@@ -27,3 +27,11 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - `studio.cmd run 01`: all stages, resumes; exit 2 = waiting (plan, asset descriptions)
 - `studio.cmd run 01 --final`: full-resolution render (default is a 720p preview); `--workers N` (default 2)
 - `tools\.venv\Scripts\python.exe -m pytest tools -q`: tests
+
+## Token budget (the Pro plan limit is the real cost)
+- One phase or feature per session. When a session passes ~300k tokens of context, finish the step, commit, update `docs/STATUS.md` and start a fresh session (everything needed is in the docs).
+- Never write a big file twice. The edit hook asks for facts on the first touch of every file, which makes a full write cost double: create files with one Bash `python` / `cat` write, or have the folder exempted (user setting `GATEGUARD_EXEMPT_GLOBS`). Then change files with small Edit / sed / python patches, not full rewrites.
+- Read only the lines needed (offset + limit); do not re-read files just written. Use `grep -n` to find lines.
+- Test the smallest thing that proves the change (one test file, one scene render); run the full test suite once per finished step. One screenshot per check, scaled down; prefer scripted DOM checks.
+- Shell heredocs: ASCII only. Put Telugu text in a file written with the Write tool, never inside a long heredoc (a parse error means sending it twice).
+- Long runs (renders, downloads) in the background; do not poll.
