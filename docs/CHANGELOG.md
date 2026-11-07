@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-07 · Dashboard: narration context, framing, trim, safe replacement
+- Contract: `VisualAsset.narration`, `context`, `prompt_original`, `media` (`AssetMedia`: aspect 16:9 / 9:16 / 4:5 / 1:1, fill / fit, crop focus, zoom, trim start / end, required and source duration, source and output size), `pending_file`, `pending_preview`, `history` (additive).
+- `visual.sync(words=...)` fills the narration from the transcript (an overlay's own time window, a main visual's scene) and the required duration; `visual.process` frames images (fill / fit at the chosen aspect) and trims / frames videos with FFmpeg into a new file. Brief asks for `context`, full video prompts (max 10 s, start / end) and narration-linked memes.
+- Dashboard: Narration / Why this visual / Scene box, live framing preview (aspect, fill / fit, crop X / Y, zoom), video start / end with "use required length", Replace = upload -> side-by-side preview -> Confirm or Discard (the current file stays until the new one validates; previous processed files kept as `.vN`), original prompt kept, history list, Save Changes / Cancel. API: `PUT .../media`, `POST .../replace/confirm|cancel`.
+- 01: `context` written for all 24 assets, narration filled. Tests: 70.
+
 ## 2026-11-07 · Visual Assets dashboard
 - `ui/backend/service.py` (projects, assets, prompt save, upload / replace through `pipeline.visual.sync`), `ui/backend/server.py` (stdlib JSON API, safe file serving with Range, static UI).
 - `ui/frontend/`: dark / purple layout from the reference (sidebar, project dropdown, Total / Found / Missing, image grid with Found / Missing badges), asset detail modal (preview, facts, its own editable prompt + negative, Copy / Edit / Save, Upload / Replace with drag and drop and progress, unsaved-changes guard). Project choice survives a refresh.

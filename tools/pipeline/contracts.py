@@ -312,6 +312,33 @@ class VisualAsset(BaseModel):
     credits: dict = Field(default_factory=dict)  # source_url, license, author (online assets)
     validation: dict = Field(default_factory=lambda: {"status": "pending", "checks": []})
     notes: str = ""
+    narration: str = ""           # exact narration words this visual belongs to (filled from the transcript)
+    context: str = ""             # why the visual is there and what it tells the viewer
+    prompt_original: str = ""     # the first prompt, kept when the prompt is edited
+    media: "AssetMedia" = Field(default_factory=lambda: AssetMedia())
+    pending_file: str = ""        # uploaded replacement waiting for confirmation (original upload)
+    pending_preview: str = ""     # that replacement processed with the current media settings
+    history: list[dict] = Field(default_factory=list)  # [{time, action, ...}] versions and edits
+
+
+class AssetMedia(BaseModel):
+    """User framing / trim of the uploaded media; the original upload is never changed."""
+    aspect: str = ""              # "" = the output size; or "16:9" | "9:16" | "4:5" | "1:1"
+    fit: Literal["fill", "fit"] = "fill"   # fill = crop to the aspect, fit = whole picture with padding
+    crop_x: float = 0.5           # focus point of the crop, 0..1 of the source width (fill)
+    crop_y: float = 0.5
+    zoom: float = 1.0             # 1..3 (fill)
+    trim_start: float = 0.0       # video: seconds into the upload
+    trim_end: float | None = None  # video: None = to the end
+    duration_required: float = 0.0  # the scene length (filled by sync)
+    duration_source: float = 0.0  # length of the uploaded video
+    source_w: int = 0
+    source_h: int = 0
+    out_w: int = 0
+    out_h: int = 0
+
+
+VisualAsset.model_rebuild()
 
 
 class Character(BaseModel):

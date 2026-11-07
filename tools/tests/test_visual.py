@@ -109,3 +109,15 @@ def test_brief_lists_scenes_rules_and_local_files(tmp_path):
     md = out.read_text("utf-8")
     assert "Never ai_generate a logo" in md and "WORD FOR WORD" in md and "assets/images/a.png - office" in md
     assert "| 2 | 1.00-2.00 | photo |" in md and "full narration" in md
+
+
+def test_narration_comes_from_the_transcript_window(tmp_path):
+    from pipeline.contracts import Word
+    words = [Word(text=t, start=a, end=a + 0.3) for t, a in (("one", 0.0), ("two", 0.3), ("three", 0.55))]
+    va = VisualAssets.model_validate({"assets": [
+        {"id": "A1", "name": "main", "category": "photo", "scenes": [1], "method": "template"},
+        {"id": "A2", "name": "pop", "category": "sticker", "scenes": [1], "role": "overlay",
+         "placement": {"at": 0.4, "until": 0.8}, "method": "template"}]})
+    va = visual.sync(va, tmp_path, _plan(), tmp_path, None, log=lambda *_: None, words=words)
+    assert va.assets[0].narration == "one two three" and va.assets[1].narration == "two three"
+    assert va.assets[0].media.duration_required == 1.0

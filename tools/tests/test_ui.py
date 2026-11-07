@@ -33,7 +33,8 @@ def api(tmp_path, monkeypatch):
         {"id": "A001", "name": "Hero", "category": "ai_image", "scenes": [1], "prompt": {"text": "alpha prompt", "negative": "no text"},
          "output": {"width": 64, "height": 36}},
         {"id": "A002", "name": "Sticker", "category": "sticker", "scenes": [1], "role": "overlay", "prompt": {"text": "keep me"}},
-        {"id": "A003", "name": "Title", "category": "other", "scenes": [2], "method": "template"}])
+        {"id": "A003", "name": "Title", "category": "other", "scenes": [2], "method": "template"},
+        {"id": "A004", "name": "Clip", "category": "video_broll", "scenes": [1], "output": {"format": "mp4", "width": 64, "height": 36}}])
     _project(tmp_path, "02_Beta", [{"id": "A001", "name": "Beta hero", "category": "photo", "prompt": {"text": "beta prompt"}}])
     httpd = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -61,9 +62,9 @@ def _png() -> bytes:
 def test_projects_are_listed_and_isolated(api):
     call, _ = api
     st, projects = call("GET", "/api/projects")
-    assert st == 200 and [p["id"] for p in projects] == ["01", "02"] and projects[0]["total"] == 3
+    assert st == 200 and [p["id"] for p in projects] == ["01", "02"] and projects[0]["total"] == 4
     st, a = call("GET", "/api/projects/01/assets")
-    assert st == 200 and a["counts"] == {"total": 3, "found": 1, "missing": 2}  # the template counts as found
+    assert st == 200 and a["counts"] == {"total": 4, "found": 1, "missing": 3}  # the template counts as found
     st, b = call("GET", "/api/projects/02/assets")
     assert [x["name"] for x in b["assets"]] == ["Beta hero"]
     assert call("GET", "/api/projects/01/assets/A001")[1]["prompt"]["text"] == "alpha prompt"
@@ -91,14 +92,53 @@ def test_upload_validates_never_overwrites_and_replaces(api):
     assert up("x.png", b"")[0] == 400                            # empty
     st, res = up("hero.png", _png())
     assert st == 200 and res["asset"]["found"] and res["asset"]["status"] == "validated"
-    assert res["counts"] == {"total": 3, "found": 2, "missing": 1}
+    assert res["counts"] == {"total": 4, "found": 2, "missing": 2}
     first = res["asset"]["source_file"]
     assert (root / "01_Alpha" / res["asset"]["file"]).exists()
     assert up("again.png", _png())[0] == 409                     # no silent overwrite
-    st, res2 = up("better.png", _png(), "?replace=1")
-    assert st == 200 and res2["asset"]["source_file"] != first and (root / "01_Alpha" / first).exists()
+    st, res2 = up("better.png", _png(), "?replace=1")       # a candidate: the current file stays
+    a2 = res2["asset"]
+    assert st == 200 and a2["pending_file"].startswith("assets/generated/pending/") and a2["source_file"] == first
+    assert a2["pending_preview"] and (root / "01_Alpha" / a2["pending_preview"]).exists()
+    st, res3 = call("POST", "/api/projects/01/assets/A001/replace/confirm")
+    a3 = res3["asset"]
+    assert st == 200 and a3["source_file"] == a2["pending_file"] and not a3["pending_file"] and a3["status"] == "validated"
+    assert (root / "01_Alpha" / first).exists() and "replaced" in [h["action"] for h in a3["history"]]
+    assert call("POST", "/api/projects/01/assets/A001/replace/cancel")[0] == 200   # nothing waiting: harmless
+    res2 = res3
     assert call("POST", "/api/projects/01/assets/A003/upload", _png(), {"X-Filename": "t.png"})[0] == 400  # template
     st, body = call("GET", f"/files/01/{res2['asset']['file']}")
     assert st == 200 and body[:8] == b"\x89PNG\r\n\x1a\n"
     assert call("GET", "/files/01/..%2F02_Beta%2Fvisual-assets.json")[0] == 404  # stays inside the project
     assert call("GET", "/")[0] == 200                             # the dashboard page itself
+
+
+def test_media_framing_and_video_trim_keep_originals(api, tmp_path):
+    import subprocess
+    call, root = api
+    up = lambda aid, name, data: call("POST", f"/api/projects/01/assets/{aid}/upload", data, {"X-Filename": name})  # noqa: E731
+    put = lambda aid, body: call("PUT", f"/api/projects/01/assets/{aid}/media", body, {"Content-Type": "application/json"})  # noqa: E731
+    assert put("A001", {"aspect": "1:1"})[0] == 400              # nothing uploaded yet
+    st, res = up("A001", "hero.png", _png())
+    orig = root / "01_Alpha" / res["asset"]["source_file"]
+    before = orig.read_bytes()
+    assert put("A001", {"aspect": "3:2"})[0] == 400              # unsupported aspect
+    st, res = put("A001", {"aspect": "1:1", "fit": "fill", "crop_x": 0, "zoom": 2})
+    a = res["asset"]
+    assert st == 200 and a["media"]["aspect"] == "1:1" and (a["media"]["out_w"], a["media"]["out_h"]) == (64, 64)
+    with Image.open(root / "01_Alpha" / a["file"]) as im:
+        assert im.size == (64, 64)
+    assert orig.read_bytes() == before and "media_changed" in [h["action"] for h in a["history"]]
+    clip = tmp_path / "c.mp4"
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i", "testsrc=s=128x72:r=25:d=3", "-pix_fmt", "yuv420p",
+                    str(clip)], check=True)
+    st, res = up("A004", "clip.mp4", clip.read_bytes())
+    assert st == 200 and res["asset"]["media"]["duration_source"] > 2.9
+    st, res = put("A004", {"trim_start": 0.5, "trim_end": 1.5, "aspect": "9:16", "fit": "fit"})
+    a = res["asset"]
+    out = root / "01_Alpha" / a["file"]
+    dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(out)],
+                               capture_output=True, text=True).stdout)
+    assert st == 200 and abs(dur - 1.0) < 0.15 and (a["media"]["out_w"], a["media"]["out_h"]) == (36, 64)
+    assert (root / "01_Alpha" / a["source_file"]).stat().st_size == clip.stat().st_size  # the upload is untouched
+    assert put("A004", {"trim_start": 2, "trim_end": 1})[0] == 400

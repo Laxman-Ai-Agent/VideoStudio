@@ -15,6 +15,12 @@ export const api = {
     fetch(`/api/projects/${enc(pid)}/assets/${enc(id)}/prompt`, {
       method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, negative }),
     }).then(json),
+  saveMedia: (pid, id, settings) =>
+    fetch(`/api/projects/${enc(pid)}/assets/${enc(id)}/media`, {
+      method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings),
+    }).then(json),
+  confirmReplace: (pid, id) => fetch(`/api/projects/${enc(pid)}/assets/${enc(id)}/replace/confirm`, { method: "POST" }).then(json),
+  cancelReplace: (pid, id) => fetch(`/api/projects/${enc(pid)}/assets/${enc(id)}/replace/cancel`, { method: "POST" }).then(json),
   // raw body upload with progress (XHR has upload progress events, fetch does not)
   upload: (pid, id, file, replace, onProgress) => new Promise((resolve, reject) => {
     const x = new XMLHttpRequest();

@@ -85,6 +85,10 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Checked in the browser on 01 (24 / 12 / 12, A010 detail, Edit -> Save round trip, no console errors); upload / replace covered by HTTP tests on temp projects (01 was not changed)
 - Projects / Settings in the sidebar are placeholders (Projects opens the dropdown)
 
+## Dashboard: narration context, framing, trim, safe replacement ✅ (2026-11-07)
+- [x] Every asset shows its narration words, why it is there, its scene; prompt edit keeps the original; framing (aspect, fill/fit, crop, zoom) and video trim re-process from the original; Replace = preview then confirm; history. Tests 70; checked in the browser on 01 (A002)
+- Older processed files show "Original ?" size until they are processed again
+
 ## Known issues / notes
 - Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.

@@ -147,7 +147,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     from pipeline.resolve import fetch_asset
     remover = visual.rembg_remover()
     va = visual.sync(visual.load(p), p, plan, ROOT, None, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, pexels_key),
-                     remove_bg=remover)
+                     remove_bg=remover, words=transcript.words)
     visual.save(p, va)
     mains = visual.main_files(va, p)  # validated main visuals win over any search in resolve
 
@@ -172,7 +172,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     print(f"  resolve: {'done' if ran else 'up to date'} {counts}")
 
     # visual assets, pass 2: link what resolve found, add uncovered missing scenes, summary
-    va = visual.sync(va, p, plan, ROOT, resolved, remove_bg=remover)
+    va = visual.sync(va, p, plan, ROOT, resolved, remove_bg=remover, words=transcript.words)
     visual.save(p, va)
     print_assets(va, p)
 
@@ -297,6 +297,11 @@ def make_theme(p: Path, force: bool = False):
     return ThemeSpec.model_validate_json(out.read_text("utf-8"))
 
 
+def transcript_words(p: Path) -> list:
+    f = p / "work" / "transcript.json"
+    return Transcript.model_validate_json(f.read_text("utf-8")).words if f.exists() else []
+
+
 def print_assets(va, p: Path) -> None:
     from pipeline import visual
     sm = va.summary
@@ -325,7 +330,7 @@ def assets_command(project: Path) -> int:
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8")) if resolved_json.exists() else None
     key = secret("PEXELS_API_KEY")
     va = visual.sync(va, project, plan, ROOT, resolved, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, key),
-                     remove_bg=visual.rembg_remover())
+                     remove_bg=visual.rembg_remover(), words=transcript_words(project))
     visual.save(project, va)
     print_assets(va, project)
     for a in va.assets:

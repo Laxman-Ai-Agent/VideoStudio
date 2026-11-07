@@ -4,7 +4,9 @@
     GET  /api/projects/<pid>/assets                     one project's visual-assets.json (+ found / preview)
     GET  /api/projects/<pid>/assets/<aid>               one asset
     PUT  /api/projects/<pid>/assets/<aid>/prompt        {"text": "...", "negative": "..."} -> saved asset
+    PUT  /api/projects/<pid>/assets/<aid>/media         {aspect, fit, crop_x, crop_y, zoom, trim_start, trim_end}
     POST /api/projects/<pid>/assets/<aid>/upload[?replace=1]   raw file body, header X-Filename
+    POST /api/projects/<pid>/assets/<aid>/replace/confirm | /replace/cancel
     GET  /files/<pid>/<path inside the project>         previews (Range supported for video)
     GET  /                                              the dashboard (ui/frontend)
 """
@@ -22,7 +24,7 @@ import service  # noqa: E402
 
 FRONTEND = Path(__file__).resolve().parents[1] / "frontend"
 MAX_BODY = service.MAX_VIDEO + 2**20
-ASSET = re.compile(r"^/api/projects/([^/]+)/assets/([A-Za-z0-9_\-]+)(/prompt|/upload)?$")
+ASSET = re.compile(r"^/api/projects/([^/]+)/assets/([A-Za-z0-9_\-]+)(/prompt|/media|/upload|/replace/confirm|/replace/cancel)?$")
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -101,10 +103,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_PUT(self):
         m = ASSET.match(urllib.parse.urlparse(self.path).path)
         try:
-            if not m or m[3] != "/prompt":
+            if not m or m[3] not in ("/prompt", "/media"):
                 raise service.NotFound(self.path)
             data = json.loads(self._body() or b"{}")
-            self._json(service.save_prompt(m[1], m[2], data.get("text", ""), data.get("negative")))
+            if m[3] == "/prompt":
+                return self._json(service.save_prompt(m[1], m[2], data.get("text", ""), data.get("negative")))
+            self._json(service.save_media(m[1], m[2], data))
         except json.JSONDecodeError:
             self._json({"error": "body must be JSON"}, 400)
         except Exception as e:  # noqa: BLE001
@@ -114,6 +118,10 @@ class Handler(BaseHTTPRequestHandler):
         url = urllib.parse.urlparse(self.path)
         m = ASSET.match(url.path)
         try:
+            if m and m[3] == "/replace/confirm":
+                return self._json(service.confirm_replace(m[1], m[2]))
+            if m and m[3] == "/replace/cancel":
+                return self._json(service.cancel_replace(m[1], m[2]))
             if not m or m[3] != "/upload":
                 raise service.NotFound(self.path)
             name = urllib.parse.unquote(self.headers.get("X-Filename") or "")

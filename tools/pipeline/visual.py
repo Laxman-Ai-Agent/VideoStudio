@@ -115,7 +115,13 @@ the `characters[].description` WORD FOR WORD when a character appears; 4. compos
 framing, where the empty space for on-screen text is; 5. background (plain light grey / solid colour when
 it will be cut out); 6. lighting and the shared `style` line; 7. aspect ratio and resolution; 8. transparent
 background yes/no; 9. text inside the image: exact words or "no text"; 10. what must not appear (`negative`).
-Video prompts also give duration (scene length + 1 s), camera move and that it is one continuous shot.
+Video prompts (tools make at most 10 s) give: main subject, exact action, environment, camera movement,
+subject movement, lighting, style, duration (scene length + 1 s, max 10 s; it is trimmed later), aspect,
+composition, how the shot STARTS and how it ENDS, and that it is one continuous shot.
+Memes / reactions: only where the narration has a matching moment; give the situation, subject, facial
+expression, and the caption text with its placement and style, or "no text" when the image says it alone.
+Every asset also gets `context`: one or two sentences on what situation it shows, why the scene needs it and
+what the viewer should understand. (`narration` is filled from the transcript automatically.)
 Keep 16:9 main visuals centred (they are centre-cropped for 9:16). Overlays: square or portrait, subject
 fills the frame, transparent or plain background, `processing.remove_background: true`.
 Several characters drawn in one image: list each as its own asset with `processing.extract_from` (the
@@ -168,19 +174,108 @@ def is_transparent(img) -> bool:
     return img.convert("RGBA").getchannel("A").getextrema()[0] < 250
 
 
-def process(a: VisualAsset, src: Path, project: Path, remove_bg: Callable | None = None) -> tuple[Path, list[str]]:
-    """Image pipeline: extract/crop -> background removal -> trim -> resize (Lanczos) -> format.
-    Videos, SVG and Lottie pass through unchanged."""
+ASPECTS = {"16:9": (16, 9), "9:16": (9, 16), "4:5": (4, 5), "1:1": (1, 1)}
+
+
+def out_size(a: VisualAsset) -> tuple[int, int]:
+    """Final pixel size: the output size, or the chosen aspect at the output's long side (even numbers)."""
+    tw, th = a.output.width or 1920, a.output.height or 1080
+    if a.media.aspect not in ASPECTS:
+        return tw, th
+    rw, rh = ASPECTS[a.media.aspect]
+    L = max(tw, th)
+    w, h = (L, L * rh / rw) if rw >= rh else (L * rw / rh, L)
+    return round(w / 2) * 2, round(h / 2) * 2
+
+
+def crop_window(w: int, h: int, ratio: float, m) -> tuple[int, int, int, int]:
+    """Fill: the largest window of `ratio` inside w x h, shrunk by zoom, centred on the focus point."""
+    cw = min(w, h * ratio) / max(1.0, m.zoom)
+    ch = cw / ratio
+    x = min(max(0.0, m.crop_x * w - cw / 2), w - cw)
+    y = min(max(0.0, m.crop_y * h - ch / 2), h - ch)
+    return round(x), round(y), round(cw), round(ch)
+
+
+def _frame(img, a: VisualAsset, want_alpha: bool, log: list):
+    """Aspect framing chosen in the dashboard: fill (crop window) or fit (pad), exact output size."""
     from PIL import Image
-    log, out_dir = [], project / PROCESSED
+    ow, oh = out_size(a)
+    m = a.media
+    if m.fit == "fit":
+        k = min(ow / img.size[0], oh / img.size[1])
+        img = img.resize((max(1, round(img.size[0] * k)), max(1, round(img.size[1] * k))), Image.LANCZOS)
+        canvas = Image.new("RGBA" if want_alpha else "RGB", (ow, oh), (0, 0, 0, 0) if want_alpha else (0, 0, 0))
+        canvas.paste(img, ((ow - img.size[0]) // 2, (oh - img.size[1]) // 2), img if img.mode == "RGBA" else None)
+        log.append(f"fit into {m.aspect} {ow}x{oh} (padded)")
+        return canvas
+    x, y, cw, ch = crop_window(*img.size, ow / oh, m)
+    img = img.crop((x, y, x + cw, y + ch)).resize((ow, oh), Image.LANCZOS)
+    log.append(f"filled {m.aspect} {ow}x{oh} (crop {cw}x{ch} at {x},{y}, zoom {m.zoom:g})")
+    return img
+
+
+def _video(a: VisualAsset, src: Path, dest: Path, log: list) -> None:
+    """Trim (trim_start..trim_end) and frame (aspect, fill/fit) with FFmpeg into a new file."""
+    info = probe(src)
+    w, h, dur = info.get("width") or 0, info.get("height") or 0, _video_seconds(src)
+    m = a.media
+    m.source_w, m.source_h, m.duration_source = w, h, round(dur, 3)
+    start = max(0.0, min(m.trim_start, max(0.0, dur - 0.1)))
+    end = min(m.trim_end, dur) if m.trim_end else dur
+    if end - start < 0.1:
+        raise ValueError(f"trim {start:.2f}-{end:.2f} s is empty (video is {dur:.2f} s)")
+    vf = []
+    if m.aspect in ASPECTS and w and h:
+        ow, oh = out_size(a)
+        if m.fit == "fit":
+            vf.append(f"scale={ow}:{oh}:force_original_aspect_ratio=decrease,pad={ow}:{oh}:(ow-iw)/2:(oh-ih)/2")
+        else:
+            x, y, cw, ch = crop_window(w, h, ow / oh, m)
+            vf.append(f"crop={cw // 2 * 2}:{ch // 2 * 2}:{x}:{y},scale={ow}:{oh}")
+        m.out_w, m.out_h = ow, oh
+    else:
+        m.out_w, m.out_h = w, h
+    cmd = ["ffmpeg", "-y", "-v", "error", "-ss", f"{start:.3f}", "-i", str(src), "-t", f"{end - start:.3f}", "-an",
+           *(["-vf", ",".join(vf + ["setsar=1"])] if vf else []), "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+           "-pix_fmt", "yuv420p", str(dest)]
+    p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if p.returncode:
+        raise RuntimeError(f"ffmpeg: {p.stderr.strip()[-300:]}")
+    log.append(f"video trimmed {start:.2f}-{end:.2f} s ({end - start:.2f} s of {dur:.2f} s)"
+               + (f", framed {m.aspect} {m.fit} {m.out_w}x{m.out_h}" if vf else ""))
+
+
+def process(a: VisualAsset, src: Path, project: Path, remove_bg: Callable | None = None,
+            dest_dir: Path | None = None) -> tuple[Path, list[str]]:
+    """Image pipeline: extract/crop -> background removal -> trim -> aspect framing (dashboard) or
+    resize (Lanczos) -> format. Videos: trim + framing with FFmpeg when set, else copied. The source
+    file is never changed; the result goes to `dest_dir` (default assets/processed)."""
+    from PIL import Image
+    log, out_dir = [], dest_dir or project / PROCESSED
     out_dir.mkdir(parents=True, exist_ok=True)
-    if src.suffix.lower() not in IMAGE or src.suffix.lower() == ".svg":
-        dest = out_dir / f"{a.id}{src.suffix.lower()}"
+    ext = src.suffix.lower()
+    if ext in VIDEO:
+        m = a.media
+        edited = m.aspect in ASPECTS or m.trim_start > 0 or m.trim_end
+        dest = out_dir / f"{a.id}{'.mp4' if edited else ext}"
+        if edited:
+            _video(a, src, dest, log)
+        else:
+            info = probe(src)
+            m.source_w, m.source_h, m.duration_source = info.get("width") or 0, info.get("height") or 0, round(_video_seconds(src), 3)
+            m.out_w, m.out_h = m.source_w, m.source_h
+            shutil.copy2(src, dest)
+            log.append("video copied as is (no trim / framing set)")
+        return dest, log
+    if ext not in IMAGE or ext == ".svg":
+        dest = out_dir / f"{a.id}{ext}"
         shutil.copy2(src, dest)
         return dest, ["copied as is (not a raster image)"]
     p = a.processing
     img = Image.open(src)
     img.load()
+    a.media.source_w, a.media.source_h = img.size
     if p.crop and len(p.crop) == 4:
         x, y, w, h = p.crop
         W, H = img.size
@@ -198,11 +293,14 @@ def process(a: VisualAsset, src: Path, project: Path, remove_bg: Callable | None
             img = img.crop(bbox)
             log.append("trimmed to the subject")
     tw, th = a.output.width, a.output.height
-    if p.resize and tw and th:
+    if a.media.aspect in ASPECTS:
+        img = _frame(img, a, want_alpha, log)
+    elif p.resize and tw and th:
         k = min(tw / img.size[0], th / img.size[1])
         if k < 1 or (k > 1 and p.upscale_if_small):
             img = img.resize((max(1, round(img.size[0] * k)), max(1, round(img.size[1] * k))), Image.LANCZOS)
             log.append(f"resized x{k:.2f} to {img.size[0]}x{img.size[1]}" + (" (upscaled, may look soft)" if k > 1.5 else ""))
+    a.media.out_w, a.media.out_h = img.size
     fmt = (p.convert_to or a.output.format or "png").lower().lstrip(".")
     fmt = "png" if want_alpha or fmt not in ("png", "jpg", "jpeg", "webp") else fmt
     dest = out_dir / f"{a.id}.{'jpg' if fmt == 'jpeg' else fmt}"
@@ -275,14 +373,32 @@ def summary(va: VisualAssets) -> dict:
             "failed": [a.id for a in va.assets if a.status == "failed"]}
 
 
+def narration_for(a: VisualAsset, start: float, end: float, words: list | None, scene_text: str) -> str:
+    """The narration words this visual sits on: an overlay's own window (at .. until, or 2.5 s),
+    a main visual's whole scene. Script words with Whisper timing; the scene text without a transcript."""
+    if a.role == "overlay":
+        lo = start + (a.placement.at or 0)
+        hi = start + a.placement.until if a.placement.until else min(end, lo + 2.5)
+    else:
+        lo, hi = start, end
+    picked = [w.text for w in (words or []) if lo <= (w.start + w.end) / 2 < hi]
+    return " ".join(picked) if picked else scene_text
+
+
 def sync(va: VisualAssets, project: Path, plan: ScenePlan, root: Path, resolved: Resolved | None = None,
-         fetch: Callable | None = None, remove_bg: Callable | None = None, log=print) -> VisualAssets:
+         fetch: Callable | None = None, remove_bg: Callable | None = None, log=print,
+         words: list | None = None) -> VisualAssets:
     """Bring every asset up to date. `fetch(asset) -> (abs_path, credits) | None` collects online assets
     (resolve's providers); `remove_bg(PIL.Image) -> PIL.Image` is rembg. Finished assets are not redone."""
     by_scene = {s.id: s for s in plan.scenes}
     res = {r.id: r for r in (resolved.scenes if resolved else [])}
     for a in va.assets:
         a.timestamps = [{"scene": i, "start": by_scene[i].start, "end": by_scene[i].end} for i in a.scenes if i in by_scene]
+        if a.timestamps:
+            t = a.timestamps[0]
+            a.media.duration_required = round(t["end"] - t["start"], 3)
+            if not a.narration:
+                a.narration = narration_for(a, t["start"], t["end"], words, by_scene[t["scene"]].narration)
         if a.category == "logo" and a.method == "ai_generate":
             a.method = "real_logo"
             a.notes = (a.notes + " Logos are never AI-generated: switched to real_logo.").strip()

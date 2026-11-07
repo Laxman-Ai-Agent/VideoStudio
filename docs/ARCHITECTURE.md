@@ -51,6 +51,7 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> theme -> visual assets (
 - `ui/backend/` (Python standard library `http.server`, localhost only) + `ui/frontend/` (plain HTML/CSS/JS modules, no build, no npm). Start: `studio.cmd ui` (default http://127.0.0.1:8790, next free port if busy).
 - No second database: `service.py` reads the project's `visual-assets.json` on every request, changes only the asked asset id and saves through `pipeline.visual` (atomic). Found / missing comes from the files on disk.
 - API: list projects, one project's assets, one asset, `PUT .../prompt`, `POST .../upload` (raw body + `X-Filename`, `?replace=1`), `/files/<pid>/<path>` previews (path-checked, Range for video).
+- Detail view: narration (from the transcript), context (Claude), scene; framing / trim (`AssetMedia`) re-process from the original upload; Replace keeps the current file until the candidate (`assets/generated/pending/`, preview in `assets/processed/pending/`) is confirmed and validated; every change goes to the asset's `history`.
 - Uploads: png / jpg / jpeg / webp (50 MB), mp4 / mov / webm (1 GB) -> `assets/generated/<ID>_<time>.<ext>` (never overwritten); then `visual.sync` processes and validates exactly like `studio.cmd assets`. An asset that already has a file is only replaced with `?replace=1` (Replace button + confirm).
 
 ## Per-video theme
