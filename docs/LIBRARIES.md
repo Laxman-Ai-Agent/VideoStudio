@@ -11,6 +11,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | hyperframes | 0.9.19 | Apache-2.0 | engines/hyperframes | HTML/GSAP compositions -> MP4 | open license, built for agent workflows, uses system Chrome |
 | faster-whisper | 1.2.1 | MIT | transcribe | Whisper large-v3 int8 on CPU, word timestamps | 4x faster than openai-whisper on CPU, no torch |
 | ctranslate2 (via faster-whisper) | 4.8.5 | MIT | transcribe | inference backend | pulled by faster-whisper |
+| av / PyAV (via faster-whisper) | 15.1.0 | BSD-3 | transcribe | audio decode | pinned `15.*`: av 19 dropped `metadata_errors`, faster-whisper 1.2.1 crashes. Unpin when faster-whisper fixes it |
 | esbuild (via hyperframes) | 0.28.2 | MIT | engines/hyperframes | bundler HyperFrames needs | install script approved in package.json `allowScripts` |
 
 ## External tools (system-wide)

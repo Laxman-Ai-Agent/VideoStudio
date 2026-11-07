@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "language": "te",
+  "duration": 30.491,
+  "source": "whisper",
+  "model": "faster-whisper large-v3 int8",
+  "words": [
+    {
+      "text": "Hi,",
+      "start": 0.0,
+      "end": 0.3,
+      "probability": 0.269
+    },
+    {
+      "text": "ఇప్పడువర్కు",
+      "start": 0.56,
+      "end": 1.46,
+      "probability": 0.933
+    },
+    {
+      "text": "మనం",
+      "start": 1.46,
+      "end": 1.72,
+      "probability": 0.97
+    },
+    {
+      "text": "AI",
+      "start": 1.72,
+      "end": 2.06,
+      "probability": 0.758
+    },
+    {
+      "text": "అంటే",
+      "start": 2.06,
+      "end": 2.5,
+      "probability": 0.96
+    },
+    {
+      "text": "క్వేష్యన",
+      "start": 2.5,
+      "end": 3.14,
+      "probability": 0.857
+    },
+    {
+      "text": "అడిగితే",
+      "start": 3.14,
+      "end": 3.46,
+      "probability": 0.905
+    },
+    {
+      "text": "ఆంసర్",
+      "start": 3.46,
+      "end": 3.88,
+      "probability": 0.959
+    },
+    {
+      "text": "చెప్పే",
+      "start": 3.88,
+      "end": 4.08,
+      "probability": 0.947
+    },
+    {
+      "text": "చాట్",
+      "start": 4.08,
+      "end": 4.48,
+      "probability": 0.885
+    },
+    {
+      "text": "జిపిటి,",
+      "start": 4.48,
+      "end": 4.92,
+      "probability": 0.921
+    },
+    {
+      "text": "జేమినాయ్,",
+      "start": 5.0,
+      "end": 5.74,
+      "probability": 0.922
+    },
+    {
+      "text": "గ్రాక్,",
+      "start": 5.74,
+      "end": 6.2,
+      "probability": 0.964
+    },
+    {
+      "text": "ఇలాంటి",
+      "start": 6.28,
+      "end": 6.76,
+      "probability": 0.96
+    },
+    {
+      "text": "టూల్స్",
+      "start": 6.76,
+      "end": 7.14,
+      "probability": 0.963
+    },
+    {
+      "text": "ని",
+      "start": 7.14,
+      "end": 7.22,
+      "probability": 0.869
+    },
+    {
+      "text": "చూసం.",
+      "start": 7.22,
+      "end": 7.5,
+      "probability": 0.934
+    },
+    {
+      "text": "కాని",
+      "start": 7.5,
+      "end": 8.26,
+      "probability": 0.916
+    },
+    {
+      "text": "ఇప్పుడు",
+      "start": 8.26,
+      "end": 8.9,
+      "probability": 0.983
+    },
+    {
+      "text": "అదే",
+      "start": 8.9,
+      "end": 9.48,
+      "probability": 0.958
+    },
+    {
+      "text": "AI",
+      "start": 9.48,
+      "end": 9.78,
+      "probability": 0.802
+    },
+    {
+      "text": "మనిషి",
+      "start": 9.78,
+      "end": 10.68,
+      "probability": 0.966
+    },
+    {
+      "text": "లేకుండానే",
+      "start": 10.68,
+      "end": 11.14,
+      "probability": 0.977
+    },
+    {
+      "text": "పూర్తి",
+      "start": 11.14,
+      "end": 11.72,
+      "probability": 0.979
+    },
+    {
+      "text": "పనిచేసే",
+      "start": 11.72,
+      "end": 12.16,
+      "probability": 0.936
+    },
+    {
+      "text": "AI",
+      "start": 12.16,
+      "end": 12.52,
+      "probability": 0.991
+    },
+    {
+      "text": "ఏజంట్",
+      "start": 12.52,
+      "end": 13.18,
+      "probability": 0.82
+    },
+    {
+      "text": "గా",
+      "start": 13.18,
+      "end": 13.26,
+      "probability": 0.941
+    },
+    {
+      "text": "మారిపోయంది",
+      "start": 13.26,
+      "end": 13.84,
+      "probability": 0.918
+    },
+    {
+      "text": "కంప్పనీస్",
+      "start": 13.84,
+      "end": 14.76,
+      "probability": 0.895
+    },
+    {
+      "text": "ఇప్పడికే",
+      "start": 14.76,
+      "end": 15.18,
+      "probability": 0.948
+    },
+    {
+      "text": "AI",
+      "start": 15.18,
+      "end": 15.46,
+      "probability": 0.749
+    },
+    {
+      "text": "agents",
+      "start": 15.46,
+      "end": 15.9,
+      "probability": 0.208
+    },
+    {
+      "text": "ని",
+      "start": 15.9,
+      "end": 16.16,
+      "probability": 0.947
+    },
+    {
+      "text": "యూస్",
+      "start": 16.16,
+      "end": 16.4,
+      "probability": 0.922
+    },
+    {
+      "text": "చేసి",
+      "start": 16.4,
+      "end": 16.68,
+      "probability": 0.981
+    },
+    {
+      "text": "జోబ్స్",
+      "start": 16.68,
+      "end": 17.54,
+      "probability": 0.886
+    },
+    {
+      "text": "కట్చేడం",
+      "start": 17.54,
+      "end": 18.02,
+      "probability": 0.955
+    },
+    {
+      "text": "మొదలు",
+      "start": 18.02,
+      "end": 18.3,
+      "probability": 0.899
+    },
+    {
+      "text": "పెట్టాయ్",
+      "start": 18.3,
+      "end": 18.76,
+      "probability": 0.897
+    },
+    {
+      "text": "అస్లు",
+      "start": 18.76,
+      "end": 19.38,
+      "probability": 0.948
+    },
+    {
+      "text": "AI",
+      "start": 19.38,
+      "end": 19.62,
+      "probability": 0.877
+    },
+    {
+      "text": "agents",
+      "start": 19.62,
+      "end": 20.1,
+      "probability": 0.796
+    },
+    {
+      "text": "అంటే",
+      "start": 20.1,
+      "end": 20.4,
+      "probability": 0.906
+    },
+    {
+      "text": "ఏమిటి?",
+      "start": 20.4,
+      "end": 20.84,
+      "probability": 0.871
+    },
+    {
+      "text": "ఇవి",
+      "start": 20.88,
+      "end": 21.4,
+      "probability": 0.987
+    },
+    {
+      "text": "ఎలా",
+      "start": 21.4,
+      "end": 21.7,
+      "probability": 0.961
+    },
+    {
+      "text": "పని",
+      "start": 21.7,
+      "end": 21.92,
+      "probability": 0.976
+    },
+    {
+      "text": "చాస్తాఈ?",
+      "start": 21.92,
+      "end": 22.22,
+      "probability": 0.912
+    },
+    {
+      "text": "మన",
+      "start": 22.32,
+      "end": 22.82,
+      "probability": 0.995
+    },
+    {
+      "text": "జోబ్స్",
+      "start": 22.82,
+      "end": 23.32,
+      "probability": 0.895
+    },
+    {
+      "text": "మిదా",
+      "start": 23.32,
+      "end": 23.54,
+      "probability": 0.881
+    },
+    {
+      "text": "ఎంత",
+      "start": 23.54,
+      "end": 23.76,
+      "probability": 0.932
+    },
+    {
+      "text": "ఇంపాక్ట్",
+      "start": 23.76,
+      "end": 24.36,
+      "probability": 0.956
+    },
+    {
+      "text": "చూపిస్తాఈ?",
+      "start": 24.36,
+      "end": 24.82,
+      "probability": 0.988
+    },
+    {
+      "text": "ఇంక",
+      "start": 24.94,
+      "end": 25.4,
+      "probability": 0.988
+    },
+    {
+      "text": "ఫ్యూచర్",
+      "start": 25.4,
+      "end": 26.0,
+      "probability": 0.926
+    },
+    {
+      "text": "లో",
+      "start": 26.0,
+      "end": 26.1,
+      "probability": 0.943
+    },
+    {
+      "text": "మనం",
+      "start": 26.1,
+      "end": 26.3,
+      "probability": 0.931
+    },
+    {
+      "text": "సేఫ్",
+      "start": 26.3,
+      "end": 26.68,
+      "probability": 0.959
+    },
+    {
+      "text": "గా",
+      "start": 26.68,
+      "end": 26.86,
+      "probability": 0.884
+    },
+    {
+      "text": "ఉండాలంటే",
+      "start": 26.86,
+      "end": 27.26,
+      "probability": 0.936
+    },
+    {
+      "text": "ఏమి",
+      "start": 27.26,
+      "end": 27.62,
+      "probability": 0.981
+    },
+    {
+      "text": "చేయా",
+      "start": 27.62,
+      "end": 30.46,
+      "probability": 0.987
+    }
+  ]
+}

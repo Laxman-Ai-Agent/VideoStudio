@@ -19,7 +19,11 @@ def transcribe(audio: Path, language: str = "te") -> Transcript:
 
     model = WhisperModel(MODEL, device="cpu", compute_type="int8")
     segments, info = model.transcribe(str(audio), language=language, word_timestamps=True,
-                                      vad_filter=True, beam_size=5)
+                                      vad_filter=True, beam_size=5,
+                                      # large-v3 loops on Telugu (repeated a sentence, lost 14 s of
+                                      # the sample) when it conditions on its own previous text
+                                      condition_on_previous_text=False,
+                                      hallucination_silence_threshold=2.0)
     words = [Word(text=w.word.strip(), start=round(w.start, 3), end=round(w.end, 3),
                   probability=round(w.probability, 3))
              for seg in segments for w in (seg.words or []) if w.word.strip()]
