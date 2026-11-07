@@ -89,3 +89,15 @@ def test_interpolated_words_are_flagged_and_long_unanchored_span_fails():
         Word(text="xx", start=5, end=6), Word(text="మూడు", start=20, end=21)])
     with pytest.raises(ValueError, match="no script word matched"):
         align(far, "ఒకటి రెండు ఏదో మూడు")
+
+
+def test_transcribe_checked_retries_until_coverage_ok(monkeypatch):
+    import pipeline.transcribe as tr
+    good = Transcript.model_validate_json((FIXTURE / "transcript.json").read_text("utf-8"))
+    bad = good.model_copy(update={"words": good.words[:5]})
+    results = iter([bad, good])
+    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: next(results))
+    assert tr.transcribe_checked(FIXTURE / "audio.wav", attempts=3) is good
+    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: bad)
+    with pytest.raises(ValueError, match="no words for"):
+        tr.transcribe_checked(FIXTURE / "audio.wav", attempts=2)

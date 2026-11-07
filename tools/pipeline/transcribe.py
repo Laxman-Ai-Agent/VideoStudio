@@ -6,16 +6,19 @@ they reuse tools/tests/fixtures/sample_30s/transcript.json.
 One-time fixture refresh:
     tools\\.venv\\Scripts\\python.exe -m pipeline.transcribe tests\\fixtures\\sample_30s\\audio.wav tests\\fixtures\\sample_30s\\transcript.json [model]
 """
+import os
 import sys
 from pathlib import Path
 
 from .contracts import Transcript, Word
 
-MODEL = "large-v3"  # default; any faster-whisper size works (benchmark in DECISIONS.md)
+# Size name or local model folder. Only large-v3 gives usable Telugu anchors (benchmark: DECISIONS.md #14).
+MODEL = os.environ.get("STUDIO_WHISPER_MODEL", "large-v3")
+ATTEMPTS = 3  # fallback decoding is random: a run that drops speech usually succeeds on retry
 
 
 def transcribe(audio: Path, language: str = "te", model_size: str = MODEL, **options) -> Transcript:
-    """options override the decode settings below (benchmarks); prompt= biases toward the script."""
+    """options override the decode settings below (benchmarks), e.g. temperature=0, initial_prompt=..."""
     from faster_whisper import WhisperModel  # heavy import, only when actually transcribing
 
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
@@ -46,11 +49,24 @@ def check_coverage(t: Transcript, max_gap: float = MAX_GAP) -> None:
                          f"(music/silence?) and the Whisper settings (DECISIONS.md).")
 
 
+def transcribe_checked(audio: Path, model_size: str = MODEL, attempts: int = ATTEMPTS) -> Transcript:
+    """transcribe() + check_coverage(), retried. Raises the last coverage error if every attempt fails."""
+    for n in range(1, attempts + 1):
+        t = transcribe(audio, model_size=model_size)
+        try:
+            check_coverage(t)
+            return t
+        except ValueError as e:
+            print(f"  transcribe attempt {n}/{attempts}: {e}")
+            if n == attempts:
+                raise
+
+
 if __name__ == "__main__":
     from .config import setup_env
     from .project import atomic_write
 
     setup_env()
-    t = transcribe(Path(sys.argv[1]), model_size=sys.argv[3] if len(sys.argv) > 3 else MODEL)
+    t = transcribe_checked(Path(sys.argv[1]), model_size=sys.argv[3] if len(sys.argv) > 3 else MODEL)
     atomic_write(Path(sys.argv[2]), t.model_dump_json(indent=2))
     print(f"{len(t.words)} words, {t.duration}s")

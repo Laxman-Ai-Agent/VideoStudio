@@ -47,10 +47,9 @@ def run_project(p: Path) -> int:
     whisper_json, transcript_json = w / "whisper.json", w / "transcript.json"
 
     def transcribe():
-        from pipeline.transcribe import check_coverage, transcribe as whisper  # faster-whisper loads lazily
-        t = whisper(audio, model_size=WHISPER_MODEL)
-        check_coverage(t)  # before writing, so a bad result is never cached as "done"
-        atomic_write(whisper_json, t.model_dump_json(indent=2))
+        from pipeline.transcribe import transcribe_checked  # faster-whisper loads lazily
+        # coverage-checked before writing, so a result with lost speech is never cached as "done"
+        atomic_write(whisper_json, transcribe_checked(audio, WHISPER_MODEL).model_dump_json(indent=2))
 
     def align():
         t = Transcript.model_validate_json(whisper_json.read_text("utf-8"))
