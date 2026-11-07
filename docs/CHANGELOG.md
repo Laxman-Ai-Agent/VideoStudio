@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-07 · Transitions, kinetic text, UI cards
+- Transitions: brand.json `transitions` cycled per cut (blur, wipe, zoom, circle; `params.transition` overrides, `cut` = hard cut). The outgoing scene animates out in its last 0.2 s and the incoming one in over its first 0.25 s, so clips stay separate and cached. Wipe/zoom cuts get a whoosh.
+- `kinetic` template: mixed-size lines (`params.lines` with size s/m/l/xl and style bold/plain/box/script/outline), words blur in, giant faded `bg_word`. Script style uses `brand.fonts.script` (Akaya Telivigala).
+- `cards` template: checklist card (`items`), stat card (`stat` value/label/trend with a drawn trend shape, numbers only from the plan), call-to-action `button`.
+- 01 scenes.json uses kinetic (1, 5, 8, 9), cards (11), highlighter (2, 4, 7) and black & white (4).
+
 ## 2026-11-07 · Paper style
 - brand.json `theme` + `themes` (dark, paper; paper is the default): colours incl. marker, panel, caption pill. Paper adds animated film grain.
 - Shared params for every template: `look` (sepia, bw, vintage, halftone), `marks` / `marks_v` (hand-drawn circle, underline, arrow, box, sticker tag), `marker` (highlighter behind on-screen words).

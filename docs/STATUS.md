@@ -58,9 +58,13 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 
 ## Paper style ✅ (2026-11-07)
 - [x] Themes in brand.json (paper default, dark kept), grain, photo looks, hand-drawn marks + sticker tag + highlighter, `cutout_title` poster, generated SFX. Tests: 52 passing. Checked by one test sheet (4 scenes x 2 formats)
-- [ ] 01 previews not re-rendered in the new style yet (user asked not to render)
+
+## Transitions + kinetic text + UI cards ✅ (2026-11-07)
+- [x] Per-cut transitions, `kinetic` and `cards` templates, script font role. Tests: 54 passing. Checked by one test sheet; the stat card arrow/line bug found there is fixed
+- [x] 01 scenes.json updated to use them
 
 ## Known issues / notes
+- Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.
 - Auto-capture: some sites block headless Chrome (Wikipedia returned its block page). Check captured screenshots in the storyboard; drop your own `scene_NNN.png` in `assets/screenshots/` when a capture is wrong (a dropped file is never overwritten).
 - Map names are Natural Earth English names (`"Telangana"`, `"India"`); pins need lat/lon in scenes.json (no geocoder). States exist only for IN, US, CN, BR, AU, CA, RU, ID, ZA.
