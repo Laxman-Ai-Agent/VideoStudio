@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-07 · Visual asset requirements (visual-assets.json)
+- Contracts `VisualAssets`, `VisualAsset`, `Character`, `AssetPrompt`, `AssetOutput`, `AssetProcessing`, `AssetPlacement`.
+- `pipeline/visual.py`: brief for Claude, sync (timestamps, logo rule, uploads by id, online fetch, processing, validation, fallback entry for uncovered missing scenes, summary), `main_files`, `overlays`, rembg remover.
+- `resolve.fetch_asset` (one asset through the same providers) and `resolve(main_assets=...)`. Ingest sends `A012*.png|mp4|json` to `assets/generated/`. Asset index skips `generated/` and `processed/`.
+- Render: overlay layer (`scene.overlays`, `_shared/studio.js|css`), overlays in the cache key.
+- studio: theme right after the plan, visual-assets stop + brief, sync before and after resolve, `studio.cmd assets NN` (no render). `pipeline/prompts.py` and the `prompts/` folders removed.
+- 01: `visual-assets.json` written in-session (24 assets: 2 characters + reference sheets, real local logos as overlays, 10 AI prompts, scene 10 main image). Tests: 65.
+
 ## 2026-11-07 · Per-video visual themes
 - `ThemeSpec` contract, `pipeline/theme.py` (auto pick by English/Telugu keywords, manual preset + overrides, validation: colours, WCAG contrast fix, font availability with safe fallbacks, unsupported values), 11 presets in `tools/themes/`.
 - theme stage -> `work/theme.json`; `studio theme NN [--preset NAME | --auto]` (never renders). Doctor checks the presets.

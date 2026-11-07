@@ -17,7 +17,7 @@ PROJECT_DIRS = [
     "drop/_unknown",
     "input",
     "assets/images", "assets/videos", "assets/screenshots", "assets/logos", "assets/raw_footage",
-    "prompts/images", "prompts/videos",
+    "assets/generated",  # uploads for visual-assets.json (A012.png)
     "work/scenes", "work/logs",
     "output",
 ]

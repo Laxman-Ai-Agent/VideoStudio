@@ -21,6 +21,8 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - `studio.cmd new "Name"`: new project in `projects/`
 - `studio.cmd status 01`: stage checkpoints
 - `studio.cmd theme 01 [--preset NAME | --auto]`: show / pin / re-pick the video's visual theme (no render)
+- `studio.cmd assets 01`: after dropping generated files named by asset id (A012.png) into drop/: match, process, validate, update visual-assets.json (no render)
+- New video: after scenes.json the run stops once more; read `work/assets_brief.md` and write `visual-assets.json` (every asset, exact prompts)
 - `studio.cmd run 01`: all stages, resumes; exit 2 = waiting (plan, asset descriptions)
 - `studio.cmd run 01 --final`: full-resolution render (default is a 720p preview); `--workers N` (default 2)
 - `tools\.venv\Scripts\python.exe -m pytest tools -q`: tests

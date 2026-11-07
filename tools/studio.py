@@ -4,7 +4,7 @@
     studio new "AI Agents"        create projects/NN_AI_Agents with all sub-folders
     studio status 01              show which stages are done / failed
     studio run 01                 ingest -> transcribe -> align -> plan -> index -> resolve
-                                  -> prompts -> storyboard -> render -> assemble (resumes)
+                                  -> visual assets -> storyboard -> render -> assemble (resumes)
     studio run 01 --final         full resolution instead of the 720p preview
     studio run 01 --workers 1     parallel scene renders (default 2; ~0.5 GB RAM each)
 """
@@ -81,6 +81,24 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     run_stage(p, "plan", plan_inputs, [], lambda: validate(scenes_json, transcript))
     print("  plan: scenes.json valid")
 
+    # Per-video visual theme (typography, palette, backgrounds) -> work/theme.json, reused on resume
+    theme = make_theme(p)
+    print(f"  theme: {theme.name} ({theme.source})" + (f", {len(theme.issues)} fallback(s)" if theme.issues else ""))
+
+    # Visual assets: Claude lists every visual of the video with ready-to-paste prompts (one JSON)
+    from pipeline import visual
+    plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
+    if not visual.path(p).exists():
+        abrief = w / "assets_brief.md"
+        idx = assets.load(p / "assets" / "index.json")
+        local = [f"assets/{e.file} - {e.description}" for e in idx.assets.values() if e.description]
+        formats = json.loads((BRAND / "brand.json").read_text("utf-8")).get("formats", {})
+        visual.brief(p, plan, " ".join(x.text for x in transcript.words), formats,
+                     theme.model_dump(include={"name", "category", "colors"}), local, abrief)
+        print(f"  STOP: visual assets need Claude. Brief: {abrief}\n"
+              f"        Write {visual.path(p)}, then run again.")
+        return NEEDS_USER
+
     # Phase 5: screenshot scenes with params.url -> assets/screenshots/scene_NNN.png (headless Chrome)
     from pipeline.capture import capture
     captures = w / "captures.json"
@@ -99,7 +117,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
                         lambda r=raw: print(f"    {r.name}: {len(shots.cut(r, p / 'assets' / 'shots'))} shot(s)"))
         print(f"  shots {raw.name}: {'done' if ran else 'up to date'}")
 
-    # Phase 2: index assets (described once, by hash) -> resolve -> prompts for missing ones
+    # Phase 2: index assets (described once, by hash) -> visual assets -> resolve
     LIBRARY.mkdir(exist_ok=True)
     todo = []
     for name, base in (("index", p / "assets"), ("library_index", LIBRARY)):
@@ -125,9 +143,18 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     lib_idx, proj_idx = LIBRARY / "index.json", p / "assets" / "index.json"
     pexels_key = secret("PEXELS_API_KEY")
 
+    # visual assets, pass 1: uploads by id, processing, online collection (same providers as resolve)
+    from pipeline.resolve import fetch_asset
+    remover = visual.rembg_remover()
+    va = visual.sync(visual.load(p), p, plan, ROOT, None, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, pexels_key),
+                     remove_bg=remover)
+    visual.save(p, va)
+    mains = visual.main_files(va, p)  # validated main visuals win over any search in resolve
+
     def resolve():
         from pipeline.resolve import credits, resolve as pick
-        res = pick(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, LIBRARY, ROOT, pexels_key)
+        res = pick(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, LIBRARY, ROOT, pexels_key,
+                   main_assets=mains)
         atomic_write(resolved_json, res.model_dump_json(indent=2))
         atomic_write(credits_txt, credits(res))
 
@@ -136,24 +163,20 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
         r.asset and not (ROOT / r.asset).exists()
         for r in Resolved.model_validate_json(resolved_json.read_text("utf-8")).scenes)
     ran = run_stage(p, "resolve", [scenes_json, proj_idx] + ([lib_idx] if lib_idx.exists() else []),
-                    [resolved_json, credits_txt], resolve, force=gone, extra="pexels" if pexels_key else "")
+                    [resolved_json, credits_txt], resolve, force=gone,
+                    extra=("pexels" if pexels_key else "") + str([(k, v.name, v.stat().st_mtime_ns) for k, v in sorted(mains.items())]))
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8"))
     counts = {}
     for r in resolved.scenes:
         counts[r.status] = counts.get(r.status, 0) + 1
     print(f"  resolve: {'done' if ran else 'up to date'} {counts}")
 
-    readme = p / "prompts" / "README.md"
-
-    def prompts():
-        from pipeline.prompts import write
-        brand = json.loads((BRAND / "brand.json").read_text("utf-8")) if (BRAND / "brand.json").exists() else {}
-        write(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), resolved, p,
-              brand.get("formats", {"16:9": {"width": 1920, "height": 1080}}))
+    # visual assets, pass 2: link what resolve found, add uncovered missing scenes, summary
+    va = visual.sync(va, p, plan, ROOT, resolved, remove_bg=remover)
+    visual.save(p, va)
+    print_assets(va, p)
 
     brand_in = [f for f in (BRAND / "brand.json",) if f.exists()]
-    print(f"  prompts: {'done' if run_stage(p, 'prompts', [resolved_json, scenes_json] + brand_in, [readme], prompts) else 'up to date'}"
-          f" ({counts.get('missing', 0)} missing -> {readme})")
 
     html_out, png_out = w / "storyboard.html", w / "storyboard.png"
 
@@ -181,10 +204,6 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     prepared = Prepared.model_validate_json(prep_json.read_text("utf-8"))
     print(f"  prepare: {'done' if ran else 'up to date'} ({len(prepared.scenes)} parallax scene(s))")
 
-    # Per-video visual theme (typography, palette, backgrounds) -> work/theme.json, reused on resume
-    theme = make_theme(p)
-    print(f"  theme: {theme.name} ({theme.source})" + (f", {len(theme.issues)} fallback(s)" if theme.issues else ""))
-
     # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
     from pipeline import render as rnd
     from pipeline.assemble import assemble, pick_music, sfx_cues
@@ -197,7 +216,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
             continue
         d = rnd.fmt_dir(fmt, final)
         jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
-                             prepared, theme)
+                             prepared, theme, visual.overlays(va, p))
         clips = [j.out for j in jobs]
         keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
         report_json = w / "scenes" / d / "report.json"
@@ -278,6 +297,46 @@ def make_theme(p: Path, force: bool = False):
     return ThemeSpec.model_validate_json(out.read_text("utf-8"))
 
 
+def print_assets(va, p: Path) -> None:
+    from pipeline import visual
+    sm = va.summary
+    print(f"  visual assets: {sm['total']} listed, {sm['found']} ready, {len(sm['to_generate'])} to generate"
+          + (f", {len(sm['failed'])} failed {sm['failed']}" if sm["failed"] else "") + f" -> {visual.path(p)}")
+
+
+def assets_command(project: Path) -> int:
+    """After uploading generated files (drop/A012.png): match them by id, process, validate, update
+    visual-assets.json. Never renders."""
+    from pipeline import visual
+    from pipeline.resolve import fetch_asset
+    drop = [f for f in (project / "drop").iterdir() if f.is_file()] if (project / "drop").is_dir() else []
+    if drop:
+        try:
+            print(f"  ingest: moved {len(ingest(project))} file(s)")
+        except AmbiguousInput as e:
+            print(f"  STOP: {e}")
+            return NEEDS_USER
+    va = visual.load(project)
+    scenes_json, resolved_json = project / "work" / "scenes.json", project / "work" / "resolved.json"
+    if va is None or not scenes_json.exists():
+        print(f"  no {visual.FILE} yet: run `studio.cmd run {project.name[:2]}` first")
+        return NEEDS_USER
+    plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
+    resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8")) if resolved_json.exists() else None
+    key = secret("PEXELS_API_KEY")
+    va = visual.sync(va, project, plan, ROOT, resolved, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, key),
+                     remove_bg=visual.rembg_remover())
+    visual.save(project, va)
+    print_assets(va, project)
+    for a in va.assets:
+        if a.status not in visual.FOUND:
+            print(f"    {a.id}  {a.category:<20} {a.status:<12} {a.name}")
+        elif a.validation.get("status") == "warn":
+            print(f"    {a.id}  {a.category:<20} warn         {'; '.join(a.validation.get('checks', [])[-2:])}")
+    print(f"  upload: save each file as its id (e.g. A012.png) in {project / 'drop'}, then run this again.")
+    return 0
+
+
 def theme_command(project: Path, preset: str | None, auto: bool) -> int:
     """Show, pin or re-pick the video's theme. Never renders."""
     from pipeline import theme as th
@@ -313,6 +372,8 @@ def main() -> int:
     sub.add_parser("doctor")
     sub.add_parser("new").add_argument("name")
     sub.add_parser("status").add_argument("project")
+    sub.add_parser("assets", help="match uploads (A012.png) to visual-assets.json, process, validate (no render)") \
+        .add_argument("project")
     tc = sub.add_parser("theme", help="show / pin / re-pick the video's visual theme (no render)")
     tc.add_argument("project")
     tc.add_argument("--preset", help="pin a preset (tools/themes/<name>.json)")
@@ -336,6 +397,8 @@ def main() -> int:
             return 1
     if a.cmd == "theme":
         return theme_command(find_project(a.project), a.preset, a.auto)
+    if a.cmd == "assets":
+        return assets_command(find_project(a.project))
     if a.cmd == "status":
         project = find_project(a.project)
         stages = load_state(project).stages

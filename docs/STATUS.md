@@ -74,6 +74,12 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] 01 picked `tech` automatically (keyword hits: tech 24, finance 13). Its previews are still the old paper render. The next `studio.cmd run 01` re-renders every scene in the tech look; to keep the paper look run `studio.cmd theme 01 --preset paper` first
 - [ ] Not checked visually yet: the new presets (gradients, textures, fonts) need one test render before a real video
 
+## Visual asset requirements ✅ (2026-11-07)
+- [x] `visual-assets.json` per project (Claude writes, `visual.py` maintains), uploads by id, processing, validation, overlay layer, `studio assets`. Tests 65
+- [x] 01: 24 assets, 12 ready (local logos/videos + templates), 12 prompts to generate: first A023/A024 (reference sheets), then A010 (scene 10), A014-A022. The 4 local stock videos are only 832x464 (validation warns)
+- [x] Overlay checked by one test render (scene 2, ChatGPT logo, 16:9 + 9:16). Full 01 not re-rendered
+- The old `projects/01_AI_Agents/prompts/` folder is no longer updated (visual-assets.json replaces it)
+
 ## Known issues / notes
 - Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.

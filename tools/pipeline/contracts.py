@@ -240,3 +240,106 @@ class ThemeSpec(BaseModel):
     background: dict = Field(default_factory=dict)  # type colors angle pattern pattern_opacity texture texture_opacity
     text: dict = Field(default_factory=dict)        # heading_weight body_weight shadow tracking scale
     issues: list[str] = Field(default_factory=list)  # validation fallbacks that were applied
+
+
+# ---- visual asset requirements (projects/NN/visual-assets.json) -----------------
+
+AssetCategory = Literal["meme", "logo", "ai_image", "video_broll", "character_expression", "transparent_png",
+                        "illustration", "infographic", "map", "reaction", "sticker", "photo", "screenshot", "other"]
+AssetStatus = Literal["needed", "found_online", "found_local", "prompt_ready", "uploaded", "processed",
+                      "validated", "failed"]
+
+
+class AssetPrompt(BaseModel):
+    text: str = ""                # ready to paste into ChatGPT / an image or video tool
+    negative: str = ""            # what must NOT appear
+    tool: str = ""                # e.g. "ChatGPT image", "any text-to-video"
+    aspect_ratio: str = "16:9"
+    resolution: str = "1920x1080"
+    transparent: bool = False     # ask the tool for a transparent / plain background to cut out
+    text_in_image: str = ""       # exact text to render inside the image, "" = no text at all
+    style: str = ""               # one style line shared by the whole video (consistency)
+    settings: dict = Field(default_factory=dict)  # recommended tool settings (quality, seed, duration ...)
+
+
+class AssetOutput(BaseModel):
+    format: Literal["png", "jpg", "webp", "mp4", "webm", "svg", "json"] = "png"
+    width: int = 1920
+    height: int = 1080
+    transparent: bool = False
+    min_width: int = 0            # smaller uploads are resized up but flagged low resolution
+
+
+class AssetProcessing(BaseModel):
+    remove_background: bool = False
+    crop: list[float] | None = None          # [x, y, w, h] as fractions of the source image
+    extract_from: str = ""                   # asset id of a composite image to cut this one out of (with `crop`)
+    resize: bool = True                      # fit into output width x height (aspect kept)
+    upscale_if_small: bool = True            # Lanczos (Pillow); no AI upscaler
+    convert_to: str = ""                     # target format if different from the upload
+    status: Literal["pending", "done", "failed", "not_needed"] = "pending"
+    log: list[str] = Field(default_factory=list)
+
+
+class AssetPlacement(BaseModel):
+    """Overlays only: where the asset sits on top of its scene (fractions of the safe area)."""
+    position: str = "center"      # center | left | right | top | bottom | top-left | top-right | bottom-left | bottom-right
+    size: float = 0.4             # height as a fraction of the safe-area height
+    at: float = 0.3               # seconds after the scene start
+    until: float | None = None    # seconds after the scene start, None = to the end
+    animation: str = "pop"        # pop | slide | float | fade | none
+
+
+class VisualAsset(BaseModel):
+    id: str                       # A001, A002 ... (stable; uploads are matched by this id)
+    name: str
+    description: str = ""
+    category: AssetCategory
+    subcategory: str = ""
+    scenes: list[int] = Field(default_factory=list)
+    timestamps: list[dict] = Field(default_factory=list)  # [{scene, start, end}] filled from scenes.json
+    role: Literal["main", "overlay", "reference"] = "main"  # reference = character sheet, not shown itself
+    placement: AssetPlacement = Field(default_factory=AssetPlacement)
+    method: Literal["online", "real_logo", "ai_generate", "capture", "template", "local"] = "ai_generate"
+    source_hint: str = ""         # entity name / search query / url for online, real_logo and capture
+    character: str = ""           # id in `characters` (consistency across prompts)
+    prompt: AssetPrompt = Field(default_factory=AssetPrompt)
+    output: AssetOutput = Field(default_factory=AssetOutput)
+    processing: AssetProcessing = Field(default_factory=AssetProcessing)
+    status: AssetStatus = "needed"
+    source_file: str = ""         # what was found / uploaded, posix relative to the project
+    file: str = ""                # final processed file, posix relative to the project
+    credits: dict = Field(default_factory=dict)  # source_url, license, author (online assets)
+    validation: dict = Field(default_factory=lambda: {"status": "pending", "checks": []})
+    notes: str = ""
+
+
+class Character(BaseModel):
+    id: str                       # C1, C2 ...
+    name: str
+    description: str              # fixed appearance text, repeated in every prompt that uses the character
+    reference_asset: str = ""     # asset id of the reference sheet, if any
+
+
+class VisualAssets(BaseModel):
+    """projects/NN/visual-assets.json - every visual the video needs, one file per project.
+    Claude writes assets + prompts in-session from work/assets_brief.md; pipeline/visual.py keeps
+    timestamps, statuses, files, processing, validation and the summary up to date."""
+    schema_version: int = SCHEMA_VERSION
+    project: dict = Field(default_factory=dict)   # name, title, duration, formats, theme, updated
+    summary: dict = Field(default_factory=dict)   # total, by_category, by_status, found, missing (computed)
+    style: str = ""                               # one look line for all generated images (consistency)
+    characters: list[Character] = Field(default_factory=list)
+    assets: list[VisualAsset] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _check(self):
+        ids = [a.id for a in self.assets]
+        dup = {i for i in ids if ids.count(i) > 1}
+        if dup:
+            raise ValueError(f"duplicate asset ids: {sorted(dup)}")
+        known = {c.id for c in self.characters}
+        for a in self.assets:
+            if a.character and a.character not in known:
+                raise ValueError(f"{a.id}: unknown character {a.character!r}")
+        return self

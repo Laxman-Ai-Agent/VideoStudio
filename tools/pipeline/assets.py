@@ -3,7 +3,7 @@
 `assets/index.json` (project) and `_library/index.json`. A new or changed file gets a thumbnail
 (first frame for videos) and an empty description. All undescribed files go on ONE contact sheet;
 Claude reads that single image and fills `description` in the index (run exits 2 until done).
-Files named `scene_NNN*` came back from the prompts stage and need no description.
+Files named `scene_NNN*` were generated for a scene and need no description.
 """
 import hashlib
 import html
@@ -25,9 +25,10 @@ SHEET_MAX = 20  # tiles per contact sheet; more files = one more sheet per run
 
 
 def media_files(base: Path) -> list[Path]:
-    # raw_footage originals are indexed as their cut shots (assets/shots, shots stage) instead
+    # raw_footage originals are indexed as their cut shots (assets/shots, shots stage) instead;
+    # generated/processed belong to visual-assets.json, which already describes them
     return sorted(p for p in base.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE | VIDEO
-                  and not {THUMBS, "raw_footage"} & set(p.relative_to(base).parts[:-1]))
+                  and not {THUMBS, "raw_footage", "generated", "processed"} & set(p.relative_to(base).parts[:-1]))
 
 
 def file_hash(p: Path) -> str:

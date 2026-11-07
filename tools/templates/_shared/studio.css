@@ -81,3 +81,8 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
                                radial-gradient(circle, var(--marker) calc(var(--u) * .09), transparent calc(var(--u) * .14));
              background-size: calc(var(--u) * 19) calc(var(--u) * 23), calc(var(--u) * 9) calc(var(--u) * 11), calc(var(--u) * 31) calc(var(--u) * 17);
              background-position: 0 0, calc(var(--u) * 4) calc(var(--u) * 6), calc(var(--u) * 12) calc(var(--u) * 2); }
+
+/* ---- overlays from visual-assets.json (studio.js) ---- */
+.ovl { position: absolute; width: auto; max-width: 60%; object-fit: contain; z-index: 4; transform-origin: 50% 80%;
+        filter: drop-shadow(0 calc(var(--u) * .6) calc(var(--u) * 1.2) rgba(0,0,0,.35)); }
+.captions { z-index: 5; }

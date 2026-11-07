@@ -8,7 +8,7 @@ As long as a box's contract (input/output file shapes) holds, its inside can cha
 
 ## Pipeline
 ```
-drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -> 6 storyboard -> [GATE: user approves]
+drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> theme -> visual assets (Claude) -> 4 resolve -> 5 visual assets sync -> 6 storyboard -> [GATE: user approves]
       -> 7 prepare -> 8 render (per scene, per format) -> 9 assemble -> 10 qa -> output/{preview|final}_{16x9|9x16}.mp4
 ```
 
@@ -22,7 +22,7 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 | shots | `assets/raw_footage/*` (videos > 2 min) | `assets/shots/<stem>_NNN.mp4` | FFmpeg scene-change detect (score 0.3, on a 320 px copy), shots < 1.5 s merged, > 20 s split, re-encoded without audio. Originals are not indexed; their shots are |
 | index | `assets/**` (minus `raw_footage/`), `_library/**` | `assets/index.json`, `_library/index.json`, `.thumbs/contact_sheet.png` | hash-keyed descriptions; Claude describes new files from one contact sheet of max 20 tiles per run (exit 2) |
 | resolve | scenes, asset indexes | `work/resolved.json`, `output/credits.txt` | pick a file per scene: project assets, then `_library`, then internet, then missing |
-| prompts | resolved (missing) | `prompts/{images,videos}/scene_NNN.md`, `prompts/README.md` | generation prompts with an exact "save as" name |
+| visual assets | scenes, transcript, theme, asset index, resolved, uploads `assets/generated/A012*` | `visual-assets.json` (project folder), `work/assets_brief.md`, `assets/processed/<id>.<ext>` | one JSON per video with every visual it needs: category, scenes + timestamps, role (main / overlay / reference), method (online, real_logo, ai_generate, capture, template, local), ready-to-paste prompt, output size/format/transparency, processing, status, final file, credits, validation. Claude writes it in-session from the brief (run exits 2 until it exists); `visual.sync` runs before resolve (uploads by id, online collection with resolve's providers, processing, validation) and after it (links what resolve found, adds a fallback entry for an uncovered missing scene, summary) |
 | storyboard | scenes (resolved from Phase 2) | `work/storyboard.html`, `work/storyboard.png` | text-only sheet for approval, HTML screenshotted by headless Chrome |
 | theme | transcript, scenes, script, project `theme.json`, `tools/themes/*.json` | `work/theme.json` | one visual identity per video: typography (heading/body/script fonts, weights, tracking, scale, shadow, outline), palette (background, text, text2, accent, highlight, warning, panel, caption pill), background (solid/linear/radial/multi, grid/dots/lines pattern, grain/paper/smoke/particles/stars texture). Auto from keywords (English + Telugu) or pinned in project `theme.json`; validated (colours, WCAG contrast, fonts) with fallbacks listed in `issues` |
 | prepare | scenes, resolved | `work/prepared/prepared.json`, `scene_NNN_{fg,bg}.png` | rembg cut-out (CPU, model in `tools/models/rembg`) for scenes with `params.parallax: true`: fg = subject with alpha, bg = photo with the subject area blurred. Failure or no clear subject = plain photo |
@@ -39,6 +39,13 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 ## Contracts
 - Source of truth: `tools/pipeline/contracts.py` (pydantic). Every JSON has a `schema_version`.
 - Adding an optional field is safe. Removing/renaming a field or changing its meaning means bumping the version and adding a converter.
+
+## Visual assets (visual-assets.json)
+- One file per project, `projects/NN/visual-assets.json` (contract `VisualAssets`). Dashboard-ready: `summary` has total, by_category, by_status, by_method, found, missing, to_generate, failed; every asset has its prompt, status, final `file`, processing log and validation checks.
+- Claude lists the assets from `work/assets_brief.md` (whole script, scenes, theme, local files, prompt rules): no fixed number, one `main` per scene plus any `overlay`s; `characters` keep faces/designs identical across prompts (description repeated word for word, reference sheets with role `reference`). Logos are never AI-generated (`sync` switches them to `real_logo`).
+- Upload: save the generated file as its id (`A012.png`, `A012_v2.png`) in `drop/`; ingest moves it to `assets/generated/`; `studio.cmd assets NN` (or the next run) matches it, processes it (crop / extract from a composite, rembg background removal, trim, Lanczos resize, format) into `assets/processed/` and validates it (size, transparency, aspect, video length). Finished assets are never redone; an online search runs once per asset.
+- Render: validated `main` files win in resolve; validated `overlay` images are drawn by `_shared/studio.js` on top of their scenes (position in the safe area above the captions, size = fraction of the safe-area height, pop / slide / float / fade, optional `until`). Overlays are part of the scene cache key.
+- `assets/generated` and `assets/processed` are not in the asset index (the JSON describes them).
 
 ## Per-video theme
 - Presets in `tools/themes/<name>.json` (tech, history, horror, war, education, documentary, space, health, finance, paper, dark). Add a preset = add a file with `keywords`.
@@ -80,7 +87,7 @@ projects/NN_Name/
   drop/        user puts everything here (mixed)
   input/       audio, optional script/json (sorted by ingest)
   assets/      images, videos, screenshots, logos, raw_footage, index.json
-  prompts/     images/, videos/, README.md
+  visual-assets.json   every visual the video needs, prompts, statuses (one file)
   work/        state.json, whisper.json, transcript.json, plan_brief.md, scenes.json, storyboard.png, scenes/<format>/, logs/
   output/      preview_16x9.mp4, preview_9x16.mp4, final_16x9.mp4, final_9x16.mp4, thumbnail.jpg, description.txt, credits.txt
   project.md   human log

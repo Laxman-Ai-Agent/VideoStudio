@@ -220,6 +220,41 @@
     if (tout === "wipe") tl.fromTo(panel, { xPercent: -101 }, { xPercent: 0, duration: TOUT, ease: "power2.out", immediateRender: false }, at);
   }
 
+  // Overlays from visual-assets.json (S.overlays: [{src, position, size, at, until, animation}]):
+  // stickers, logos, reactions, character expressions on top of the scene, inside the safe area and
+  // above the captions band. size = height as a fraction of the safe-area height.
+  const ANCHOR = { center: [0.5, 0.5, -50, -50], left: [0, 0.5, 0, -50], right: [1, 0.5, -100, -50],
+                   top: [0.5, 0, -50, 0], bottom: [0.5, 1, -50, -100], "top-left": [0, 0, 0, 0],
+                   "top-right": [1, 0, -100, 0], "bottom-left": [0, 1, 0, -100], "bottom-right": [1, 1, -100, -100] };
+  function overlays(tl) {
+    const list = S.overlays || [];
+    if (!list.length) return;
+    const top = safe.t * S.h, left = safe.l * S.w, w = S.w * (1 - safe.l - safe.r);
+    const h = S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0);
+    list.forEach((o) => {
+      const [fx, fy, xp, yp] = ANCHOR[o.position] || ANCHOR.center;
+      const el = document.createElement("img");
+      el.className = "ovl";
+      el.src = o.src;
+      Object.assign(el.style, { left: left + fx * w + "px", top: top + fy * h + "px",
+                                height: Math.max(0.05, Math.min(1, +o.size || 0.4)) * h + "px" });
+      document.getElementById("root").appendChild(el);
+      gsap.set(el, { xPercent: xp, yPercent: yp });
+      const at = Math.min(Math.max(0, +o.at || 0), S.duration - 0.2), anim = o.animation || "pop";
+      const from = { pop: { scale: 0, opacity: 0 }, fade: { opacity: 0 }, float: { scale: 0.6, opacity: 0 },
+                     slide: { x: (fx < 0.5 ? -1 : 1) * u * 30, opacity: 0 }, none: { opacity: 0 } }[anim] || { scale: 0, opacity: 0 };
+      const to = { scale: 1, x: 0, opacity: 1, duration: anim === "none" ? 0.01 : 0.4,
+                   ease: anim === "pop" || anim === "float" ? "back.out(2)" : "power2.out" };
+      tl.fromTo(el, from, to, at);
+      const end = o.until ? Math.min(+o.until, S.duration) : S.duration;
+      if (anim === "float" && end - at > 1) {
+        tl.to(el, { y: -u * 1.2, duration: 0.9, yoyo: true, repeat: Math.max(0, Math.floor((end - at - 0.5) / 0.9) - 1),
+                    ease: "sine.inOut" }, at + 0.4);
+      }
+      if (o.until && end < S.duration) tl.to(el, { opacity: 0, scale: 0.9, duration: 0.2 }, end);
+    });
+  }
+
   window.finish = function (tl) {
     if (P.look === "halftone") {  // dot screen over the picture
       const d = document.createElement("div");
@@ -228,6 +263,7 @@
     }
     scaleText();
     marks(tl);
+    overlays(tl);
     captions(tl);
     transitions(tl);
     texture(tl);

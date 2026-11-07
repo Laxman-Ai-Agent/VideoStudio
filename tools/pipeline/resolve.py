@@ -1,13 +1,13 @@
 """resolve stage: scenes.json + asset indexes -> work/resolved.json (+ output/credits.txt).
 
 Per scene, first hit wins:
-1. `asset` set in scenes.json, or a project file named scene_NNN.* (returned from the prompts stage)
+1. a validated main visual from visual-assets.json, `asset` set in scenes.json, or a project file scene_NNN.*
 2. `params.entity` (exact person / brand): Wikidata photo or logo, Simple Icons for logos (no key)
 3. best description match in project assets, then `_library` (each asset used once per video)
 4. motion_graphic / diagram / chart / text / map: no asset needed -> 'template' (`params.lottie` fetches
    the animation: an emoji -> Google's animated Noto emoji in `_library/lottie`, or a project .json)
 5. internet (providers.search: Pexels, Openverse, Wikimedia), downloaded to `_library/downloads`, credits kept
-6. 'missing' -> the prompts stage writes a generation prompt
+6. 'missing' -> visual-assets.json holds its generation prompt (visual.sync adds one if needed)
 """
 import hashlib
 import re
@@ -162,9 +162,33 @@ def _lottie(scene: Scene, project: Path, library: Path, root: Path, download: Ca
                          license=c.license, author=c.author)
 
 
+CATEGORY_VISUAL = {"logo": "logo", "video_broll": "footage", "screenshot": "screenshot"}
+
+
+def fetch_asset(a, library: Path, root: Path, pexels_key: str = "", search: Callable = providers.search,
+                download: Callable = providers.download, entity: Callable = providers.entity,
+                icon: Callable = providers.simple_icon) -> tuple[Path, dict] | None:
+    """One visual-assets.json entry (method online / real_logo) through the same providers as scenes:
+    exact name (Wikidata, Simple Icons) for logos and "entity:Name" hints, else keyword search."""
+    hint = a.source_hint or a.name
+    named = a.method == "real_logo" or hint.startswith("entity:")
+    name = hint.removeprefix("entity:").strip()
+    s = Scene(id=a.scenes[0] if a.scenes else 1, start=0, end=1, narration="", query=a.description or name,
+              visual_type=CATEGORY_VISUAL.get(a.category, "logo" if a.method == "real_logo" else "photo"),
+              params={"entity": name} if named else {})
+    lib_index = library / "index.json"
+    r = (_named(s, library, lib_index, root, entity, icon, download) if named
+         else _internet(s.model_copy(update={"query": hint}), library, lib_index, root, pexels_key, search, download))
+    if not r or not r.asset:
+        return None
+    return root / r.asset, {"source_url": r.source_url, "license": r.license, "author": r.author}
+
+
 def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_key: str = "",
             search: Callable = providers.search, download: Callable = providers.download,
-            entity: Callable = providers.entity, icon: Callable = providers.simple_icon) -> Resolved:
+            entity: Callable = providers.entity, icon: Callable = providers.simple_icon,
+            main_assets: dict[int, Path] | None = None) -> Resolved:
+    """`main_assets`: scene id -> validated main file from visual-assets.json (wins over everything)."""
     base = project / "assets"
     proj, lib_index = assets.load(base / "index.json"), library / "index.json"
     by_scene: dict[int, dict[bool, AssetEntry]] = {}
@@ -175,7 +199,9 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
     out = []
     for s in plan.scenes:
         r = None
-        if s.asset and (project / s.asset).exists():
+        if main_assets and s.id in main_assets and main_assets[s.id].exists():
+            r = ResolvedScene(id=0, status="project", asset=_rel(main_assets[s.id], root))
+        elif s.asset and (project / s.asset).exists():
             r = ResolvedScene(id=0, status="project", asset=_rel(project / s.asset, root))
         elif s.id in by_scene:
             got = by_scene[s.id]

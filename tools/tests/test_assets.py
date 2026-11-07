@@ -2,7 +2,6 @@ from pathlib import Path
 
 from pipeline import assets
 from pipeline.contracts import Resolved, ScenePlan
-from pipeline.prompts import write as write_prompts
 from pipeline.providers import Candidate
 from pipeline.resolve import credits, keywords, resolve
 from pipeline.storyboard import build_html
@@ -72,21 +71,6 @@ def test_resolve_order_template_internet_missing(tmp_path):
     # downloaded file is now a described, credited library asset: reused without searching again
     res2 = resolve(_plan(), proj, lib, root, search=lambda *a: [], download=None)
     assert res2.scenes[3].status == "library" and res2.scenes[3].license == "CC0"
-
-
-def test_prompts_for_missing_only(tmp_path):
-    proj = tmp_path / "01_X"
-    (proj / "prompts" / "images").mkdir(parents=True)
-    (proj / "prompts" / "images" / "scene_099.md").write_text("stale")
-    res = Resolved.model_validate({"scenes": [{"id": i, "status": st} for i, st in
-                                              enumerate(["project", "template", "missing", "library", "missing"], 1)]})
-    files = write_prompts(_plan(), res, proj, {"16:9": {"width": 1920, "height": 1080},
-                                               "9:16": {"width": 1080, "height": 1920}})
-    assert [f.name for f in files] == ["scene_003.md", "scene_005.md"]
-    assert not (proj / "prompts" / "images" / "scene_099.md").exists()
-    md = files[0].read_text("utf-8")
-    assert "`scene_003.png`" in md and "1080x1920" in md and "Empty office chair" in md
-    assert "scene_005.png" in (proj / "prompts" / "README.md").read_text("utf-8")
 
 
 def test_storyboard_shows_missing_tile(tmp_path):

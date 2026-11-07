@@ -133,6 +133,7 @@ class Job:
     layers: tuple = ()     # photo_parallax: (fg.png, bg.png) from the prepare stage
     trans: tuple = ("", "")  # (in, out) transition at this scene's cuts, see transitions()
     style: ThemeSpec = None  # the video's visual theme (work/theme.json), see theme.py
+    overlays: list = None  # [(file, placement)] from visual-assets.json (role "overlay")
 
     @property
     def duration(self) -> float:
@@ -141,7 +142,8 @@ class Job:
 
 def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root: Path,
               out_dir: Path, final: bool, words: list[Word] | None = None,
-              prepared: Prepared | None = None, theme: ThemeSpec | None = None) -> list[Job]:
+              prepared: Prepared | None = None, theme: ThemeSpec | None = None,
+              overlays: dict[int, list] | None = None) -> list[Job]:
     """Cheap: hashes inputs only. Key = scene JSON + asset hash + template (version + files)
     + brand.json + theme + output size/fps."""
     from .theme import from_brand
@@ -173,12 +175,14 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
         if layers:
             asset_hash += ":" + ":".join(file_hash(f) for f in layers)
+        ovl = [(f, pl) for f, pl in (overlays or {}).get(s.id, []) if f.exists()]
+        ovl_key = [(file_hash(f), pl) for f, pl in ovl]
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
                 if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
-                                         brand_hash, fmt, w, h, brand.fps, caps, trans[s.id]]).encode()).hexdigest()[:16]
+                                         brand_hash, fmt, w, h, brand.fps, caps, trans[s.id], ovl_key]).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style, ovl))
     return jobs
 
 
@@ -269,6 +273,11 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
             shutil.copy2(job.asset, build_dir / asset_name)
     s, st = job.scene, job.style
     f = st.fonts
+    ovl = []
+    for i, (src, pl) in enumerate(job.overlays or []):  # visual-assets.json overlays (stickers, logos, ...)
+        name = f"ov{i}{src.suffix.lower()}"
+        shutil.copy2(src, build_dir / name)
+        ovl.append({"src": name, **pl})
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
@@ -276,7 +285,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "theme": st.name, "style": {"background": st.background, "text": st.text},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script")},
              "error": error,
-             "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1]}
+             "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")
     if load_template(template).engine == "remotion":

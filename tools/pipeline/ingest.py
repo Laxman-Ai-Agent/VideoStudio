@@ -2,10 +2,12 @@
 
 - audio  -> input/audio.<ext>     (2+ audio files -> AmbiguousInput, ask the user)
 - script -> input/script.<ext>    (.txt/.md, or a Gemini transcript *gemini*.json; 2+ -> AmbiguousInput)
+- A012.png / A012_v2.mp4 (visual-assets.json ids) -> assets/generated
 - images -> assets/logos | assets/screenshots | assets/images  (by name keyword)
 - videos -> assets/raw_footage if longer than 2 min, else assets/videos
 - anything else -> drop/_unknown
 """
+import re
 import shutil
 import subprocess
 from collections.abc import Callable
@@ -17,6 +19,7 @@ SCRIPT = {".txt", ".md"}
 IMAGE = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".svg"}
 VIDEO = {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"}
 RAW_FOOTAGE_SECONDS = 120
+ASSET_ID = re.compile(r"^a\d{3,4}(?:[_\-. ].*)?$")  # A012.png, A012_v2.png -> visual-assets.json upload
 
 
 class AmbiguousInput(Exception):
@@ -47,6 +50,8 @@ def classify(path: Path, duration: Callable[[Path], float] = probe_duration) -> 
     ext, name = path.suffix.lower(), path.stem.lower()
     if role(path):
         return "input"
+    if ASSET_ID.match(name) and (ext in IMAGE or ext in VIDEO or ext == ".json"):
+        return "assets/generated"  # an upload for visual-assets.json (matched by its id)
     if ext in IMAGE:
         if "logo" in name or ext == ".svg":
             return "assets/logos"
