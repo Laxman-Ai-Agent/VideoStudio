@@ -13,6 +13,7 @@ from pathlib import Path
 from .contracts import Transcript, Word
 
 MIN_MATCH = 0.3  # below this share of Whisper words matched, the script is probably for another audio
+MAX_ANCHOR_GAP = 8.0  # seconds between matched words; more = timing there is a guess (sample max: 3 s)
 
 
 def norm(w: str) -> str:
@@ -35,7 +36,7 @@ def script_text(path: Path) -> str:
 
 def _spread(words: list[str], start: float, end: float) -> list[Word]:
     step = (end - start) / len(words)
-    return [Word(text=w, start=round(start + i * step, 3), end=round(start + (i + 1) * step, 3))
+    return [Word(text=w, start=round(start + i * step, 3), end=round(start + (i + 1) * step, 3), matched=False)
             for i, w in enumerate(words)]
 
 
@@ -51,7 +52,7 @@ def align(whisper: Transcript, script: str) -> Transcript:
     out: list[Word] = []
     for k, (tag, i1, i2, j1, j2) in enumerate(ops):
         if tag == "equal":
-            out += [Word(text=sw[i1 + n], start=w.start, end=w.end, probability=w.probability)
+            out += [Word(text=sw[i1 + n], start=w.start, end=w.end, probability=w.probability, matched=True)
                     for n, w in enumerate(ww[j1:j2])]
         elif tag == "replace":
             words = sw[i1:i2]
@@ -66,5 +67,10 @@ def align(whisper: Transcript, script: str) -> Transcript:
             prev_end = out[-1].end if out else 0.0
             out += _spread(sw[i1:i2], prev_end, max(prev_end, ww[j1].start))
         # "insert" (Whisper-only words) and delete outside the spoken part are dropped
+    anchors = [w.start for w in out if w.matched]
+    holes = [(a, b) for a, b in zip(anchors, anchors[1:]) if b - a > MAX_ANCHOR_GAP]
+    if holes:
+        raise ValueError("no script word matched Whisper between "
+                         + ", ".join(f"{a:.1f}-{b:.1f}s" for a, b in holes) + "; timing there would be a guess")
     return Transcript(language=whisper.language, duration=whisper.duration, source="script_aligned",
                       model=whisper.model, words=out)

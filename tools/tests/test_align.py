@@ -70,3 +70,22 @@ def test_cached_sample_aligns_gemini_text_with_whisper_timing():
     assert 13.0 < companies.start < 14.5        # Whisper's time (13.8 s), not Gemini's 19-21 s
     starts = [x.start for x in t.words]
     assert starts == sorted(starts) and t.words[-1].end <= w.duration
+
+
+def test_coverage_check_catches_dropped_speech():
+    from pipeline.transcribe import check_coverage
+    ok = Transcript.model_validate_json((FIXTURE / "transcript.json").read_text("utf-8"))
+    check_coverage(ok)
+    lost = ok.model_copy(update={"words": [w for w in ok.words if w.start < 7.5]})  # the real 7-30 s loss
+    with pytest.raises(ValueError, match="no words for"):
+        check_coverage(lost)
+
+
+def test_interpolated_words_are_flagged_and_long_unanchored_span_fails():
+    t = align(_whisper("ఒకటి", "రెండు", "నాలుగు", "ఐదు"), "ఒకటి రెండు మూడు నాలుగు ఐదు")
+    assert [x.matched for x in t.words] == [True, True, False, True, True]
+    far = Transcript(language="te", duration=30.0, source="whisper", model="m", words=[
+        Word(text="ఒకటి", start=0, end=1), Word(text="రెండు", start=1, end=2),
+        Word(text="xx", start=5, end=6), Word(text="మూడు", start=20, end=21)])
+    with pytest.raises(ValueError, match="no script word matched"):
+        align(far, "ఒకటి రెండు ఏదో మూడు")

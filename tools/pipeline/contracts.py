@@ -31,6 +31,7 @@ class Word(BaseModel):
     start: float  # seconds from audio start
     end: float
     probability: float | None = None
+    matched: bool | None = None  # script alignment: True = Whisper timing, False = interpolated
 
 
 class Transcript(BaseModel):
