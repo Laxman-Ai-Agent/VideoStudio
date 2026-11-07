@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script><script src="map.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+#map { position: absolute; inset: 0; width: 100%; height: 100%; }
+#map path { vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.land { fill: #26262c; stroke: #3d3d46; stroke-width: 1; }
+.state { fill: none; stroke: #4a4a55; stroke-width: 0.8; }
+.focus { fill: var(--accent); stroke: #fff3c4; stroke-width: 1.5; filter: drop-shadow(0 0 6px rgba(255,196,0,.6)); }
+.pin { fill: var(--accent); stroke: var(--bg); }
+.ring { fill: none; stroke: var(--accent); }
+.plabel { fill: var(--text); font-weight: 800; paint-order: stroke; stroke: var(--bg); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <svg id="map" xmlns="http://www.w3.org/2000/svg"><g id="lands"></g><g id="states"></g><g id="focus"></g><g id="pins"></g></svg>
+  <div class="shade"></div>
+  <div class="safe" id="safe"><div id="t" class="lower"></div></div>
+</div>
+<script>
+  // window.MAP = {countries: [{n, r: [[lon, lat, ...]]}], states: [{n, a, r}]} (Natural Earth, see make_data.py)
+  const S = window.SCENE, p = S.params || {}, M = window.MAP, tl = gsap.timeline({ paused: true }), d = S.duration;
+  const NS = "http://www.w3.org/2000/svg", low = s => String(s || "").trim().toLowerCase();
+  const names = [].concat(p.focus || []).map(low);
+  const pins = [].concat(p.pin || []).filter(x => x && isFinite(x.lat) && isFinite(x.lon));
+  const fStates = M.states.filter(s => names.includes(low(s.n)));
+  const fCountries = M.countries.filter(c => names.includes(low(c.n)));
+  const focus = fStates.concat(fCountries);
+  // equirectangular, x squeezed by cos(latitude of the focus): fine at country/state scale
+  let bb = [180, 90, -180, -90];
+  const grow = (lon, lat) => { bb = [Math.min(bb[0], lon), Math.min(bb[1], lat), Math.max(bb[2], lon), Math.max(bb[3], lat)]; };
+  focus.forEach(f => f.r.forEach(r => { for (let i = 0; i < r.length; i += 2) grow(r[i], r[i + 1]); }));
+  pins.forEach(q => { grow(q.lon - 1.5, q.lat - 1.5); grow(q.lon + 1.5, q.lat + 1.5); });
+  if (bb[0] > bb[2]) bb = [60, 5, 100, 38];  // nothing matched: South Asia
+  const lat0 = (bb[1] + bb[3]) / 2, kx = Math.cos(lat0 * Math.PI / 180);
+  const X = lon => lon * kx, Y = lat => -lat;
+  const pathOf = rs => rs.map(r => {
+    let s = "";
+    for (let i = 0; i < r.length; i += 2) s += (i ? "L" : "M") + X(r[i]).toFixed(2) + " " + Y(r[i + 1]).toFixed(2);
+    return s + "Z";
+  }).join("");
+  const add = (g, cls, dd) => {
+    const e = document.createElementNS(NS, "path");
+    e.setAttribute("class", cls); e.setAttribute("d", dd);
+    document.getElementById(g).appendChild(e);
+    return e;
+  };
+  M.countries.forEach(c => add("lands", "land", pathOf(c.r)));
+  // state lines for every country that a focus belongs to (or is)
+  const ctx = new Set(fStates.map(s => s.a).concat(fCountries.map(c => c.n)));
+  M.states.filter(s => ctx.has(s.a)).forEach(s => add("states", "state", pathOf(s.r)));
+  const fp = focus.map(f => add("focus", "focus", pathOf(f.r)));
+  // camera: fit the focus box into the safe area, starting 4x wider (or the whole world)
+  const svg = document.getElementById("map"), sr = document.getElementById("safe").getBoundingClientRect();
+  const view = (x0, y0, x1, y1, fill) => {
+    const k = Math.min(sr.width / (x1 - x0), sr.height / (y1 - y0)) * fill;
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    return { x: cx - (sr.left + sr.width / 2) / k, y: cy - (sr.top + sr.height / 2) / k, w: S.w / k, h: S.h / k };
+  };
+  const end = view(X(bb[0]), Y(bb[3]), X(bb[2]), Y(bb[1]), 0.8);
+  const cxe = end.x + end.w / 2, cye = end.y + end.h / 2;
+  const start = p.from === "world" ? view(X(-170), Y(75), X(190), Y(-55), 1)
+                                   : { x: cxe - end.w * 2, y: cye - end.h * 2, w: end.w * 4, h: end.h * 4 };
+  const cam = { ...start };
+  const pinEls = pins.map(q => {
+    const g = document.createElementNS(NS, "g");
+    g.innerHTML = '<circle class="ring"/><circle class="pin"/><text class="plabel"></text>';
+    g.querySelector("text").textContent = q.label || "";
+    document.getElementById("pins").appendChild(g);
+    return { q, g, ring: g.querySelector(".ring"), dot: g.querySelector(".pin"), text: g.querySelector("text"), pulse: { v: 0 } };
+  });
+  const draw = () => {
+    svg.setAttribute("viewBox", `${cam.x} ${cam.y} ${cam.w} ${cam.h}`);
+    const px = cam.w / S.w;  // svg units per screen pixel: pins and labels keep their screen size
+    pinEls.forEach(e => {
+      const x = X(e.q.lon), y = Y(e.q.lat), r = U * 1.1 * px;
+      e.dot.setAttribute("cx", x); e.dot.setAttribute("cy", y); e.dot.setAttribute("r", r);
+      e.dot.setAttribute("stroke-width", U * 0.35 * px);
+      e.ring.setAttribute("cx", x); e.ring.setAttribute("cy", y); e.ring.setAttribute("r", r * (1 + 2.5 * e.pulse.v));
+      e.ring.setAttribute("stroke-width", U * 0.3 * px); e.ring.setAttribute("opacity", 1 - e.pulse.v);
+      e.text.setAttribute("x", x + r * 1.8); e.text.setAttribute("y", y + U * 1.2 * px);
+      e.text.setAttribute("font-size", U * 3.6 * px); e.text.setAttribute("stroke-width", U * 0.6 * px);
+    });
+  };
+  const fly = Math.min(2.2, d * 0.55);
+  tl.fromTo(cam, start, { ...end, duration: fly, ease: "power2.inOut", onUpdate: draw }, 0);
+  tl.to(cam, { x: end.x + end.w * 0.03, y: end.y + end.h * 0.03, w: end.w * 0.94, h: end.h * 0.94,
+               duration: Math.max(0.1, d - fly), ease: "none", onUpdate: draw }, fly);  // slow push-in after landing
+  tl.fromTo(fp, { opacity: 0 }, { opacity: 0.92, duration: 0.5 }, fly * 0.6);
+  pinEls.forEach((e, i) => {
+    const at = fly * 0.8 + i * 0.25;
+    tl.fromTo(e.g, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at);
+    tl.fromTo(e.pulse, { v: 0 }, { v: 1, duration: 1.2, repeat: Math.max(0, Math.floor((d - at) / 1.2) - 1),
+                                   ease: "sine.out", onUpdate: draw }, at);
+  });
+  draw();
+  kinetic(document.getElementById("t"), S.text, tl, fly * 0.7);
+  tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, fly * 0.65);
+  finish(tl);
+</script></body></html>

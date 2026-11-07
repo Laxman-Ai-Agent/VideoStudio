@@ -54,7 +54,10 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if r.status == "template":
         if scene.visual_type == "chart":
             return "chart"
-        return "timeline" if scene.params.get("events") else "headline"
+        if scene.params.get("events"):
+            return "timeline"
+        p = scene.params
+        return "map" if scene.visual_type == "map" and (p.get("focus") or p.get("pin")) else "headline"
     if r.status == "missing" or not r.asset:
         return "missing"
     if Path(r.asset).suffix.lower() in VIDEO:
@@ -216,6 +219,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     if load_template(template).engine == "remotion":
         shutil.copy2(TEMPLATES / template / "Composition.jsx", build_dir / "Composition.jsx")
         return
+    for f in (TEMPLATES / template).glob("*.js"):  # template data, e.g. map/map.js
+        shutil.copy2(f, build_dir / f.name)
     html = (TEMPLATES / template / "index.html").read_text("utf-8")
     for k, v in {"{{W}}": job.w, "{{H}}": job.h, "{{DUR}}": f"{job.duration:.4f}", "{{ASSET}}": asset_name}.items():
         html = html.replace(k, str(v))

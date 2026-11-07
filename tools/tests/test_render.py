@@ -145,3 +145,12 @@ def test_template_scenes_pick_by_params():
     shot = plan.scenes[2].model_copy(update={"visual_type": "screenshot"})
     assert rnd.pick_template(shot, ResolvedScene(id=3, status="project", asset="a/s.png")) == "screenshot"
     assert rnd.pick_template(shot, ResolvedScene(id=3, status="project", asset="a/s.mp4")) == "video_clip"
+
+
+def test_map_scene_needs_focus_or_pin():
+    from pipeline.contracts import Scene
+    m = Scene(id=1, start=0, end=1, narration="x", visual_type="map", query="q")
+    t = ResolvedScene(id=1, status="template")
+    assert rnd.pick_template(m, t) == "headline"  # nothing to show on a map -> text card
+    assert rnd.pick_template(m.model_copy(update={"params": {"focus": "Telangana"}}), t) == "map"
+    assert "Telangana" in (rnd.TEMPLATES / "map" / "map.js").read_text("utf-8")  # offline data ships with it

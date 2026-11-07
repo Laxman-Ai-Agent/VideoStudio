@@ -1,0 +1,6 @@
+{"name": "map", "version": 1, "engine": "hyperframes",
+ "visual_types": ["map"],
+ "params": {"focus": "country or state name(s) to highlight, e.g. \"Telangana\" or [\"India\", \"Pakistan\"] (Natural Earth English names)",
+            "pin": "{\"lat\": 17.39, \"lon\": 78.49, \"label\": \"హైదరాబాద్\"} or a list of them",
+            "from": "\"world\" to fly in from the whole world (default: 4x wider than the focus)"},
+ "description": "Offline outline map (Natural Earth, India's point of view on borders, map.js from make_data.py): camera flies in, focus area fills in accent colour, pins pulse with labels"}

@@ -47,6 +47,9 @@ Write `work/scenes.json` for this narration, then run `studio.cmd run {project.n
 - `asset`: a path from "Assets" below when one fits, else null.
 - Cut at phrase boundaries. Aim for 2-4 s per scene.
 - One plan is rendered in every format in brand.json (16:9 and 9:16): pick visuals whose subject survives a centre crop.
+- Optional `params` (see tools/templates/*/template.json): chart `bars`/`number`/`source` (cited data only);
+  timeline `events` [{{"date", "label"}}]; map `focus` (country/state name), `pin` {{"lat", "lon", "label"}}, `from`;
+  screenshot `url` (captured automatically), `highlight` [x, y, w, h]; photo `parallax: true`; any scene `sfx`.
 
 Example:
 ```json
