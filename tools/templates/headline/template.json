@@ -1,0 +1,4 @@
+{"name": "headline", "version": 1, "engine": "hyperframes",
+ "visual_types": ["text", "motion_graphic", "diagram", "map"],
+ "params": {"sub": "optional small line under the headline (default: none)"},
+ "description": "Kinetic text card: 1-4 words pop in on a dark brand background with an accent bar and slow glow"}

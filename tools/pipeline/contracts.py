@@ -60,6 +60,7 @@ class Scene(BaseModel):
     on_screen_text: str = ""      # 1-4 words, empty for none
     asset: str | None = None      # project-relative path when a known asset fits
     notes: str = ""               # animation / framing hints for the render step
+    params: dict = Field(default_factory=dict)  # template parameters (e.g. chart bars), see template.json
 
     @model_validator(mode="after")
     def _check(self):
@@ -147,3 +148,34 @@ class Resolved(BaseModel):
     """work/resolved.json - one asset (or missing/template) per scene, same order as scenes.json."""
     schema_version: int = SCHEMA_VERSION
     scenes: list[ResolvedScene]
+
+
+# ---- Phase 3: render --------------------------------------------------------
+
+class TemplateSpec(BaseModel):
+    """tools/templates/<name>/template.json. Bump `version` when the look changes on purpose."""
+    name: str
+    version: int
+    engine: Literal["hyperframes", "remotion"]
+    visual_types: list[VisualType]
+    params: dict[str, str] = Field(default_factory=dict)  # param name -> what it does
+    description: str = ""
+
+
+class SceneRender(BaseModel):
+    id: int
+    template: str
+    status: Literal["rendered", "cached", "failed"]  # failed = placeholder clip was used
+    key: str                      # cache key: scene + asset hash + template + brand + size
+    seconds: float = 0.0
+    error: str = ""
+
+
+class RenderReport(BaseModel):
+    """work/scenes/<format>/report.json - one clip per scene, same order as scenes.json."""
+    schema_version: int = SCHEMA_VERSION
+    format: str                   # "16:9"
+    width: int
+    height: int
+    fps: int
+    scenes: list[SceneRender]

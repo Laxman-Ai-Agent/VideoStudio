@@ -1,0 +1,4 @@
+{"name": "video_clip", "version": 1, "engine": "hyperframes",
+ "visual_types": ["footage", "screenshot", "photo", "logo", "motion_graphic", "diagram", "chart", "map", "text"],
+ "params": {"media_start": "seconds into the source clip to start from, default 0"},
+ "description": "Video trimmed (or looped) to the scene length and cover-fitted by FFmpeg before render (blurred backdrop when the aspect does not fit); slow push-in, lower-third text"}

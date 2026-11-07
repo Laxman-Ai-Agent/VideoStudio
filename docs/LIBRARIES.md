@@ -12,6 +12,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | faster-whisper | 1.2.1 | MIT | transcribe | Whisper large-v3 int8 on CPU, word timestamps | 4x faster than openai-whisper on CPU, no torch |
 | ctranslate2 (via faster-whisper) | 4.8.5 | MIT | transcribe | inference backend | pulled by faster-whisper |
 | av / PyAV (via faster-whisper) | 15.1.0 | BSD-3 | transcribe | audio decode | pinned `15.*`: av 19 dropped `metadata_errors`, faster-whisper 1.2.1 crashes. Unpin when faster-whisper fixes it |
+| GSAP (bundled by hyperframes) | 3.15.0 | GSAP standard license (free, incl. commercial) | templates | template animation timelines | ships inside hyperframes (`dist/vendor/npm/gsap@3.15.0`), copied into each scene build; no CDN, no extra install |
 | esbuild (via hyperframes) | 0.28.2 | MIT | engines/hyperframes | bundler HyperFrames needs | install script approved in package.json `allowScripts` |
 
 ## External tools (system-wide)
@@ -28,7 +29,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | Library | Phase | Responsibility |
 |---|---|---|
 | Pillow | 4 | image resize/crop for `prepare` (NOT text: no raqm on Windows, Telugu breaks). Not needed in Phase 2: thumbs are ffmpeg, sheets are Chrome |
-| GSAP, D3 | 3 | animation, charts (inside templates) |
+| D3 | 4+ | richer charts, only if the plain-DOM chart template falls short |
 | rembg | 4 | background removal |
 | remotion | 4 | second render engine (isolated in engines/remotion) |
 | PySceneDetect, MapLibre GL | 5 | raw-footage shots, maps |

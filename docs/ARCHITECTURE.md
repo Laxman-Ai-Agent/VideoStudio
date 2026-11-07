@@ -9,7 +9,7 @@ As long as a box's contract (input/output file shapes) holds, its inside can cha
 ## Pipeline
 ```
 drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -> 6 storyboard -> [GATE: user approves]
-      -> 7 prepare -> 8 render (per scene) -> 9 assemble -> 10 qa -> output/final.mp4
+      -> 7 prepare -> 8 render (per scene, per format) -> 9 assemble -> 10 qa -> output/{preview|final}_{16x9|9x16}.mp4
 ```
 
 | Stage | Reads | Writes | Job |
@@ -23,8 +23,8 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 | prompts | resolved (missing) | `prompts/{images,videos}/scene_NNN.md`, `prompts/README.md` | generation prompts with an exact "save as" name |
 | storyboard | scenes (resolved from Phase 2) | `work/storyboard.html`, `work/storyboard.png` | text-only sheet for approval, HTML screenshotted by headless Chrome |
 | prepare | resolved | `work/prepared/*` | crops, cut-outs, fake parallax layers |
-| render | one scene + its template | `work/scenes/scene_NNN.mp4` | one clip per scene, cached by content hash |
-| assemble | clips, narration, music, sfx | `work/assembled.mp4` | concat, mix with music ducking, captions |
+| render | scenes, resolved, brand, `tools/templates/*` | `work/scenes/<16x9|9x16>[_final]/scene_NNN.mp4` + `.key`, `report.json` | one HyperFrames clip per scene per format, exact frame count, cached by key = scene JSON + asset hash + template (version + files) + brand + size. 720p preview by default, `--final` = full size. Failures -> `missing` tile + report, retried next run. `--workers` (default 2) |
+| assemble | clips, narration (music/sfx in Phase 4) | `output/{preview|final}_{16x9|9x16}.mp4` | FFmpeg concat (re-encoded once) + narration, two-pass loudnorm -14 LUFS / -1.5 dBTP, length = last scene end. Credits: `output/credits.txt` is written by resolve |
 | qa | assembled | `work/qa.json`, `output/*` | loudness (-14 LUFS), black frames, sync, final export |
 
 ## Orchestration and checkpoints
@@ -38,6 +38,10 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 - Adding an optional field is safe. Removing/renaming a field or changing its meaning means bumping the version and adding a converter.
 
 ## Render engines
+- Templates: `photo` (Ken Burns, blurred backdrop when the aspect doesn't fit), `video_clip` (FFmpeg trims/loops + cover-fits first, then push-in), `headline` (kinetic 1-4 words), `chart` (bars / count-up from `scene.params`, decorative without data), `missing` (scene number tile, also used for failures).
+- Template choice (`render.pick_template`): resolved `template` -> chart for chart scenes, else headline; missing -> missing; video file -> video_clip; image -> photo.
+- Safe areas (`_shared/studio.js`): 16:9 6% sides / 8% top+bottom; 9:16 7% sides, 14% top, 22% bottom (Shorts UI). Sizes are in `--u` = 1% of the short side, so preview and final look the same.
+- Each scene renders in its own build folder (`.build/scene_NNN`, kept only on failure) with GSAP copied from the HyperFrames package (no CDN).
 - Each template declares `"engine": "hyperframes" | "remotion"` in its `template.json`.
 - Engines live isolated in `tools/engines/<name>/`, each with its own `package.json` and lockfile, so they never share dependencies.
 - Engine contract: scene JSON + template in, one MP4 (same size/fps) out. Assemble doesn't care which engine made a clip.
@@ -46,7 +50,7 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 ## Extension points (add, don't modify)
 | New thing | How |
 |---|---|
-| scene/animation type | new `tools/templates/<name>/` (`template.json`, `index.html`, `anim.js`, `preview.png`) |
+| scene/animation type | new `tools/templates/<name>/` (`template.json` = `TemplateSpec`, `index.html` with `{{W}} {{H}} {{DUR}} {{ASSET}}`, reads `window.SCENE`, uses `_shared/studio.js|css`) + a line in `render.pick_template` |
 | asset source | new provider module with `search(need) -> candidates` |
 | transcription engine / GPU parallax / vision check | an option inside the owning module only |
 | new stage | new module + one line in the studio stage list |
@@ -67,8 +71,8 @@ projects/NN_Name/
   input/       audio, optional script/json (sorted by ingest)
   assets/      images, videos, screenshots, logos, raw_footage, index.json
   prompts/     images/, videos/, README.md
-  work/        state.json, whisper.json, transcript.json, plan_brief.md, scenes.json, storyboard.png, preview.mp4, scenes/, logs/
-  output/      final.mp4, thumbnail.jpg, description.txt, credits.txt
+  work/        state.json, whisper.json, transcript.json, plan_brief.md, scenes.json, storyboard.png, scenes/<format>/, logs/
+  output/      preview_16x9.mp4, preview_9x16.mp4, final_16x9.mp4, final_9x16.mp4, thumbnail.jpg, description.txt, credits.txt
   project.md   human log
 ```
 

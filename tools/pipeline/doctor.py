@@ -40,6 +40,16 @@ def checks() -> list[tuple[str, str, str]]:
     hf = ENGINES / "hyperframes" / "node_modules" / "hyperframes" / "bin" / "hyperframes.mjs"
     r.append(("ok" if hf.exists() else "fail", "HyperFrames",
               "installed" if hf.exists() else "run: npm ci in tools/engines/hyperframes"))
+    from .render import GSAP, TEMPLATES, load_template  # templates validate + GSAP bundled by HyperFrames
+    bad = []
+    for t in ("photo", "video_clip", "headline", "chart", "missing"):
+        try:
+            load_template(t)
+        except Exception as e:  # noqa: BLE001
+            bad.append(f"{t}: {type(e).__name__}")
+    names = sorted(d.name for d in TEMPLATES.iterdir() if (d / "template.json").exists())
+    r.append(("ok" if not bad and GSAP.exists() else "fail", "Templates",
+              ", ".join(names) if not bad and GSAP.exists() else f"{bad or ''} gsap: {GSAP.exists()}"))
     chrome = next((p for p in CHROME_PATHS if p.exists()), None)
     r.append(("ok" if chrome else "fail", "Chrome (render)", str(chrome) if chrome else "not found"))
 

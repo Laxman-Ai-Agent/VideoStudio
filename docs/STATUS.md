@@ -1,6 +1,6 @@
 # Status
 
-Current phase: **2 Assets, done (2026-11-07)**. Next: **Phase 3, Render v1 (HyperFrames)**.
+Current phase: **3 Render v1, done (2026-11-07)**. Next: **Phase 4, Polish + Remotion** (captions, music, SFX, parallax).
 
 ## Phase 0: Foundation ✅
 - [x] Folder structure (`_brand`, `_library`, `tools`, `projects`, `docs`, `.claude/skills`)
@@ -33,9 +33,19 @@ Current phase: **2 Assets, done (2026-11-07)**. Next: **Phase 3, Render v1 (Hype
 - [x] storyboard: thumbnail per scene, or MISSING / TEMPLATE tile
 - [x] Tests: 37 passing. On 01 (15 test files copied from `E:\Youtube\13-AI agents\videos\01\`): 5 project, 5 template, 1 missing (scene 10 prompt); drop-back of `scene_010.png` verified
 
-## Phase 3: Render v1 (next)
+## Phase 3: Render v1 ✅
+- [x] Templates `photo`, `video_clip`, `headline`, `chart`, `missing` (+ `_shared`): brand colours/fonts, safe areas 16:9 + 9:16, GSAP from HyperFrames
+- [x] render: per scene per format, exact frames, cache key (scene + asset hash + template + brand + size), failure -> tile + `report.json`, 2 workers
+- [x] assemble: concat + narration, two-pass loudnorm -> `output/preview_{16x9,9x16}.mp4` (720p) or `final_*` with `--final`
+- [x] Tests: 40 passing (fake engine: cache, single-scene re-render, isolation, exact frames; assemble sync)
+- [x] On 01: 22 clips in 5 min (2 workers, 720p); both previews 915 frames = 30.5 s, -14.3 LUFS, peak -1.4 dB. Editing scene 11 re-rendered only scene 11 (13 s per format)
+
+## Phase 4: Polish + Remotion (next)
 
 ## Known issues / notes
+- Render speed here: ~15-30 s per 720p scene clip, video scenes up to ~50 s when two run at once. Full-size `--final` not timed yet (expect ~2-3x).
+- Scene 3 ("Chatbots") resolved to a Grok-only logo; the multi-logo idea needs a Phase 4 template. Scene 9 chart has no cited data, so it shows decorative bars only (add `params.bars` + `params.source` to scenes.json).
+- An edit that doesn't change pixels (e.g. `notes`) re-renders the scene but assemble stays cached (same clip bytes).
 - No `PEXELS_API_KEY` yet (`tools/.env`), so internet search is Wikimedia only. Wikimedia rarely fits generic stock scenes; the first live run picked off-topic files at a 2-keyword match, so internet results now need half the query keywords (DECISIONS #16).
 - Matching is keyword overlap on English descriptions (threshold 0.34). Multi-item scenes (e.g. "ChatGPT, Gemini and Grok logos") get one asset; Phase 3 templates can combine more.
 - Only ~1.6 GB RAM was free during the HyperFrames doctor check. Close heavy apps before long renders.

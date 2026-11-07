@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.wrap { position: absolute; inset: 0; display: flex; flex-direction: column; gap: calc(var(--u) * 3); }
+#title { font-weight: 900; font-size: calc(var(--u) * 8); }
+#title .word:last-child { color: var(--accent); }
+#bars { flex: 1; display: flex; align-items: flex-end; gap: calc(var(--u) * 3); margin-bottom: calc(var(--u) * 6);
+        border-bottom: 2px solid rgba(255,255,255,.3); }
+.b { flex: 1; position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.fillbar { background: var(--accent); border-radius: calc(var(--u) * .6) calc(var(--u) * .6) 0 0; transform-origin: bottom; }
+.val { text-align: center; font-weight: 800; font-size: calc(var(--u) * 4); margin-bottom: calc(var(--u) * 1); }
+.lab { position: absolute; bottom: calc(var(--u) * -5.5); width: 100%; text-align: center; font-size: calc(var(--u) * 3.2); opacity: .85; }
+#num { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 900;
+       font-size: calc(var(--u) * 30); color: var(--accent); }
+#src { font-size: calc(var(--u) * 2.4); opacity: .6; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="safe"><div class="wrap"><div id="title"></div><div id="bars"></div><div id="num"></div><div id="src"></div></div></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true });
+  const n = kinetic(document.getElementById("title"), S.text, tl, 0.1);
+  const bars = document.getElementById("bars"), num = document.getElementById("num"), unit = p.unit || "";
+  document.getElementById("src").textContent = p.source ? "Source: " + p.source : "";
+  const t0 = 0.3 + n * 0.12;
+  if (typeof p.number === "number") {
+    bars.style.display = "none";
+    const o = { v: 0 };
+    num.textContent = "0" + unit;
+    tl.to(o, { v: p.number, duration: Math.min(1.5, S.duration * 0.6), ease: "power2.out",
+               onUpdate: () => { num.textContent = Math.round(o.v) + unit; } }, t0);
+  } else {
+    num.style.display = "none";
+    // no data -> decorative rising bars without labels or numbers (never invent statistics)
+    const data = (p.bars && p.bars.length) ? p.bars.slice(0, 6) : [3, 5, 4, 7, 6].map(v => ({ value: v }));
+    const max = Math.max(...data.map(d => d.value));
+    data.forEach((d, i) => {
+      const b = document.createElement("div"); b.className = "b";
+      const labelled = d.label !== undefined;
+      if (labelled) { const v = document.createElement("div"); v.className = "val"; v.textContent = d.value + unit; b.appendChild(v); }
+      const f = document.createElement("div"); f.className = "fillbar"; f.style.height = (d.value / max * 80) + "%"; b.appendChild(f);
+      if (labelled) { const l = document.createElement("div"); l.className = "lab"; l.textContent = d.label; b.appendChild(l); }
+      bars.appendChild(b);
+      tl.fromTo(f, { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: "power3.out" }, t0 + i * 0.15);
+      if (labelled) tl.fromTo(b.firstChild, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t0 + i * 0.15 + 0.4);
+    });
+  }
+  finish(tl);
+</script></body></html>

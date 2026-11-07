@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.tile { position: absolute; inset: 0; border: calc(var(--u) * .5) dashed var(--accent); border-radius: calc(var(--u) * 2);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        gap: calc(var(--u) * 2); padding: calc(var(--u) * 4); box-sizing: border-box; }
+#n { font-weight: 900; font-size: calc(var(--u) * 16); color: var(--accent); }
+#k { font-weight: 800; font-size: calc(var(--u) * 5); letter-spacing: .15em; }
+#q, #e { font-size: calc(var(--u) * 3.2); opacity: .75; max-width: 85%; }
+#e { color: #ff8a8a; font-size: calc(var(--u) * 2.4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="safe"><div class="tile"><div id="n"></div><div id="k"></div><div id="q"></div><div id="e"></div></div></div>
+</div>
+<script>
+  const S = window.SCENE, tl = gsap.timeline({ paused: true });
+  document.getElementById("n").textContent = "SCENE " + S.id;
+  document.getElementById("k").textContent = S.error ? "RENDER FAILED" : "MISSING";
+  document.getElementById("q").textContent = S.query || "";
+  document.getElementById("e").textContent = (S.error || "").slice(0, 160);
+  tl.fromTo(".tile", { opacity: 0.5 }, { opacity: 1, duration: 0.6, ease: "sine.inOut" }, 0);
+  finish(tl);
+</script></body></html>

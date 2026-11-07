@@ -1,0 +1,5 @@
+{"name": "chart", "version": 1, "engine": "hyperframes",
+ "visual_types": ["chart"],
+ "params": {"bars": "[{\"label\": \"IT\", \"value\": 40}, ...] up to 6 bars", "unit": "suffix such as %",
+            "number": "one big count-up number instead of bars", "source": "citation line shown small"},
+ "description": "Animated bar chart or count-up number from scene params; without params, an unlabelled decorative bar motif (never invented numbers)"}

@@ -1,0 +1,4 @@
+{"name": "missing", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "footage", "screenshot", "logo", "chart", "map", "motion_graphic", "diagram", "text"],
+ "params": {},
+ "description": "Placeholder tile: scene number, MISSING (or RENDER FAILED) and the asset query, so a gap is obvious in the preview"}

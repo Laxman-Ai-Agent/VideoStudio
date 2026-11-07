@@ -1,0 +1,4 @@
+{"name": "photo", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "screenshot", "logo", "map", "diagram", "motion_graphic", "chart", "footage", "text"],
+ "params": {"zoom": "end scale of the Ken Burns move, default 1.12", "pan": "left | right | none, default alternates by scene id"},
+ "description": "Still image with a Ken Burns pan/zoom, blurred backdrop when the aspect does not fit, lower-third text"}

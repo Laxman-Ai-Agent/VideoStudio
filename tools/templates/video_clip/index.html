@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+</head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <video id="v" class="fill clip" src="{{ASSET}}" muted data-start="0" data-duration="{{DUR}}" data-media-start="0"></video>
+  <div class="shade"></div>
+  <div class="safe"><div id="t" class="lower"></div></div>
+</div>
+<script>
+  const S = window.SCENE, tl = gsap.timeline({ paused: true });
+  tl.fromTo("#v", { scale: 1.0 }, { scale: 1.05, duration: S.duration, ease: "none" }, 0);
+  kinetic(document.getElementById("t"), S.text, tl, 0.3);
+  tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, 0.25);
+  finish(tl);
+</script></body></html>

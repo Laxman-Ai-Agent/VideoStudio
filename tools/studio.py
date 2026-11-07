@@ -4,7 +4,9 @@
     studio new "AI Agents"        create projects/NN_AI_Agents with all sub-folders
     studio status 01              show which stages are done / failed
     studio run 01                 ingest -> transcribe -> align -> plan -> index -> resolve
-                                  -> prompts -> storyboard (resumes)
+                                  -> prompts -> storyboard -> render -> assemble (resumes)
+    studio run 01 --final         full resolution instead of the 720p preview
+    studio run 01 --workers 1     parallel scene renders (default 2; ~0.5 GB RAM each)
 """
 import argparse
 import json
@@ -15,7 +17,7 @@ from pathlib import Path
 from pipeline import doctor
 from pipeline import assets
 from pipeline.config import BRAND, LIBRARY, ROOT, secret, setup_env
-from pipeline.contracts import Resolved, ScenePlan, Transcript
+from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
 from pipeline.ingest import AmbiguousInput, ingest
 from pipeline.plan import RULES, validate, write_brief
 from pipeline.project import atomic_write, find_project, load_state, new_project, run_stage
@@ -32,7 +34,7 @@ def _one(folder: Path, stem: str) -> Path | None:
     return found[0] if found else None
 
 
-def run_project(p: Path) -> int:
+def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
     drop = [f for f in (p / "drop").iterdir() if f.is_file()]
@@ -140,7 +142,43 @@ def run_project(p: Path) -> int:
 
     sb_inputs = [scenes_json, resolved_json] + brand_in
     print(f"  storyboard: {'done' if run_stage(p, 'storyboard', sb_inputs, [html_out, png_out], storyboard) else 'up to date'}")
-    print(f"  GATE: approve {png_out} before render (Phase 3).")
+
+    # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
+    from pipeline import render as rnd
+    from pipeline.assemble import assemble
+    brand = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8"))
+    plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
+    mode = "final" if final else "preview"
+    failed = 0
+    for fmt in ("16:9", "9:16"):
+        if fmt not in brand.formats:
+            continue
+        d = rnd.fmt_dir(fmt, final)
+        jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final)
+        clips = [j.out for j in jobs]
+        keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
+        report_json = w / "scenes" / d / "report.json"
+
+        def render(jobs=jobs, fmt=fmt):
+            rep = rnd.render_format(jobs, fmt, final, workers)
+            n = sum(s.status == "failed" for s in rep.scenes)
+            if n:
+                print(f"    {n} scene(s) failed -> placeholder tile. Details: {report_json}")
+
+        retry = any(not rnd.is_cached(j) for j in jobs)  # e.g. a scene that failed last time
+        ran = run_stage(p, f"render_{d}", [], clips + [report_json], render, extra=keys, force=retry)
+        failed += sum(s.status == "failed" for s in
+                      RenderReport.model_validate_json(report_json.read_text("utf-8")).scenes)
+        print(f"  render {fmt}: {'done' if ran else 'up to date'} ({len(jobs)} scenes, {jobs[0].w}x{jobs[0].h})")
+
+        out = p / "output" / f"{mode}_{d.removesuffix('_final')}.mp4"
+        total = round(plan.scenes[-1].end * brand.fps)
+        ran = run_stage(p, f"assemble_{d}", clips + [audio], [out],
+                        lambda c=clips, o=out: assemble(c, audio, o, brand.fps, total), extra=str(total))
+        print(f"  assemble {fmt}: {'done' if ran else 'up to date'} -> {out}")
+    print(f"  credits: {credits_txt}")
+    if failed:
+        print(f"  NOTE: {failed} scene clip(s) are placeholders (see work/scenes/*/report.json)")
     return 0
 
 
@@ -152,7 +190,10 @@ def main() -> int:
     sub.add_parser("doctor")
     sub.add_parser("new").add_argument("name")
     sub.add_parser("status").add_argument("project")
-    sub.add_parser("run").add_argument("project")
+    run = sub.add_parser("run")
+    run.add_argument("project")
+    run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
+    run.add_argument("--workers", type=int, default=2, help="parallel scene renders (default 2)")
     a = ap.parse_args()
 
     if a.cmd == "doctor":
@@ -162,7 +203,7 @@ def main() -> int:
         return 0
     if a.cmd == "run":
         try:
-            return run_project(find_project(a.project))
+            return run_project(find_project(a.project), a.final, a.workers)
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
