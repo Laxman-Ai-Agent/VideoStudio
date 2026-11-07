@@ -168,3 +168,15 @@ def test_brand_fonts_load_from_folder_without_faux_bold(tmp_path):
     assert css.count("@font-face") == 3  # duplicates once, unknown family -> system font
     assert 'font-family: "Gidugu"; src: url("font0.ttf"); font-weight: 100 900' in css  # one file = every weight
     assert "font-weight: 700" in css and (out / "font2.ttf").exists()
+
+
+def test_cutout_poster_needs_its_cut(tmp_path):
+    from pipeline.contracts import Prepared, PreparedScene
+    img = tmp_path / "p.png"
+    _ffmpeg("-f", "lavfi", "-i", "color=c=red:s=32x18", "-frames:v", "1", str(img))
+    plan = _plan()
+    plan.scenes[2].params["cutout"] = True
+    res = Resolved(scenes=RESOLVED.scenes[:2] + [ResolvedScene(id=3, status="project", asset="p.png")])
+    pick = lambda prep: rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False, None, prep)[2].template  # noqa: E731
+    assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo"  # no tight cut -> photo
+    assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png", cut="p.png")])) == "cutout_title"

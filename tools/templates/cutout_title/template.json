@@ -1,0 +1,6 @@
+{"name": "cutout_title", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "logo"],
+ "params": {"cutout": "true = opt in (rembg cut-out of the subject; falls back to photo)",
+            "title": "poster title, default the on-screen text: first word line 1, the rest line 2 in accent",
+            "kicker": "small line under the title", "frame": "true = corner brackets"},
+ "description": "Poster: cut-out subject with a white sticker outline and shadow rises over a big two-line title on the themed background"}

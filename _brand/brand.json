@@ -1,12 +1,44 @@
 {
   "schema_version": 1,
   "formats": {
-    "16:9": {"width": 1920, "height": 1080},
-    "9:16": {"width": 1080, "height": 1920}
+    "16:9": {
+      "width": 1920,
+      "height": 1080
+    },
+    "9:16": {
+      "width": 1080,
+      "height": 1920
+    }
   },
   "fps": 30,
-  "colors": {"background": "#0E0E10", "accent": "#FFC400", "text": "#FFFFFF"},
-  "fonts": {"telugu": "Gidugu", "latin": "Gidugu"},
+  "colors": {
+    "background": "#0E0E10",
+    "accent": "#FFC400",
+    "text": "#FFFFFF"
+  },
+  "fonts": {
+    "telugu": "Gidugu",
+    "latin": "Gidugu"
+  },
   "captions": true,
-  "music_mood": "calm"
+  "music_mood": "calm",
+  "theme": "paper",
+  "themes": {
+    "dark": {
+      "background": "#0E0E10",
+      "accent": "#FFC400",
+      "text": "#FFFFFF",
+      "marker": "#FFC400",
+      "panel": "rgba(14,14,16,0.78)",
+      "capbg": "rgba(0,0,0,0)"
+    },
+    "paper": {
+      "background": "#F2EEE6",
+      "accent": "#E03A2F",
+      "text": "#151515",
+      "marker": "#FFD84D",
+      "panel": "rgba(255,255,255,0.94)",
+      "capbg": "rgba(20,20,20,0.82)"
+    }
+  }
 }

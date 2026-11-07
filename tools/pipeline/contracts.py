@@ -106,6 +106,8 @@ class Brand(BaseModel):
     colors: dict[str, str]
     fonts: dict[str, str]
     captions: bool = False        # word-by-word captions from work/transcript.json (bottom third)
+    theme: str = "dark"           # key of `themes`: its colours override `colors` (e.g. "paper")
+    themes: dict[str, dict[str, str]] = Field(default_factory=dict)
     music_mood: str = ""          # _library/music/<mood>/ ; empty or missing folder = no music
 
 
@@ -189,6 +191,7 @@ class PreparedScene(BaseModel):
     id: int
     fg: str = ""                  # cut-out subject PNG with alpha, posix relative to the root
     bg: str = ""                  # photo with the subject area blurred out
+    cut: str = ""                 # subject only, cropped tight to its outline (cutout_title template)
     error: str = ""               # set when the cut-out failed -> scene renders as a plain photo
 
 

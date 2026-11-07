@@ -1,5 +1,5 @@
-"""prepare stage: cut-out layers for fake parallax (rembg on CPU), opt-in per scene via
-`params.parallax: true`. A failed or empty cut-out just means the scene renders as a plain photo."""
+"""prepare stage: cut-out layers (rembg on CPU) for scenes with `params.parallax: true` (photo_parallax)
+or `params.cutout: true` (cutout_title poster). A failed or empty cut-out means the scene stays a plain photo."""
 import os
 from pathlib import Path
 
@@ -16,7 +16,7 @@ def wanted(plan: ScenePlan, resolved: Resolved, root: Path) -> list[tuple[int, P
     out = []
     for s in plan.scenes:
         r = by_id.get(s.id)
-        if s.params.get("parallax") and r and r.asset and Path(r.asset).suffix.lower() in IMAGE:
+        if (s.params.get("parallax") or s.params.get("cutout")) and r and r.asset and Path(r.asset).suffix.lower() in IMAGE:
             out.append((s.id, root / r.asset))
     return out
 
@@ -36,6 +36,7 @@ def cutout(src: Path, fg: Path, bg: Path, session) -> None:
     Image.composite(img.filter(ImageFilter.GaussianBlur(r * 2)), img, hole.filter(ImageFilter.GaussianBlur(r))).save(bg)
     img.putalpha(mask)
     img.save(fg)
+    img.crop(mask.point(lambda v: 255 if v > 40 else 0).getbbox()).save(fg.with_name(fg.name.replace("_fg", "_cut")))
 
 
 def prepare(plan: ScenePlan, resolved: Resolved, root: Path, out_dir: Path) -> Prepared:
@@ -55,7 +56,9 @@ def prepare(plan: ScenePlan, resolved: Resolved, root: Path, out_dir: Path) -> P
         fg, bg = out_dir / f"scene_{sid:03d}_fg.png", out_dir / f"scene_{sid:03d}_bg.png"
         try:
             cutout(src, fg, bg, session)
-            res.scenes.append(PreparedScene(id=sid, fg=fg.relative_to(root).as_posix(), bg=bg.relative_to(root).as_posix()))
+            cut = fg.with_name(fg.name.replace("_fg", "_cut"))
+            res.scenes.append(PreparedScene(id=sid, fg=fg.relative_to(root).as_posix(), bg=bg.relative_to(root).as_posix(),
+                                            cut=cut.relative_to(root).as_posix()))
         except Exception as e:  # noqa: BLE001 - isolation: this scene renders as a plain photo
             fg.unlink(missing_ok=True)
             bg.unlink(missing_ok=True)

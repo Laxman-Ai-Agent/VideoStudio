@@ -129,15 +129,16 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
     shared = _dir_hash(SHARED)
     jobs, tpl_hash = [], {}
     by_id = {r.id: r for r in resolved.scenes}
-    cut = {c.id: (root / c.fg, root / c.bg) for c in (prepared.scenes if prepared else []) if c.fg and c.bg}
+    prep = {c.id: c for c in (prepared.scenes if prepared else [])}
     for s in plan.scenes:
         r = by_id.get(s.id) or ResolvedScene(id=s.id, status="missing")
         name = pick_template(s, r)
-        layers = cut.get(s.id, ()) if name == "photo" else ()
-        if layers and all(f.exists() for f in layers):
-            name = "photo_parallax"  # opt-in (params.parallax) and the cut-out worked; else plain photo
-        else:
-            layers = ()
+        # opt-in templates that need a working cut-out (prepare stage); otherwise a plain photo
+        c, layers = (prep.get(s.id) if name == "photo" else None), ()
+        if c and s.params.get("cutout") and c.cut and (root / c.cut).exists():
+            name, layers = "cutout_title", (root / c.cut,)
+        elif c and s.params.get("parallax") and c.fg and c.bg and (root / c.fg).exists() and (root / c.bg).exists():
+            name, layers = "photo_parallax", (root / c.fg, root / c.bg)
         if name not in tpl_hash:
             tpl_hash[name] = f"{load_template(name).version}:{_dir_hash(TEMPLATES / name)}:{shared}"
         rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip", "screenshot") else None
@@ -218,7 +219,10 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     (build_dir / "studio.css").write_text(font_css(job.brand.fonts.values(), build_dir) + "\n"
                                           + (SHARED / "studio.css").read_text("utf-8"), "utf-8")
     asset_name, fit = "", "cover"
-    if template == "photo_parallax":
+    if template == "cutout_title":
+        shutil.copy2(job.layers[0], build_dir / "cut.png")
+        asset_name = "cut.png"
+    elif template == "photo_parallax":
         for f, name in zip(job.layers, ("fg.png", "bg.png")):
             shutil.copy2(f, build_dir / name)
         asset_name = "bg.png"
@@ -235,7 +239,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     s, b = job.scene, job.brand
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "fit": fit, **_dims(job.asset if asset_name else None), "colors": b.colors, "fonts": b.fonts, "error": error,
+             "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None), "colors": {**b.colors, **b.themes.get(b.theme, {})}, "theme": b.theme,
+             "fonts": b.fonts, "error": error,
              "captions": job.captions or []}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")

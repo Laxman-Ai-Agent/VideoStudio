@@ -7,7 +7,7 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 .word { display: inline-block; }
 /* lower third: on-screen text over photos / footage */
 .lower { margin-top: auto; align-self: flex-start; max-width: 80%; padding: calc(var(--u) * 1.6) calc(var(--u) * 3);
-         background: rgba(14, 14, 16, 0.78); border-left: calc(var(--u) * 0.8) solid var(--accent);
+         background: var(--panel); border-left: calc(var(--u) * 0.8) solid var(--accent);
          font-weight: 800; font-size: calc(var(--u) * 6.5); line-height: 1.25; }
 .portrait .lower { align-self: center; text-align: center; border-left: 0;
                    border-bottom: calc(var(--u) * 0.8) solid var(--accent); font-size: calc(var(--u) * 8); }
@@ -17,7 +17,39 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 .captions { position: absolute; left: var(--sl); right: var(--sr); bottom: var(--sb); height: calc(var(--u) * 15);
             display: flex; align-items: flex-end; justify-content: center; text-align: center; pointer-events: none; }
 .cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 800; font-size: calc(var(--u) * 5.2);
-            line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9); }
+            line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9);
+            background: var(--capbg); border-radius: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.6); }
 .portrait .cap-page { font-size: calc(var(--u) * 6.4); }
 .cap-word { transform-origin: 50% 70%; }
 .has-captions .safe { bottom: calc(var(--sb) + var(--u) * 16); }
+
+/* ---- paper theme (brand.json "theme": "paper"): light page, dark ink, softer photo shade ---- */
+.theme-paper .shade { background: linear-gradient(to top, rgba(0,0,0,.25), rgba(0,0,0,0) 35%); }
+.theme-paper .cap-page { text-shadow: none; }
+.theme-paper .lower { box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.5) rgba(0,0,0,.18); }
+.theme-paper #line { background: rgba(0,0,0,.18) !important; }             /* timeline */
+.theme-paper .land { fill: #ddd7cb; stroke: #b9b1a2; }                         /* map */
+.theme-paper .state { stroke: #a99f8f; }
+.theme-paper .focus { stroke: #7a1d16; filter: none; }
+.theme-paper .plabel { stroke: #F2EEE6; }
+.grain { position: absolute; inset: -200px; pointer-events: none; opacity: .13; mix-blend-mode: multiply;
+         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>"); }
+
+/* ---- photo looks (params.look) on every picture layer ---- */
+.look-sepia .fill, .look-sepia #fg { filter: sepia(.75) contrast(1.08) brightness(.97); }
+.look-bw .fill, .look-bw #fg { filter: grayscale(1) contrast(1.2); }
+.look-vintage .fill, .look-vintage #fg { filter: sepia(.35) saturate(.75) contrast(1.06); }
+.look-halftone .fill, .look-halftone #fg { filter: grayscale(1) contrast(1.35); }
+.halftone { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; opacity: .45;
+            background: radial-gradient(circle, #000 32%, transparent 36%) 0 0 / calc(var(--u) * .7) calc(var(--u) * .7); }
+.look-vintage #root::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+                             background: radial-gradient(ellipse at center, transparent 55%, rgba(40,25,10,.45)); }
+
+/* ---- hand-drawn marks (params.marks) and highlighter words (params.marker) ---- */
+.marks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.mark { fill: none; stroke: var(--accent); stroke-width: calc(var(--u) * .75); stroke-linecap: round; stroke-linejoin: round; }
+.tag { position: absolute; padding: calc(var(--u) * .6) calc(var(--u) * 1.8); background: var(--marker); color: #151515;
+       font-weight: 900; font-size: calc(var(--u) * 4.5); border-radius: calc(var(--u) * .6); transform-origin: 0 50%;
+       box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(0,0,0,.25); }
+.mk { background-image: linear-gradient(var(--marker), var(--marker)); background-repeat: no-repeat;
+      background-position: 0 88%; background-size: 0% 42%; padding: 0 .08em; }
