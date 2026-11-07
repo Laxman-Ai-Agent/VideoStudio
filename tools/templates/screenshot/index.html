@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.grid { position: absolute; inset: 0; opacity: .06;
+        background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
+        background-size: calc(var(--u) * 8) calc(var(--u) * 8); }
+#win { position: relative; flex: 1; display: flex; flex-direction: column; border-radius: calc(var(--u) * 1.4);
+       overflow: hidden; background: #1c1c20; box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 6) rgba(0,0,0,.6); }
+#bar { height: calc(var(--u) * 5); flex: none; display: flex; align-items: center; gap: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.8); }
+.dot { width: calc(var(--u) * 1.3); height: calc(var(--u) * 1.3); border-radius: 50%; background: #55555c; }
+#url { margin-left: calc(var(--u) * 1.5); flex: 1; height: calc(var(--u) * 3.2); border-radius: calc(var(--u) * 1.6); background: #2c2c32;
+       color: #c8c8cc; font-size: calc(var(--u) * 1.9); display: flex; align-items: center; padding: 0 calc(var(--u) * 1.6);
+       white-space: nowrap; overflow: hidden; }
+#view { position: relative; flex: 1; overflow: hidden; background: #fff; }
+#page { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+#page img { display: block; width: 100%; }
+#hl { position: absolute; border: calc(var(--u) * .6) solid var(--accent); border-radius: calc(var(--u) * .8);
+      box-shadow: 0 0 0 9999px rgba(0,0,0,.35); opacity: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="grid"></div>
+  <div class="safe">
+    <div id="win"><div id="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div id="url"></div></div>
+      <div id="view"><div id="page"><img src="{{ASSET}}"><div id="hl"></div></div></div></div>
+  </div>
+  <div class="safe" style="pointer-events:none"><div id="t" class="lower"></div></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
+  document.getElementById("url").textContent = (p.url || "").replace(/^https?:\/\/(www\.)?/, "");
+  const view = document.getElementById("view"), page = document.getElementById("page");
+  const vw = view.clientWidth, vh = view.clientHeight;
+  const ph = (S.asset_h && S.asset_w) ? vw * S.asset_h / S.asset_w : vh;  // page height at view width
+  page.style.width = vw + "px";
+  tl.fromTo("#win", { opacity: 0, y: U * 4, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out" }, 0);
+  const hl = p.highlight;  // [x, y, w, h] as fractions of the screenshot
+  if (Array.isArray(hl) && hl.length === 4) {
+    const [x, y, w, h] = [hl[0] * vw, hl[1] * ph, hl[2] * vw, hl[3] * ph];
+    Object.assign(document.getElementById("hl").style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px" });
+    const k = Math.min(1.8, Math.max(1, 0.75 * Math.min(vw / w, vh / h)));  // zoom so the box fills ~3/4 of the view
+    const cx = x + w / 2, cy = y + h / 2;
+    const tx = Math.min(0, Math.max(vw - vw * k, vw / 2 - cx * k)), ty = Math.min(0, Math.max(vh - ph * k, vh / 2 - cy * k));
+    const sy = Math.min(0, Math.max(vh - ph, vh / 2 - cy));  // first bring the box into view
+    const at = Math.min(1.5, d * 0.4);
+    tl.fromTo(page, { y: 0 }, { y: sy, duration: Math.min(1.2, d * 0.3), ease: "power2.inOut" }, 0.3);
+    tl.to(page, { x: tx, y: ty, scale: k, duration: Math.min(1.2, d * 0.35), ease: "power2.inOut" }, at);
+    tl.fromTo("#hl", { opacity: 0, scale: 1.15 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, at + 0.4);
+  } else if (ph > vh * 1.15) {  // tall page: scroll down (at most 1.5 views)
+    tl.fromTo(page, { y: 0 }, { y: -Math.min(ph - vh, vh * 1.5), duration: Math.max(0.5, d - 0.4), ease: "sine.inOut" }, 0.4);
+  } else {
+    tl.fromTo(page, { scale: 1 }, { scale: 1.06, duration: d, ease: "none" }, 0);
+  }
+  kinetic(document.getElementById("t"), S.text, tl, 0.4);
+  tl.fromTo("#t", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.35);
+  finish(tl);
+</script></body></html>

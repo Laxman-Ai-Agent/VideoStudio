@@ -55,7 +55,9 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
         return "chart" if scene.visual_type == "chart" else "headline"
     if r.status == "missing" or not r.asset:
         return "missing"
-    return "video_clip" if Path(r.asset).suffix.lower() in VIDEO else "photo"
+    if Path(r.asset).suffix.lower() in VIDEO:
+        return "video_clip"
+    return "screenshot" if scene.visual_type == "screenshot" else "photo"
 
 
 def caption_pages(scene: Scene, words: list[Word], max_words: int) -> list[list[dict]]:
@@ -128,7 +130,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
             layers = ()
         if name not in tpl_hash:
             tpl_hash[name] = f"{load_template(name).version}:{_dir_hash(TEMPLATES / name)}:{shared}"
-        rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip") else None
+        rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip", "screenshot") else None
         asset = root / rel if rel else None
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
         if layers:
@@ -151,6 +153,11 @@ def _ffmpeg(args: list[str]) -> None:
     p = subprocess.run(["ffmpeg", "-y", "-v", "error", *args], capture_output=True, text=True)
     if p.returncode:
         raise RuntimeError(f"ffmpeg failed: {p.stderr.strip()[-400:]}")
+
+
+def _dims(asset: Path | None) -> dict:
+    info = probe(asset) if asset else {}
+    return {"asset_w": info.get("width", 0), "asset_h": info.get("height", 0)}
 
 
 def _fit(asset: Path, w: int, h: int) -> str:
@@ -187,7 +194,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         for f, name in zip(job.layers, ("fg.png", "bg.png")):
             shutil.copy2(f, build_dir / name)
         asset_name = "bg.png"
-    elif template in ("photo", "video_clip"):
+    elif template in ("photo", "video_clip", "screenshot"):
         if not job.asset or not job.asset.exists():
             raise FileNotFoundError(f"asset not found: {job.asset}")
         fit = _fit(job.asset, job.w, job.h)
@@ -200,7 +207,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     s, b = job.scene, job.brand
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "fit": fit, "colors": b.colors, "fonts": b.fonts, "error": error,
+             "asset": asset_name, "fit": fit, **_dims(job.asset if asset_name else None), "colors": b.colors, "fonts": b.fonts, "error": error,
              "captions": job.captions or []}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")

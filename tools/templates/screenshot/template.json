@@ -1,0 +1,5 @@
+{"name": "screenshot", "version": 1, "engine": "hyperframes",
+ "visual_types": ["screenshot"],
+ "params": {"url": "page address shown in the browser bar; with no screenshot file the page is captured automatically (headless Chrome)",
+            "highlight": "[x, y, w, h] as fractions of the screenshot: box drawn + zoomed in"},
+ "description": "Screenshot in a browser window on the brand background: tall pages scroll, `highlight` zooms to a boxed area, otherwise a slow push-in"}

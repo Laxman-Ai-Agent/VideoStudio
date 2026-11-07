@@ -81,6 +81,16 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     run_stage(p, "plan", plan_inputs, [], lambda: validate(scenes_json, transcript))
     print("  plan: scenes.json valid")
 
+    # Phase 5: screenshot scenes with params.url -> assets/screenshots/scene_NNN.png (headless Chrome)
+    from pipeline.capture import capture
+    captures = w / "captures.json"
+    urls = {s.id: s.params.get("url") for s in ScenePlan.model_validate_json(scenes_json.read_text("utf-8")).scenes
+            if s.visual_type == "screenshot" and s.params.get("url")}
+    if urls:
+        ran = run_stage(p, "capture", [scenes_json], [captures], extra=json.dumps(urls),
+                        fn=lambda: capture(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, captures))
+        print(f"  capture: {'done' if ran else 'up to date'} ({len(urls)} url(s))")
+
     # Phase 5: long videos (assets/raw_footage) -> shots in assets/shots, indexed like any clip
     from pipeline import shots
     for raw in shots.raw_files(p / "assets"):
