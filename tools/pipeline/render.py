@@ -52,7 +52,9 @@ def frame_count(scene: Scene, fps: int) -> int:
 
 def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if r.status == "template":
-        return "chart" if scene.visual_type == "chart" else "headline"
+        if scene.visual_type == "chart":
+            return "chart"
+        return "timeline" if scene.params.get("events") else "headline"
     if r.status == "missing" or not r.asset:
         return "missing"
     if Path(r.asset).suffix.lower() in VIDEO:

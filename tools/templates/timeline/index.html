@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.grid { position: absolute; inset: 0; opacity: .06;
+        background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
+        background-size: calc(var(--u) * 8) calc(var(--u) * 8); }
+#title { font-weight: 900; font-size: calc(var(--u) * 7); text-align: center; }
+#tl { position: relative; flex: 1; }
+#line { position: absolute; background: rgba(255,255,255,.25); }
+#fill { position: absolute; background: var(--accent); }
+.ev { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.5); }
+.dot { width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: 50%; background: var(--bg);
+       border: calc(var(--u) * .6) solid var(--accent); box-sizing: border-box; flex: none; }
+.date { font-weight: 900; color: var(--accent); font-size: calc(var(--u) * 5); line-height: 1.1; }
+.label { font-weight: 700; font-size: calc(var(--u) * 3.6); line-height: 1.2; }
+.portrait .ev .dot { order: -1; }
+.portrait .date { font-size: calc(var(--u) * 7.5); }
+.portrait .label { font-size: calc(var(--u) * 5.5); }
+.portrait .ev { right: 0; flex-wrap: wrap; column-gap: calc(var(--u) * 2.5); }
+.landscape .ev { flex-direction: column; margin-left: calc(var(--slot) / -2); text-align: center; width: var(--slot); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="grid"></div>
+  <div class="safe"><div id="title"></div><div id="tl"><div id="line"></div><div id="fill"></div></div></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
+  const ev = (p.events || []).slice(0, 6), n = Math.max(1, ev.length), port = S.h > S.w;
+  const box = document.getElementById("tl"), W = box.clientWidth, H = box.clientHeight;
+  kinetic(document.getElementById("title"), S.text, tl, 0.05);
+  // events sit evenly along a line: horizontal in 16:9, vertical in 9:16
+  const pos = i => (i + 0.5) / n;
+  const line = document.getElementById("line"), fill = document.getElementById("fill"), th = U * 0.6, x0 = U * 1.5;
+  const geo = port ? { left: x0 - th / 2 + "px", top: 0, width: th + "px", height: H + "px" }
+                   : { left: 0, top: H / 2 - th / 2 + "px", width: W + "px", height: th + "px" };
+  Object.assign(line.style, geo);
+  Object.assign(fill.style, geo, { transformOrigin: port ? "top" : "left" });
+  document.documentElement.style.setProperty("--slot", W / n + "px");
+  const t0 = 0.4, span = Math.max(0.6, d * 0.75 - t0);  // every event is in by 75% of the scene
+  tl.fromTo(fill, port ? { scaleY: 0 } : { scaleX: 0 }, { ...(port ? { scaleY: 1 } : { scaleX: 1 }), duration: span, ease: "none" }, t0);
+  ev.forEach((e, i) => {
+    const el = document.createElement("div");
+    el.className = "ev";
+    el.innerHTML = '<div class="date"></div><div class="dot"></div><div class="label"></div>';
+    el.querySelector(".date").textContent = e.date || "";
+    el.querySelector(".label").textContent = e.label || "";
+    box.appendChild(el);
+    const dot = el.querySelector(".dot");
+    if (port) {  // dot centred on the vertical line
+      el.style.top = H * pos(i) - el.offsetHeight / 2 + "px";
+      el.style.left = x0 - dot.offsetWidth / 2 + "px";
+    } else {     // dot centred on the horizontal line
+      el.style.left = W * pos(i) + "px";
+      el.style.top = H / 2 - (dot.offsetTop + dot.offsetHeight / 2) + "px";
+    }
+    const at = t0 + span * pos(i);
+    tl.fromTo(el, { opacity: 0, [port ? "x" : "y"]: U * 3 }, { opacity: 1, x: 0, y: 0, duration: 0.35, ease: "back.out(2)" }, at);
+    tl.fromTo(dot, { backgroundColor: S.colors.background || "#0E0E10" },
+              { backgroundColor: S.colors.accent || "#FFC400", duration: 0.2 }, at + 0.15);
+  });
+  finish(tl);
+</script></body></html>

@@ -1,0 +1,4 @@
+{"name": "timeline", "version": 1, "engine": "hyperframes",
+ "visual_types": ["motion_graphic", "diagram", "text"],
+ "params": {"events": "[{\"date\": \"2022\", \"label\": \"ChatGPT\"}, ...] up to 6, in order; picks this template"},
+ "description": "Timeline: title on top, a line that fills in accent colour while dated events pop in one by one (horizontal in 16:9, vertical in 9:16)"}

@@ -136,3 +136,12 @@ def test_build_follows_template_engine(tmp_path):
         assert (tmp_path / j.template / "scene.json").exists()
         assert (tmp_path / j.template / ("Composition.jsx" if engine == "remotion" else "index.html")).exists()
     assert {rnd.load_template(j.template).engine for j in jobs[:2]} == {"remotion", "hyperframes"}
+
+
+def test_template_scenes_pick_by_params():
+    plan = _plan()
+    plan.scenes[0].params["events"] = [{"date": "2022", "label": "ChatGPT"}]
+    assert rnd.pick_template(plan.scenes[0], RESOLVED.scenes[0]) == "timeline"
+    shot = plan.scenes[2].model_copy(update={"visual_type": "screenshot"})
+    assert rnd.pick_template(shot, ResolvedScene(id=3, status="project", asset="a/s.png")) == "screenshot"
+    assert rnd.pick_template(shot, ResolvedScene(id=3, status="project", asset="a/s.mp4")) == "video_clip"
