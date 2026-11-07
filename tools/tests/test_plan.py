@@ -66,3 +66,10 @@ def test_storyboard_html_escapes_and_lists_scenes():
     plan = ScenePlan(scenes=[_scene(1, 0, 2, text="<b>AI</b>"), _scene(2, 2, 4, "chart")])
     page = build_html(plan, "01_Demo", {"colors": {"accent": "#FFC400"}})
     assert "&lt;b&gt;AI&lt;/b&gt;" in page and "#2" in page and "#FFC400" in page
+
+
+def test_repo_brand_json_matches_contract():
+    from pipeline.config import BRAND
+    from pipeline.contracts import Brand
+    b = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8"))
+    assert {"16:9", "9:16"} <= set(b.formats)

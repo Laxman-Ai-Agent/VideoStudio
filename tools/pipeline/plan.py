@@ -46,6 +46,7 @@ Write `work/scenes.json` for this narration, then run `studio.cmd run {project.n
 - on_screen_text: 0-4 words. `query`: concrete, searchable description of the visual (English).
 - `asset`: a path from "Assets" below when one fits, else null.
 - Cut at phrase boundaries. Aim for 2-4 s per scene.
+- One plan is rendered in every format in brand.json (16:9 and 9:16): pick visuals whose subject survives a centre crop.
 
 Example:
 ```json

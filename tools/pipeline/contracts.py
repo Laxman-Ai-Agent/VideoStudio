@@ -88,3 +88,18 @@ class ScenePlan(BaseModel):
             if a.visual_type == b.visual_type == c.visual_type:
                 raise ValueError(f"scenes {a.id}-{c.id}: same visual type 3 times in a row")
         return self
+
+
+class OutputFormat(BaseModel):
+    width: int
+    height: int
+
+
+class Brand(BaseModel):
+    """_brand/brand.json - channel look. One scene plan is rendered once per format
+    (per-format layout/safe areas live in the templates, not in scenes.json)."""
+    schema_version: int = SCHEMA_VERSION
+    formats: dict[Literal["16:9", "9:16", "1:1", "4:5"], OutputFormat] = Field(min_length=1)
+    fps: int = 30
+    colors: dict[str, str]
+    fonts: dict[str, str]

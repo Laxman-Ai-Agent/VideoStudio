@@ -8,18 +8,19 @@ As long as a box's contract (input/output file shapes) holds, its inside can cha
 
 ## Pipeline
 ```
-drop/ -> 1 ingest -> 2 transcribe -> 3 plan -> 4 resolve -> 5 prompts -> 6 storyboard -> [GATE: user approves]
+drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -> 6 storyboard -> [GATE: user approves]
       -> 7 prepare -> 8 render (per scene) -> 9 assemble -> 10 qa -> output/final.mp4
 ```
 
 | Stage | Reads | Writes | Job |
 |---|---|---|---|
 | ingest | `drop/*` | `input/`, `assets/**`, log in `project.md` | sort dropped files by type (move, never edit) |
-| transcribe | `input/audio.*`, optional `input/script.*` | `work/transcript.json` | words + timings. Script text wins over Whisper text when given |
-| plan | transcript, `_brand/brand.json`, skill rules | `work/scenes.json` | per-scene visual type, query, on-screen text. Written by Claude in-session |
+| transcribe | `input/audio.*` | `work/whisper.json` | faster-whisper large-v3 int8 CPU, word timings (slow, so its own stage) |
+| align | `work/whisper.json`, optional `input/script.*` | `work/transcript.json` | difflib: script words win, Whisper gives timing. No script = copy |
+| plan | transcript, `_brand/brand.json`, skill rules | `work/plan_brief.md` -> `work/scenes.json` | brief for Claude; Claude writes scenes.json in-session; `ScenePlan` validates it (run exits 2 until it exists) |
 | resolve | scenes, asset indexes | `work/resolved.json` | pick a file per scene: project assets, then `_library`, then internet, then missing |
 | prompts | resolved (missing) | `prompts/{images,videos}/scene_NNN.md`, `prompts/README.md` | generation prompts with an exact "save as" name |
-| storyboard | resolved | `work/storyboard.jpg` | contact sheet for approval |
+| storyboard | scenes (resolved from Phase 2) | `work/storyboard.html`, `work/storyboard.png` | text-only sheet for approval, HTML screenshotted by headless Chrome |
 | prepare | resolved | `work/prepared/*` | crops, cut-outs, fake parallax layers |
 | render | one scene + its template | `work/scenes/scene_NNN.mp4` | one clip per scene, cached by content hash |
 | assemble | clips, narration, music, sfx | `work/assembled.mp4` | concat, mix with music ducking, captions |
@@ -65,7 +66,7 @@ projects/NN_Name/
   input/       audio, optional script/json (sorted by ingest)
   assets/      images, videos, screenshots, logos, raw_footage, index.json
   prompts/     images/, videos/, README.md
-  work/        state.json, transcript.json, scenes.json, storyboard.jpg, preview.mp4, scenes/, logs/
+  work/        state.json, whisper.json, transcript.json, plan_brief.md, scenes.json, storyboard.png, preview.mp4, scenes/, logs/
   output/      final.mp4, thumbnail.jpg, description.txt, credits.txt
   project.md   human log
 ```
