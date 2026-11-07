@@ -1,6 +1,6 @@
 # Status
 
-Current phase: **4 Polish + Remotion, done (2026-11-07)**. Next: **Phase 5, Extras** (maps, timeline, screenshots, raw-footage cutting).
+Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: multi-logo template, per-project music choice, Inter font, more Remotion templates).
 
 ## Phase 0: Foundation ✅
 - [x] Folder structure (`_brand`, `_library`, `tools`, `projects`, `docs`, `.claude/skills`)
@@ -49,7 +49,17 @@ Current phase: **4 Polish + Remotion, done (2026-11-07)**. Next: **Phase 5, Extr
 - [x] Tests: 45 passing. Doctor all green
 - [x] On 01: 22 clips in ~11 min (2 workers, 720p, captions changed every key), scene 3 parallax, headline scenes 1/5/8/11 by Remotion, rest HyperFrames, mixed video assembled. QA PASS both formats: -14.4 LUFS, -1.4 dBTP, 30.50 s vs 30.49 s narration, no black/freeze, warn: scene 10 still MISSING
 
+## Phase 5: Extras ✅
+- [x] Raw footage: videos > 2 min cut into shots (FFmpeg scene detect) in `assets/shots/`, described from the contact sheet (max 20 per run) and matched like clips
+- [x] Screenshots: `screenshot` template (browser frame, scroll for tall pages, `highlight` zoom) + automatic capture of `params.url`
+- [x] Timeline template (`params.events`, horizontal 16:9 / vertical 9:16)
+- [x] Map template: offline Natural Earth outlines with India's official borders + states (incl. Telangana/AP), fly-in, focus fill, pins with Telugu labels
+- [x] Tests: 50 passing. Doctor all green. Each template checked by one test render (16:9 + 9:16). 01 unchanged (all cached), QA PASS
+
 ## Known issues / notes
+- Auto-capture: some sites block headless Chrome (Wikipedia returned its block page). Check captured screenshots in the storyboard; drop your own `scene_NNN.png` in `assets/screenshots/` when a capture is wrong (a dropped file is never overwritten).
+- Map names are Natural Earth English names (`"Telangana"`, `"India"`); pins need lat/lon in scenes.json (no geocoder). States exist only for IN, US, CN, BR, AU, CA, RU, ID, ZA.
+- Raw-footage cutting is untested on real long footage (tested on a generated 3-shot clip); a 20 min 1080p video should take a few minutes on this CPU.
 - `_library/music/*` and `_library/sfx/*` are empty, so 01 has no music/SFX yet (code tested with generated tones). Drop royalty-free tracks in `_library/music/calm/` (or change `music_mood`) and whoosh files in `_library/sfx/whoosh/`; the next run re-assembles only (no re-render).
 - Inter is not installed on this PC, so Latin words fall back to Noto Sans Telugu / Nirmala UI. Install Inter for the brand look; fonts are not in the scene cache key, so bump the template versions to re-render.
 - The first rembg cut-out took ~2 min (model download + numba warm-up); the prepare stage caches it afterwards.

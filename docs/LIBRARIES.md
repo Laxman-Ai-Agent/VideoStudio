@@ -32,8 +32,12 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | Google Chrome | system | HyperFrames rendering, storyboard + asset contact sheet screenshots (headless) |
 | uv | system | Python env + lockfile |
 
+## Data
+| Data | Version | License | Owner | Used for |
+|---|---|---|---|---|
+| Natural Earth admin-0 countries 10m, India point of view (`ne_10m_admin_0_countries_ind`) + admin-1 states 50m | natural-earth-vector master, 2026-11-07 | public domain | templates/map (`map.js`, built by `make_data.py`, simplified to 0.04°/0.02°) | offline map outlines, no tiles or API key |
+
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
 |---|---|---|
 | D3 | 4+ | richer charts, only if the plain-DOM chart template falls short |
-| PySceneDetect, MapLibre GL | 5 | raw-footage shots, maps |
