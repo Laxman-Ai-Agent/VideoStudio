@@ -6,7 +6,7 @@
   },
   "fps": 30,
   "colors": {"background": "#0E0E10", "accent": "#FFC400", "text": "#FFFFFF"},
-  "fonts": {"telugu": "Noto Sans Telugu", "latin": "Inter"},
+  "fonts": {"telugu": "Gidugu", "latin": "Gidugu"},
   "captions": true,
   "music_mood": "calm"
 }

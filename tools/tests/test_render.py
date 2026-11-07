@@ -128,14 +128,14 @@ def test_qa_flags_black_and_frozen_video(tmp_path):
     assert black and freeze
 
 
-def test_build_follows_template_engine(tmp_path):
+def test_build_follows_template_engine(tmp_path, monkeypatch):
     jobs = rnd.plan_jobs(_plan(), RESOLVED, BRAND, "16:9", tmp_path, tmp_path / "o", final=False)
-    for j in jobs[:2]:  # headline -> remotion input, chart -> hyperframes input
+    real = rnd.load_template  # headline ships both engines; force Remotion to cover that path
+    monkeypatch.setattr(rnd, "load_template", lambda n: real(n).model_copy(
+        update={"engine": "remotion"}) if n == "headline" else real(n))
+    for j, want in zip(jobs[:2], ("Composition.jsx", "index.html")):  # headline -> remotion, chart -> hyperframes
         rnd.build(j, tmp_path / j.template, j.template)
-        engine = rnd.load_template(j.template).engine
-        assert (tmp_path / j.template / "scene.json").exists()
-        assert (tmp_path / j.template / ("Composition.jsx" if engine == "remotion" else "index.html")).exists()
-    assert {rnd.load_template(j.template).engine for j in jobs[:2]} == {"remotion", "hyperframes"}
+        assert (tmp_path / j.template / "scene.json").exists() and (tmp_path / j.template / want).exists()
 
 
 def test_template_scenes_pick_by_params():
@@ -154,3 +154,17 @@ def test_map_scene_needs_focus_or_pin():
     assert rnd.pick_template(m, t) == "headline"  # nothing to show on a map -> text card
     assert rnd.pick_template(m.model_copy(update={"params": {"focus": "Telangana"}}), t) == "map"
     assert "Telangana" in (rnd.TEMPLATES / "map" / "map.js").read_text("utf-8")  # offline data ships with it
+
+
+def test_brand_fonts_load_from_folder_without_faux_bold(tmp_path):
+    fonts, out = tmp_path / "fonts", tmp_path / "build"
+    (fonts / "Gidugu").mkdir(parents=True)
+    (fonts / "Gidugu" / "Gidugu-Regular.ttf").write_bytes(b"x")
+    (fonts / "Hind").mkdir()
+    for s in ("Regular", "Bold"):
+        (fonts / "Hind" / f"Hind-{s}.ttf").write_bytes(b"x")
+    out.mkdir()
+    css = rnd.font_css(["Gidugu", "Hind", "Not Saved", "Gidugu"], out, fonts)
+    assert css.count("@font-face") == 3  # duplicates once, unknown family -> system font
+    assert 'font-family: "Gidugu"; src: url("font0.ttf"); font-weight: 100 900' in css  # one file = every weight
+    assert "font-weight: 700" in css and (out / "font2.ttf").exists()

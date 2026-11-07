@@ -61,7 +61,7 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - Map names are Natural Earth English names (`"Telangana"`, `"India"`); pins need lat/lon in scenes.json (no geocoder). States exist only for IN, US, CN, BR, AU, CA, RU, ID, ZA.
 - Raw-footage cutting is untested on real long footage (tested on a generated 3-shot clip); a 20 min 1080p video should take a few minutes on this CPU.
 - `_library/music/*` and `_library/sfx/*` are empty, so 01 has no music/SFX yet (code tested with generated tones). Drop royalty-free tracks in `_library/music/calm/` (or change `music_mood`) and whoosh files in `_library/sfx/whoosh/`; the next run re-assembles only (no re-render).
-- Inter is not installed on this PC, so Latin words fall back to Noto Sans Telugu / Nirmala UI. Install Inter for the brand look; fonts are not in the scene cache key, so bump the template versions to re-render.
+- Default font is now Gidugu (`_brand/fonts`, DECISIONS #30). Gidugu is smaller and lighter than Noto at the same size, so text looks ~20% smaller; scale sizes up if it reads small. The 01 previews are not re-rendered with it yet.
 - The first rembg cut-out took ~2 min (model download + numba warm-up); the prepare stage caches it afterwards.
 - Caption pages split by word count, so a page can start with a suffix word (e.g. "ని చూసాం."). Tune `CAPTION_WORDS` / `CAPTION_BREAK` in render.py if it reads badly.
 - Render speed here: ~15-30 s per 720p scene clip, video scenes up to ~50 s when two run at once. Full-size `--final` not timed yet (expect ~2-3x).
