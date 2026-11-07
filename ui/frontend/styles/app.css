@@ -248,3 +248,26 @@ details summary { font-size: 12.5px; }
 .stat.total { background: #1b1a45; border-color: #4a3fb0; }
 .empty { grid-column: 1 / -1; color: var(--muted); padding: 30px 0; }
 @media (max-width: 900px) { .stats { flex-wrap: wrap; } }
+
+/* ---- compact cards: only the image / video, a category label on top ---- */
+.grid { grid-template-columns: repeat(auto-fill, minmax(188px, 1fr)); gap: 14px; }
+.tile { border-radius: 12px; }
+.tile .ph b { font-size: 20px; margin-bottom: 2px; }
+.tile .ph { font-size: 11px; padding: 6px; }
+.tile .status { top: 7px; right: 7px; padding: 3px 9px 3px 5px; font-size: 11px; gap: 4px; }
+.tile .status::before { width: 12px; height: 12px; background-size: 8px; }
+.cat { position: absolute; top: 7px; left: 7px; max-width: calc(100% - 92px); padding: 3px 9px; border-radius: 999px; font-size: 11px;
+       font-weight: 700; text-transform: capitalize; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+       color: #fff; background: rgba(20, 23, 52, .82); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, .14); }
+.cat[data-cat="ai_image"] { background: rgba(111, 76, 255, .88); }
+.cat[data-cat="meme"], .cat[data-cat="reaction"] { background: rgba(234, 120, 20, .9); }
+.cat[data-cat="logo"] { background: rgba(37, 99, 235, .9); }
+.cat[data-cat="video_broll"] { background: rgba(13, 148, 136, .9); }
+.cat[data-cat="character_expression"], .cat[data-cat="sticker"] { background: rgba(219, 39, 119, .88); }
+.cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 9px 7px; font-size: 11.5px; white-space: nowrap; overflow: hidden;
+       text-overflow: ellipsis; background: linear-gradient(transparent, rgba(5, 6, 15, .9)); opacity: 0; transition: opacity .15s; }
+.tile:hover .cap, .tile:focus-visible .cap { opacity: 1; }
+/* one card is active (last opened): the others step back */
+.grid.has-active .tile { transition: transform .15s, border-color .15s, opacity .2s, filter .2s; }
+.grid.has-active .tile:not(.active) { opacity: .5; filter: saturate(.55) brightness(.85); }
+.grid.has-active .tile:not(.active):hover, .grid.has-active .tile:not(.active):focus-visible { opacity: 1; filter: none; }

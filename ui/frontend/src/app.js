@@ -23,16 +23,20 @@ function tile(a) {
   const st = document.createElement("span");
   st.className = `status ${a.found ? "found" : "missing"}`;
   st.textContent = a.found ? "Found" : "Missing";
-  const meta = document.createElement("div");
-  meta.className = "meta";
-  meta.innerHTML = `<div class="scene"></div><div class="name"></div><span class="chip"></span>`;
-  meta.querySelector(".scene").textContent = `${sceneLabel(a)} · ${a.id}`;
-  meta.querySelector(".name").textContent = a.name;
-  meta.querySelector(".chip").textContent = a.category.replace(/_/g, " ");
-  b.append(st, meta);
+  // the card is only the image / video plus its category; scene, id and name show on hover
+  const cat = document.createElement("span");
+  cat.className = "cat";
+  cat.dataset.cat = a.category;
+  cat.textContent = a.category.replace(/_/g, " ");
+  const cap = document.createElement("span");
+  cap.className = "cap";
+  cap.textContent = `${sceneLabel(a)} · ${a.id} · ${a.name}`;
+  b.title = cap.textContent;
+  b.append(st, cat, cap);
   b.classList.toggle("active", a.id === state.active);   // last opened card stays highlighted
   b.addEventListener("click", () => {
     state.active = a.id;
+    $("grid").classList.add("has-active");
     document.querySelectorAll(".tile.active").forEach((t) => t.classList.remove("active"));
     b.classList.add("active");
     openDetail({ pid: state.pid, refresh }, a);
@@ -53,6 +57,7 @@ function render() {
     p.textContent = `No ${state.filter} assets.`;
     return $("grid").replaceChildren(p);
   }
+  $("grid").classList.toggle("has-active", list.some((x) => x.id === state.active));
   $("grid").replaceChildren(...list.map(tile));
 }
 
