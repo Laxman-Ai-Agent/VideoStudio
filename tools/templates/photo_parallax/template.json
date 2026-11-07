@@ -1,0 +1,4 @@
+{"name": "photo_parallax", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "screenshot", "logo"],
+ "params": {"parallax": "true = opt in (needs a clear subject; falls back to photo)", "pan": "left | right, default alternates by scene id"},
+ "description": "Fake 2.5D: rembg cut-out subject (fg.png) drifts and grows faster than the blurred-out background (bg.png); lower-third text"}

@@ -8,6 +8,7 @@ dependencies = [
     "av==15.*",
     "faster-whisper==1.*",
     "pydantic==2.*",
+    "rembg==2.0.87",
 ]
 
 [dependency-groups]

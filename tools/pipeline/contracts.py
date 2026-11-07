@@ -181,3 +181,18 @@ class RenderReport(BaseModel):
     height: int
     fps: int
     scenes: list[SceneRender]
+
+
+# ---- Phase 4: prepare -------------------------------------------------------
+
+class PreparedScene(BaseModel):
+    id: int
+    fg: str = ""                  # cut-out subject PNG with alpha, posix relative to the root
+    bg: str = ""                  # photo with the subject area blurred out
+    error: str = ""               # set when the cut-out failed -> scene renders as a plain photo
+
+
+class Prepared(BaseModel):
+    """work/prepared/prepared.json - parallax layers for scenes with `params.parallax: true`."""
+    schema_version: int = SCHEMA_VERSION
+    scenes: list[PreparedScene] = Field(default_factory=list)

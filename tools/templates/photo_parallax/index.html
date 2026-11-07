@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+#fg { filter: drop-shadow(0 calc(var(--u) * 1) calc(var(--u) * 2.5) rgba(0,0,0,.55)); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <img id="bg" class="fill" src="bg.png">
+  <img id="fg" class="fill" src="fg.png">
+  <div class="shade"></div>
+  <div class="safe"><div id="t" class="lower"></div></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true });
+  const dir = (p.pan || ["left", "right"][S.id % 2]) === "left" ? -1 : 1, d = S.duration;
+  // background: slow and small; foreground: twice the travel and more zoom -> depth
+  tl.fromTo("#bg", { scale: 1.08, x: -dir * U * 1.5 }, { scale: 1.14, x: dir * U * 1.5, duration: d, ease: "none" }, 0);
+  tl.fromTo("#fg", { scale: 1.04, x: -dir * U * 3.5, y: U * 1 }, { scale: 1.2, x: dir * U * 3.5, y: 0, duration: d, ease: "none" }, 0);
+  tl.fromTo(["#bg", "#fg"], { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
+  kinetic(document.getElementById("t"), S.text, tl, 0.3);
+  tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, 0.25);
+  finish(tl);
+</script></body></html>

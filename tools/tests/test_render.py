@@ -103,3 +103,16 @@ def test_assemble_mixes_ducked_music_and_sfx_at_target_loudness(tmp_path):
     assemble([clip, clip], audio, out, FPS, 60, music, cues)  # music loops past its 1 s length
     assert rnd.frames_of(out) == 60
     assert abs(loudness(out) + 14) < 1.0
+
+
+def test_parallax_only_when_cutout_exists(tmp_path):
+    from pipeline.contracts import Prepared, PreparedScene
+    img = tmp_path / "p.png"
+    _ffmpeg("-f", "lavfi", "-i", "color=c=red:s=32x18", "-frames:v", "1", str(img))
+    plan = _plan()
+    plan.scenes[2].params["parallax"] = True
+    res = Resolved(scenes=RESOLVED.scenes[:2] + [ResolvedScene(id=3, status="project", asset="p.png")])
+    pick = lambda prep: rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False, None, prep)[2].template  # noqa: E731
+    assert pick(None) == "photo"
+    assert pick(Prepared(scenes=[PreparedScene(id=3, error="no clear subject")])) == "photo"  # fallback
+    assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo_parallax"

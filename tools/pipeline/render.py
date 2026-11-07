@@ -17,7 +17,7 @@ from pathlib import Path
 from .assets import VIDEO, file_hash, probe
 from .config import ENGINES, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
-                        TemplateSpec, Word)
+                        TemplateSpec, Word, Prepared)
 from .project import atomic_write
 
 TEMPLATES = TOOLS / "templates"
@@ -98,6 +98,7 @@ class Job:
     key: str
     brand: Brand
     captions: list = None  # caption pages (caption_pages), None = no captions
+    layers: tuple = ()     # photo_parallax: (fg.png, bg.png) from the prepare stage
 
     @property
     def duration(self) -> float:
@@ -105,7 +106,8 @@ class Job:
 
 
 def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root: Path,
-              out_dir: Path, final: bool, words: list[Word] | None = None) -> list[Job]:
+              out_dir: Path, final: bool, words: list[Word] | None = None,
+              prepared: Prepared | None = None) -> list[Job]:
     """Cheap: hashes inputs only. Key = scene JSON + asset hash + template (version + files)
     + brand.json + output size/fps."""
     of = brand.formats[fmt]
@@ -114,20 +116,28 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
     shared = _dir_hash(SHARED)
     jobs, tpl_hash = [], {}
     by_id = {r.id: r for r in resolved.scenes}
+    cut = {c.id: (root / c.fg, root / c.bg) for c in (prepared.scenes if prepared else []) if c.fg and c.bg}
     for s in plan.scenes:
         r = by_id.get(s.id) or ResolvedScene(id=s.id, status="missing")
         name = pick_template(s, r)
+        layers = cut.get(s.id, ()) if name == "photo" else ()
+        if layers and all(f.exists() for f in layers):
+            name = "photo_parallax"  # opt-in (params.parallax) and the cut-out worked; else plain photo
+        else:
+            layers = ()
         if name not in tpl_hash:
             tpl_hash[name] = f"{load_template(name).version}:{_dir_hash(TEMPLATES / name)}:{shared}"
         rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip") else None
         asset = root / rel if rel else None
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
+        if layers:
+            asset_hash += ":" + ":".join(file_hash(f) for f in layers)
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
                 if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
                                          brand_hash, fmt, w, h, brand.fps, caps]).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers))
     return jobs
 
 
@@ -172,7 +182,11 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     for f in (SHARED / "studio.js", SHARED / "studio.css", GSAP):
         shutil.copy2(f, build_dir / f.name)
     asset_name, fit = "", "cover"
-    if template in ("photo", "video_clip"):
+    if template == "photo_parallax":
+        for f, name in zip(job.layers, ("fg.png", "bg.png")):
+            shutil.copy2(f, build_dir / name)
+        asset_name = "bg.png"
+    elif template in ("photo", "video_clip"):
         if not job.asset or not job.asset.exists():
             raise FileNotFoundError(f"asset not found: {job.asset}")
         fit = _fit(job.asset, job.w, job.h)

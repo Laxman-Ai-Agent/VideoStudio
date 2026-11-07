@@ -143,6 +143,23 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     sb_inputs = [scenes_json, resolved_json] + brand_in
     print(f"  storyboard: {'done' if run_stage(p, 'storyboard', sb_inputs, [html_out, png_out], storyboard) else 'up to date'}")
 
+    # Phase 4: cut-out layers for scenes that opt into parallax (failures fall back to a plain photo)
+    from pipeline.contracts import Prepared
+    prep_json = w / "prepared" / "prepared.json"
+
+    def prepare():
+        from pipeline.prepare import prepare as cut
+        res = cut(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), resolved, ROOT, w / "prepared")
+        atomic_write(prep_json, res.model_dump_json(indent=2))
+        for c in res.scenes:
+            print(f"    scene {c.id}: {'cut-out ok' if c.fg else 'plain photo (' + c.error[:100] + ')'}")
+
+    from pipeline.prepare import MODEL as REMBG_MODEL, wanted
+    srcs = [f for _, f in wanted(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), resolved, ROOT)]
+    ran = run_stage(p, "prepare", [scenes_json, resolved_json] + srcs, [prep_json], prepare, extra=REMBG_MODEL)
+    prepared = Prepared.model_validate_json(prep_json.read_text("utf-8"))
+    print(f"  prepare: {'done' if ran else 'up to date'} ({len(prepared.scenes)} parallax scene(s))")
+
     # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
     from pipeline import render as rnd
     from pipeline.assemble import assemble, pick_music, sfx_cues
@@ -154,7 +171,8 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
         if fmt not in brand.formats:
             continue
         d = rnd.fmt_dir(fmt, final)
-        jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words)
+        jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
+                             prepared)
         clips = [j.out for j in jobs]
         keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
         report_json = w / "scenes" / d / "report.json"
