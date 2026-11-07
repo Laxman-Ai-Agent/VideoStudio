@@ -9,6 +9,9 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | pydantic | 2.14.3 | MIT | contracts | validate every file passed between modules | standard, stops bad data at stage boundaries |
 | pytest (dev) | 8.4.2 | MIT | tests | test runner | standard |
 | hyperframes | 0.9.19 | Apache-2.0 | engines/hyperframes | HTML/GSAP compositions -> MP4 | open license, built for agent workflows, uses system Chrome |
+| faster-whisper | 1.2.1 | MIT | transcribe | Whisper large-v3 int8 on CPU, word timestamps | 4x faster than openai-whisper on CPU, no torch |
+| ctranslate2 (via faster-whisper) | 4.8.5 | MIT | transcribe | inference backend | pulled by faster-whisper |
+| Pillow | 11.3.0 | MIT-CMU | storyboard | draw the text-only storyboard sheet | standard, no system deps |
 | esbuild (via hyperframes) | 0.28.2 | MIT | engines/hyperframes | bundler HyperFrames needs | install script approved in package.json `allowScripts` |
 
 ## External tools (system-wide)
@@ -24,8 +27,6 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
 |---|---|---|
-| faster-whisper | 1 | transcription with word timestamps (CPU int8) |
-| Pillow | 1 | storyboard grid, image resize |
 | httpx | 2 | Wikimedia / Pexels API |
 | GSAP, D3 | 3 | animation, charts (inside templates) |
 | rembg | 4 | background removal |

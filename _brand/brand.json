@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "format": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "colors": {"background": "#0E0E10", "accent": "#FFC400", "text": "#FFFFFF"},
+  "fonts": {"telugu": "Noto Sans Telugu", "latin": "Inter"}
+}

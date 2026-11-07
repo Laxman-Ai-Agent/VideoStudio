@@ -1,0 +1,84 @@
+"""ingest stage: sort drop/ into input/ and assets/. Files are MOVED (never edited or deleted) and logged.
+
+- audio  -> input/audio.<ext>     (2+ audio files -> AmbiguousInput, ask the user)
+- script -> input/script.<ext>    (.txt/.md; 2+ -> AmbiguousInput)
+- images -> assets/logos | assets/screenshots | assets/images  (by name keyword)
+- videos -> assets/raw_footage if longer than 2 min, else assets/videos
+- anything else -> drop/_unknown
+"""
+import shutil
+import subprocess
+from collections.abc import Callable
+from datetime import datetime
+from pathlib import Path
+
+AUDIO = {".wav", ".mp3", ".m4a", ".aac", ".flac", ".ogg"}
+SCRIPT = {".txt", ".md"}
+IMAGE = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".svg"}
+VIDEO = {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"}
+RAW_FOOTAGE_SECONDS = 120
+
+
+class AmbiguousInput(Exception):
+    """More than one audio file or script. The user must pick one; nothing was moved."""
+
+
+def probe_duration(path: Path) -> float:
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                          "-of", "csv=p=0", str(path)], capture_output=True, text=True).stdout
+    try:
+        return float(out.strip())
+    except ValueError:
+        return 0.0
+
+
+def classify(path: Path, duration: Callable[[Path], float] = probe_duration) -> str:
+    """Destination folder relative to the project, or 'drop/_unknown'."""
+    ext, name = path.suffix.lower(), path.stem.lower()
+    if ext in AUDIO or ext in SCRIPT:
+        return "input"
+    if ext in IMAGE:
+        if "logo" in name or ext == ".svg":
+            return "assets/logos"
+        if any(k in name for k in ("screenshot", "screen", "ss_", "capture")):
+            return "assets/screenshots"
+        return "assets/images"
+    if ext in VIDEO:
+        return "assets/raw_footage" if duration(path) > RAW_FOOTAGE_SECONDS else "assets/videos"
+    return "drop/_unknown"
+
+
+def _free_name(dest: Path) -> Path:
+    stem, n = dest.stem, 1
+    while dest.exists():
+        dest = dest.with_name(f"{stem}__{n}{dest.suffix}")
+        n += 1
+    return dest
+
+
+def ingest(project: Path, duration: Callable[[Path], float] = probe_duration) -> list[tuple[Path, Path]]:
+    """Returns (source, destination) for every moved file."""
+    # ponytail: top-level files only; walk sub-folders if the user starts dropping folders
+    files = sorted(p for p in (project / "drop").iterdir() if p.is_file())
+    for kind, exts in (("audio", AUDIO), ("script", SCRIPT)):
+        new = [p for p in files if p.suffix.lower() in exts]
+        old = list((project / "input").glob(f"{kind}.*")) if new else []
+        if len(new) + len(old) > 1:
+            names = ", ".join(p.relative_to(project).as_posix() for p in old + new)
+            raise AmbiguousInput(f"more than one {kind}: {names}. Keep only one, move the rest out.")
+
+    moves = []
+    for src in files:
+        folder, ext = classify(src, duration), src.suffix.lower()
+        name = "audio" + ext if ext in AUDIO else "script" + ext if ext in SCRIPT else src.name
+        dest = _free_name(project / folder / name)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(src, dest)
+        moves.append((src, dest))
+
+    if moves:
+        stamp = f"{datetime.now():%Y-%m-%d %H:%M}"
+        with open(project / "project.md", "a", encoding="utf-8") as f:
+            f.writelines(f"- {stamp} ingest: `{s.relative_to(project).as_posix()}` -> "
+                         f"`{d.relative_to(project).as_posix()}`\n" for s, d in moves)
+    return moves
