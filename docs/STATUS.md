@@ -29,7 +29,7 @@ Current phase: **1 Audio -> Plan, done (2026-11-07)**. Next: **Phase 2, Assets**
 - [ ] resolve stage: project assets -> `_library` -> Wikimedia/Pexels -> missing
 - [ ] prompts stage for missing assets
 - [ ] storyboard with thumbnails
-- Test assets (user-approved): COPY (never move/modify) the media of the old hand-edited video, `E:\Youtube-AI agentsideos\` (mp4 clips + png images for the first audio segment), into `projects/01_AI_Agents/drop/`.
+- Test assets (user-approved): COPY (never move/modify) the media of the old hand-edited video, `E:\Youtube\13-AI agents\videos\01\` (mp4 clips + png images for the first audio segment), into `projects/01_AI_Agents/drop/`.
 - Testing only proves the pipeline works: no extra benchmarks, minimal waiting, smallest check per stage (user: "idi testing purpose kabbati time waste cheyoddu").
 
 ## Known issues / notes
