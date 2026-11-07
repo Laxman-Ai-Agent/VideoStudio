@@ -1,0 +1,6 @@
+# Kept out of searches (ripgrep / Grep tool): huge one-line data files that would flood the context.
+map.js
+lottie.min.js
+package-lock.json
+uv.lock
+tools/tests/fixtures/

@@ -3,9 +3,8 @@
 Talk to the user in Telugu (technical terms in English). Docs and code stay in English (cheaper for the usage limit).
 
 ## Read first, every session
-1. `docs/STATUS.md`: current phase, what is done, what is next, known issues.
-2. `docs/ARCHITECTURE.md`: design and the rules below in detail.
-3. Before adding any library: `docs/LIBRARIES.md`. Before re-arguing a choice: `docs/DECISIONS.md`.
+- `docs/STATUS.md` only (short: where we are, what is pending, known issues).
+- On demand, only the part you need (`grep -n` then read those lines): `docs/ARCHITECTURE.md` (design), `docs/LIBRARIES.md` (before adding a library), `docs/DECISIONS.md` (before re-arguing a choice), `docs/CHANGELOG.md` (history).
 
 ## Hard rules
 - Modules talk only through files. Shapes live in `tools/pipeline/contracts.py`. Changing a field's meaning means bumping `SCHEMA_VERSION` and adding a converter.
@@ -35,3 +34,5 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - Test the smallest thing that proves the change (one test file, one scene render); run the full test suite once per finished step. One screenshot per check, scaled down; prefer scripted DOM checks.
 - Shell heredocs: ASCII only. Put Telugu text in a file written with the Write tool, never inside a long heredoc (a parse error means sending it twice).
 - Long runs (renders, downloads) in the background; do not poll.
+- Every .md and code file stays under 450 lines. Split a module before it grows past that (e.g. `visual.py` + `visual_media.py`).
+- Huge data files (`map.js`, `lottie.min.js`, lock files, fixtures) are listed in `.ignore` so searches skip them; never open them.
