@@ -30,7 +30,13 @@ function tile(a) {
   meta.querySelector(".name").textContent = a.name;
   meta.querySelector(".chip").textContent = a.category.replace(/_/g, " ");
   b.append(st, meta);
-  b.addEventListener("click", () => openDetail({ pid: state.pid, refresh }, a));
+  b.classList.toggle("active", a.id === state.active);   // last opened card stays highlighted
+  b.addEventListener("click", () => {
+    state.active = a.id;
+    document.querySelectorAll(".tile.active").forEach((t) => t.classList.remove("active"));
+    b.classList.add("active");
+    openDetail({ pid: state.pid, refresh }, a);
+  });
   return b;
 }
 

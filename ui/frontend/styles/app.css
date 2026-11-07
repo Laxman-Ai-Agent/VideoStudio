@@ -55,6 +55,7 @@ h1 { margin: 0; font-size: 34px; letter-spacing: -.01em; }
 .tile { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--card); border: 1px solid var(--line);
         cursor: pointer; transition: transform .15s, border-color .15s; text-align: left; padding: 0; }
 .tile:hover, .tile:focus-visible { transform: translateY(-2px); border-color: var(--purple2); outline: none; }
+.tile.active { border: 2px solid var(--purple2); box-shadow: 0 0 0 3px rgba(167, 139, 250, .35), 0 0 22px rgba(167, 139, 250, .45); }
 .thumb { aspect-ratio: 16 / 9; width: 100%; display: block; object-fit: cover; background: #0d0f22; }
 .thumb.contain { object-fit: contain; background: #1b1e3d; }
 .ph { aspect-ratio: 16 / 9; display: grid; place-items: center; text-align: center; padding: 10px; color: var(--muted);

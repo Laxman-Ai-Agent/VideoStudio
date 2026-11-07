@@ -50,16 +50,9 @@ function why(a) {
 }
 
 function info(a) {
-  const o = a.output, m = a.media, p = a.processing;
-  const rows = [
-    ["Asset ID", a.id], ["Category", a.category.replace(/_/g, " ") + (a.subcategory ? ` · ${a.subcategory}` : "")],
-    ["Scene", a.scenes.length ? a.scenes.map((s) => `Scene ${s}`).join(", ") : "—"],
-    ["Role", a.role + (a.role === "overlay" ? ` · ${a.placement.position}, ${a.placement.animation}, at ${a.placement.at}s` : "")],
-    ["Method", a.method + (a.source_hint ? ` · ${a.source_hint}` : "")],
-    ["Status", a.status.replace(/_/g, " ")], ["File path", a.file || "—"],
-    ["Original upload", a.source_file || "—"],
+  const o = a.output, p = a.processing;
+  const rows = [  // user asked for the required size only; id/category/status etc. are dropped
     ["Required", `${o.width}×${o.height} ${o.format.toUpperCase()}${o.transparent ? " · transparent background" : ""}`],
-    ["Dimensions", m.source_w ? `${m.source_w}×${m.source_h} → ${m.out_w}×${m.out_h}` : "—"],
   ];
   if (p.log.length) rows.push(["Processing", p.log.join("; ")]);
   if (a.validation?.checks?.length) rows.push(["Validation", `${a.validation.status}: ${a.validation.checks.join("; ")}`]);
