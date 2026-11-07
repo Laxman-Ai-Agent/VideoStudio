@@ -202,3 +202,31 @@ details summary { cursor: pointer; color: #c9bfff; font-size: 13.5px; }
 @keyframes ready { to { box-shadow: 0 0 0 10px rgba(139, 107, 255, 0); } }
 .seg button { transition: background .18s, color .18s; }
 @media (max-width: 900px) { .modal { padding: 10px; } .sheet { height: auto; } .d-left, .d-body { height: auto; } }
+
+/* ---- detail v5: compact type and spacing so the popup fits without scrolling ---- */
+.d-left { padding: 20px 24px; gap: 10px; }
+.frame { max-height: 62vh; }
+.d-body { padding: 20px 28px 16px; gap: 11px; }
+.d-head { padding-right: 56px; }
+.d-head h2 { font-size: 19px; }
+.badge { font-size: 12px; padding: 2px 9px; }
+.why { padding: 9px 12px; gap: 5px; }
+.why-row { font-size: 12.5px; grid-template-columns: 96px 1fr; gap: 8px; }
+.why-row q { font-size: 14px; }
+.d-info { font-size: 13px; gap: 4px 14px; }
+.d-section h3 { font-size: 13.5px; }
+textarea { font-size: 13px; padding: 8px 10px; line-height: 1.4; }
+#d-prompt { min-height: 140px; font-size: 13px; }
+.hint { font-size: 11.5px; margin-top: 4px; }
+.msg { font-size: 12.5px; min-height: 18px; }
+.btn { font-size: 13px; padding: 7px 14px; }
+.btn.ghost { padding: 5px 10px; font-size: 12.5px; }
+.d-actions { padding-top: 10px; }
+.d-actions .btn { min-width: 104px; padding: 8px 16px; }
+.ctl-row, .ctl-grid { font-size: 12.5px; }
+.ctl-row { margin-bottom: 6px; gap: 10px; }
+.ctl-row select, .ctl-row input[type=number] { padding: 4px 6px; }
+.seg button { font-size: 12.5px; padding: 5px 10px; }
+.media h3 { font-size: 13px; }
+details summary { font-size: 12.5px; }
+.close { width: 42px; height: 42px; font-size: 30px; top: 14px; right: 16px; }
