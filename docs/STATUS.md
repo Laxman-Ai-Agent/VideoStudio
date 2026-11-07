@@ -89,6 +89,12 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Every asset shows its narration words, why it is there, its scene; prompt edit keeps the original; framing (aspect, fill/fit, crop, zoom) and video trim re-process from the original; Replace = preview then confirm; history. Tests 70; checked in the browser on 01 (A002)
 - Older processed files show "Original ?" size until they are processed again
 
+## Housekeeping (2026-11-07)
+- [x] Working tree had been put back to an older copy (70d05bc) while HEAD was da70ed7; restored to da70ed7 (nothing unique was lost). Tests 70
+- [x] 01 `visual-assets.json`: `context` written for all 24 assets; dashboard checked in the browser (narration, context, per-type controls, video preview)
+- [x] Token budget rules in CLAUDE.md; `.claude/settings.local.json` (local, git-ignored) sets `GATEGUARD_EXEMPT_GLOBS` for this folder
+- [ ] Verify the hook exemption in a NEW session (first Write of a new file should not be blocked; if it is, try the glob `E:/VideoStudio/**`)
+
 ## Known issues / notes
 - Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.
