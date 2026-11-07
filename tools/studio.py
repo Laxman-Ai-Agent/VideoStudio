@@ -145,7 +145,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
 
     # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
     from pipeline import render as rnd
-    from pipeline.assemble import assemble
+    from pipeline.assemble import assemble, pick_music, sfx_cues
     brand = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8"))
     plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
     mode = "final" if final else "preview"
@@ -173,9 +173,13 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
 
         out = p / "output" / f"{mode}_{d.removesuffix('_final')}.mp4"
         total = round(plan.scenes[-1].end * brand.fps)
-        ran = run_stage(p, f"assemble_{d}", clips + [audio], [out],
-                        lambda c=clips, o=out: assemble(c, audio, o, brand.fps, total), extra=str(total))
-        print(f"  assemble {fmt}: {'done' if ran else 'up to date'} -> {out}")
+        music = pick_music(LIBRARY, brand.music_mood)  # missing folder/file = no music
+        cues = sfx_cues([(j.scene.id, j.scene.start, j.template, j.scene.params) for j in jobs], LIBRARY)
+        ran = run_stage(p, f"assemble_{d}", clips + [audio] + ([music] if music else []) + [f for _, f in cues],
+                        [out], lambda c=clips, o=out, m=music, q=cues: assemble(c, audio, o, brand.fps, total, m, q),
+                        extra=f"{total}|{[(round(t, 3), f.name) for t, f in cues]}")
+        print(f"  assemble {fmt}: {'done' if ran else 'up to date'} -> {out}"
+              f" (music: {music.name if music else 'none'}, sfx: {len(cues)})")
     print(f"  credits: {credits_txt}")
     if failed:
         print(f"  NOTE: {failed} scene clip(s) are placeholders (see work/scenes/*/report.json)")

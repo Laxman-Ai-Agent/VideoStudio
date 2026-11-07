@@ -84,3 +84,22 @@ def test_caption_pages_split_on_count_pause_and_cut():
     # "a" (midpoint before the cut) and "g" (midpoint after) belong to other scenes
     assert [[x["t"] for x in p] for p in pages] == [["b", "c", "d."], ["e"], ["f"]]
     assert pages[0][0]["s"] == 0.0 and pages[2][0]["s"] == 1.6
+
+
+def test_assemble_mixes_ducked_music_and_sfx_at_target_loudness(tmp_path):
+    from pipeline.assemble import loudness, pick_music, sfx_cues
+    lib = tmp_path / "lib"
+    (lib / "music" / "calm").mkdir(parents=True)
+    (lib / "sfx" / "whoosh").mkdir(parents=True)
+    _ffmpeg("-f", "lavfi", "-i", "sine=frequency=220:duration=1", str(lib / "music" / "calm" / "m.wav"))
+    _ffmpeg("-f", "lavfi", "-i", "anoisesrc=d=0.3:a=0.5", str(lib / "sfx" / "whoosh" / "w.wav"))
+    assert pick_music(lib, "dramatic") is None and pick_music(lib, "") is None  # missing folder = no music
+    music = pick_music(lib, "calm")
+    cues = sfx_cues([(1, 0, "photo", {}), (2, 1.0, "headline", {}), (3, 1.5, "photo", {"sfx": "click"})], lib)
+    assert [round(t, 2) for t, _ in cues] == [0.85]  # whoosh before the cut into a graphic; no click folder
+    clip, audio, out = tmp_path / "c.mp4", tmp_path / "a.wav", tmp_path / "o.mp4"
+    _ffmpeg("-f", "lavfi", "-i", "color=c=blue:s=64x36:r=30", "-frames:v", "30", "-pix_fmt", "yuv420p", str(clip))
+    _ffmpeg("-f", "lavfi", "-i", "sine=frequency=440:duration=1.5", "-af", "volume=-20dB", str(audio))
+    assemble([clip, clip], audio, out, FPS, 60, music, cues)  # music loops past its 1 s length
+    assert rnd.frames_of(out) == 60
+    assert abs(loudness(out) + 14) < 1.0
