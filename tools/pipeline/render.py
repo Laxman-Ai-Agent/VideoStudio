@@ -28,6 +28,7 @@ GSAP = HF / "dist" / "vendor" / "npm" / "gsap@3.15.0" / "dist" / "gsap.min.js"
 PREVIEW_SHORT_SIDE = 720
 FIT_TOLERANCE = 0.35  # aspect mismatch above this -> blurred backdrop instead of a hard crop
 RENDER_TIMEOUT = 900
+REMOTION = ENGINES / "remotion" / "render.mjs"
 CAPTION_WORDS = {"landscape": 4, "portrait": 3}  # max words per caption page
 CAPTION_BREAK = 0.5  # a pause longer than this starts a new caption page
 
@@ -202,6 +203,10 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "asset": asset_name, "fit": fit, "colors": b.colors, "fonts": b.fonts, "error": error,
              "captions": job.captions or []}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
+    (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")
+    if load_template(template).engine == "remotion":
+        shutil.copy2(TEMPLATES / template / "Composition.jsx", build_dir / "Composition.jsx")
+        return
     html = (TEMPLATES / template / "index.html").read_text("utf-8")
     for k, v in {"{{W}}": job.w, "{{H}}": job.h, "{{DUR}}": f"{job.duration:.4f}", "{{ASSET}}": asset_name}.items():
         html = html.replace(k, str(v))
@@ -236,13 +241,29 @@ def hyperframes(build_dir: Path, out: Path, fps: int, final: bool) -> None:
         raise RuntimeError(f"hyperframes exit {p.returncode}: {(p.stderr or p.stdout).strip()[-500:]}")
 
 
+def remotion(build_dir: Path, out: Path, fps: int, final: bool) -> None:
+    """Second engine (tools/engines/remotion). Same contract; fps/size come from scene.json."""
+    from .doctor import CHROME_PATHS
+    chrome = next((c for c in CHROME_PATHS if c.exists()), None)
+    if not chrome:
+        raise FileNotFoundError("Chrome not found (studio doctor)")
+    p = subprocess.run(["node", str(REMOTION), str(build_dir), str(out), "final" if final else "preview", str(chrome)],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=RENDER_TIMEOUT)
+    if p.returncode or not out.exists():
+        raise RuntimeError(f"remotion exit {p.returncode}: {(p.stderr or p.stdout).strip()[-500:]}")
+
+
+ENGINE_FN = {"hyperframes": hyperframes, "remotion": remotion}
+
+
 def _color_clip(job: Job, dest: Path) -> None:
     bg = (job.brand.colors.get("background") or "#000000").lstrip("#")
     _ffmpeg(["-f", "lavfi", "-i", f"color=c=0x{bg}:s={job.w}x{job.h}:r={job.fps}", "-frames:v", str(job.frames),
              "-c:v", "libx264", "-pix_fmt", "yuv420p", str(dest)])
 
 
-def render_one(job: Job, final: bool, render=hyperframes) -> SceneRender:
+def render_one(job: Job, final: bool, render=None) -> SceneRender:
+    """`render` overrides the engine (tests); default = the template's engine from template.json."""
     t0 = time.monotonic()
     work = job.out.parent / ".build" / job.out.stem
     raw = job.out.with_name(job.out.stem + ".raw.mp4")
@@ -251,7 +272,7 @@ def render_one(job: Job, final: bool, render=hyperframes) -> SceneRender:
     for template in dict.fromkeys([job.template, "missing"]):  # requested template, then the tile
         try:
             build(job, work, template, error)
-            render(work, raw, job.fps, final)
+            (render or ENGINE_FN[load_template(template).engine])(work, raw, job.fps, final)
             _exact_frames(raw, tmp, job)
             break
         except Exception as e:  # noqa: BLE001 - isolation: any scene failure becomes a report entry
@@ -268,7 +289,7 @@ def render_one(job: Job, final: bool, render=hyperframes) -> SceneRender:
 
 
 def render_format(jobs: list[Job], fmt: str, final: bool, workers: int = 2,
-                  render=hyperframes, log=print) -> RenderReport:
+                  render=None, log=print) -> RenderReport:
     """Render every uncached job with `workers` parallel HyperFrames processes; write report.json."""
     out_dir = jobs[0].out.parent
     out_dir.mkdir(parents=True, exist_ok=True)

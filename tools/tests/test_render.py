@@ -29,7 +29,8 @@ def _ffmpeg(*args):
 def _fake(calls, fail):
     def render(build_dir, out, fps, final):
         scene = json.loads((build_dir / "scene.js").read_text("utf-8").split("=", 1)[1].rstrip(";\n"))
-        tpl = "chart" if 'id="bars"' in (build_dir / "index.html").read_text("utf-8") else "other"
+        html = build_dir / "index.html"  # remotion templates have no index.html
+        tpl = "chart" if html.exists() and 'id="bars"' in html.read_text("utf-8") else "other"
         calls.append(scene["id"])
         if tpl in fail:
             raise RuntimeError("boom")
@@ -125,3 +126,13 @@ def test_qa_flags_black_and_frozen_video(tmp_path):
             "-filter_complex", "[0][1]concat=n=2", "-pix_fmt", "yuv420p", str(v))
     black, freeze = video_events(v)
     assert black and freeze
+
+
+def test_build_follows_template_engine(tmp_path):
+    jobs = rnd.plan_jobs(_plan(), RESOLVED, BRAND, "16:9", tmp_path, tmp_path / "o", final=False)
+    for j in jobs[:2]:  # headline -> remotion input, chart -> hyperframes input
+        rnd.build(j, tmp_path / j.template, j.template)
+        engine = rnd.load_template(j.template).engine
+        assert (tmp_path / j.template / "scene.json").exists()
+        assert (tmp_path / j.template / ("Composition.jsx" if engine == "remotion" else "index.html")).exists()
+    assert {rnd.load_template(j.template).engine for j in jobs[:2]} == {"remotion", "hyperframes"}

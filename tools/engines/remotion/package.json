@@ -1,0 +1,19 @@
+{
+  "name": "engine-remotion",
+  "private": true,
+  "description": "Isolated Remotion render engine. Contract: scene JSON + template in, one MP4 out. License: free for individuals and companies of up to 3 people (remotion.dev/license).",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.541",
+    "@remotion/renderer": "4.0.541",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  }
+}

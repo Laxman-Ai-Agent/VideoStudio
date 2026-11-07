@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .config import CACHE_ENV, ENGINES, FIXTURE, ROOT
+from .config import CACHE_ENV, ENGINES, FIXTURE, MODELS, ROOT
 
 CHROME_PATHS = [
     Path(r"C:\Program Files\Google\Chrome\Application\chrome.exe"),
@@ -40,6 +40,16 @@ def checks() -> list[tuple[str, str, str]]:
     hf = ENGINES / "hyperframes" / "node_modules" / "hyperframes" / "bin" / "hyperframes.mjs"
     r.append(("ok" if hf.exists() else "fail", "HyperFrames",
               "installed" if hf.exists() else "run: npm ci in tools/engines/hyperframes"))
+    rm = ENGINES / "remotion" / "node_modules" / "@remotion" / "renderer" / "package.json"
+    r.append(("ok" if rm.exists() else "fail", "Remotion",
+              "installed" if rm.exists() else "run: npm ci in tools/engines/remotion"))
+    try:
+        import rembg  # noqa: F401
+        from .prepare import MODEL
+        model = MODELS / "rembg" / "models" / MODEL
+        r.append(("ok", "rembg (parallax)", f"model {MODEL}: {'cached' if model.exists() else 'downloads on first use'}"))
+    except Exception as e:  # noqa: BLE001 - parallax falls back to plain photos
+        r.append(("warn", "rembg (parallax)", f"{type(e).__name__}: parallax scenes render as plain photos"))
     from .render import GSAP, TEMPLATES, load_template  # templates validate + GSAP bundled by HyperFrames
     bad = []
     names = sorted(d.name for d in TEMPLATES.iterdir() if (d / "template.json").exists())

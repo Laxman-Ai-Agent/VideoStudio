@@ -9,6 +9,7 @@ _brand/*
 tools/.venv/
 tools/node_modules/
 tools/engines/*/node_modules/
+tools/engines/remotion/.bundles/
 tools/models/
 tools/.cache/
 tools/tests/fixtures/**/*.wav
