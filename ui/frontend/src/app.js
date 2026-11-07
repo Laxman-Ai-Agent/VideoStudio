@@ -112,7 +112,7 @@ init();
 
 // Live update: a frontend file changed -> reload the page; visual-assets.json changed -> reload the data
 // (and the open popup) in place. Unsaved edits in the popup are never thrown away.
-let seen = null;
+let seen = null, liveFails = 0;
 setInterval(async () => {
   if (document.hidden || !state.pid) return;
   try {
@@ -120,5 +120,9 @@ setInterval(async () => {
     if (seen && v.ui !== seen.ui && !hasUnsaved()) return location.reload();
     if (seen && v.data !== seen.data) await liveSync(refresh);
     seen = v;
-  } catch { /* server restarting: try again next tick */ }
+    if (liveFails) { liveFails = 0; notice(""); }
+  } catch {
+    // an old server has no /api/version, a stopped one does not answer: say so instead of failing silently
+    if (++liveFails === 3) notice("Live update is off: restart the dashboard (close its window, run start-dashboard.bat).");
+  }
 }, 1500);
