@@ -17,7 +17,7 @@ from pathlib import Path
 from .assets import VIDEO, file_hash, probe
 from .config import BRAND, ENGINES, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
-                        TemplateSpec, Word, Prepared)
+                        TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
 
 TEMPLATES = TOOLS / "templates"
@@ -132,6 +132,7 @@ class Job:
     captions: list = None  # caption pages (caption_pages), None = no captions
     layers: tuple = ()     # photo_parallax: (fg.png, bg.png) from the prepare stage
     trans: tuple = ("", "")  # (in, out) transition at this scene's cuts, see transitions()
+    style: ThemeSpec = None  # the video's visual theme (work/theme.json), see theme.py
 
     @property
     def duration(self) -> float:
@@ -140,14 +141,17 @@ class Job:
 
 def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root: Path,
               out_dir: Path, final: bool, words: list[Word] | None = None,
-              prepared: Prepared | None = None) -> list[Job]:
+              prepared: Prepared | None = None, theme: ThemeSpec | None = None) -> list[Job]:
     """Cheap: hashes inputs only. Key = scene JSON + asset hash + template (version + files)
-    + brand.json + output size/fps."""
+    + brand.json + theme + output size/fps."""
+    from .theme import from_brand
+    style = theme or from_brand(brand)
     of = brand.formats[fmt]
     w, h = size_for(of.width, of.height, final)
-    fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in brand.fonts.values() if fam
+    fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in set(style.fonts.values()) if fam
              for f in sorted((FONTS / fam).glob("*.ttf"))]  # adding/removing a font file re-renders
-    brand_hash = hashlib.sha256((brand.model_dump_json() + str(fonts)).encode()).hexdigest()[:16]
+    look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name"})
+    brand_hash = hashlib.sha256((brand.model_dump_json() + str(fonts) + look).encode()).hexdigest()[:16]
     shared = _dir_hash(SHARED)
     jobs, tpl_hash = [], {}
     by_id = {r.id: r for r in resolved.scenes}
@@ -174,7 +178,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
                                          brand_hash, fmt, w, h, brand.fps, caps, trans[s.id]]).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id]))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style))
     return jobs
 
 
@@ -239,7 +243,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     build_dir.mkdir(parents=True)
     for f in (SHARED / "studio.js", GSAP):
         shutil.copy2(f, build_dir / f.name)
-    (build_dir / "studio.css").write_text(font_css(job.brand.fonts.values(), build_dir) + "\n"
+    (build_dir / "studio.css").write_text(font_css(job.style.fonts.values(), build_dir) + "\n"
                                           + (SHARED / "studio.css").read_text("utf-8"), "utf-8")
     asset_name, fit = "", "cover"
     if template == "lottie":
@@ -263,11 +267,15 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         else:
             asset_name = "asset" + job.asset.suffix.lower()
             shutil.copy2(job.asset, build_dir / asset_name)
-    s, b = job.scene, job.brand
+    s, st = job.scene, job.style
+    f = st.fonts
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None), "colors": {**b.colors, **b.themes.get(b.theme, {})}, "theme": b.theme,
-             "fonts": b.fonts, "error": error,
+             "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
+             "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
+             "theme": st.name, "style": {"background": st.background, "text": st.text},
+             "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script")},
+             "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1]}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")

@@ -60,6 +60,14 @@ def checks() -> list[tuple[str, str, str]]:
             bad.append(f"{t}: {type(e).__name__}")
     r.append(("ok" if not bad and GSAP.exists() else "fail", "Templates",
               ", ".join(names) if not bad and GSAP.exists() else f"{bad or ''} gsap: {GSAP.exists()}"))
+    try:  # per-video themes: every preset loads and its fonts exist (else a safe font is used)
+        from .theme import build, presets
+        names = list(presets())
+        weak = [n for n in names if any("not found" in i for i in build("", {"preset": n}).issues)]
+        r.append(("warn" if weak or not names else "ok", "Themes",
+                  f"{len(names)} presets" + (f"; font fallback in {weak}" if weak else "")))
+    except Exception as e:  # noqa: BLE001
+        r.append(("fail", "Themes", f"{type(e).__name__}: {e}"))
     chrome = next((p for p in CHROME_PATHS if p.exists()), None)
     r.append(("ok" if chrome else "fail", "Chrome (render)", str(chrome) if chrome else "not found"))
 

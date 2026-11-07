@@ -1,0 +1,59 @@
+{
+ "name": "education",
+ "category": "Education",
+ "colors": {
+  "background": "#FAFAF7",
+  "text": "#1B1F3B",
+  "text2": "#4B5170",
+  "accent": "#2563EB",
+  "highlight": "#FACC15",
+  "warning": "#DC2626",
+  "panel": "rgba(255,255,255,0.95)",
+  "capbg": "rgba(27,31,59,0.85)"
+ },
+ "fonts": {
+  "heading": "Baloo Tammudu 2",
+  "body": "Hind Guntur",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "solid",
+  "colors": [
+   "#FAFAF7"
+  ],
+  "pattern": "dots",
+  "pattern_opacity": 0.1,
+  "texture": "none",
+  "texture_opacity": 0.0
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 600,
+  "shadow": "none",
+  "tracking": 0.0,
+  "scale": 1.1
+ },
+ "keywords": [
+  "learn",
+  "learning",
+  "study",
+  "exam",
+  "school",
+  "student",
+  "teacher",
+  "tips",
+  "how",
+  "explain",
+  "explained",
+  "basics",
+  "guide",
+  "tutorial",
+  "course",
+  "నేర్చుకో",
+  "విద్యార్థి",
+  "పరీక్ష",
+  "చదువు",
+  "టిప్స్",
+  "ఎలా"
+ ]
+}

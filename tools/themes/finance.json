@@ -1,0 +1,65 @@
+{
+ "name": "finance",
+ "category": "Business / Finance",
+ "colors": {
+  "background": "#F4F6F2",
+  "text": "#10231A",
+  "text2": "#41574B",
+  "accent": "#16A34A",
+  "highlight": "#FDE047",
+  "warning": "#DC2626",
+  "panel": "rgba(255,255,255,0.95)",
+  "capbg": "rgba(16,35,26,0.85)"
+ },
+ "fonts": {
+  "heading": "Anek Telugu",
+  "body": "Hind Guntur",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "solid",
+  "colors": [
+   "#F4F6F2"
+  ],
+  "pattern": "grid",
+  "pattern_opacity": 0.07,
+  "texture": "grain",
+  "texture_opacity": 0.06
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 600,
+  "shadow": "none",
+  "tracking": 0.0,
+  "scale": 1.1
+ },
+ "keywords": [
+  "money",
+  "stock",
+  "stocks",
+  "market",
+  "business",
+  "economy",
+  "invest",
+  "investment",
+  "startup",
+  "rupees",
+  "salary",
+  "company",
+  "companies",
+  "profit",
+  "loss",
+  "bank",
+  "loan",
+  "gold",
+  "price",
+  "jobs",
+  "డబ్బు",
+  "వ్యాపారం",
+  "ఆర్థిక",
+  "షేర్",
+  "జీతం",
+  "కంపెనీ",
+  "బ్యాంక్"
+ ]
+}

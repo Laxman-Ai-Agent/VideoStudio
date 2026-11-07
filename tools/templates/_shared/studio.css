@@ -1,5 +1,5 @@
 html, body { margin: 0; padding: 0; background: var(--bg); }
-#root { position: relative; overflow: hidden; width: var(--w); height: var(--h); background: var(--bg);
+#root { position: relative; overflow: hidden; width: var(--w); height: var(--h); background: var(--bg); background-image: var(--bg-img, none);
         font-family: var(--font); color: var(--text); }
 .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .safe { position: absolute; top: var(--st); bottom: var(--sb); left: var(--sl); right: var(--sr);
@@ -16,22 +16,22 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 /* captions overlay (studio.js): bottom third inside the safe area; lower thirds move above it */
 .captions { position: absolute; left: var(--sl); right: var(--sr); bottom: var(--sb); height: calc(var(--u) * 15);
             display: flex; align-items: flex-end; justify-content: center; text-align: center; pointer-events: none; }
-.cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 800; font-size: calc(var(--u) * 5.2);
+.cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 800; font-size: calc(var(--u) * 5.2 * var(--tscale, 1));
             line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9);
             background: var(--capbg); border-radius: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.6); }
-.portrait .cap-page { font-size: calc(var(--u) * 6.4); }
+.portrait .cap-page { font-size: calc(var(--u) * 6.4 * var(--tscale, 1)); }
 .cap-word { transform-origin: 50% 70%; }
 .has-captions .safe { bottom: calc(var(--sb) + var(--u) * 16); }
 
 /* ---- paper theme (brand.json "theme": "paper"): light page, dark ink, softer photo shade ---- */
-.theme-paper .shade { background: linear-gradient(to top, rgba(0,0,0,.25), rgba(0,0,0,0) 35%); }
-.theme-paper .cap-page { text-shadow: none; }
-.theme-paper .lower { box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.5) rgba(0,0,0,.18); }
-.theme-paper #line { background: rgba(0,0,0,.18) !important; }             /* timeline */
-.theme-paper .land { fill: #ddd7cb; stroke: #b9b1a2; }                         /* map */
-.theme-paper .state { stroke: #a99f8f; }
-.theme-paper .focus { stroke: #7a1d16; filter: none; }
-.theme-paper .plabel { stroke: #F2EEE6; }
+.tone-light .shade { background: linear-gradient(to top, rgba(0,0,0,.25), rgba(0,0,0,0) 35%); }
+.tone-light .cap-page { text-shadow: none; }
+.tone-light .lower { box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.5) rgba(0,0,0,.18); }
+.tone-light #line { background: rgba(0,0,0,.18) !important; }             /* timeline */
+.tone-light .land { fill: #ddd7cb; stroke: #b9b1a2; }                         /* map */
+.tone-light .state { stroke: #a99f8f; }
+.tone-light .focus { stroke: #7a1d16; filter: none; }
+.tone-light .plabel { stroke: #F2EEE6; }
 .grain { position: absolute; inset: -200px; pointer-events: none; opacity: .13; mix-blend-mode: multiply;
          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>"); }
 
@@ -57,3 +57,27 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 /* ---- transitions (studio.js): the frame wrapper and the accent wipe panel ---- */
 .tx { position: absolute; inset: 0; transform-origin: 50% 50%; }
 .wipe { position: absolute; inset: 0; background: var(--accent); z-index: 20; }
+
+/* ---- per-video theme (work/theme.json; studio.js sets the variables) ---- */
+.grid, .logo-grid { background-image: var(--pat-img) !important; background-size: var(--pat-size) !important;
+                    opacity: var(--pat-op) !important; }
+:root #t, :root #title, :root .ln.st-bold, :root .ln.st-box, :root .ln.st-outline, :root #stat .val, :root .lower, :root .date
+  { font-family: var(--font-head); font-weight: var(--hw); letter-spacing: var(--tracking);
+    -webkit-text-stroke: var(--outline, 0) var(--outline-c, transparent); paint-order: stroke fill; }
+:root #t:not(.lower), :root #title, :root .ln.st-bold, :root .ln.st-outline, :root #stat .val, :root .date { text-shadow: var(--tshadow); }
+:root #kicker, :root .ln.st-plain, :root #stat .lab, :root .label { color: var(--text2); opacity: 1; }
+#root { font-weight: var(--bw); }
+.tone-dark .grain { mix-blend-mode: overlay; }
+.tex { position: absolute; inset: -6%; pointer-events: none; }
+.tex-smoke { background: radial-gradient(ellipse 45% 35% at 25% 70%, rgba(200,200,200,.35), transparent 70%),
+                         radial-gradient(ellipse 50% 40% at 75% 30%, rgba(200,200,200,.25), transparent 70%),
+                         radial-gradient(ellipse 60% 30% at 50% 95%, rgba(200,200,200,.3), transparent 70%); filter: blur(calc(var(--u) * 2)); }
+.tex-particles { background-image: radial-gradient(circle, var(--accent) calc(var(--u) * .14), transparent calc(var(--u) * .2)),
+                                   radial-gradient(circle, var(--text) calc(var(--u) * .1), transparent calc(var(--u) * .16));
+                 background-size: calc(var(--u) * 11) calc(var(--u) * 13), calc(var(--u) * 17) calc(var(--u) * 7);
+                 background-position: 0 0, calc(var(--u) * 5) calc(var(--u) * 3); }
+.tex-stars { background-image: radial-gradient(circle, #fff calc(var(--u) * .12), transparent calc(var(--u) * .18)),
+                               radial-gradient(circle, #fff calc(var(--u) * .07), transparent calc(var(--u) * .12)),
+                               radial-gradient(circle, var(--marker) calc(var(--u) * .09), transparent calc(var(--u) * .14));
+             background-size: calc(var(--u) * 19) calc(var(--u) * 23), calc(var(--u) * 9) calc(var(--u) * 11), calc(var(--u) * 31) calc(var(--u) * 17);
+             background-position: 0 0, calc(var(--u) * 4) calc(var(--u) * 6), calc(var(--u) * 12) calc(var(--u) * 2); }

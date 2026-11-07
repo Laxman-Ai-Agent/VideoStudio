@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-07 · Per-video visual themes
+- `ThemeSpec` contract, `pipeline/theme.py` (auto pick by English/Telugu keywords, manual preset + overrides, validation: colours, WCAG contrast fix, font availability with safe fallbacks, unsupported values), 11 presets in `tools/themes/`.
+- theme stage -> `work/theme.json`; `studio theme NN [--preset NAME | --auto]` (never renders). Doctor checks the presets.
+- render: theme -> scene colours, fonts (`font_css` loads the theme fonts), `scene.style`; theme in the cache key.
+- `_shared/studio.js|css`: heading/body/script fonts, weights, tracking, shadow, outline, text scale, secondary text and warning colours, gradient backgrounds, grid/dots/lines patterns, grain/paper/smoke/particles/stars textures, light/dark tone rules (`.tone-light` replaces `.theme-paper`). Stat card down arrow uses the warning colour.
+- Tests: 61.
+
 ## 2026-11-07 · Free asset sources
 - `params.entity`: exact person photo / brand logo via Wikidata + Commons, Simple Icons fallback for logos (transparent PNG card by headless Chrome).
 - Openverse added to keyword search (photos, no key). Commons URLs keep the right file extension.

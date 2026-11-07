@@ -1,0 +1,63 @@
+{
+ "name": "space",
+ "category": "Space / Astronomy",
+ "colors": {
+  "background": "#07051A",
+  "text": "#EDEBFF",
+  "text2": "#B4AEE0",
+  "accent": "#A78BFA",
+  "highlight": "#67E8F9",
+  "warning": "#FB7185",
+  "panel": "rgba(12,9,40,0.82)",
+  "capbg": "rgba(0,0,0,0.6)"
+ },
+ "fonts": {
+  "heading": "Anek Telugu",
+  "body": "Hind Guntur",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "radial",
+  "colors": [
+   "#1B1446",
+   "#05040F"
+  ],
+  "pattern": "none",
+  "pattern_opacity": 0.0,
+  "texture": "stars",
+  "texture_opacity": 0.7
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 500,
+  "shadow": "glow",
+  "tracking": 0.02,
+  "scale": 1.1
+ },
+ "keywords": [
+  "space",
+  "planet",
+  "galaxy",
+  "nasa",
+  "isro",
+  "moon",
+  "mars",
+  "sun",
+  "universe",
+  "star",
+  "stars",
+  "rocket",
+  "astronaut",
+  "black",
+  "hole",
+  "orbit",
+  "satellite",
+  "అంతరిక్షం",
+  "గ్రహం",
+  "చంద్రుడు",
+  "ఇస్రో",
+  "నక్షత్రం",
+  "విశ్వం",
+  "రాకెట్"
+ ]
+}

@@ -11,7 +11,7 @@
 #t:empty { display: none; }
 .card { background: var(--panel); border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 2.4) calc(var(--u) * 3);
         box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) rgba(0,0,0,.18); }
-.theme-paper .card { background: #fff; }
+.tone-light .card { background: #fff; }
 .item { display: flex; align-items: center; gap: calc(var(--u) * 1.6); font-weight: 800; font-size: calc(var(--u) * 4.6);
         padding: calc(var(--u) * .9) 0; border-bottom: 1px solid rgba(127,127,127,.25); }
 .item:last-child { border-bottom: 0; }
@@ -64,7 +64,7 @@
     t += 0.3 + items.length * step;
   }
   if (p.stat) {
-    const up = p.stat.trend === "up", c = up ? "#1f9d55" : "var(--accent)";
+    const up = p.stat.trend === "up", c = up ? "#1f9d55" : "var(--warn)";
     const card = add('<div class="lab"></div><div class="row"><div class="val"></div><div class="arrow"></div></div>' +
                      '<svg viewBox="0 0 100 30" preserveAspectRatio="none"><path/></svg>', "card", "stat");
     card.querySelector(".lab").textContent = p.stat.label || "";

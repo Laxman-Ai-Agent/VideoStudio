@@ -1,0 +1,51 @@
+{
+ "name": "documentary",
+ "category": "Documentary",
+ "colors": {
+  "background": "#14161B",
+  "text": "#F4F1EA",
+  "text2": "#B8B3A8",
+  "accent": "#E8B04B",
+  "highlight": "#E8B04B",
+  "warning": "#E5484D",
+  "panel": "rgba(20,22,27,0.84)",
+  "capbg": "rgba(0,0,0,0.6)"
+ },
+ "fonts": {
+  "heading": "Anek Telugu",
+  "body": "Noto Sans Telugu",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "linear",
+  "colors": [
+   "#1A1D24",
+   "#0B0C0F"
+  ],
+  "angle": 180,
+  "pattern": "none",
+  "pattern_opacity": 0.0,
+  "texture": "grain",
+  "texture_opacity": 0.1
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 500,
+  "shadow": "soft",
+  "tracking": 0.01,
+  "scale": 1.1
+ },
+ "keywords": [
+  "story",
+  "documentary",
+  "life",
+  "journey",
+  "real",
+  "inside",
+  "truth",
+  "investigation",
+  "కథ",
+  "నిజం",
+  "జీవితం"
+ ]
+}

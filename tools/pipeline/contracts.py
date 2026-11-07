@@ -222,3 +222,21 @@ class QAReport(BaseModel):
     schema_version: int = SCHEMA_VERSION
     mode: Literal["preview", "final"]
     files: list[QAFile]
+
+
+# ---- per-video visual theme -------------------------------------------------
+
+class ThemeSpec(BaseModel):
+    """work/theme.json - one visual identity per video (theme stage, tools/pipeline/theme.py): text
+    colours, fonts, text panels, background colour/gradient/pattern/texture, outline/shadow.
+    Scene layouts, motion and transitions are NOT part of it."""
+    schema_version: int = SCHEMA_VERSION
+    name: str                     # preset it came from (tools/themes/<name>.json)
+    category: str = ""
+    source: str = "auto"          # auto (keywords) | manual (project theme.json) | brand (brand.json fallback)
+    scores: dict[str, float] = Field(default_factory=dict)  # keyword hits per preset (auto)
+    colors: dict[str, str]        # background text text2 accent highlight warning panel capbg
+    fonts: dict[str, str]         # heading body script (folder names in _brand/fonts, or installed fonts)
+    background: dict = Field(default_factory=dict)  # type colors angle pattern pattern_opacity texture texture_opacity
+    text: dict = Field(default_factory=dict)        # heading_weight body_weight shadow tracking scale
+    issues: list[str] = Field(default_factory=list)  # validation fallbacks that were applied

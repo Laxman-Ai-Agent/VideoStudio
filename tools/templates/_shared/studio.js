@@ -6,23 +6,51 @@
 //   marks: [{type: "circle"|"underline"|"arrow"|"box"|"tag", x, y, w, h, at, text}]  (x/y/w/h = 0..1 of the frame)
 //   marks_v: same list with 9:16 positions (the crop differs); falls back to marks
 //   marker: true (last word) or ["word", ...]       highlighter swipe behind on-screen words
+//   bg_level: 0..1                                  background pattern/texture intensity for this scene
+// Video theme (work/theme.json via render): S.style.background {type, colors, angle, pattern, pattern_opacity,
+//   texture, texture_opacity}, S.style.text {heading_weight, body_weight, shadow, tracking, scale},
+//   S.fonts {heading, telugu (body), latin (body), script}.
 (function () {
   const S = window.SCENE, P = S.params || {}, C = S.colors || {};
+  const ST = S.style || {}, BG = ST.background || {}, TX = ST.text || {};
   const r = document.documentElement.style, html = document.documentElement.classList;
   const u = Math.min(S.w, S.h) / 100;  // 1u = 1% of the short side, so layouts scale to any size
   // safe areas as fractions of width/height; 9:16 keeps clear of the Shorts/Reels UI top and bottom
   const safe = S.h > S.w ? { t: 0.14, b: 0.22, l: 0.07, r: 0.07 } : { t: 0.08, b: 0.08, l: 0.06, r: 0.06 };
+  const lum = h => {  // relative luminance of #rgb / #rrggbb, for light/dark tone
+    let x = String(h || "#000").replace("#", "");
+    if (x.length === 3) x = x.split("").map(c => c + c).join("");
+    const [R, G, B] = [0, 2, 4].map(i => parseInt(x.slice(i, i + 2), 16) / 255)
+      .map(c => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  };
+  const light = lum(C.background) > 0.35, level = P.bg_level === undefined ? 1 : Math.max(0, Math.min(1, +P.bg_level));
+  const body = S.fonts.telugu || "Noto Sans Telugu", stack = `"${body}", "Noto Sans Telugu", "Nirmala UI", sans-serif`;
+  const cols = (BG.colors && BG.colors.length ? BG.colors : [C.background || "#0E0E10"]).join(", ");
+  const bgImg = { linear: `linear-gradient(${BG.angle || 180}deg, ${cols})`, multi: `linear-gradient(${BG.angle || 180}deg, ${cols})`,
+                  radial: `radial-gradient(ellipse at 50% 40%, ${cols})` }[BG.type] || "none";
+  const PAT = { grid: [`linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px)`, `${u * 6}px ${u * 6}px`],
+                dots: [`radial-gradient(circle, var(--text) ${u * 0.18}px, transparent ${u * 0.24}px)`, `${u * 3}px ${u * 3}px`],
+                lines: [`repeating-linear-gradient(45deg, var(--text) 0 1px, transparent 1px ${u * 2.2}px)`, `auto`] }[BG.pattern || "grid"];
+  const SHADOW = { soft: `0 ${u * 0.3}px ${u * 1.2}px rgba(0,0,0,${light ? 0.18 : 0.45})`, hard: `${u * 0.25}px ${u * 0.25}px 0 rgba(0,0,0,.55)`,
+                   glow: `0 0 ${u * 1.4}px ${C.accent || "#FFC400"}`, none: "none" };
   const vars = {
     "--u": u + "px", "--w": S.w + "px", "--h": S.h + "px",
     "--st": safe.t * S.h + "px", "--sb": safe.b * S.h + "px", "--sl": safe.l * S.w + "px", "--sr": safe.r * S.w + "px",
     "--bg": C.background || "#0E0E10", "--accent": C.accent || "#FFC400", "--text": C.text || "#FFFFFF",
+    "--text2": C.text2 || C.text || "#FFFFFF", "--warn": C.warning || C.accent || "#FF5A5A",
     "--marker": C.marker || C.accent || "#FFC400", "--panel": C.panel || "rgba(14,14,16,.78)",
     "--capbg": C.capbg || "rgba(0,0,0,0)",
-    "--font": `"${S.fonts.latin || "Inter"}", "${S.fonts.telugu || "Noto Sans Telugu"}", "Nirmala UI", sans-serif`,
-    "--font-script": `"${S.fonts.script || S.fonts.telugu || "Noto Sans Telugu"}", "${S.fonts.telugu || "Noto Sans Telugu"}", sans-serif`,
+    "--font": stack, "--font-head": `"${S.fonts.heading || body}", ${stack}`,
+    "--font-script": `"${S.fonts.script || body}", ${stack}`,
+    "--bg-img": bgImg, "--hw": TX.heading_weight || 800, "--bw": TX.body_weight || 600,
+    "--tracking": (TX.tracking || 0) + "em", "--tshadow": SHADOW[TX.shadow] || "none", "--tscale": TX.scale || 1,
+    "--outline": (u * (TX.outline || 0)).toFixed(2) + "px", "--outline-c": C.background || "#000",
+    "--pat-img": PAT ? PAT[0] : "none", "--pat-size": PAT ? PAT[1] : "auto",
+    "--pat-op": BG.pattern === "none" ? 0 : (BG.pattern_opacity === undefined ? 0.07 : BG.pattern_opacity) * level,
   };
   Object.entries(vars).forEach(([k, v]) => r.setProperty(k, v));
-  html.add(S.h > S.w ? "portrait" : "landscape", "theme-" + (S.theme || "dark"));
+  html.add(S.h > S.w ? "portrait" : "landscape", "theme-" + (S.theme || "dark"), light ? "tone-light" : "tone-dark");
   if (P.look) html.add("look-" + P.look);
   window.U = u;
 
@@ -78,16 +106,37 @@
     });
   }
 
-  // Film grain (paper theme): a noise tile that jumps 12 times a second, deterministic per frame.
-  function grain(tl) {
-    if (S.theme !== "paper") return;
+  // Background texture from the theme. grain/paper: a noise tile that jumps 12 times a second
+  // (deterministic per frame). smoke/particles/stars drift slowly and are skipped over real photos
+  // and footage, so they never cover the picture.
+  function texture(tl) {
+    const kind = BG.texture || "none", op = (BG.texture_opacity || 0) * level;
+    const media = S.asset && S.asset !== "cut.png";
+    if (kind === "none" || op <= 0 || (media && kind !== "grain" && kind !== "paper")) return;
     const g = document.createElement("div");
-    g.className = "grain";
+    g.className = "tex tex-" + kind;
+    g.style.opacity = op;
     document.getElementById("root").appendChild(g);
-    for (let k = 0, t = 0; t < S.duration; k++, t = k / 12) {
-      const rx = Math.abs(Math.sin(k * 12.9898) * 43758.5453) % 1, ry = Math.abs(Math.sin(k * 78.233) * 12345.678) % 1;
-      tl.set(g, { backgroundPosition: `${Math.round(rx * 200)}px ${Math.round(ry * 200)}px` }, t);
+    if (kind === "grain" || kind === "paper") {
+      g.classList.add("grain");
+      for (let k = 0, t = 0; t < S.duration; k++, t = k / 12) {
+        const rx = Math.abs(Math.sin(k * 12.9898) * 43758.5453) % 1, ry = Math.abs(Math.sin(k * 78.233) * 12345.678) % 1;
+        tl.set(g, { backgroundPosition: `${Math.round(rx * 200)}px ${Math.round(ry * 200)}px` }, t);
+      }
+    } else {
+      tl.fromTo(g, { x: -u * 3, y: kind === "smoke" ? 0 : u * 2 }, { x: u * 3, y: kind === "smoke" ? -u * 2 : -u * 2,
+                     duration: S.duration, ease: "none" }, 0);
     }
+  }
+
+  // Theme text scale for headings, lower thirds and on-screen titles (captions scale in CSS).
+  const HEAD = "#t, #title, .ln, .item, #stat .val, .lower, .date, .label, #bgw";
+  function scaleText() {
+    const k = +(TX.scale || 1);
+    if (Math.abs(k - 1) < 0.01) return;
+    document.querySelectorAll(HEAD).forEach(el => {
+      el.style.fontSize = parseFloat(getComputedStyle(el).fontSize) * k + "px";
+    });
   }
 
   // Hand-drawn marks: a wobbly path that draws itself (stroke-dashoffset), or a sticker tag.
@@ -177,10 +226,11 @@
       d.className = "halftone";
       document.getElementById("root").insertBefore(d, document.querySelector("#root .safe"));
     }
+    scaleText();
     marks(tl);
     captions(tl);
     transitions(tl);
-    grain(tl);
+    texture(tl);
     // pin the timeline length to the scene so the runtime never trims or pads it
     tl.set({}, {}, S.duration);
     window.__timelines = { root: tl };

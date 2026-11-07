@@ -1,0 +1,71 @@
+{
+ "name": "tech",
+ "category": "Science / Technology",
+ "colors": {
+  "background": "#0B1426",
+  "text": "#EAF2FF",
+  "text2": "#9FB3D1",
+  "accent": "#22D3EE",
+  "highlight": "#22D3EE",
+  "warning": "#F97316",
+  "panel": "rgba(11,20,38,0.82)",
+  "capbg": "rgba(0,0,0,0.6)"
+ },
+ "fonts": {
+  "heading": "Anek Telugu",
+  "body": "Hind Guntur",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "linear",
+  "colors": [
+   "#0B1426",
+   "#132544"
+  ],
+  "angle": 160,
+  "pattern": "grid",
+  "pattern_opacity": 0.08,
+  "texture": "particles",
+  "texture_opacity": 0.35
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 600,
+  "shadow": "soft",
+  "tracking": 0.01,
+  "scale": 1.1
+ },
+ "keywords": [
+  "ai",
+  "artificial",
+  "intelligence",
+  "technology",
+  "tech",
+  "computer",
+  "software",
+  "robot",
+  "internet",
+  "app",
+  "data",
+  "chatgpt",
+  "agent",
+  "agents",
+  "digital",
+  "code",
+  "cyber",
+  "gadget",
+  "phone",
+  "smartphone",
+  "gemini",
+  "openai",
+  "google",
+  "microsoft",
+  "chip",
+  "సాంకేతిక",
+  "టెక్నాలజీ",
+  "కంప్యూటర్",
+  "రోబో",
+  "ఇంటర్నెట్",
+  "డేటా"
+ ]
+}

@@ -69,6 +69,11 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Logo layout checked (Anthropic, Claude logos whole and centred); tests for entity + Lottie resolve (56 passing); docs and plan brief updated
 - Footage still needs the free `PEXELS_API_KEY` in `tools/.env` (Openverse / Wikimedia have photos only)
 
+## Per-video themes ✅ (2026-11-07, not rendered: the user asked for implementation only)
+- [x] Theme stage + 11 presets + validation + `studio theme` command; shared template helpers apply it. Tests 61, doctor green
+- [x] 01 picked `tech` automatically (keyword hits: tech 24, finance 13). Its previews are still the old paper render. The next `studio.cmd run 01` re-renders every scene in the tech look; to keep the paper look run `studio.cmd theme 01 --preset paper` first
+- [ ] Not checked visually yet: the new presets (gradients, textures, fonts) need one test render before a real video
+
 ## Known issues / notes
 - Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.

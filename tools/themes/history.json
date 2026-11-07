@@ -1,0 +1,64 @@
+{
+ "name": "history",
+ "category": "History",
+ "colors": {
+  "background": "#EFE3C8",
+  "text": "#3B2A1A",
+  "text2": "#6B5440",
+  "accent": "#A0522D",
+  "highlight": "#D4A537",
+  "warning": "#8B1E1E",
+  "panel": "rgba(250,243,228,0.94)",
+  "capbg": "rgba(59,42,26,0.85)"
+ },
+ "fonts": {
+  "heading": "Ramaraja",
+  "body": "Noto Serif Telugu",
+  "script": "Sree Krushnadevaraya"
+ },
+ "background": {
+  "type": "radial",
+  "colors": [
+   "#F3E9D2",
+   "#DCC9A3"
+  ],
+  "pattern": "none",
+  "pattern_opacity": 0.0,
+  "texture": "paper",
+  "texture_opacity": 0.18
+ },
+ "text": {
+  "heading_weight": 700,
+  "body_weight": 500,
+  "shadow": "none",
+  "tracking": 0.02,
+  "scale": 1.15
+ },
+ "keywords": [
+  "history",
+  "historical",
+  "ancient",
+  "king",
+  "queen",
+  "empire",
+  "dynasty",
+  "kingdom",
+  "fort",
+  "temple",
+  "century",
+  "medieval",
+  "colonial",
+  "british",
+  "mughal",
+  "freedom",
+  "independence",
+  "చరిత్ర",
+  "రాజు",
+  "రాణి",
+  "సామ్రాజ్యం",
+  "కోట",
+  "పురాతన",
+  "ఆలయం",
+  "స్వాతంత్ర్య"
+ ]
+}

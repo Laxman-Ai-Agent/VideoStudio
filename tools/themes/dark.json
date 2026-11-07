@@ -1,0 +1,37 @@
+{
+ "name": "dark",
+ "category": "Dark brand",
+ "colors": {
+  "background": "#0E0E10",
+  "text": "#FFFFFF",
+  "text2": "#B9B9C0",
+  "accent": "#FFC400",
+  "highlight": "#FFC400",
+  "warning": "#FF5A5A",
+  "panel": "rgba(14,14,16,0.78)",
+  "capbg": "rgba(0,0,0,0)"
+ },
+ "fonts": {
+  "heading": "Gidugu",
+  "body": "Gidugu",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "solid",
+  "colors": [
+   "#0E0E10"
+  ],
+  "pattern": "grid",
+  "pattern_opacity": 0.07,
+  "texture": "none",
+  "texture_opacity": 0.0
+ },
+ "text": {
+  "heading_weight": 800,
+  "body_weight": 600,
+  "shadow": "soft",
+  "tracking": 0.0,
+  "scale": 1.0
+ },
+ "keywords": []
+}

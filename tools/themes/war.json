@@ -1,0 +1,65 @@
+{
+ "name": "war",
+ "category": "Geopolitics / War",
+ "colors": {
+  "background": "#1E2318",
+  "text": "#E8E6D9",
+  "text2": "#B5B29E",
+  "accent": "#C9A227",
+  "highlight": "#C9A227",
+  "warning": "#B22222",
+  "panel": "rgba(30,35,24,0.86)",
+  "capbg": "rgba(0,0,0,0.65)"
+ },
+ "fonts": {
+  "heading": "Ramabhadra",
+  "body": "Hind Guntur",
+  "script": "Timmana"
+ },
+ "background": {
+  "type": "linear",
+  "colors": [
+   "#2B3324",
+   "#141810"
+  ],
+  "angle": 170,
+  "pattern": "lines",
+  "pattern_opacity": 0.05,
+  "texture": "grain",
+  "texture_opacity": 0.14
+ },
+ "text": {
+  "heading_weight": 400,
+  "body_weight": 600,
+  "shadow": "hard",
+  "tracking": 0.02,
+  "scale": 1.1
+ },
+ "keywords": [
+  "war",
+  "army",
+  "military",
+  "border",
+  "missile",
+  "soldier",
+  "attack",
+  "nuclear",
+  "defence",
+  "defense",
+  "geopolitics",
+  "china",
+  "pakistan",
+  "russia",
+  "ukraine",
+  "israel",
+  "iran",
+  "nato",
+  "conflict",
+  "యుద్ధం",
+  "సైన్యం",
+  "సరిహద్దు",
+  "క్షిపణి",
+  "సైనికులు",
+  "దాడి"
+ ]
+}

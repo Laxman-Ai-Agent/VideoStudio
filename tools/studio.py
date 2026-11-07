@@ -181,6 +181,10 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     prepared = Prepared.model_validate_json(prep_json.read_text("utf-8"))
     print(f"  prepare: {'done' if ran else 'up to date'} ({len(prepared.scenes)} parallax scene(s))")
 
+    # Per-video visual theme (typography, palette, backgrounds) -> work/theme.json, reused on resume
+    theme = make_theme(p)
+    print(f"  theme: {theme.name} ({theme.source})" + (f", {len(theme.issues)} fallback(s)" if theme.issues else ""))
+
     # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
     from pipeline import render as rnd
     from pipeline.assemble import assemble, pick_music, sfx_cues
@@ -193,7 +197,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
             continue
         d = rnd.fmt_dir(fmt, final)
         jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
-                             prepared)
+                             prepared, theme)
         clips = [j.out for j in jobs]
         keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
         report_json = w / "scenes" / d / "report.json"
@@ -256,6 +260,51 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     return 1 if final and qa_failed else 0
 
 
+def make_theme(p: Path, force: bool = False):
+    """theme stage: work/theme.json from the project's text (+ project theme.json overrides)."""
+    from pipeline import theme as th
+    from pipeline.contracts import ThemeSpec
+    w, manual = p / "work", p / "theme.json"
+    out = w / "theme.json"
+    inputs = [f for f in (w / "transcript.json", w / "scenes.json", manual, *sorted((p / "input").glob("script.*")),
+                          *sorted(th.PRESETS.glob("*.json"))) if f.exists()]
+    fonts = ",".join(sorted(d.name for d in th.FONTS.iterdir() if d.is_dir())) if th.FONTS.is_dir() else ""
+
+    def build():
+        override = json.loads(manual.read_text("utf-8")) if manual.exists() else None
+        atomic_write(out, th.build(th.theme_text(p), override).model_dump_json(indent=2))
+
+    run_stage(p, "theme", inputs, [out], build, force=force, extra=fonts)
+    return ThemeSpec.model_validate_json(out.read_text("utf-8"))
+
+
+def theme_command(project: Path, preset: str | None, auto: bool) -> int:
+    """Show, pin or re-pick the video's theme. Never renders."""
+    from pipeline import theme as th
+    manual = project / "theme.json"
+    if preset or auto:
+        if preset and preset not in th.presets():
+            print(f"  unknown preset {preset!r}. Presets: {', '.join(th.presets())}")
+            return 1
+        cur = json.loads(manual.read_text("utf-8")) if manual.exists() else {}
+        cur.pop("preset", None)
+        if preset:
+            cur["preset"] = preset
+        atomic_write(manual, json.dumps(cur, ensure_ascii=False, indent=2))
+    t = make_theme(project, force=True)
+    print(f"{project.name}: theme {t.name!r} ({t.category}), source {t.source}")
+    if t.scores:
+        print("  keyword hits: " + ", ".join(f"{k} {v:.0f}" for k, v in sorted(t.scores.items(), key=lambda x: -x[1]) if v))
+    print(f"  fonts: heading {t.fonts['heading']}, body {t.fonts['body']}, script {t.fonts['script']}")
+    print(f"  colours: " + ", ".join(f"{k} {v}" for k, v in t.colors.items()))
+    print(f"  background: {t.background['type']} {t.background['colors']}, pattern {t.background['pattern']}, "
+          f"texture {t.background['texture']}")
+    for i in t.issues:
+        print(f"  fallback: {i}")
+    print(f"  saved: {project / 'work' / 'theme.json'}  (overrides: {manual})")
+    return 0
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     setup_env()
@@ -264,6 +313,10 @@ def main() -> int:
     sub.add_parser("doctor")
     sub.add_parser("new").add_argument("name")
     sub.add_parser("status").add_argument("project")
+    tc = sub.add_parser("theme", help="show / pin / re-pick the video's visual theme (no render)")
+    tc.add_argument("project")
+    tc.add_argument("--preset", help="pin a preset (tools/themes/<name>.json)")
+    tc.add_argument("--auto", action="store_true", help="drop the pinned preset, pick from the content again")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
@@ -281,6 +334,8 @@ def main() -> int:
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
+    if a.cmd == "theme":
+        return theme_command(find_project(a.project), a.preset, a.auto)
     if a.cmd == "status":
         project = find_project(a.project)
         stages = load_state(project).stages

@@ -1,0 +1,60 @@
+{
+ "name": "horror",
+ "category": "Horror / Mystery",
+ "colors": {
+  "background": "#0A0606",
+  "text": "#EDE6E3",
+  "text2": "#A89A96",
+  "accent": "#B3121B",
+  "highlight": "#E11D2A",
+  "warning": "#E11D2A",
+  "panel": "rgba(10,6,6,0.85)",
+  "capbg": "rgba(0,0,0,0.75)"
+ },
+ "fonts": {
+  "heading": "Dhurjati",
+  "body": "Noto Sans Telugu",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "radial",
+  "colors": [
+   "#2A0A0A",
+   "#050303"
+  ],
+  "pattern": "none",
+  "pattern_opacity": 0.0,
+  "texture": "smoke",
+  "texture_opacity": 0.5
+ },
+ "text": {
+  "heading_weight": 700,
+  "body_weight": 500,
+  "shadow": "glow",
+  "tracking": 0.03,
+  "scale": 1.15
+ },
+ "keywords": [
+  "horror",
+  "ghost",
+  "haunted",
+  "mystery",
+  "murder",
+  "crime",
+  "dark",
+  "evil",
+  "curse",
+  "paranormal",
+  "unsolved",
+  "killer",
+  "dead",
+  "death",
+  "దెయ్యం",
+  "భయం",
+  "రహస్యం",
+  "హత్య",
+  "మిస్టరీ",
+  "శాపం",
+  "నేరం"
+ ]
+}

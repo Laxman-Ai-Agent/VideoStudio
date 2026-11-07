@@ -1,0 +1,60 @@
+{
+ "name": "health",
+ "category": "Medical / Health",
+ "colors": {
+  "background": "#F7FBFC",
+  "text": "#0F2A33",
+  "text2": "#3E5A63",
+  "accent": "#0F9D9A",
+  "highlight": "#7DD3FC",
+  "warning": "#DC2626",
+  "panel": "rgba(255,255,255,0.95)",
+  "capbg": "rgba(15,42,51,0.85)"
+ },
+ "fonts": {
+  "heading": "Hind Guntur",
+  "body": "Noto Sans Telugu",
+  "script": "Akaya Telivigala"
+ },
+ "background": {
+  "type": "linear",
+  "colors": [
+   "#FFFFFF",
+   "#E8F5F7"
+  ],
+  "angle": 180,
+  "pattern": "none",
+  "pattern_opacity": 0.0,
+  "texture": "none",
+  "texture_opacity": 0.0
+ },
+ "text": {
+  "heading_weight": 700,
+  "body_weight": 500,
+  "shadow": "none",
+  "tracking": 0.0,
+  "scale": 1.1
+ },
+ "keywords": [
+  "health",
+  "doctor",
+  "disease",
+  "medicine",
+  "hospital",
+  "diet",
+  "food",
+  "body",
+  "heart",
+  "diabetes",
+  "cancer",
+  "fitness",
+  "sleep",
+  "vitamin",
+  "ఆరోగ్యం",
+  "వైద్యం",
+  "వ్యాధి",
+  "ఆహారం",
+  "డాక్టర్",
+  "గుండె"
+ ]
+}
