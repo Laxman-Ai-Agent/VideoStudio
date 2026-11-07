@@ -4,7 +4,7 @@ import { api } from "./api.js";
 import { hasUnsaved, liveSync, openDetail, preview } from "./detail.js";
 
 const $ = (id) => document.getElementById(id);
-const state = { pid: "", data: null, token: 0 };
+const state = { pid: "", data: null, token: 0, filter: "all" };
 
 const pad = (n) => String(n).padStart(2, "0");
 export function sceneLabel(a) {
@@ -45,7 +45,15 @@ function render() {
   $("c-total").textContent = d ? d.counts.total : 0;
   $("c-found").textContent = d ? d.counts.found : 0;
   $("c-missing").textContent = d ? d.counts.missing : 0;
-  $("grid").replaceChildren(...(d ? d.assets.map(tile) : []));
+  document.querySelectorAll(".stat").forEach((b) => b.classList.toggle("on", b.dataset.filter === state.filter));
+  const list = d ? d.assets.filter((x) => state.filter === "all" || (state.filter === "found") === x.found) : [];
+  if (d && !list.length) {
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = `No ${state.filter} assets.`;
+    return $("grid").replaceChildren(p);
+  }
+  $("grid").replaceChildren(...list.map(tile));
 }
 
 function notice(text) {
@@ -78,6 +86,11 @@ async function select(pid) {
   history.replaceState(null, "", `#p=${encodeURIComponent(pid)}`);
   await refresh();
 }
+
+document.querySelectorAll(".stat").forEach((b) => b.addEventListener("click", () => {
+  state.filter = b.dataset.filter;
+  render();
+}));
 
 async function init() {
   let projects = [];

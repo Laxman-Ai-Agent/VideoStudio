@@ -230,3 +230,21 @@ textarea { font-size: 13px; padding: 8px 10px; line-height: 1.4; }
 .media h3 { font-size: 13px; }
 details summary { font-size: 12.5px; }
 .close { width: 42px; height: 42px; font-size: 30px; top: 14px; right: 16px; }
+
+/* ---- stats as small filter buttons: Total / Found / Missing ---- */
+.stats { display: flex; gap: 12px; margin: 22px 0 24px; }
+.stat { font: inherit; color: inherit; text-align: left; cursor: pointer; padding: 8px 18px 8px 10px; gap: 12px; border-width: 1.5px;
+        border-radius: 999px; transition: transform .12s, box-shadow .18s, border-color .18s, background .18s; }
+.stat > div { display: flex; align-items: baseline; gap: 8px; }
+.stat b { font-size: 22px; line-height: 1; }
+.stat span { font-size: 14px; }
+.stat-icon { width: 32px; height: 32px; }
+.stat-icon svg { width: 17px; height: 17px; }
+.stat:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+.stat:active { transform: scale(.97); }
+.stat:focus-visible { outline: 2px solid var(--purple2); outline-offset: 2px; }
+.stat:not(.on) { opacity: .62; }
+.stat.on { opacity: 1; box-shadow: 0 0 0 3px rgba(139, 107, 255, .35); }
+.stat.total { background: #1b1a45; border-color: #4a3fb0; }
+.empty { grid-column: 1 / -1; color: var(--muted); padding: 30px 0; }
+@media (max-width: 900px) { .stats { flex-wrap: wrap; } }
