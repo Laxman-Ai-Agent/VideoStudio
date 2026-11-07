@@ -20,4 +20,5 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - `studio.cmd doctor`: pre-flight checks
 - `studio.cmd new "Name"`: new project in `projects/`
 - `studio.cmd status 01`: stage checkpoints
+- `studio.cmd run 01`: all stages, resumes; exit 2 = waiting (plan, asset descriptions)
 - `tools\.venv\Scripts\python.exe -m pytest tools -q`: tests

@@ -21,14 +21,13 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | Node.js | 24.19.0 | render engines |
 | FFmpeg / FFprobe | 9.0.2 | cut, mix, loudness, encode, probe |
 | Git | 2.55.0 | version control |
-| Google Chrome | system | HyperFrames rendering, storyboard screenshot (headless) |
+| Google Chrome | system | HyperFrames rendering, storyboard + asset contact sheet screenshots (headless) |
 | uv | system | Python env + lockfile |
 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
 |---|---|---|
-| Pillow | 2 | image resize/crop (NOT text: no raqm on Windows, Telugu breaks) |
-| httpx | 2 | Wikimedia / Pexels API |
+| Pillow | 4 | image resize/crop for `prepare` (NOT text: no raqm on Windows, Telugu breaks). Not needed in Phase 2: thumbs are ffmpeg, sheets are Chrome |
 | GSAP, D3 | 3 | animation, charts (inside templates) |
 | rembg | 4 | background removal |
 | remotion | 4 | second render engine (isolated in engines/remotion) |

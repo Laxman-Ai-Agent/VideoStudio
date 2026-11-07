@@ -1,6 +1,6 @@
 # Status
 
-Current phase: **1 Audio -> Plan, done (2026-11-07)**. Next: **Phase 2, Assets**.
+Current phase: **2 Assets, done (2026-11-07)**. Next: **Phase 3, Render v1 (HyperFrames)**.
 
 ## Phase 0: Foundation ✅
 - [x] Folder structure (`_brand`, `_library`, `tools`, `projects`, `docs`, `.claude/skills`)
@@ -25,14 +25,19 @@ Current phase: **1 Audio -> Plan, done (2026-11-07)**. Next: **Phase 2, Assets**
 - [x] `studio.cmd run NN` wires all stages through `run_stage`, resumes; exit 2 = waiting for user/Claude
 - [x] Tests: 32 passing. End to end on `projects/01_AI_Agents` (sample audio + full script): 11 scenes, storyboard ok
 
-## Phase 2: Assets (next)
-- [ ] resolve stage: project assets -> `_library` -> Wikimedia/Pexels -> missing
-- [ ] prompts stage for missing assets
-- [ ] storyboard with thumbnails
-- Test assets (user-approved): COPY (never move/modify) the media of the old hand-edited video, `E:\Youtube\13-AI agents\videos\01\` (mp4 clips + png images for the first audio segment), into `projects/01_AI_Agents/drop/`.
-- Testing only proves the pipeline works: no extra benchmarks, minimal waiting, smallest check per stage (user: "idi testing purpose kabbati time waste cheyoddu").
+## Phase 2: Assets ✅
+- [x] Contracts: `AssetEntry`, `AssetIndex` (keyed by content hash), `ResolvedScene`, `Resolved`
+- [x] index / library_index stages: `assets/index.json`, `_library/index.json` (ffprobe size/duration, first-frame thumbs in `.thumbs/`). New files -> ONE contact sheet `.thumbs/contact_sheet.png`, Claude fills `description`, run exits 2 until done. Unchanged files are not re-read (path+size+mtime); renamed files keep their description (hash)
+- [x] resolve: `scenes.json asset` / `scene_NNN.*` -> project -> `_library` -> template types (motion_graphic, diagram, chart, text, map) -> Pexels/Wikimedia -> missing. `work/resolved.json` + `output/credits.txt`. Downloads in `_library/downloads` with source/license/author
+- [x] prompts: `prompts/{images,videos}/scene_NNN.md` + `prompts/README.md`; dropped `scene_NNN.png|mp4` (and `scene_NNN_v.*` for 9:16) map straight to the scene
+- [x] storyboard: thumbnail per scene, or MISSING / TEMPLATE tile
+- [x] Tests: 37 passing. On 01 (15 test files copied from `E:\Youtube\13-AI agents\videos\01\`): 5 project, 5 template, 1 missing (scene 10 prompt); drop-back of `scene_010.png` verified
+
+## Phase 3: Render v1 (next)
 
 ## Known issues / notes
+- No `PEXELS_API_KEY` yet (`tools/.env`), so internet search is Wikimedia only. Wikimedia rarely fits generic stock scenes; the first live run picked off-topic files at a 2-keyword match, so internet results now need half the query keywords (DECISIONS #16).
+- Matching is keyword overlap on English descriptions (threshold 0.34). Multi-item scenes (e.g. "ChatGPT, Gemini and Grok logos") get one asset; Phase 3 templates can combine more.
 - Only ~1.6 GB RAM was free during the HyperFrames doctor check. Close heavy apps before long renders.
 - The user also has `E:\Youtube\13-AI agents\ai agents content.txt` (likely the full script) and a hand-edited version of that video. Both are useful for script-alignment tests and style reference.
 - Whisper large-v3 is slow here: ~4-12 min per 30 s clip (8x+ real time; a 20 min video is ~2.5 h+, unattended, cached once). small/turbo can't anchor Telugu (DECISIONS #14). Idea: retry per VAD chunk instead of the whole file.

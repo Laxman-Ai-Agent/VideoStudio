@@ -104,3 +104,46 @@ class Brand(BaseModel):
     fps: int = 30
     colors: dict[str, str]
     fonts: dict[str, str]
+
+
+# ---- Phase 2: assets -------------------------------------------------------
+
+class AssetEntry(BaseModel):
+    file: str                     # posix path, relative to the folder holding index.json
+    kind: Literal["image", "video"]
+    size: int
+    mtime_ns: int                 # with size: skips re-hashing unchanged files
+    duration: float = 0.0
+    width: int = 0
+    height: int = 0
+    thumb: str = ""               # cached jpg, relative like `file`
+    description: str = ""         # English keywords; Claude writes it from the contact sheet
+    source_url: str = ""          # downloads only: where it came from (credits)
+    license: str = ""
+    author: str = ""
+    query: str = ""               # downloads only: the scene query it answered
+
+
+class AssetIndex(BaseModel):
+    """assets/index.json and _library/index.json. Key = file content hash, so a renamed file
+    keeps its description and a changed file gets a new one."""
+    schema_version: int = SCHEMA_VERSION
+    assets: dict[str, AssetEntry] = Field(default_factory=dict)
+
+
+class ResolvedScene(BaseModel):
+    id: int
+    status: Literal["project", "library", "downloaded", "template", "missing"]
+    asset: str | None = None      # posix, relative to the VideoStudio root
+    asset_9x16: str | None = None  # optional vertical variant (scene_NNN_v.*)
+    thumb: str | None = None      # relative to the root
+    score: float = 0.0
+    source_url: str = ""
+    license: str = ""
+    author: str = ""
+
+
+class Resolved(BaseModel):
+    """work/resolved.json - one asset (or missing/template) per scene, same order as scenes.json."""
+    schema_version: int = SCHEMA_VERSION
+    scenes: list[ResolvedScene]
