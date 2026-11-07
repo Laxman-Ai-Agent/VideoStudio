@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-07 · Paper style
+- brand.json `theme` + `themes` (dark, paper; paper is the default): colours incl. marker, panel, caption pill. Paper adds animated film grain.
+- Shared params for every template: `look` (sepia, bw, vintage, halftone), `marks` / `marks_v` (hand-drawn circle, underline, arrow, box, sticker tag), `marker` (highlighter behind on-screen words).
+- `cutout_title` template: rembg subject with a white sticker outline over a big two-line title (`params.cutout`, `title`, `kicker`, `frame`); prepare also writes a tight `scene_NNN_cut.png`.
+- `_library/sfx`: whoosh, click, pop, paper sounds generated with FFmpeg (no third-party licence).
+
 ## 2026-11-07 · Brand fonts
 - 24 Telugu families (Google Fonts, OFL) saved in `_brand/fonts/` with a catalog README; specimen sheet in `tools/.cache/fonts/`.
 - render: `font_css` writes @font-face rules for the brand.json families into each build's studio.css and copies the files; font files are part of the scene cache key.

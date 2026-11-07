@@ -56,7 +56,12 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Map template: offline Natural Earth outlines with India's official borders + states (incl. Telangana/AP), fly-in, focus fill, pins with Telugu labels
 - [x] Tests: 50 passing. Doctor all green. Each template checked by one test render (16:9 + 9:16). 01 unchanged (all cached), QA PASS
 
+## Paper style ✅ (2026-11-07)
+- [x] Themes in brand.json (paper default, dark kept), grain, photo looks, hand-drawn marks + sticker tag + highlighter, `cutout_title` poster, generated SFX. Tests: 52 passing. Checked by one test sheet (4 scenes x 2 formats)
+- [ ] 01 previews not re-rendered in the new style yet (user asked not to render)
+
 ## Known issues / notes
+- `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.
 - Auto-capture: some sites block headless Chrome (Wikipedia returned its block page). Check captured screenshots in the storyboard; drop your own `scene_NNN.png` in `assets/screenshots/` when a capture is wrong (a dropped file is never overwritten).
 - Map names are Natural Earth English names (`"Telangana"`, `"India"`); pins need lat/lon in scenes.json (no geocoder). States exist only for IN, US, CN, BR, AU, CA, RU, ID, ZA.
 - Raw-footage cutting is untested on real long footage (tested on a generated 3-shot clip); a 20 min 1080p video should take a few minutes on this CPU.
