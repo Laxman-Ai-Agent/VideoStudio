@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-07 · Free asset sources
+- `params.entity`: exact person photo / brand logo via Wikidata + Commons, Simple Icons fallback for logos (transparent PNG card by headless Chrome).
+- Openverse added to keyword search (photos, no key). Commons URLs keep the right file extension.
+- `params.lottie`: emoji -> Google animated Noto emoji in `_library/lottie` (or a project .json); new `lottie` template with lottie-web 5.13.0.
+- Photo template: logo scenes show the whole logo on the themed background (no blurred copy); `params.full` keeps the old look.
+- Plan brief lists `entity`, `lottie` and the other style params. Tests: 56.
+
 ## 2026-11-07 · Transitions, kinetic text, UI cards
 - Transitions: brand.json `transitions` cycled per cut (blur, wipe, zoom, circle; `params.transition` overrides, `cut` = hard cut). The outgoing scene animates out in its last 0.2 s and the incoming one in over its first 0.25 s, so clips stay separate and cached. Wipe/zoom cuts get a whoosh.
 - `kinetic` template: mixed-size lines (`params.lines` with size s/m/l/xl and style bold/plain/box/script/outline), words blur in, giant faded `bg_word`. Script style uses `brand.fonts.script` (Akaya Telivigala).

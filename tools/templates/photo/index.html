@@ -5,8 +5,8 @@
 .blurbg { filter: blur(calc(var(--u) * 4)) brightness(.55); transform: scale(1.15); }
 .contain { object-fit: contain; }
 /* logo scenes: the logo sits whole in the middle of the themed background, no blurred copy */
-.logo-mode #img { inset: 18% 14% 34% 14%; width: auto; height: auto; object-fit: contain; }
-.portrait.logo-mode #img { inset: 26% 10% 40% 10%; }
+.logo-mode #img { left: 14%; top: 18%; width: 72%; height: 48%; object-fit: contain; }
+.portrait.logo-mode #img { left: 10%; top: 26%; width: 80%; height: 34%; }
 .logo-mode .shade { display: none; }
 .logo-grid { position: absolute; inset: 0; opacity: .06;
              background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);

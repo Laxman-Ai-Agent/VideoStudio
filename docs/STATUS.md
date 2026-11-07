@@ -63,10 +63,10 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Per-cut transitions, `kinetic` and `cards` templates, script font role. Tests: 54 passing. Checked by one test sheet; the stat card arrow/line bug found there is fixed
 - [x] 01 scenes.json updated to use them
 
-## Free asset sources ✅ (2026-11-07, saved mid-work: user hit the usage limit)
+## Free asset sources ✅ (2026-11-07)
 - [x] `params.entity` (exact person / brand): Wikidata photo (P18) or logo (P154) from Commons, Simple Icons fallback for logos (rendered to a transparent PNG card). Openverse (no key) added to keyword search. `params.lottie` = emoji -> Google animated Noto emoji (CC BY 4.0) in `_library/lottie`, or a project .json; new `lottie` template (lottie-web 5.13.0 vendored, MIT). Photo template: logo scenes shown whole on the themed background
 - [x] Live-checked: Sam Altman photo (CC BY 2.0), Anthropic + Claude logos (public domain), rocket Lottie; credits filled. Tests 54 passing
-- [ ] Not done yet: look at the last test sheet (`tools/.cache/p8/sheet.png`) for the new logo layout; add unit tests for entity/lottie resolve; LIBRARIES.md rows (lottie-web, Openverse, Wikidata, Simple Icons, Noto animation), DECISIONS entry, CHANGELOG; plan brief line for `entity` / `lottie`
+- [x] Logo layout checked (Anthropic, Claude logos whole and centred); tests for entity + Lottie resolve (56 passing); docs and plan brief updated
 - Footage still needs the free `PEXELS_API_KEY` in `tools/.env` (Openverse / Wikimedia have photos only)
 
 ## Known issues / notes

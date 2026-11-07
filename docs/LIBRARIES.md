@@ -37,6 +37,16 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 |---|---|---|---|---|
 | Natural Earth admin-0 countries 10m, India point of view (`ne_10m_admin_0_countries_ind`) + admin-1 states 50m | natural-earth-vector master, 2026-11-07 | public domain | templates/map (`map.js`, built by `make_data.py`, simplified to 0.04°/0.02°) | offline map outlines, no tiles or API key |
 | 24 Telugu font families from Google Fonts (`_brand/fonts/<Family>/`, catalog in `_brand/fonts/README.md`) | google/fonts main, 2026-11-07 | SIL OFL 1.1 (free, commercial ok, `OFL.txt` kept per family) | render (`font_css`) | brand fonts loaded by @font-face, no Windows install; git-ignored like the rest of `_brand/` |
+| lottie-web (SVG player, vendored in `tools/templates/lottie/lottie.min.js`) | 5.13.0 | MIT | templates/lottie | plays Lottie JSON frame-exactly from the GSAP timeline | standard player, one file, no npm install |
+
+## Free online sources (no key, no cost)
+| Source | Used for | License of what we fetch |
+|---|---|---|
+| Wikidata + Wikimedia Commons (`providers.entity`) | exact person photo (P18) / brand logo (P154) from `params.entity` | per file (CC BY / CC BY-SA / public domain), kept in credits |
+| Openverse API (`providers.openverse`) | CC / public-domain photos by keyword (anonymous, rate-limited) | per file, commercial-use licences only |
+| Simple Icons CDN (`providers.simple_icon`) | brand icon fallback for logo scenes, rendered to a transparent PNG | CC0 data; trademarks stay with their owners |
+| Google animated Noto emoji (`providers.noto_lottie`) | Lottie icons from `params.lottie` emoji | CC BY 4.0, credited |
+| Pexels (free key in `tools/.env`) | stock photos and footage | Pexels License |
 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
