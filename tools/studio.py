@@ -214,7 +214,8 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
         out.parent.mkdir(exist_ok=True)
         total = round(plan.scenes[-1].end * brand.fps)
         music = pick_music(LIBRARY, brand.music_mood)  # missing folder/file = no music
-        cues = sfx_cues([(j.scene.id, j.scene.start, j.template, j.scene.params) for j in jobs], LIBRARY)
+        cues = sfx_cues([(j.scene.id, j.scene.start, j.template, {**j.scene.params, "transition": j.trans[0]})
+                         for j in jobs], LIBRARY)
         ran = run_stage(p, f"assemble_{d}", clips + [audio] + ([music] if music else []) + [f for _, f in cues],
                         [out], lambda c=clips, o=out, m=music, q=cues: assemble(c, audio, o, brand.fps, total, m, q),
                         extra=f"{total}|{[(round(t, 3), f.name) for t, f in cues]}")

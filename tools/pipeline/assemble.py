@@ -54,11 +54,12 @@ def pick_music(library: Path, mood: str) -> Path | None:
 
 
 def sfx_cues(scenes: list[tuple[int, float, str, dict]], library: Path) -> list[tuple[float, Path]]:
-    """(id, start, template, params) per scene -> [(time, file)]. Cuts into a graphic scene get a
+    """(id, start, template, params) per scene -> [(time, file)]. Cuts into a graphic scene or with a
+    wipe/zoom transition (params.transition, filled in by studio) get a
     whoosh; `params.sfx` = "whoosh" | "click" | "none" overrides. Missing sfx folders = no sfx."""
     cues = []
     for sid, start, template, params in scenes[1:]:
-        kind = params.get("sfx") or ("whoosh" if template in GRAPHIC else "none")
+        kind = params.get("sfx") or ("whoosh" if template in GRAPHIC or params.get("transition") in ("wipe", "zoom") else "none")
         d = library / "sfx" / kind
         files = sorted(f for f in d.iterdir() if f.suffix.lower() in AUDIO_EXT) if d.is_dir() else []
         if kind != "none" and files:

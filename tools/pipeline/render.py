@@ -55,6 +55,10 @@ def frame_count(scene: Scene, fps: int) -> int:
 
 def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if r.status == "template":
+        if any(scene.params.get(k) for k in ("items", "stat", "button")):
+            return "cards"
+        if scene.params.get("lines") or scene.params.get("bg_word"):
+            return "kinetic"
         if scene.visual_type == "chart":
             return "chart"
         if scene.params.get("events"):
@@ -66,6 +70,21 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if Path(r.asset).suffix.lower() in VIDEO:
         return "video_clip"
     return "screenshot" if scene.visual_type == "screenshot" else "photo"
+
+
+TRANSITIONS = {"blur", "wipe", "zoom", "circle", "cut"}
+
+
+def transitions(plan: ScenePlan, brand: Brand) -> dict[int, tuple[str, str]]:
+    """Scene id -> (in, out). Cut k (scene k -> k+1) uses scene k+1's `params.transition`, else the
+    brand list cycled; both sides of a cut get the same type so out + in read as one move."""
+    out = {s.id: ["", ""] for s in plan.scenes}
+    cycle = [t for t in brand.transitions if t in TRANSITIONS]
+    for k, (a, b) in enumerate(zip(plan.scenes, plan.scenes[1:])):
+        t = str(b.params.get("transition") or (cycle[k % len(cycle)] if cycle else "cut"))
+        t = "" if t not in TRANSITIONS or t == "cut" else t
+        out[a.id][1] = out[b.id][0] = t
+    return {k: tuple(v) for k, v in out.items()}
 
 
 def caption_pages(scene: Scene, words: list[Word], max_words: int) -> list[list[dict]]:
@@ -110,6 +129,7 @@ class Job:
     brand: Brand
     captions: list = None  # caption pages (caption_pages), None = no captions
     layers: tuple = ()     # photo_parallax: (fg.png, bg.png) from the prepare stage
+    trans: tuple = ("", "")  # (in, out) transition at this scene's cuts, see transitions()
 
     @property
     def duration(self) -> float:
@@ -130,6 +150,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
     jobs, tpl_hash = [], {}
     by_id = {r.id: r for r in resolved.scenes}
     prep = {c.id: c for c in (prepared.scenes if prepared else [])}
+    trans = transitions(plan, brand)
     for s in plan.scenes:
         r = by_id.get(s.id) or ResolvedScene(id=s.id, status="missing")
         name = pick_template(s, r)
@@ -149,9 +170,9 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
                 if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
-                                         brand_hash, fmt, w, h, brand.fps, caps]).encode()).hexdigest()[:16]
+                                         brand_hash, fmt, w, h, brand.fps, caps, trans[s.id]]).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id]))
     return jobs
 
 
@@ -241,7 +262,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "text": s.on_screen_text, "query": s.query, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None), "colors": {**b.colors, **b.themes.get(b.theme, {})}, "theme": b.theme,
              "fonts": b.fonts, "error": error,
-             "captions": job.captions or []}
+             "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1]}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")
     if load_template(template).engine == "remotion":

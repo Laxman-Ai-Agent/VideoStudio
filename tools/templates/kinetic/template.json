@@ -1,0 +1,5 @@
+{"name": "kinetic", "version": 1, "engine": "hyperframes",
+ "visual_types": ["text", "motion_graphic", "diagram"],
+ "params": {"lines": "[{\"text\": \"...\", \"size\": \"s|m|l|xl\", \"style\": \"bold|plain|box|script|outline\", \"color\": \"accent|text\"}] up to 6; picks this template",
+            "bg_word": "giant faded word behind the text (vertical in 9:16)", "align": "left | center (default)"},
+ "description": "Kinetic typography: mixed-size lines, accent box, handwritten script word (brand.fonts.script), words blur in one by one"}

@@ -19,6 +19,7 @@
     "--marker": C.marker || C.accent || "#FFC400", "--panel": C.panel || "rgba(14,14,16,.78)",
     "--capbg": C.capbg || "rgba(0,0,0,0)",
     "--font": `"${S.fonts.latin || "Inter"}", "${S.fonts.telugu || "Noto Sans Telugu"}", "Nirmala UI", sans-serif`,
+    "--font-script": `"${S.fonts.script || S.fonts.telugu || "Noto Sans Telugu"}", "${S.fonts.telugu || "Noto Sans Telugu"}", sans-serif`,
   };
   Object.entries(vars).forEach(([k, v]) => r.setProperty(k, v));
   html.add(S.h > S.w ? "portrait" : "landscape", "theme-" + (S.theme || "dark"));
@@ -142,6 +143,34 @@
     });
   }
 
+  // Transitions (S.trans_in / S.trans_out, set per cut by render.transitions): the whole frame moves
+  // in over the first 0.25 s and out over the last 0.2 s; both sides of a cut use the same type.
+  const TIN = 0.25, TOUT = 0.2;
+  function transitions(tl) {
+    const tin = S.trans_in, tout = S.trans_out, d = S.duration;
+    if (!tin && !tout) return;
+    const root = document.getElementById("root"), wrap = document.createElement("div");
+    wrap.className = "tx";
+    while (root.firstChild) wrap.appendChild(root.firstChild);
+    root.appendChild(wrap);
+    const panel = document.createElement("div");
+    panel.className = "wipe";
+    root.appendChild(panel);
+    tl.set(panel, { xPercent: -101 }, 0);
+    const blur = k => `blur(${(u * k).toFixed(1)}px)`, open = "circle(75% at 50% 50%)", shut = "circle(0% at 50% 50%)";
+    const IN = { blur: [{ filter: blur(2), scale: 1.06 }, { filter: blur(0), scale: 1 }],
+                 zoom: [{ filter: blur(1.5), scale: 0.82 }, { filter: blur(0), scale: 1 }],
+                 circle: [{ clipPath: shut }, { clipPath: open }] };
+    const OUT = { blur: [{ filter: blur(0), scale: 1 }, { filter: blur(2), scale: 1.06 }],
+                  zoom: [{ filter: blur(0), scale: 1 }, { filter: blur(1.5), scale: 1.25 }],
+                  circle: [{ clipPath: open }, { clipPath: shut }] };
+    if (IN[tin]) tl.fromTo(wrap, IN[tin][0], { ...IN[tin][1], duration: TIN, ease: "power2.out" }, 0);
+    if (tin === "wipe") tl.fromTo(panel, { xPercent: 0 }, { xPercent: 101, duration: TIN, ease: "power2.in" }, 0);
+    const at = Math.max(TIN, d - TOUT);
+    if (OUT[tout]) tl.fromTo(wrap, OUT[tout][0], { ...OUT[tout][1], duration: TOUT, ease: "power2.in", immediateRender: false }, at);
+    if (tout === "wipe") tl.fromTo(panel, { xPercent: -101 }, { xPercent: 0, duration: TOUT, ease: "power2.out", immediateRender: false }, at);
+  }
+
   window.finish = function (tl) {
     if (P.look === "halftone") {  // dot screen over the picture
       const d = document.createElement("div");
@@ -150,6 +179,7 @@
     }
     marks(tl);
     captions(tl);
+    transitions(tl);
     grain(tl);
     // pin the timeline length to the scene so the runtime never trims or pads it
     tl.set({}, {}, S.duration);

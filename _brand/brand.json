@@ -18,7 +18,8 @@
   },
   "fonts": {
     "telugu": "Gidugu",
-    "latin": "Gidugu"
+    "latin": "Gidugu",
+    "script": "Akaya Telivigala"
   },
   "captions": true,
   "music_mood": "calm",
@@ -40,5 +41,13 @@
       "panel": "rgba(255,255,255,0.94)",
       "capbg": "rgba(20,20,20,0.82)"
     }
-  }
+  },
+  "transitions": [
+    "blur",
+    "wipe",
+    "blur",
+    "zoom",
+    "blur",
+    "circle"
+  ]
 }

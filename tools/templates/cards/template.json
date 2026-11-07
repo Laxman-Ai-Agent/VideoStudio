@@ -1,0 +1,5 @@
+{"name": "cards", "version": 1, "engine": "hyperframes",
+ "visual_types": ["text", "motion_graphic", "diagram", "chart"],
+ "params": {"items": "[\"...\"] up to 5 checklist rows; picks this template", "stat": "{\"value\": \"40%\", \"label\": \"Leads\", \"trend\": \"up|down\"} cited numbers only; the line is a trend shape, not data",
+            "button": "call-to-action pill, e.g. \"DM Help\""},
+ "description": "UI cards on the themed background: title, checklist card, stat card with arrow and drawn trend line, tappable button"}

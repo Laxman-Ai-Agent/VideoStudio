@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.grid { position: absolute; inset: 0; opacity: .06;
+        background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
+        background-size: calc(var(--u) * 6) calc(var(--u) * 6); }
+#bgw { position: absolute; left: 50%; top: 50%; white-space: nowrap; font-weight: 900; font-size: calc(var(--u) * 42);
+       line-height: 1; color: var(--text); opacity: .07; }
+.portrait #bgw { font-size: calc(var(--u) * 30); writing-mode: vertical-rl; }
+#stack { margin: auto 0; display: flex; flex-direction: column; gap: calc(var(--u) * 1.2); align-items: center; text-align: center; }
+.left #stack { align-items: flex-start; text-align: left; }
+.ln { line-height: 1.12; max-width: 100%; }
+.ln .word { margin-right: .22em; }
+.st-bold { font-weight: 900; } .st-plain { font-weight: 500; opacity: .85; }
+.st-box { font-weight: 900; background: var(--accent); color: #fff; padding: .04em .35em .1em; border-radius: calc(var(--u) * .6);
+          transform-origin: 0 50%; }
+.st-script { font-family: var(--font-script); color: var(--accent); transform: rotate(-4deg); }
+.st-outline { font-weight: 900; color: transparent; -webkit-text-stroke: calc(var(--u) * .25) var(--text); }
+.c-accent { color: var(--accent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="grid"></div><div id="bgw"></div>
+  <div class="safe"><div id="stack"></div></div>
+</div>
+<script>
+  // Kinetic typography: lines of mixed size/style (params.lines), words blur in one by one,
+  // optional giant faded background word (params.bg_word). Without lines: the on-screen text, large.
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
+  const SIZE = { s: 4.5, m: 7, l: 10, xl: 15 };
+  const lines = (p.lines && p.lines.length ? p.lines : [{ text: S.text, size: "l", style: "bold" }]).slice(0, 6);
+  if (p.align === "left") document.documentElement.classList.add("left");
+  const stack = document.getElementById("stack");
+  let t = 0.15;
+  lines.forEach(L => {
+    const el = document.createElement("div");
+    el.className = `ln st-${L.style || "bold"}` + (L.color === "accent" ? " c-accent" : "");
+    el.style.fontSize = `calc(var(--u) * ${SIZE[L.size] || SIZE.m})`;
+    stack.appendChild(el);
+    if (L.style === "box") tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, t);
+    String(L.text || "").split(/\s+/).filter(Boolean).forEach(w => {
+      const s = document.createElement("span");
+      s.className = "word";
+      s.textContent = w;
+      el.appendChild(s);
+      tl.fromTo(s, { opacity: 0, y: U * 2, filter: `blur(${U * 1.2}px)` },
+                { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.32, ease: "power2.out" }, t + 0.05);
+      t += 0.09;
+    });
+    t += 0.12;
+  });
+  const bg = document.getElementById("bgw");
+  bg.textContent = p.bg_word || "";
+  gsap.set(bg, { xPercent: -50, yPercent: -50 });
+  tl.fromTo(bg, { opacity: 0, x: U * 6 }, { opacity: 0.07, x: -U * 6, duration: d, ease: "none" }, 0);
+  finish(tl);
+</script></body></html>

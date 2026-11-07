@@ -108,6 +108,7 @@ class Brand(BaseModel):
     captions: bool = False        # word-by-word captions from work/transcript.json (bottom third)
     theme: str = "dark"           # key of `themes`: its colours override `colors` (e.g. "paper")
     themes: dict[str, dict[str, str]] = Field(default_factory=dict)
+    transitions: list[str] = Field(default_factory=list)  # cycled per cut: blur|wipe|zoom|circle|cut; empty = hard cuts
     music_mood: str = ""          # _library/music/<mood>/ ; empty or missing folder = no music
 
 

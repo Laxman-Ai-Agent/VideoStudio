@@ -53,3 +53,7 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
        box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(0,0,0,.25); }
 .mk { background-image: linear-gradient(var(--marker), var(--marker)); background-repeat: no-repeat;
       background-position: 0 88%; background-size: 0% 42%; padding: 0 .08em; }
+
+/* ---- transitions (studio.js): the frame wrapper and the accent wipe panel ---- */
+.tx { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.wipe { position: absolute; inset: 0; background: var(--accent); z-index: 20; }

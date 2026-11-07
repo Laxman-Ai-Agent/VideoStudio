@@ -180,3 +180,18 @@ def test_cutout_poster_needs_its_cut(tmp_path):
     pick = lambda prep: rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False, None, prep)[2].template  # noqa: E731
     assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo"  # no tight cut -> photo
     assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png", cut="p.png")])) == "cutout_title"
+
+
+def test_transitions_pair_both_sides_of_each_cut():
+    plan = _plan()
+    plan.scenes[2].params["transition"] = "cut"  # per-scene override: hard cut into scene 3
+    b = BRAND.model_copy(update={"transitions": ["wipe", "bogus"]})
+    assert rnd.transitions(plan, b) == {1: ("", "wipe"), 2: ("wipe", ""), 3: ("", "")}
+    assert rnd.transitions(plan, BRAND) == {1: ("", ""), 2: ("", ""), 3: ("", "")}  # no list = hard cuts
+
+
+def test_kinetic_and_cards_pick_by_params():
+    s = _plan().scenes[0]
+    t = ResolvedScene(id=1, status="template")
+    assert rnd.pick_template(s.model_copy(update={"params": {"lines": [{"text": "a"}]}}), t) == "kinetic"
+    assert rnd.pick_template(s.model_copy(update={"params": {"items": ["a"], "lines": [{"text": "a"}]}}), t) == "cards"
