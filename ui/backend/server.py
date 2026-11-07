@@ -84,6 +84,14 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path == "/api/projects":
                 return self._json(service.list_projects())
+            if path == "/api/version":  # live update: the page polls this and reloads what changed
+                pid = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("p", [""])[0]
+                ui = max(f.stat().st_mtime for f in FRONTEND.rglob("*") if f.is_file())
+                try:
+                    data = (service.project_dir(pid) / "visual-assets.json").stat().st_mtime
+                except Exception:  # noqa: BLE001 - no project / no file yet
+                    data = 0
+                return self._json({"ui": ui, "data": data})
             if m := re.match(r"^/api/projects/([^/]+)/assets$", path):
                 return self._json(service.project_assets(m[1]))
             if (m := ASSET.match(path)) and not m[3]:

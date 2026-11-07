@@ -1,7 +1,7 @@
 // Visual Assets page: project picker, Total / Found / Missing, image grid. Clicking a tile opens
 // that asset's detail view (detail.js). The selected project survives a page refresh (#p=01).
 import { api } from "./api.js";
-import { openDetail, preview } from "./detail.js";
+import { hasUnsaved, liveSync, openDetail, preview } from "./detail.js";
 
 const $ = (id) => document.getElementById(id);
 const state = { pid: "", data: null, token: 0 };
@@ -109,3 +109,16 @@ async function init() {
 }
 
 init();
+
+// Live update: a frontend file changed -> reload the page; visual-assets.json changed -> reload the data
+// (and the open popup) in place. Unsaved edits in the popup are never thrown away.
+let seen = null;
+setInterval(async () => {
+  if (document.hidden || !state.pid) return;
+  try {
+    const v = await api.version(state.pid);
+    if (seen && v.ui !== seen.ui && !hasUnsaved()) return location.reload();
+    if (seen && v.data !== seen.data) await liveSync(refresh);
+    seen = v;
+  } catch { /* server restarting: try again next tick */ }
+}, 1500);

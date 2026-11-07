@@ -205,6 +205,11 @@ function setEditing(on) {
   if (on) $("d-prompt").focus();
 }
 
+export const hasUnsaved = () => promptDirty || mediaDirty;
+export async function liveSync(refresh) {
+  if (cur && !busy) await reload(true); else if (!busy) await refresh();
+}
+
 async function reload(keepEdits) {
   const data = await ctx.refresh();
   const fresh = data && data.assets.find((x) => x.id === cur.id);
