@@ -17,7 +17,7 @@ from pathlib import Path
 from .assets import VIDEO, file_hash, probe
 from .config import ENGINES, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
-                        TemplateSpec)
+                        TemplateSpec, Word)
 from .project import atomic_write
 
 TEMPLATES = TOOLS / "templates"
@@ -28,6 +28,8 @@ GSAP = HF / "dist" / "vendor" / "npm" / "gsap@3.15.0" / "dist" / "gsap.min.js"
 PREVIEW_SHORT_SIDE = 720
 FIT_TOLERANCE = 0.35  # aspect mismatch above this -> blurred backdrop instead of a hard crop
 RENDER_TIMEOUT = 900
+CAPTION_WORDS = {"landscape": 4, "portrait": 3}  # max words per caption page
+CAPTION_BREAK = 0.5  # a pause longer than this starts a new caption page
 
 
 def fmt_dir(fmt: str, final: bool) -> str:
@@ -55,6 +57,21 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
     return "video_clip" if Path(r.asset).suffix.lower() in VIDEO else "photo"
 
 
+def caption_pages(scene: Scene, words: list[Word], max_words: int) -> list[list[dict]]:
+    """Words whose midpoint falls inside the scene, as pages of <= max_words, times relative to the
+    scene start. A page never crosses a cut, a long pause or a sentence end."""
+    pages, cur = [], []
+    for wd in words:
+        if not scene.start <= (wd.start + wd.end) / 2 < scene.end:
+            continue
+        s, e = max(0.0, wd.start - scene.start), min(scene.end, wd.end) - scene.start
+        if cur and (len(cur) >= max_words or s - cur[-1]["e"] > CAPTION_BREAK or cur[-1]["t"][-1] in ".?!।"):
+            pages.append(cur)
+            cur = []
+        cur.append({"t": wd.text, "s": round(s, 3), "e": round(max(e, s + 0.05), 3)})
+    return pages + [cur] if cur else pages
+
+
 def load_template(name: str) -> TemplateSpec:
     return TemplateSpec.model_validate_json((TEMPLATES / name / "template.json").read_text("utf-8"))
 
@@ -80,6 +97,7 @@ class Job:
     out: Path
     key: str
     brand: Brand
+    captions: list = None  # caption pages (caption_pages), None = no captions
 
     @property
     def duration(self) -> float:
@@ -87,7 +105,7 @@ class Job:
 
 
 def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root: Path,
-              out_dir: Path, final: bool) -> list[Job]:
+              out_dir: Path, final: bool, words: list[Word] | None = None) -> list[Job]:
     """Cheap: hashes inputs only. Key = scene JSON + asset hash + template (version + files)
     + brand.json + output size/fps."""
     of = brand.formats[fmt]
@@ -104,10 +122,12 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip") else None
         asset = root / rel if rel else None
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
+        caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
+                if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
-                                         brand_hash, fmt, w, h, brand.fps]).encode()).hexdigest()[:16]
+                                         brand_hash, fmt, w, h, brand.fps, caps]).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps))
     return jobs
 
 
@@ -165,7 +185,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     s, b = job.scene, job.brand
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "fit": fit, "colors": b.colors, "fonts": b.fonts, "error": error}
+             "asset": asset_name, "fit": fit, "colors": b.colors, "fonts": b.fonts, "error": error,
+             "captions": job.captions or []}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     html = (TEMPLATES / template / "index.html").read_text("utf-8")
     for k, v in {"{{W}}": job.w, "{{H}}": job.h, "{{DUR}}": f"{job.duration:.4f}", "{{ASSET}}": asset_name}.items():

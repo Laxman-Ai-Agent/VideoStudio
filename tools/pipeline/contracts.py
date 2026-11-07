@@ -105,6 +105,8 @@ class Brand(BaseModel):
     fps: int = 30
     colors: dict[str, str]
     fonts: dict[str, str]
+    captions: bool = False        # word-by-word captions from work/transcript.json (bottom third)
+    music_mood: str = ""          # _library/music/<mood>/ ; empty or missing folder = no music
 
 
 # ---- Phase 2: assets -------------------------------------------------------

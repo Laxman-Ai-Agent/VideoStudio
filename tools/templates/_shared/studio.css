@@ -13,3 +13,11 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
                    border-bottom: calc(var(--u) * 0.8) solid var(--accent); font-size: calc(var(--u) * 8); }
 .lower:empty { display: none; }
 .shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0) 45%); }
+/* captions overlay (studio.js): bottom third inside the safe area; lower thirds move above it */
+.captions { position: absolute; left: var(--sl); right: var(--sr); bottom: var(--sb); height: calc(var(--u) * 15);
+            display: flex; align-items: flex-end; justify-content: center; text-align: center; pointer-events: none; }
+.cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 800; font-size: calc(var(--u) * 5.2);
+            line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9); }
+.portrait .cap-page { font-size: calc(var(--u) * 6.4); }
+.cap-word { transform-origin: 50% 70%; }
+.has-captions .safe { bottom: calc(var(--sb) + var(--u) * 16); }

@@ -37,7 +37,38 @@
     return words.length;
   };
 
+  // Word-by-word captions (S.captions = pages of {t, s, e}, scene-relative seconds; empty = off).
+  // One page at a time in the bottom third; the spoken word turns accent-coloured and pops.
+  function captions(tl) {
+    const pages = S.captions || [];
+    if (!pages.length) return;
+    document.documentElement.classList.add("has-captions");
+    const box = document.createElement("div");
+    box.className = "captions";
+    document.getElementById("root").appendChild(box);
+    pages.forEach((page, i) => {
+      const el = document.createElement("div");
+      el.className = "cap-page";
+      box.appendChild(el);
+      const end = i + 1 < pages.length ? pages[i + 1][0].s : S.duration;
+      tl.set(el, { autoAlpha: 0 }, 0);
+      tl.set(el, { autoAlpha: 1 }, page[0].s);
+      if (end < S.duration) tl.set(el, { autoAlpha: 0 }, end);
+      page.forEach((w, j) => {
+        const s = document.createElement("span");
+        s.className = "word cap-word";
+        s.textContent = w.t;
+        el.appendChild(s);
+        if (j < page.length - 1) el.appendChild(document.createTextNode(" "));
+        tl.fromTo(s, { color: S.colors.text || "#FFFFFF", scale: 1 },
+          { color: S.colors.accent || "#FFC400", scale: 1.08, duration: 0.08, ease: "power1.out" }, w.s);
+        tl.to(s, { color: S.colors.text || "#FFFFFF", scale: 1, duration: 0.1 }, Math.max(w.e, w.s + 0.1));
+      });
+    });
+  }
+
   window.finish = function (tl) {
+    captions(tl);
     // pin the timeline length to the scene so the runtime never trims or pads it
     tl.set({}, {}, S.duration);
     window.__timelines = { root: tl };

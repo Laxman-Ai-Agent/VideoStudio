@@ -72,3 +72,15 @@ def test_assemble_matches_scene_length_and_has_audio(tmp_path):
     streams = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "csv=p=0", str(out)],
                              capture_output=True, text=True).stdout.split()
     assert sorted(streams) == ["audio", "video"]
+
+
+def test_caption_pages_split_on_count_pause_and_cut():
+    from pipeline.contracts import Scene, Word
+    w = lambda t, a, b: Word(text=t, start=a, end=b)  # noqa: E731
+    words = [w("a", 0.9, 1.0), w("b", 1.0, 1.2), w("c", 1.2, 1.4), w("d.", 1.4, 1.6), w("e", 1.6, 1.8),
+             w("f", 2.6, 2.8), w("g", 2.95, 3.2)]
+    scene = Scene(id=1, start=1.0, end=3.0, narration="x", visual_type="text", query="q")
+    pages = rnd.caption_pages(scene, words, 3)
+    # "a" (midpoint before the cut) and "g" (midpoint after) belong to other scenes
+    assert [[x["t"] for x in p] for p in pages] == [["b", "c", "d."], ["e"], ["f"]]
+    assert pages[0][0]["s"] == 0.0 and pages[2][0]["s"] == 1.6
