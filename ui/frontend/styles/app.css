@@ -100,7 +100,8 @@ textarea:not([readonly]) { border-color: var(--purple2); }
 .small { display: block; margin: 8px 0 4px; font-size: 13px; color: var(--muted); }
 .hint { color: var(--muted); font-size: 12.5px; margin: 6px 0 0; }
 .drop { border: 1.5px dashed #3b3f72; border-radius: 12px; padding: 16px; text-align: center; color: #cfd2ee; }
-.drop p { margin: 0; } .drop.over { border-color: var(--purple2); background: #17153a; }
+.drop p { margin: 0; } .drop.over, .d-left.over { border-color: var(--purple2); background: #17153a; }
+.d-left.over { outline: 2px dashed var(--purple2); outline-offset: -8px; }
 .progress { margin-top: 10px; height: 8px; border-radius: 99px; background: #23264d; overflow: hidden; }
 .progress span { display: block; height: 100%; width: 0; background: var(--purple2); transition: width .1s; }
 .msg { min-height: 20px; margin: 0; font-size: 14px; }

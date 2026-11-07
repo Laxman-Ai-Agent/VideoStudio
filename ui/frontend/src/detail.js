@@ -49,6 +49,19 @@ function why(a) {
   $("d-scene").style.whiteSpace = "pre-line";
 }
 
+// One copy-ready prompt: the transparent-background request and the "avoid" list live inside the text.
+// Older assets kept them apart (prompt.negative / output.transparent); they are folded in here and
+// saved that way on the next Save.
+export function fullPrompt(a) {
+  const p = a.prompt || {}, neg = (p.negative || "").trim();
+  let t = (p.text || "").trim();
+  if (!t) return "";
+  if ((p.transparent || a.output?.transparent) && !/transparent/i.test(t))
+    t += "\n\nTransparent background (PNG with alpha channel): only the subject, no backdrop, no shadow box.";
+  if (neg && !t.includes(neg)) t += `\n\nAvoid: ${neg}`;
+  return t;
+}
+
 function info(a) {
   const o = a.output, p = a.processing;
   const rows = [  // user asked for the required size only; id/category/status etc. are dropped
@@ -153,8 +166,7 @@ function show(a, keepEdits = false) {
   why(a);
   info(a);
   if (!keepEdits || !promptDirty) {
-    $("d-prompt").value = a.prompt.text || "";
-    $("d-negative").value = a.prompt.negative || "";
+    $("d-prompt").value = fullPrompt(a);
     promptDirty = false;
     setEditing(false);
   }
@@ -166,11 +178,6 @@ function show(a, keepEdits = false) {
     : (a.method === "template" ? "Drawn by a template: no prompt needed." : "No prompt stored yet; write one with Edit Prompt.");
   $("d-orig-box").hidden = !a.prompt_original || a.prompt_original === a.prompt.text;
   $("d-orig").textContent = a.prompt_original || "";
-  $("d-file-box").hidden = a.method === "template";
-  $("d-file-title").textContent = a.found ? "Replace with a new file" : "Upload the generated file";
-  $("d-drop-text").textContent = a.found
-    ? "Drop a new image or video here: you will see it next to the current one before anything changes"
-    : "Drag & drop the generated file here, or use Upload";
   // pending replacement: current vs new
   const pend = !!a.pending_file;
   $("d-pending").hidden = !pend;
@@ -192,7 +199,7 @@ function show(a, keepEdits = false) {
 }
 
 function setEditing(on) {
-  $("d-prompt").readOnly = $("d-negative").readOnly = !on;
+  $("d-prompt").readOnly = !on;
   $("d-edit").textContent = on ? "Editing…" : "Edit Prompt";
   $("d-edit").disabled = on;
   if (on) $("d-prompt").focus();
@@ -210,7 +217,7 @@ async function saveAll() {
   try {
     if (promptDirty) {
       msg("Saving prompt…");
-      await api.savePrompt(ctx.pid, cur.id, $("d-prompt").value, $("d-negative").value);
+      await api.savePrompt(ctx.pid, cur.id, $("d-prompt").value, "");  // "avoid" now lives inside the prompt
       promptDirty = false;
     }
     if (mediaDirty) {
@@ -308,11 +315,9 @@ $("d-cancel").addEventListener("click", close);
 $("modal").addEventListener("mousedown", (e) => { if (e.target === $("modal")) close(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("modal").hidden) close(); });
 $("d-edit").addEventListener("click", () => setEditing(true));
-for (const id of ["d-prompt", "d-negative"]) {
-  $(id).addEventListener("input", () => { promptDirty = true; buttons(); msg("Unsaved changes"); });
-}
+$("d-prompt").addEventListener("input", () => { promptDirty = true; buttons(); msg("Unsaved changes"); });
 $("d-copy").addEventListener("click", async () => {
-  const text = $("d-prompt").value + ($("d-negative").value ? `\n\nAvoid: ${$("d-negative").value}` : "");
+  const text = $("d-prompt").value;
   try { await navigator.clipboard.writeText(text); } catch { $("d-prompt").select(); document.execCommand("copy"); }
   msg("Prompt copied", "ok");
 });
@@ -321,7 +326,7 @@ $("d-upload").addEventListener("click", () => $("d-file").click());
 $("d-file").addEventListener("change", () => send($("d-file").files[0]));
 $("d-confirm").addEventListener("click", confirmReplace);
 $("d-discard").addEventListener("click", discard);
-const drop = $("d-drop");
+const drop = document.querySelector(".d-left");  // drag a file onto the preview side to upload
 drop.addEventListener("dragover", (e) => { e.preventDefault(); if (cur && cur.method !== "template") drop.classList.add("over"); });
 drop.addEventListener("dragleave", () => drop.classList.remove("over"));
 drop.addEventListener("drop", (e) => {

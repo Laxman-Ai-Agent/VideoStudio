@@ -82,15 +82,8 @@
             <p class="hint" id="m-dur"></p>
           </div>
         </div>
-        <div class="d-section" id="d-file-box">
-          <h3 id="d-file-title">File</h3>
-          <div class="drop" id="d-drop">
-            <p id="d-drop-text"></p>
-            <p class="hint">PNG, JPG, WEBP up to 50 MB · MP4, MOV, WEBM up to 1 GB</p>
-            <div class="progress" id="d-progress" hidden><span></span></div>
-          </div>
-          <input type="file" id="d-file" accept=".png,.jpg,.jpeg,.webp,.mp4,.mov,.webm" hidden>
-        </div>
+        <div class="progress" id="d-progress" hidden><span></span></div>
+        <input type="file" id="d-file" accept=".png,.jpg,.jpeg,.webp,.mp4,.mov,.webm" hidden>
         <details class="hist" id="d-hist-box" hidden><summary>History</summary><ol id="d-hist"></ol></details>
       </div>
       <div class="d-body">
@@ -109,8 +102,6 @@
               <button class="btn ghost" id="d-edit">Edit Prompt</button>
             </div></div>
           <textarea id="d-prompt" rows="6" readonly spellcheck="false"></textarea>
-          <label class="small" for="d-negative">Avoid (negative prompt)</label>
-          <textarea id="d-negative" rows="2" readonly spellcheck="false"></textarea>
           <p class="hint" id="d-settings"></p>
           <details id="d-orig-box" hidden><summary>Original prompt</summary><p class="orig" id="d-orig"></p></details>
         </div>

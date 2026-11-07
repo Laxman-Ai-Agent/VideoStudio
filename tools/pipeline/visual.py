@@ -78,8 +78,9 @@ def brief(project: Path, plan: ScenePlan, transcript_text: str, formats: dict, t
              "method": "ai_generate", "character": "C1",
              "placement": {"position": "bottom-left", "size": 0.55, "at": 0.2, "animation": "slide"},
              "prompt": {"text": "Full prompt here: subject + C1 appearance repeated word for word + expression + pose + "
-                                "camera + lighting + background + style + aspect + 'no text'",
-                        "negative": "text, watermark, extra fingers, second person", "tool": "ChatGPT image",
+                                "camera + lighting + style + aspect + 'no text'. Transparent background (PNG with "
+                                "alpha channel): only the subject. Avoid: text, watermark, extra fingers, second person.",
+                        "tool": "ChatGPT image",
                         "aspect_ratio": "1:1", "resolution": "1024x1024", "transparent": True, "text_in_image": ""},
              "output": {"format": "png", "width": 1024, "height": 1024, "transparent": True},
              "processing": {"remove_background": True}},
@@ -111,8 +112,10 @@ Every prompt must be usable as-is, without rewriting:
 1. main subject and what is happening; 2. facial expression and body pose; 3. character appearance: repeat
 the `characters[].description` WORD FOR WORD when a character appears; 4. composition and camera angle,
 framing, where the empty space for on-screen text is; 5. background (plain light grey / solid colour when
-it will be cut out); 6. lighting and the shared `style` line; 7. aspect ratio and resolution; 8. transparent
-background yes/no; 9. text inside the image: exact words or "no text"; 10. what must not appear (`negative`).
+it will be cut out); 6. lighting and the shared `style` line; 7. aspect ratio and resolution; 8. when
+`output.transparent` is true, say "transparent background (PNG with alpha channel)" in the prompt itself;
+9. text inside the image: exact words or "no text"; 10. end with "Avoid: ..." listing what must not appear.
+All of it goes in `prompt.text`, one copy-ready prompt; leave `prompt.negative` empty.
 Video prompts (tools make at most 10 s) give: main subject, exact action, environment, camera movement,
 subject movement, lighting, style, duration (scene length + 1 s, max 10 s; it is trimmed later), aspect,
 composition, how the shot STARTS and how it ENDS, and that it is one continuous shot.
