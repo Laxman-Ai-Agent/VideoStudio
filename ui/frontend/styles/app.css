@@ -128,7 +128,7 @@ textarea:not([readonly]) { border-color: var(--purple2); }
 .d-left { background: #07081a; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
 .d-preview { display: none; }
 .frame-wrap { display: grid; place-items: center; min-height: 260px; }
-.frame { position: relative; overflow: hidden; width: 100%; max-height: 56vh; border-radius: 10px;
+.frame { position: relative; overflow: hidden; width: 100%; max-height: 50vh; border-radius: 10px;
          background: repeating-conic-gradient(#14162e 0 25%, #0e1026 0 50%) 0 0 / 22px 22px; outline: 1px dashed #3b3f72; }
 .portrait-frame { width: auto; height: 56vh; }
 .frame img, .frame video { position: absolute; inset: 0; width: 100%; height: 100%; }
