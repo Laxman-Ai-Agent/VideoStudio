@@ -196,3 +196,25 @@ class Prepared(BaseModel):
     """work/prepared/prepared.json - parallax layers for scenes with `params.parallax: true`."""
     schema_version: int = SCHEMA_VERSION
     scenes: list[PreparedScene] = Field(default_factory=list)
+
+
+# ---- Phase 4: qa ------------------------------------------------------------
+
+class QACheck(BaseModel):
+    name: str                     # loudness | true_peak | black | freeze | duration | clips | placeholders
+    status: Literal["ok", "warn", "fail"]
+    detail: str = ""
+
+
+class QAFile(BaseModel):
+    file: str                     # assembled file, posix relative to the project
+    passed: bool                  # no check failed
+    checks: list[QACheck]
+
+
+class QAReport(BaseModel):
+    """work/qa.json - checks on the assembled videos of the last run. `--final` exports only
+    files that passed; previews are always exported (QA result printed)."""
+    schema_version: int = SCHEMA_VERSION
+    mode: Literal["preview", "final"]
+    files: list[QAFile]

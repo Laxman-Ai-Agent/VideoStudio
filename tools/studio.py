@@ -10,6 +10,7 @@
 """
 import argparse
 import json
+import shutil
 import sys
 
 from pathlib import Path
@@ -166,7 +167,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     brand = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8"))
     plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
     mode = "final" if final else "preview"
-    failed = 0
+    failed, assembled = 0, []
     for fmt in ("16:9", "9:16"):
         if fmt not in brand.formats:
             continue
@@ -189,19 +190,49 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
                       RenderReport.model_validate_json(report_json.read_text("utf-8")).scenes)
         print(f"  render {fmt}: {'done' if ran else 'up to date'} ({len(jobs)} scenes, {jobs[0].w}x{jobs[0].h})")
 
-        out = p / "output" / f"{mode}_{d.removesuffix('_final')}.mp4"
+        out = w / "assembled" / f"{mode}_{d.removesuffix('_final')}.mp4"  # exported to output/ after QA
+        out.parent.mkdir(exist_ok=True)
         total = round(plan.scenes[-1].end * brand.fps)
         music = pick_music(LIBRARY, brand.music_mood)  # missing folder/file = no music
         cues = sfx_cues([(j.scene.id, j.scene.start, j.template, j.scene.params) for j in jobs], LIBRARY)
         ran = run_stage(p, f"assemble_{d}", clips + [audio] + ([music] if music else []) + [f for _, f in cues],
                         [out], lambda c=clips, o=out, m=music, q=cues: assemble(c, audio, o, brand.fps, total, m, q),
                         extra=f"{total}|{[(round(t, 3), f.name) for t, f in cues]}")
-        print(f"  assemble {fmt}: {'done' if ran else 'up to date'} -> {out}"
+        print(f"  assemble {fmt}: {'done' if ran else 'up to date'}"
               f" (music: {music.name if music else 'none'}, sfx: {len(cues)})")
+        rep = RenderReport.model_validate_json(report_json.read_text("utf-8"))
+        holes = sorted({s.id for s in rep.scenes if s.status == "failed"} |
+                       {r.id for r in resolved.scenes if r.status == "missing"})
+        assembled.append((out, clips, holes))
+
+    # QA on every assembled file -> work/qa.json; previews are always exported, finals only on pass
+    from pipeline.contracts import QAReport
+    from pipeline.qa import check
+    qa_json = w / "qa.json"
+
+    def qa():
+        files = [check(o, audio, c, h, final, p) for o, c, h in assembled]
+        atomic_write(qa_json, QAReport(mode=mode, files=files).model_dump_json(indent=2))
+
+    run_stage(p, "qa", [o for o, _, _ in assembled] + [audio], [qa_json], qa, extra=mode)
+    report = QAReport.model_validate_json(qa_json.read_text("utf-8"))
+    qa_failed = False
+    for f in report.files:
+        src = p / f.file
+        dest = p / "output" / src.name
+        bad = [f"{c.name}: {c.detail}" for c in f.checks if c.status != "ok"]
+        if f.passed or not final:
+            if not dest.exists() or dest.stat().st_mtime_ns < src.stat().st_mtime_ns:
+                shutil.copy2(src, dest)
+        qa_failed |= not f.passed
+        print(f"  qa {src.name}: {'PASS' if f.passed else 'FAIL'}" + (f" ({'; '.join(bad)})" if bad else "")
+              + ("" if f.passed or not final else " -> NOT exported"))
+        print(f"    -> {dest}" if dest.exists() and (f.passed or not final) else "", end="")
+        print()
     print(f"  credits: {credits_txt}")
     if failed:
         print(f"  NOTE: {failed} scene clip(s) are placeholders (see work/scenes/*/report.json)")
-    return 0
+    return 1 if final and qa_failed else 0
 
 
 def main() -> int:

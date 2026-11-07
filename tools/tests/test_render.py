@@ -116,3 +116,12 @@ def test_parallax_only_when_cutout_exists(tmp_path):
     assert pick(None) == "photo"
     assert pick(Prepared(scenes=[PreparedScene(id=3, error="no clear subject")])) == "photo"  # fallback
     assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo_parallax"
+
+
+def test_qa_flags_black_and_frozen_video(tmp_path):
+    from pipeline.qa import video_events
+    v = tmp_path / "v.mp4"
+    _ffmpeg("-f", "lavfi", "-i", "color=c=black:s=64x36:r=30:d=2", "-f", "lavfi", "-i", "color=c=red:s=64x36:r=30:d=6",
+            "-filter_complex", "[0][1]concat=n=2", "-pix_fmt", "yuv420p", str(v))
+    black, freeze = video_events(v)
+    assert black and freeze
