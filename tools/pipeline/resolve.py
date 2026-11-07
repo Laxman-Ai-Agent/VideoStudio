@@ -2,10 +2,12 @@
 
 Per scene, first hit wins:
 1. `asset` set in scenes.json, or a project file named scene_NNN.* (returned from the prompts stage)
-2. best description match in project assets, then `_library` (each asset used once per video)
-3. motion_graphic / diagram / chart / text / map: no asset needed -> 'template' (rendered in Phase 3)
-4. internet (providers.search), downloaded to `_library/downloads`, source + license kept
-5. 'missing' -> the prompts stage writes a generation prompt
+2. `params.entity` (exact person / brand): Wikidata photo or logo, Simple Icons for logos (no key)
+3. best description match in project assets, then `_library` (each asset used once per video)
+4. motion_graphic / diagram / chart / text / map: no asset needed -> 'template' (`params.lottie` fetches
+   the animation: an emoji -> Google's animated Noto emoji in `_library/lottie`, or a project .json)
+5. internet (providers.search: Pexels, Openverse, Wikimedia), downloaded to `_library/downloads`, credits kept
+6. 'missing' -> the prompts stage writes a generation prompt
 """
 import hashlib
 import re
@@ -66,6 +68,30 @@ def _best(scene: Scene, base: Path, idx, used: set[str]) -> tuple[float, str | N
     return best, key
 
 
+def _take(c, scene: Scene, library: Path, lib_index: Path, root: Path, download: Callable,
+          make: Callable | None = None) -> ResolvedScene | None:
+    """Fetch one candidate into _library/downloads (cached by URL; `make(dest)` builds the file
+    instead of downloading it), index it and keep its credits."""
+    name = f"{c.provider}_{hashlib.sha1(c.url.encode()).hexdigest()[:10]}{c.ext}"
+    dest = library / "downloads" / name
+    try:
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            make(dest) if make else download(c.url, dest)
+    except Exception as e:
+        print(f"    (download failed: {type(e).__name__}: {e})")
+        return None
+    idx = assets.update(library, lib_index)
+    for h, e in idx.assets.items():
+        if e.file == f"downloads/{name}":
+            idx.assets[h] = e = e.model_copy(update={
+                "description": e.description or c.title, "query": scene.query,
+                "source_url": c.source_url, "license": c.license, "author": c.author})
+            assets.save(lib_index, idx)
+            return _hit("downloaded", library, e, root)
+    return None
+
+
 def _internet(scene: Scene, library: Path, lib_index: Path, root: Path, pexels_key: str,
               search: Callable, download: Callable) -> ResolvedScene | None:
     kind = "video" if scene.visual_type == "footage" else "image"
@@ -77,28 +103,68 @@ def _internet(scene: Scene, library: Path, lib_index: Path, root: Path, pexels_k
         for c in search(words, kind, scene.visual_type, pexels_key):
             if sum(w in set(keywords(c.title)) for w in q) < need:
                 continue  # search engines return loose matches; skip off-topic files
-            name = f"{c.provider}_{hashlib.sha1(c.url.encode()).hexdigest()[:10]}{c.ext}"
-            dest = library / "downloads" / name
-            try:
-                if not dest.exists():
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    download(c.url, dest)
-            except Exception as e:
-                print(f"    (download failed: {type(e).__name__}: {e})")
-                continue
-            idx = assets.update(library, lib_index)
-            for h, e in idx.assets.items():
-                if e.file == f"downloads/{name}":
-                    idx.assets[h] = e = e.model_copy(update={
-                        "description": e.description or c.title, "query": scene.query,
-                        "source_url": c.source_url, "license": c.license, "author": c.author})
-                    assets.save(lib_index, idx)
-                    return _hit("downloaded", library, e, root)
+            if r := _take(c, scene, library, lib_index, root, download):
+                return r
     return None
 
 
+def _icon_card(svg: str, dest: Path) -> None:
+    """Simple Icons SVG -> 1920x1080 PNG on a transparent background, logo centred (headless Chrome)."""
+    from .chrome import screenshot
+    src, page = dest.with_suffix(".svg"), dest.with_suffix(".html")
+    src.write_text(svg, "utf-8")
+    page.write_text(f'<body style="margin:0;background:transparent"><div style="width:1920px;height:1080px;display:flex;'
+                    f'align-items:center;justify-content:center"><img src="{src.name}" style="height:44%"></div>', "utf-8")
+    try:
+        screenshot(page, dest, 1920, 1080, transparent=True)
+    finally:
+        page.unlink(missing_ok=True)
+        src.unlink(missing_ok=True)
+
+
+def _named(scene: Scene, library: Path, lib_index: Path, root: Path, entity: Callable, icon: Callable,
+           download: Callable) -> ResolvedScene | None:
+    """`params.entity` = an exact person / brand name: Wikidata photo or logo, then (logos) Simple Icons."""
+    name, logo = str(scene.params["entity"]), scene.visual_type == "logo"
+    try:
+        for c in entity(name, logo):
+            if r := _take(c, scene, library, lib_index, root, download):
+                return r
+        svg = icon(name) if logo else None
+    except Exception as e:  # noqa: BLE001 - offline / API change: keep resolving the usual way
+        print(f"    (entity lookup skipped: {type(e).__name__}: {e})")
+        return None
+    if not svg:
+        return None
+    c = providers.Candidate(url=f"https://simpleicons.org/?q={name}", ext=".png", title=f"{name} logo",
+                            source_url="https://simpleicons.org", license="CC0 (Simple Icons; trademark of its owner)",
+                            author="Simple Icons", provider="simpleicons")
+    return _take(c, scene, library, lib_index, root, download, make=lambda dest: _icon_card(svg, dest))
+
+
+def _lottie(scene: Scene, project: Path, library: Path, root: Path, download: Callable) -> ResolvedScene | None:
+    """`params.lottie`: a project .json path, or an emoji fetched as Google's animated Noto emoji."""
+    v = str(scene.params["lottie"])
+    if v.lower().endswith(".json"):
+        f = project / v
+        return ResolvedScene(id=0, status="template", asset=_rel(f, root)) if f.exists() else None
+    c = providers.noto_lottie(v)
+    if not c:
+        return None
+    dest = library / "lottie" / f"noto_{providers.emoji_code(v)}.json"
+    try:
+        if not dest.exists():
+            download(c.url, dest)
+    except Exception as e:  # noqa: BLE001 - offline: the scene renders as a text card
+        print(f"    (lottie download failed: {type(e).__name__}: {e})")
+        return None
+    return ResolvedScene(id=0, status="template", asset=_rel(dest, root), source_url=c.source_url,
+                         license=c.license, author=c.author)
+
+
 def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_key: str = "",
-            search: Callable = providers.search, download: Callable = providers.download) -> Resolved:
+            search: Callable = providers.search, download: Callable = providers.download,
+            entity: Callable = providers.entity, icon: Callable = providers.simple_icon) -> Resolved:
     base = project / "assets"
     proj, lib_index = assets.load(base / "index.json"), library / "index.json"
     by_scene: dict[int, dict[bool, AssetEntry]] = {}
@@ -116,7 +182,9 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
             r = _hit("project", base, got.get(False) or got[True], root)
             if True in got:
                 r.asset_9x16 = _rel(base / got[True].file, root)
-        else:
+        elif s.params.get("entity") and s.visual_type not in TEMPLATE_TYPES:
+            r = _named(s, library, lib_index, root, entity, icon, download)
+        if r is None:  # local match (also when an entity lookup found nothing)
             for status, b, idx in (("project", base, proj), ("library", library, assets.load(lib_index))):
                 sc, h = _best(s, b, idx, used)
                 if h and sc >= THRESHOLD:
@@ -125,6 +193,8 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
                     break
         if r is None and s.visual_type in TEMPLATE_TYPES:
             r = ResolvedScene(id=0, status="template")
+        if s.params.get("lottie") and r and r.status == "template":
+            r = _lottie(s, project, library, root, download) or r
         if r is None:
             r = _internet(s, library, lib_index, root, pexels_key, search, download)
         r = r or ResolvedScene(id=0, status="missing")

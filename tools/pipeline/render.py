@@ -55,6 +55,8 @@ def frame_count(scene: Scene, fps: int) -> int:
 
 def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if r.status == "template":
+        if scene.params.get("lottie") and r.asset:
+            return "lottie"
         if any(scene.params.get(k) for k in ("items", "stat", "button")):
             return "cards"
         if scene.params.get("lines") or scene.params.get("bg_word"):
@@ -162,7 +164,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
             name, layers = "photo_parallax", (root / c.fg, root / c.bg)
         if name not in tpl_hash:
             tpl_hash[name] = f"{load_template(name).version}:{_dir_hash(TEMPLATES / name)}:{shared}"
-        rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip", "screenshot") else None
+        rel = (r.asset_9x16 if fmt == "9:16" and r.asset_9x16 else r.asset) if name in ("photo", "video_clip", "screenshot", "lottie") else None
         asset = root / rel if rel else None
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
         if layers:
@@ -240,7 +242,11 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     (build_dir / "studio.css").write_text(font_css(job.brand.fonts.values(), build_dir) + "\n"
                                           + (SHARED / "studio.css").read_text("utf-8"), "utf-8")
     asset_name, fit = "", "cover"
-    if template == "cutout_title":
+    if template == "lottie":
+        if not job.asset or not job.asset.exists():
+            raise FileNotFoundError(f"lottie not found: {job.asset}")
+        (build_dir / "anim.js").write_text("window.ANIM = " + job.asset.read_text("utf-8") + ";\n", "utf-8")
+    elif template == "cutout_title":
         shutil.copy2(job.layers[0], build_dir / "cut.png")
         asset_name = "cut.png"
     elif template == "photo_parallax":
@@ -259,7 +265,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
             shutil.copy2(job.asset, build_dir / asset_name)
     s, b = job.scene, job.brand
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
-             "text": s.on_screen_text, "query": s.query, "narration": s.narration, "params": s.params,
+             "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None), "colors": {**b.colors, **b.themes.get(b.theme, {})}, "theme": b.theme,
              "fonts": b.fonts, "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1]}

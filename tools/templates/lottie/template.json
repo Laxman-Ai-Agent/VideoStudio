@@ -1,0 +1,5 @@
+{"name": "lottie", "version": 1, "engine": "hyperframes",
+ "visual_types": ["motion_graphic", "diagram", "text"],
+ "params": {"lottie": "an emoji (Google animated Noto emoji, CC BY 4.0, fetched by resolve) or a project-relative .json; picks this template",
+            "size": "animation size in % of the short side, default 45"},
+ "description": "Lottie animation (lottie-web 5.13.0, frame-exact from the timeline, looped) with the on-screen text below"}

@@ -4,6 +4,13 @@
 <style>
 .blurbg { filter: blur(calc(var(--u) * 4)) brightness(.55); transform: scale(1.15); }
 .contain { object-fit: contain; }
+/* logo scenes: the logo sits whole in the middle of the themed background, no blurred copy */
+.logo-mode #img { inset: 18% 14% 34% 14%; width: auto; height: auto; object-fit: contain; }
+.portrait.logo-mode #img { inset: 26% 10% 40% 10%; }
+.logo-mode .shade { display: none; }
+.logo-grid { position: absolute; inset: 0; opacity: .06;
+             background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
+             background-size: calc(var(--u) * 6) calc(var(--u) * 6); }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <img id="bg" class="fill blurbg" src="{{ASSET}}">
@@ -13,12 +20,22 @@
 </div>
 <script>
   const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true });
-  const blur = S.fit === "blur";
+  const logo = S.visual_type === "logo" && !p.full;  // params.full: show a logo photo edge to edge
+  const blur = S.fit === "blur" && !logo;
   document.getElementById("bg").style.display = blur ? "" : "none";
   if (blur) document.getElementById("img").classList.add("contain");
-  const pan = p.pan || ["left", "right"][S.id % 2], dx = pan === "none" ? 0 : (pan === "left" ? -1 : 1) * U * 3;
-  tl.fromTo("#img", { scale: 1.0, x: -dx }, { scale: p.zoom || 1.12, x: dx, duration: S.duration, ease: "none" }, 0);
-  tl.fromTo("#img", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
+  if (logo) {
+    document.documentElement.classList.add("logo-mode");
+    const g = document.createElement("div");
+    g.className = "logo-grid";
+    document.getElementById("root").prepend(g);
+    tl.fromTo("#img", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 0);
+    tl.to("#img", { scale: 1.05, duration: Math.max(0.1, S.duration - 0.45), ease: "none" }, 0.45);
+  } else {
+    const pan = p.pan || ["left", "right"][S.id % 2], dx = pan === "none" ? 0 : (pan === "left" ? -1 : 1) * U * 3;
+    tl.fromTo("#img", { scale: 1.0, x: -dx }, { scale: p.zoom || 1.12, x: dx, duration: S.duration, ease: "none" }, 0);
+    tl.fromTo("#img", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
+  }
   kinetic(document.getElementById("t"), S.text, tl, 0.3);
   tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, 0.25);
   finish(tl);

@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<script src="lottie.min.js"></script><script src="anim.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+.grid { position: absolute; inset: 0; opacity: .06;
+        background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
+        background-size: calc(var(--u) * 6) calc(var(--u) * 6); }
+#wrap { margin: auto; display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 2.5); }
+#anim { width: var(--sz); height: var(--sz); }
+#t { font-weight: 900; font-size: calc(var(--u) * 9); text-align: center; line-height: 1.1; }
+#t:empty { display: none; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div class="grid"></div>
+  <div class="safe"><div id="wrap"><div id="anim"></div><div id="t"></div></div></div>
+</div>
+<script>
+  // Lottie animation (window.ANIM from anim.js: Google's animated Noto emoji or a dropped .json),
+  // driven frame-exactly by the GSAP timeline (no autoplay), looping over the scene, title below.
+  const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
+  document.documentElement.style.setProperty("--sz", `calc(var(--u) * ${Number(p.size) || 45})`);
+  const A = lottie.loadAnimation({ container: document.getElementById("anim"), renderer: "svg", loop: false,
+                                   autoplay: false, animationData: window.ANIM });
+  const total = Math.max(1, (window.ANIM.op || 1) - (window.ANIM.ip || 0)), fps = window.ANIM.fr || 30;
+  const clock = { f: 0 };
+  A.goToAndStop(0, true);
+  tl.to(clock, { f: d * fps, duration: d, ease: "none", onUpdate: () => A.goToAndStop(clock.f % total, true) }, 0);
+  tl.fromTo("#anim", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 0.05);
+  kinetic(document.getElementById("t"), S.text, tl, 0.35);
+  finish(tl);
+</script></body></html>
