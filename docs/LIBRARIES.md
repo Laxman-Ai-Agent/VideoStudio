@@ -14,6 +14,13 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | av / PyAV (via faster-whisper) | 15.1.0 | BSD-3 | transcribe | audio decode | pinned `15.*`: av 19 dropped `metadata_errors`, faster-whisper 1.2.1 crashes. Unpin when faster-whisper fixes it |
 | GSAP (bundled by hyperframes) | 3.15.0 | GSAP standard license (free, incl. commercial) | templates | template animation timelines | ships inside hyperframes (`dist/vendor/npm/gsap@3.15.0`), copied into each scene build; no CDN, no extra install |
 | esbuild (via hyperframes) | 0.28.2 | MIT | engines/hyperframes | bundler HyperFrames needs | install script approved in package.json `allowScripts` |
+| rembg | 2.0.87 | MIT | prepare | subject cut-out for fake parallax (CPU) | standard, CPU-only works; model `silueta` (43 MB) in `tools/models/rembg` via `U2NET_HOME`, override with env `STUDIO_REMBG_MODEL` |
+| Pillow (via rembg) | 13.0.0 | MIT-CMU | prepare | mask math, blur, PNG write for the layers (never text) | already pulled by rembg |
+| scipy, scikit-image, pymatting, numba, pooch (via rembg) | locked in uv.lock | BSD/MIT | prepare | rembg internals | not used directly |
+| onnxruntime (via faster-whisper) | 1.31.1 | MIT | transcribe, prepare | inference for VAD and rembg | already installed, rembg needs no extra |
+| remotion, @remotion/bundler, @remotion/renderer | 4.0.541 | Remotion License: free for individuals and companies of up to 3 people; bigger companies need a paid company license (remotion.dev/license) | engines/remotion | second render engine (React -> MP4) | isolated in `tools/engines/remotion` with its own lockfile; renders with system Chrome (`chromeMode: chrome-for-testing`), no browser download |
+| react, react-dom | 19.3.1 | MIT | engines/remotion | Remotion components | required by Remotion |
+| esbuild (via @remotion/bundler) | 0.28.1 | MIT | engines/remotion | bundler internals | own copy, never shared with HyperFrames |
 
 ## External tools (system-wide)
 | Tool | Version | Used for |
@@ -28,8 +35,5 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
 |---|---|---|
-| Pillow | 4 | image resize/crop for `prepare` (NOT text: no raqm on Windows, Telugu breaks). Not needed in Phase 2: thumbs are ffmpeg, sheets are Chrome |
 | D3 | 4+ | richer charts, only if the plain-DOM chart template falls short |
-| rembg | 4 | background removal |
-| remotion | 4 | second render engine (isolated in engines/remotion) |
 | PySceneDetect, MapLibre GL | 5 | raw-footage shots, maps |

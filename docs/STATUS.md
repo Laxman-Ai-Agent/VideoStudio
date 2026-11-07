@@ -1,6 +1,6 @@
 # Status
 
-Current phase: **3 Render v1, done (2026-11-07)**. Next: **Phase 4, Polish + Remotion** (captions, music, SFX, parallax).
+Current phase: **4 Polish + Remotion, done (2026-11-07)**. Next: **Phase 5, Extras** (maps, timeline, screenshots, raw-footage cutting).
 
 ## Phase 0: Foundation ✅
 - [x] Folder structure (`_brand`, `_library`, `tools`, `projects`, `docs`, `.claude/skills`)
@@ -40,11 +40,22 @@ Current phase: **3 Render v1, done (2026-11-07)**. Next: **Phase 4, Polish + Rem
 - [x] Tests: 40 passing (fake engine: cache, single-scene re-render, isolation, exact frames; assemble sync)
 - [x] On 01: 22 clips in 5 min (2 workers, 720p); both previews 915 frames = 30.5 s, -14.3 LUFS, peak -1.4 dB. Editing scene 11 re-rendered only scene 11 (13 s per format)
 
-## Phase 4: Polish + Remotion (next)
+## Phase 4: Polish + Remotion ✅
+- [x] Captions: word-by-word overlay from `work/transcript.json` (script words + Whisper timing), Noto Sans Telugu + Inter, brand colours, bottom of the safe area per format, `"captions": true` in brand.json
+- [x] Audio polish in assemble: music from `_library/music/<music_mood>/` (sidechain-ducked), whoosh/click SFX from `_library/sfx/`, loudnorm on the mix. Missing folders = narration only
+- [x] prepare stage + `photo_parallax`: rembg `silueta` cut-out on CPU (model in `tools/models/rembg`), opt-in `params.parallax`, falls back to `photo`
+- [x] qa stage -> `work/qa.json` (loudness, true peak, black, freeze, sync ±0.1 s, clips, placeholders). Previews always exported, `--final` only on pass
+- [x] Remotion 4.0.541 isolated in `tools/engines/remotion`; `headline` ported and switched to `"engine": "remotion"` (DECISIONS #24)
+- [x] Tests: 45 passing. Doctor all green
+- [x] On 01: 22 clips in ~11 min (2 workers, 720p, captions changed every key), scene 3 parallax, headline scenes 1/5/8/11 by Remotion, rest HyperFrames, mixed video assembled. QA PASS both formats: -14.4 LUFS, -1.4 dBTP, 30.50 s vs 30.49 s narration, no black/freeze, warn: scene 10 still MISSING
 
 ## Known issues / notes
+- `_library/music/*` and `_library/sfx/*` are empty, so 01 has no music/SFX yet (code tested with generated tones). Drop royalty-free tracks in `_library/music/calm/` (or change `music_mood`) and whoosh files in `_library/sfx/whoosh/`; the next run re-assembles only (no re-render).
+- Inter is not installed on this PC, so Latin words fall back to Noto Sans Telugu / Nirmala UI. Install Inter for the brand look; fonts are not in the scene cache key, so bump the template versions to re-render.
+- The first rembg cut-out took ~2 min (model download + numba warm-up); the prepare stage caches it afterwards.
+- Caption pages split by word count, so a page can start with a suffix word (e.g. "ని చూసాం."). Tune `CAPTION_WORDS` / `CAPTION_BREAK` in render.py if it reads badly.
 - Render speed here: ~15-30 s per 720p scene clip, video scenes up to ~50 s when two run at once. Full-size `--final` not timed yet (expect ~2-3x).
-- Scene 3 ("Chatbots") resolved to a Grok-only logo; the multi-logo idea needs a Phase 4 template. Scene 9 chart has no cited data, so it shows decorative bars only (add `params.bars` + `params.source` to scenes.json).
+- Scene 3 ("Chatbots") resolved to a Grok-only logo; the multi-logo idea needs a new template (not in Phase 4). Scene 9 chart has no cited data, so it shows decorative bars only (add `params.bars` + `params.source` to scenes.json).
 - An edit that doesn't change pixels (e.g. `notes`) re-renders the scene but assemble stays cached (same clip bytes).
 - No `PEXELS_API_KEY` yet (`tools/.env`), so internet search is Wikimedia only. Wikimedia rarely fits generic stock scenes; the first live run picked off-topic files at a 2-keyword match, so internet results now need half the query keywords (DECISIONS #16).
 - Matching is keyword overlap on English descriptions (threshold 0.34). Multi-item scenes (e.g. "ChatGPT, Gemini and Grok logos") get one asset; Phase 3 templates can combine more.

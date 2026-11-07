@@ -22,10 +22,10 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 | resolve | scenes, asset indexes | `work/resolved.json`, `output/credits.txt` | pick a file per scene: project assets, then `_library`, then internet, then missing |
 | prompts | resolved (missing) | `prompts/{images,videos}/scene_NNN.md`, `prompts/README.md` | generation prompts with an exact "save as" name |
 | storyboard | scenes (resolved from Phase 2) | `work/storyboard.html`, `work/storyboard.png` | text-only sheet for approval, HTML screenshotted by headless Chrome |
-| prepare | resolved | `work/prepared/*` | crops, cut-outs, fake parallax layers |
+| prepare | scenes, resolved | `work/prepared/prepared.json`, `scene_NNN_{fg,bg}.png` | rembg cut-out (CPU, model in `tools/models/rembg`) for scenes with `params.parallax: true`: fg = subject with alpha, bg = photo with the subject area blurred. Failure or no clear subject = plain photo |
 | render | scenes, resolved, brand, `tools/templates/*` | `work/scenes/<16x9|9x16>[_final]/scene_NNN.mp4` + `.key`, `report.json` | one HyperFrames clip per scene per format, exact frame count, cached by key = scene JSON + asset hash + template (version + files) + brand + size. 720p preview by default, `--final` = full size. Failures -> `missing` tile + report, retried next run. `--workers` (default 2) |
-| assemble | clips, narration (music/sfx in Phase 4) | `output/{preview|final}_{16x9|9x16}.mp4` | FFmpeg concat (re-encoded once) + narration, two-pass loudnorm -14 LUFS / -1.5 dBTP, length = last scene end. Credits: `output/credits.txt` is written by resolve |
-| qa | assembled | `work/qa.json`, `output/*` | loudness (-14 LUFS), black frames, sync, final export |
+| assemble | clips, narration, `_library/music/<brand.music_mood>/` (first file), `_library/sfx/{whoosh,click}/` | `work/assembled/{preview|final}_{16x9|9x16}.mp4` | FFmpeg concat (re-encoded once) + narration + music (18 LU under the narration, sidechain-ducked, faded) + SFX (whoosh before cuts into headline/chart, `params.sfx` overrides), two-pass loudnorm of the mix -14 LUFS / -1.5 dBTP, length = last scene end. No music/sfx files = narration only. Credits: `output/credits.txt` is written by resolve |
+| qa | assembled, narration, clips, render reports | `work/qa.json`, `output/*` | loudness -14 ±1 LUFS, true peak <= -1 dBTP, blackdetect >= 1 s, freezedetect >= 5 s, length vs narration ±0.1 s, all clips present, placeholder tiles (warn in preview, fail in final). Previews always exported; `--final` exports only files that passed (exit 1 otherwise) |
 
 ## Orchestration and checkpoints
 - `tools/studio.py` is the only orchestrator. No Airflow/Celery/DB/server.
@@ -38,11 +38,12 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> 4 resolve -> 5 prompts -
 - Adding an optional field is safe. Removing/renaming a field or changing its meaning means bumping the version and adding a converter.
 
 ## Render engines
-- Templates: `photo` (Ken Burns, blurred backdrop when the aspect doesn't fit), `video_clip` (FFmpeg trims/loops + cover-fits first, then push-in), `headline` (kinetic 1-4 words), `chart` (bars / count-up from `scene.params`, decorative without data), `missing` (scene number tile, also used for failures).
-- Template choice (`render.pick_template`): resolved `template` -> chart for chart scenes, else headline; missing -> missing; video file -> video_clip; image -> photo.
+- Templates: `photo` (Ken Burns, blurred backdrop when the aspect doesn't fit), `photo_parallax` (cut-out fg moves faster than bg; opt-in `params.parallax`), `video_clip` (FFmpeg trims/loops + cover-fits first, then push-in), `headline` (kinetic 1-4 words), `chart` (bars / count-up from `scene.params`, decorative without data), `missing` (scene number tile, also used for failures).
+- Template choice (`render.pick_template`): resolved `template` -> chart for chart scenes, else headline; missing -> missing; video file -> video_clip; image -> photo (-> photo_parallax when prepare made a cut-out).
+- Captions (`brand.json "captions": true`): words of `work/transcript.json` whose midpoint is in the scene, in pages of max 4 words (3 in 9:16), new page on a pause > 0.5 s or a sentence end. Passed in `scene.captions`; drawn by `_shared/studio.js` (HyperFrames) and `engines/remotion/src/studio.jsx` (Remotion) at the bottom of the safe area, spoken word in the accent colour. Lower thirds move above them. Part of the scene cache key.
 - Safe areas (`_shared/studio.js`): 16:9 6% sides / 8% top+bottom; 9:16 7% sides, 14% top, 22% bottom (Shorts UI). Sizes are in `--u` = 1% of the short side, so preview and final look the same.
 - Each scene renders in its own build folder (`.build/scene_NNN`, kept only on failure) with GSAP copied from the HyperFrames package (no CDN).
-- Each template declares `"engine": "hyperframes" | "remotion"` in its `template.json`.
+- Each template declares `"engine": "hyperframes" | "remotion"` in its `template.json`. HyperFrames reads `index.html` + `scene.js`; Remotion reads `Composition.jsx` + `scene.json` (`node tools/engines/remotion/render.mjs <build> <out> <preview|final> <chrome>`, bundle cached per template hash in `.bundles/`, system Chrome). A template may ship both files; flipping the field switches engines.
 - Engines live isolated in `tools/engines/<name>/`, each with its own `package.json` and lockfile, so they never share dependencies.
 - Engine contract: scene JSON + template in, one MP4 (same size/fps) out. Assemble doesn't care which engine made a clip.
 - Default is HyperFrames. Remotion is used only for templates where it measurably looks better (decided by test render, recorded in DECISIONS.md).
