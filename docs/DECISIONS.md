@@ -12,3 +12,6 @@ Newest last. Format: date · decision · why · revisit when.
 8. 2026-11-07 · HyperFrames uses the installed Chrome. No bundled browser download.
 9. 2026-11-07 · Python deps via uv (`uv.lock`), Node via `npm ci` + `package-lock.json`, exact pins · reproducible installs, no surprise upgrades.
 10. 2026-11-07 · User media (sample audio, projects, library) is never committed to git · privacy and repo size.
+11. 2026-11-07 · Storyboard is HTML screenshotted by headless system Chrome, not Pillow · Pillow wheels on Windows have no raqm, so Telugu conjuncts break; Chrome shapes Telugu and is already required · revisit if Chrome is dropped.
+12. 2026-11-07 · Whisper output (`work/whisper.json`) and script alignment (`work/transcript.json`) are separate stages · editing the script must never re-run Whisper.
+13. 2026-11-07 · Plan stage stops with exit code 2 and writes `work/plan_brief.md` when `scenes.json` is missing; Claude writes scenes.json in-session, the next run validates it.

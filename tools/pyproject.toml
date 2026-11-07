@@ -6,7 +6,6 @@ requires-python = "==3.12.*"
 # One responsibility per library. Register every addition in docs/LIBRARIES.md first.
 dependencies = [
     "faster-whisper==1.*",
-    "pillow==11.*",
     "pydantic==2.*",
 ]
 
