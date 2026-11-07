@@ -1,0 +1,14 @@
+{
+  "name": "engine-hyperframes",
+  "private": true,
+  "description": "Isolated HyperFrames render engine. Contract: scene JSON + template in, one MP4 out.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hyperframes": "0.9.19"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

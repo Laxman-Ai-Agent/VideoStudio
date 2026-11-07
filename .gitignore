@@ -1,0 +1,19 @@
+# Git tracks code, docs, contracts, templates and brand settings only.
+# Media and installed stuff stay out (they are large and reproducible).
+
+projects/
+_library/
+_brand/*
+!_brand/brand.json
+
+tools/.venv/
+tools/node_modules/
+tools/engines/*/node_modules/
+tools/models/
+tools/.cache/
+tools/tests/fixtures/**/*.wav
+tools/tests/fixtures/**/*.mp3
+tools/tests/fixtures/**/work/
+**/__pycache__/
+.pytest_cache/
+*.tmp
