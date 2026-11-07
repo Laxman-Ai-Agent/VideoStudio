@@ -17,10 +17,10 @@ per-video themes, visual-assets.json and the Visual Assets dashboard. History: `
 ## Pending, our side
 - [ ] Re-render 01 in the chosen theme once the user says so (~11 min, background).
 - [ ] One small test render of the new theme presets (gradients, textures, fonts) before a real video.
-- [ ] Verify the hook exemption (`.claude/settings.local.json`, `GATEGUARD_EXEMPT_GLOBS`) in a new session; if the first Write of a new file is still blocked, try `E:/VideoStudio/**`.
 - [ ] Not built yet (from the style references): logo watermark + CTA end card (needs the channel logo), duotone tint, several floating cut-outs per scene, dark glow style. Dashboard Settings page is a placeholder.
 
 ## Known issues / notes
+- Open sessions in `E:\VideoStudio`: its `.claude/settings.local.json` (local) turns off the ECC and Superpowers plugins here (verified: no edit gate, smaller start-up context).
 - `marks` positions are fractions of the frame; the 9:16 crop needs its own `marks_v`.
 - Auto-capture: some sites block headless Chrome (Wikipedia did). Drop your own `scene_NNN.png` when a capture is wrong.
 - Map names are Natural Earth English names; pins need lat/lon. States only for IN, US, CN, BR, AU, CA, RU, ID, ZA.
