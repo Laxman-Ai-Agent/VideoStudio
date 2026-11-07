@@ -81,6 +81,14 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
     run_stage(p, "plan", plan_inputs, [], lambda: validate(scenes_json, transcript))
     print("  plan: scenes.json valid")
 
+    # Phase 5: long videos (assets/raw_footage) -> shots in assets/shots, indexed like any clip
+    from pipeline import shots
+    for raw in shots.raw_files(p / "assets"):
+        first = p / "assets" / "shots" / f"{raw.stem}_001.mp4"
+        ran = run_stage(p, f"shots_{raw.stem}", [raw], [first],
+                        lambda r=raw: print(f"    {r.name}: {len(shots.cut(r, p / 'assets' / 'shots'))} shot(s)"))
+        print(f"  shots {raw.name}: {'done' if ran else 'up to date'}")
+
     # Phase 2: index assets (described once, by hash) -> resolve -> prompts for missing ones
     LIBRARY.mkdir(exist_ok=True)
     todo = []
@@ -94,10 +102,12 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
         undone = assets.undescribed(assets.load(idx_file))
         print(f"  {name}: {len(files)} file(s), {'done' if ran else 'up to date'}")
         if undone:
-            todo.append((idx_file, assets.contact_sheet(base, undone, f"{p.name} {name}"), len(undone)))
+            todo.append((idx_file, assets.contact_sheet(base, undone[:assets.SHEET_MAX], f"{p.name} {name}"),
+                         len(undone)))
     if todo:
         for idx_file, sheet, n in todo:
-            print(f"  STOP: {n} asset(s) need a description. Look at {sheet}\n"
+            more = f" (this sheet shows {assets.SHEET_MAX}, the rest come next run)" if n > assets.SHEET_MAX else ""
+            print(f"  STOP: {n} asset(s) need a description{more}. Look at {sheet}\n"
                   f"        and fill `description` (English keywords) in {idx_file}, then run again.")
         return NEEDS_USER
 

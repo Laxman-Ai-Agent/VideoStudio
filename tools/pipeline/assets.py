@@ -21,11 +21,13 @@ from .project import atomic_write
 THUMBS = ".thumbs"
 SCENE_FILE = re.compile(r"scene_(\d{3})(_v)?$", re.I)  # scene_004.png, scene_004_v.png (9:16)
 COLS, TILE_W = 5, 340
+SHEET_MAX = 20  # tiles per contact sheet; more files = one more sheet per run
 
 
 def media_files(base: Path) -> list[Path]:
+    # raw_footage originals are indexed as their cut shots (assets/shots, shots stage) instead
     return sorted(p for p in base.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE | VIDEO
-                  and THUMBS not in p.relative_to(base).parts)
+                  and not {THUMBS, "raw_footage"} & set(p.relative_to(base).parts[:-1]))
 
 
 def file_hash(p: Path) -> str:
