@@ -47,6 +47,12 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> theme -> visual assets (
 - Render: validated `main` files win in resolve; validated `overlay` images are drawn by `_shared/studio.js` on top of their scenes (position in the safe area above the captions, size = fraction of the safe-area height, pop / slide / float / fade, optional `until`). Overlays are part of the scene cache key.
 - `assets/generated` and `assets/processed` are not in the asset index (the JSON describes them).
 
+## Visual Assets dashboard (ui/)
+- `ui/backend/` (Python standard library `http.server`, localhost only) + `ui/frontend/` (plain HTML/CSS/JS modules, no build, no npm). Start: `studio.cmd ui` (default http://127.0.0.1:8790, next free port if busy).
+- No second database: `service.py` reads the project's `visual-assets.json` on every request, changes only the asked asset id and saves through `pipeline.visual` (atomic). Found / missing comes from the files on disk.
+- API: list projects, one project's assets, one asset, `PUT .../prompt`, `POST .../upload` (raw body + `X-Filename`, `?replace=1`), `/files/<pid>/<path>` previews (path-checked, Range for video).
+- Uploads: png / jpg / jpeg / webp (50 MB), mp4 / mov / webm (1 GB) -> `assets/generated/<ID>_<time>.<ext>` (never overwritten); then `visual.sync` processes and validates exactly like `studio.cmd assets`. An asset that already has a file is only replaced with `?replace=1` (Replace button + confirm).
+
 ## Per-video theme
 - Presets in `tools/themes/<name>.json` (tech, history, horror, war, education, documentary, space, health, finance, paper, dark). Add a preset = add a file with `keywords`.
 - `studio.cmd theme NN` shows the pick; `--preset NAME` pins one (writes the project `theme.json`); `--auto` goes back to the automatic pick. Overrides in the project `theme.json`: `colors`, `fonts`, `background`, `text`.

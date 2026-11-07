@@ -80,6 +80,11 @@ Current phase: **5 Extras, done (2026-11-07)**. Next: not planned yet (ideas: mu
 - [x] Overlay checked by one test render (scene 2, ChatGPT logo, 16:9 + 9:16). Full 01 not re-rendered
 - The old `projects/01_AI_Agents/prompts/` folder is no longer updated (visual-assets.json replaces it)
 
+## Visual Assets dashboard ✅ (2026-11-07)
+- [x] `studio.cmd ui` -> http://127.0.0.1:8790: project dropdown, counts, grid, asset detail with editable prompt, upload / replace / save, all on visual-assets.json
+- [x] Checked in the browser on 01 (24 / 12 / 12, A010 detail, Edit -> Save round trip, no console errors); upload / replace covered by HTTP tests on temp projects (01 was not changed)
+- Projects / Settings in the sidebar are placeholders (Projects opens the dropdown)
+
 ## Known issues / notes
 - Still open from the style references: brand logo watermark + CTA end card (needs the channel logo file), duotone tint and several floating cut-out objects in one scene, dark cinematic glow style.
 - `marks` positions are fractions of the frame, so the 9:16 crop needs its own `marks_v`.

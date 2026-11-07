@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visual Assets · Video Studio</title>
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>Video Studio</div>
+    <nav>
+      <a class="nav" data-nav="assets"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Dashboard</a>
+      <a class="nav" data-nav="projects"><svg viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h6l2 2h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Projects</a>
+      <a class="nav active" data-nav="assets"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg>Visual Assets</a>
+      <a class="nav disabled" title="Settings are not available yet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>Settings</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="top">
+      <div class="title">
+        <span class="title-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg></span>
+        <div><h1>Visual Assets</h1><p>Project wise visual assets</p></div>
+      </div>
+      <label class="picker">
+        <span>Project:</span>
+        <select id="project" aria-label="Project"></select>
+      </label>
+    </header>
+
+    <section class="stats">
+      <div class="stat total"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17 9 5 9-5" opacity=".6"/></svg></span>
+        <div><b id="c-total">0</b><span>Total Assets</span></div></div>
+      <div class="stat found"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9"/></svg></span>
+        <div><b id="c-found">0</b><span>Found</span></div></div>
+      <div class="stat missing"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></span>
+        <div><b id="c-missing">0</b><span>Missing</span></div></div>
+    </section>
+
+    <p id="notice" class="notice" hidden></p>
+    <section id="grid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="d-name">
+      <button class="close" id="d-close" aria-label="Close">&times;</button>
+      <div class="d-preview" id="d-preview"></div>
+      <div class="d-body">
+        <div class="d-head">
+          <h2 id="d-name"></h2>
+          <span class="badge" id="d-badge"></span>
+        </div>
+        <dl class="d-info" id="d-info"></dl>
+
+        <div class="d-section" id="d-prompt-box">
+          <div class="d-row"><h3>Generation prompt</h3>
+            <div class="btns">
+              <button class="btn ghost" id="d-copy">Copy Prompt</button>
+              <button class="btn ghost" id="d-edit">Edit Prompt</button>
+            </div></div>
+          <textarea id="d-prompt" rows="9" readonly spellcheck="false"></textarea>
+          <label class="small" for="d-negative">Avoid (negative prompt)</label>
+          <textarea id="d-negative" rows="2" readonly spellcheck="false"></textarea>
+          <p class="hint" id="d-settings"></p>
+        </div>
+
+        <div class="d-section">
+          <h3>File</h3>
+          <div class="drop" id="d-drop">
+            <p id="d-drop-text">Drag &amp; drop a file here, or use Upload</p>
+            <p class="hint">PNG, JPG, WEBP up to 50 MB · MP4, MOV, WEBM up to 1 GB</p>
+            <div class="progress" id="d-progress" hidden><span></span></div>
+          </div>
+          <input type="file" id="d-file" accept=".png,.jpg,.jpeg,.webp,.mp4,.mov,.webm" hidden>
+        </div>
+
+        <p class="msg" id="d-msg" role="status"></p>
+        <div class="d-actions">
+          <button class="btn" id="d-upload">Upload</button>
+          <button class="btn" id="d-replace">Replace</button>
+          <button class="btn primary" id="d-save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

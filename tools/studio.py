@@ -374,6 +374,9 @@ def main() -> int:
     sub.add_parser("status").add_argument("project")
     sub.add_parser("assets", help="match uploads (A012.png) to visual-assets.json, process, validate (no render)") \
         .add_argument("project")
+    uc = sub.add_parser("ui", help="Visual Assets dashboard in the browser (http://127.0.0.1:8790)")
+    uc.add_argument("--port", type=int, default=8790)
+    uc.add_argument("--no-browser", action="store_true")
     tc = sub.add_parser("theme", help="show / pin / re-pick the video's visual theme (no render)")
     tc.add_argument("project")
     tc.add_argument("--preset", help="pin a preset (tools/themes/<name>.json)")
@@ -399,6 +402,11 @@ def main() -> int:
         return theme_command(find_project(a.project), a.preset, a.auto)
     if a.cmd == "assets":
         return assets_command(find_project(a.project))
+    if a.cmd == "ui":
+        sys.path.insert(0, str(ROOT / "ui" / "backend"))
+        import server  # ui/backend/server.py (stdlib http.server, localhost only)
+        server.serve(a.port, open_browser=not a.no_browser)
+        return 0
     if a.cmd == "status":
         project = find_project(a.project)
         stages = load_state(project).stages

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-07 · Visual Assets dashboard
+- `ui/backend/service.py` (projects, assets, prompt save, upload / replace through `pipeline.visual.sync`), `ui/backend/server.py` (stdlib JSON API, safe file serving with Range, static UI).
+- `ui/frontend/`: dark / purple layout from the reference (sidebar, project dropdown, Total / Found / Missing, image grid with Found / Missing badges), asset detail modal (preview, facts, its own editable prompt + negative, Copy / Edit / Save, Upload / Replace with drag and drop and progress, unsaved-changes guard). Project choice survives a refresh.
+- `studio.cmd ui [--port N] [--no-browser]`. Tests: `tests/test_ui.py` (HTTP end to end: listing, isolation, prompt save, upload validation, no overwrite, replace, file safety). 68 tests.
+
 ## 2026-11-07 · Visual asset requirements (visual-assets.json)
 - Contracts `VisualAssets`, `VisualAsset`, `Character`, `AssetPrompt`, `AssetOutput`, `AssetProcessing`, `AssetPlacement`.
 - `pipeline/visual.py`: brief for Claude, sync (timestamps, logo rule, uploads by id, online fetch, processing, validation, fallback entry for uncovered missing scenes, summary), `main_files`, `overlays`, rembg remover.
