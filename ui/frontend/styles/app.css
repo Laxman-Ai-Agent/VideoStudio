@@ -183,3 +183,22 @@ details summary { cursor: pointer; color: #c9bfff; font-size: 13.5px; }
 .d-actions { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
 .d-actions .btn { min-width: 120px; padding: 11px 20px; }
 @media (max-width: 900px) { .sheet { height: auto; overflow: auto; } .d-left, .d-body { height: auto; } .d-body { padding: 24px 18px; } }
+
+/* ---- detail v4: framed (gap on all sides), smooth buttons, message never overlaps ---- */
+.modal { padding: 22px; background: rgba(5, 6, 15, .78); backdrop-filter: blur(3px); }
+.sheet { width: 100%; height: calc(100vh - 44px); max-height: none; border: 1px solid var(--line); border-radius: 18px;
+         box-shadow: 0 24px 70px rgba(0, 0, 0, .55); }
+.d-left, .d-body { height: 100%; }
+.close { position: absolute; top: 16px; right: 18px; }
+#d-prompt-box { min-height: auto; }
+.msg { min-height: 22px; }
+.btn { transition: background .18s, border-color .18s, transform .12s, box-shadow .18s, opacity .18s; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+.btn:active:not(:disabled) { transform: translateY(0) scale(.97); box-shadow: none; }
+.btn:focus-visible { outline: 2px solid var(--purple2); outline-offset: 2px; }
+.btn.primary:hover:not(:disabled) { background: var(--purple2); border-color: var(--purple2); }
+.btn.primary.ready { box-shadow: 0 0 0 0 rgba(139, 107, 255, .6); animation: ready 1.6s ease-out 2; }
+.btn.primary.done { background: var(--green); border-color: var(--green); }
+@keyframes ready { to { box-shadow: 0 0 0 10px rgba(139, 107, 255, 0); } }
+.seg button { transition: background .18s, color .18s; }
+@media (max-width: 900px) { .modal { padding: 10px; } .sheet { height: auto; } .d-left, .d-body { height: auto; } }

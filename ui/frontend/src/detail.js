@@ -8,6 +8,7 @@ const VIDEO = /\.(mp4|mov|webm)$/i, OK = /\.(png|jpe?g|webp|mp4|mov|webm)$/i;
 const MAX_IMG = 50 * 2 ** 20, MAX_VID = 1024 * 2 ** 20;
 const RATIO = { "16:9": 16 / 9, "9:16": 9 / 16, "4:5": 4 / 5, "1:1": 1 };
 let ctx = null, cur = null, busy = false, promptDirty = false, mediaDirty = false, media = null;
+let uploaded = false;  // a new file arrived: Save confirms it (the file itself is already stored)
 
 const url = (rel, a) => api.fileUrl(ctx.pid, rel, (a && (a.pending_file || a.source_file || a.file)) || rel);
 const fmtS = (s) => `${(+s || 0).toFixed(2)} s`;
@@ -152,7 +153,8 @@ function buttons() {
   const tpl = cur.method === "template";
   $("d-upload").disabled = busy || tpl;
   $("d-upload").textContent = cur.found ? "Upload replacement" : "Upload";
-  $("d-save").disabled = busy || !(promptDirty || mediaDirty);
+  $("d-save").disabled = busy || !(promptDirty || mediaDirty || uploaded);
+  $("d-save").classList.toggle("ready", !$("d-save").disabled);
   $("d-copy").disabled = !$("d-prompt").value.trim();
   $("d-confirm").disabled = $("d-discard").disabled = busy;
 }
@@ -217,7 +219,8 @@ async function reload(keepEdits) {
 }
 
 async function saveAll() {
-  if (!(promptDirty || mediaDirty)) return;
+  if (!(promptDirty || mediaDirty || uploaded)) return;
+  const what = [promptDirty && "prompt", mediaDirty && "framing", uploaded && "new file"].filter(Boolean).join(" + ");
   busy = true; buttons();
   try {
     if (promptDirty) {
@@ -232,8 +235,11 @@ async function saveAll() {
       await api.saveMedia(ctx.pid, cur.id, s);
       mediaDirty = false;
     }
+    uploaded = false;
     await reload(false);
-    msg("Saved to visual-assets.json", "ok");
+    msg(`Changes saved: ${what} (visual-assets.json updated)`, "ok");
+    const b = $("d-save"); b.textContent = "Saved ✓"; b.classList.add("done");
+    setTimeout(() => { b.textContent = "Save Changes"; b.classList.remove("done"); }, 2200);
   } catch (e) {
     msg(e.message, "err");
   } finally { busy = false; buttons(); }
@@ -255,9 +261,10 @@ async function send(file) {
     });
     await reload(true);
     const a = res.asset, v = a.validation || {};
+    if (a.status !== "failed" && !a.pending_file) uploaded = true;
     if (a.pending_file) msg("New file ready: compare it with the current one, then Confirm replacement or Discard", "ok");
     else msg(a.status === "failed" ? `Uploaded, but it failed validation: ${(v.checks || []).join("; ")}`
-      : `Uploaded and ${a.status}${v.status === "warn" ? ` (warning: ${v.checks.slice(-1)[0]})` : ""}`, a.status === "failed" ? "err" : "ok");
+      : `Uploaded and ${a.status}: press Save Changes to confirm${v.status === "warn" ? ` (warning: ${v.checks.slice(-1)[0]})` : ""}`, a.status === "failed" ? "err" : "ok");
   } catch (e) {
     msg(e.message, "err");
   } finally {
@@ -283,12 +290,12 @@ function close() {
   if ((promptDirty || mediaDirty) && !confirm("You have unsaved changes. Close and discard them?")) return;
   $("modal").hidden = true;
   $("d-frame").replaceChildren(); $("d-new").replaceChildren(); $("d-cur").replaceChildren();
-  cur = null; promptDirty = mediaDirty = false;
+  cur = null; promptDirty = mediaDirty = uploaded = false;
 }
 
 export function openDetail(context, a) {
   ctx = context;
-  promptDirty = mediaDirty = false;
+  promptDirty = mediaDirty = uploaded = false;
   msg("");
   show(a);
   $("modal").hidden = false;
