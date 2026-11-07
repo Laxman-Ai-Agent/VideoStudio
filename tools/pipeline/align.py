@@ -4,9 +4,11 @@ difflib matches normalised words. Matched words copy Whisper's timing; mismatche
 evenly over the Whisper time span they replace; script words the narrator skipped get squeezed
 into the gap. Script text outside the spoken part (script longer than audio) is dropped.
 """
+import json
 import re
 import unicodedata
 from difflib import SequenceMatcher
+from pathlib import Path
 
 from .contracts import Transcript, Word
 
@@ -20,6 +22,15 @@ def norm(w: str) -> str:
 
 def script_words(text: str) -> list[str]:
     return [w for w in re.split(r"\s+", text) if norm(w)]
+
+
+def script_text(path: Path) -> str:
+    """Plain text of input/script.*. Gemini JSON ({"words": [{"word", "start_ms", "end_ms"}]}):
+    words only; its timings are unreliable (two runs differed by up to 3.7 s), Whisper's are used."""
+    raw = path.read_text("utf-8")
+    if path.suffix.lower() == ".json":
+        return " ".join(w["word"] for w in json.loads(raw)["words"])
+    return raw
 
 
 def _spread(words: list[str], start: float, end: float) -> list[Word]:

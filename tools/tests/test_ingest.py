@@ -48,3 +48,10 @@ def test_name_clash_gets_suffix(tmp_path):
     _drop(p, "x.png")
     (_, dest), = ingest(p, duration=lambda f: 0)
     assert dest.name == "x__1.png" and (p / "assets" / "images" / "x.png").read_text() == "old"
+
+
+def test_gemini_json_is_the_script(tmp_path):
+    p = new_project("demo", tmp_path)
+    _drop(p, "transcript.gemini.json", "other.json")
+    moved = {d.relative_to(p).as_posix() for _, d in ingest(p, duration=lambda f: 0)}
+    assert moved == {"input/script.json", "drop/_unknown/other.json"}

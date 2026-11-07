@@ -47,3 +47,26 @@ def test_cached_sample_aligns_to_script():
     assert "ChatGPT," in text and "మారిపోయింది." in text
     starts = [x.start for x in t.words]
     assert starts == sorted(starts) and t.words[-1].end <= w.duration
+
+
+def test_gemini_json_gives_words_only(tmp_path):
+    from pipeline.align import script_text
+    f = tmp_path / "script.json"
+    f.write_text('{"file_name": "a.wav", "total_duration_ms": 9000, "words": ['
+                 '{"word": "మనం", "start_ms": 0, "end_ms": 400}, {"word": "AI", "start_ms": 400, "end_ms": 900}]}',
+                 "utf-8")
+    assert script_text(f) == "మనం AI"
+
+
+def test_cached_sample_aligns_gemini_text_with_whisper_timing():
+    """Gemini text + cached large-v3 timing. Never re-runs Whisper."""
+    w = Transcript.model_validate_json((FIXTURE / "transcript.json").read_text("utf-8"))
+    gemini = (FIXTURE / "script_gemini.txt").read_text("utf-8")
+    t = align(w, gemini)
+    got = [x.text for x in t.words]
+    assert got[:8] == "Hi ఇప్పటివరకు మనం AI అంటే question అడిగితే answer".split()
+    assert "Companies" in got and "impact" in got
+    companies = t.words[got.index("Companies")]
+    assert 13.0 < companies.start < 14.5        # Whisper's time (13.8 s), not Gemini's 19-21 s
+    starts = [x.start for x in t.words]
+    assert starts == sorted(starts) and t.words[-1].end <= w.duration

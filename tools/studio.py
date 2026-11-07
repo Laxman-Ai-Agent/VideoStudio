@@ -17,6 +17,8 @@ from pipeline.ingest import AmbiguousInput, ingest
 from pipeline.plan import RULES, validate, write_brief
 from pipeline.project import atomic_write, find_project, load_state, new_project, run_stage
 
+from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
+
 NEEDS_USER = 2  # exit code: stopped at a point where the user or Claude must act
 
 
@@ -46,20 +48,21 @@ def run_project(p: Path) -> int:
 
     def transcribe():
         from pipeline.transcribe import transcribe as whisper  # loads faster-whisper only when needed
-        atomic_write(whisper_json, whisper(audio).model_dump_json(indent=2))
+        atomic_write(whisper_json, whisper(audio, model_size=WHISPER_MODEL).model_dump_json(indent=2))
 
     def align():
         t = Transcript.model_validate_json(whisper_json.read_text("utf-8"))
         if script:
-            from pipeline.align import align as align_script
-            t = align_script(t, script.read_text("utf-8"))
+            from pipeline.align import align as align_script, script_text
+            t = align_script(t, script_text(script))
         atomic_write(transcript_json, t.model_dump_json(indent=2))
 
     for name, inputs, outputs, fn in (
         ("transcribe", [audio], [whisper_json], transcribe),
         ("align", [whisper_json] + ([script] if script else []), [transcript_json], align),
     ):
-        print(f"  {name}: {'done' if run_stage(p, name, inputs, outputs, fn) else 'up to date'}")
+        extra = WHISPER_MODEL if name == "transcribe" else ""  # a model change re-transcribes
+        print(f"  {name}: {'done' if run_stage(p, name, inputs, outputs, fn, extra=extra) else 'up to date'}")
 
     transcript = Transcript.model_validate_json(transcript_json.read_text("utf-8"))
     scenes_json, brief = w / "scenes.json", w / "plan_brief.md"
