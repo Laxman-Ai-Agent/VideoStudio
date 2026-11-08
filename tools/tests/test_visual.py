@@ -133,3 +133,20 @@ def test_overlay_subject_side_and_stamp_text(tmp_path):
     va = VisualAssets(assets=[VisualAsset(id="A001", name="s", category="sticker", subcategory="text_sticker", role="overlay",
                                           scenes=[1], status="validated", file="l.png", prompt={"text_in_image": "LAYOFFS"})])
     assert visual.overlays(va, tmp_path)[1][0][1]["text"] == "LAYOFFS"
+
+
+def test_cutout_treatments_reach_the_scene_and_layout_js_is_bundled(tmp_path):
+    ov = _png(tmp_path / "ov.png", (64, 64))
+    va = VisualAssets(assets=[VisualAsset(id="A001", name="s", category="reaction", role="overlay", scenes=[1], status="validated",
+                                          file="ov.png", placement={"outline": "accent", "bw": True, "backdrop": "rays"})])
+    pl = visual.overlays(va, tmp_path)[1][0][1]
+    assert (pl["outline"], pl["bw"], pl["backdrop"]) == ("accent", True, "rays")
+    brand = Brand(formats={"16:9": {"width": 1920, "height": 1080}}, colors={"background": "#000000", "accent": "#FFC400",
+                  "text": "#FFFFFF"}, fonts={"telugu": "Gidugu"})
+    plan = ScenePlan(scenes=[{"id": 1, "start": 0, "end": 1, "narration": "x", "visual_type": "text", "query": "q"}])
+    res = Resolved(scenes=[{"id": 1, "status": "template"}])
+    job = rnd.plan_jobs(plan, res, brand, "16:9", tmp_path, tmp_path / "o", False, overlays={1: [(ov, pl)]})[0]
+    rnd.build(job, tmp_path / "build", job.template)
+    js = (tmp_path / "build" / "studio.js").read_text("utf-8")
+    assert js.index("window.studioLayout = ") < js.index("window.studioLayout({")  # layout.js first, then studio.js
+    assert json.loads((tmp_path / "build" / "scene.json").read_text("utf-8"))["overlays"][0]["backdrop"] == "rays"

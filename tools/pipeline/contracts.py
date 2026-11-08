@@ -288,6 +288,9 @@ class AssetPlacement(BaseModel):
     at: float = 0.3               # seconds after the scene start
     until: float | None = None    # seconds after the scene start, None = to the end
     animation: str = "pop"        # pop | slide | float | fade | none
+    outline: str = ""             # cut-out sticker outline: "" | "white" | "accent"
+    bw: bool = False              # black-and-white subject (the accent colour then comes from the backdrop)
+    backdrop: str = ""            # shape behind the subject in the accent colour: "" | "glow" | "rings" | "rays"
 
 
 class VisualAsset(BaseModel):

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08 · Cut-out treatments (style plan step 2)
+- `placement.outline` ("white" | "accent" sticker edge), `placement.bw` (black-and-white subject), `placement.backdrop` ("glow" | "rings" | "rays": accent-colour shape behind the subject; rays turn slowly). Work on the subject panel and on plain overlays; backdrops sit under the text. Brief tells Claude when to use them. 01: A015 white outline + rays, A018 B&W + accent outline + glow.
+- Overlay / layout code moved from `studio.js` to `_shared/layout.js` (file size limit); `render.build` writes both into one `studio.js` (layout first). Test: `test_cutout_treatments_reach_the_scene_and_layout_js_is_bundled`.
+
 ## 2026-11-08 · Presenter reference photo
 - `Character.reference_image` + `outfit`; the user is C1 in every video (photos in `_brand/presenter/`, git-ignored; two shock samples are there now). The assets brief tells Claude the presenter rules: every C1 prompt starts "Attach reference image: <file>", outfit word for word, per-video outfit.
 - Dashboard asset page: "Attach this reference image" box (photo / character sheet, outfit, path); Copy Prompt puts the attach line first. Route `GET /brand/presenter/<file>`. Test: `test_asset_view_gives_the_character_reference_photo`.

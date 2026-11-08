@@ -104,3 +104,10 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
          line-height: 1.1; color: #E5231B; padding: .02em .22em .06em; border: calc(var(--u) * .9) solid #E5231B; border-radius: calc(var(--u) * 1);
          background: rgba(255,255,255,.92); box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) rgba(0,0,0,.45); transform-origin: 50% 50%; }
 .flash { position: absolute; inset: 0; background: #fff; z-index: 7; opacity: 0; pointer-events: none; }
+/* cut-out backdrops (layout.js backdrop): accent glow disc, rings, sunburst rays */
+.bd { position: absolute; pointer-events: none; border-radius: 50%; }
+.bd-glow { background: radial-gradient(circle, var(--accent) 0%, transparent 68%); opacity: .8; }
+.bd-rings { background: repeating-radial-gradient(circle, transparent 0 calc(var(--u) * 5), var(--accent) calc(var(--u) * 5) calc(var(--u) * 5.7));
+            -webkit-mask-image: radial-gradient(circle, #000 25%, transparent 70%); mask-image: radial-gradient(circle, #000 25%, transparent 70%); }
+.bd-rays { background: repeating-conic-gradient(var(--accent) 0 6deg, transparent 6deg 12deg); opacity: .6;
+           -webkit-mask-image: radial-gradient(circle, #000 20%, transparent 72%); mask-image: radial-gradient(circle, #000 20%, transparent 72%); }

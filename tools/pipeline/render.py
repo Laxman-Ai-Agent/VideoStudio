@@ -280,8 +280,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     """Self-contained HyperFrames project: index.html + scene.js + shared files + gsap + asset."""
     shutil.rmtree(build_dir, ignore_errors=True)
     build_dir.mkdir(parents=True)
-    for f in (SHARED / "studio.js", GSAP):
-        shutil.copy2(f, build_dir / f.name)
+    shutil.copy2(GSAP, build_dir / GSAP.name)
+    (build_dir / "studio.js").write_text((SHARED / "layout.js").read_text("utf-8") + "\n" + (SHARED / "studio.js").read_text("utf-8"), "utf-8")
     (build_dir / "studio.css").write_text(font_css(job.style.fonts.values(), build_dir) + "\n"
                                           + (SHARED / "studio.css").read_text("utf-8"), "utf-8")
     asset_name, fit = "", "cover"
