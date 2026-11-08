@@ -12,11 +12,10 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 - Manual Visual Editing built 2026-11-08 (`edits.json`, Timeline Edit mode, tabbed panel, assets strip, scene stills, reference layout; see CHANGELOG). Covers overlay images / stamp / subject panel / depth props.
 - Timeline pending (next session, in this order):
-  1. Restart `studio.cmd ui` after every backend change (a stale server has no `/edits`, `/thumb` routes); check scene stills fill in (first time ~8-15 s per scene, then cached) and the scene 8 Edit flow once more in the new layout.
-  2. Scene list names are template names ("1. template"); reference shows "1. title": derive a nicer label (on_screen_text / beat).
-  3. Edit still missing: template text blocks (kinetic title etc.), main full-frame visual (Video chip is always 0), meme-slot people, text editing, Split tool.
-  4. 9:16 hands-on check of Edit (math is fraction-based, only 16:9 tried); real mouse drag only tested with synthetic events.
-  5. 01 `edits.json` is not created (test edit removed); 01 final 16:9 still not re-rendered (ask first).
+  1. Restart `studio.cmd ui` after every backend change (a stale server has no `/edits`, `/thumb` routes). Checked 2026-11-08: stills for all 11 scenes of 01, scene names from on_screen_text, scene 8 Edit panel in the new layout.
+  2. Edit still missing: template text blocks (kinetic title etc.), main full-frame visual (Video chip is always 0), meme-slot people, text editing, Split tool.
+  3. 9:16 hands-on check of Edit (math is fraction-based, only 16:9 tried); real mouse drag only tested with synthetic events.
+  4. 01 `edits.json` is not created (test edit removed); 01 final 16:9 still not re-rendered (ask first).
 - Dev notes: pane must be visible for the browser checks (hidden pane = 0 width, slow timers); `live` is a `const` (not on `window`).
 
 ## Pending, user side

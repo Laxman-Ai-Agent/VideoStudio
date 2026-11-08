@@ -99,3 +99,4 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
 .t-text { background:#3a2f8f; } .t-cap { background:#3a3080; color:#e5e3ff; } .o-ovl { background:#8a6418; } .a-aud { background:#1f5550; }
 #ph { position:absolute; top:0; bottom:0; width:2px; background:var(--accent2); pointer-events:none; z-index:5; }
 #ph::before { content:""; position:absolute; top:0; left:-7px; width:16px; height:14px; background:var(--accent2); clip-path:polygon(0 0, 100% 0, 50% 100%); }
+@media (max-width:1300px) { #main { grid-template-columns:240px minmax(0,1fr) 320px; padding:12px 12px 0; } .sc .thumb { width:60px; height:34px; } .sc .badge { display:none; } header.top nav { display:none; } }
