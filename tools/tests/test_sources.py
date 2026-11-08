@@ -42,3 +42,20 @@ def test_entity_and_lottie_are_fetched_with_credits(tmp_path):
 def test_emoji_code_matches_noto_names():
     assert providers.emoji_code("🚀") == "1f680"
     assert providers.emoji_code("❤️") == "2764"  # variation selector dropped
+
+
+def test_credits_include_online_assets_from_visual_assets():
+    """Seen on 03: credits.txt listed only resolve's downloads, not the 7 photos fetched for visual-assets.json."""
+    from pipeline.contracts import Resolved, VisualAssets
+    from pipeline.resolve import credits
+    res = Resolved(scenes=[{"id": 2, "status": "template", "source_url": "https://noto", "license": "CC BY 4.0", "author": "Google"}])
+    va = VisualAssets.model_validate({"assets": [
+        {"id": "A1", "name": "launch", "category": "photo", "scenes": [7], "role": "main", "method": "online", "status": "validated",
+         "credits": {"source_url": "https://commons/launch.jpg", "license": "GODL-India", "author": "ISRO"}},
+        {"id": "A2", "name": "todo", "category": "photo", "scenes": [3], "method": "online", "credits": {"source_url": "https://x/never.jpg"}},
+        {"id": "A3", "name": "same", "category": "photo", "scenes": [2], "method": "online", "status": "validated",
+         "credits": {"source_url": "https://noto"}}]})
+    text = credits(res, va)
+    assert "Scene 7: https://commons/launch.jpg" in text and "ISRO" in text and "GODL-India" in text
+    assert "never.jpg" not in text and text.count("https://noto") == 1
+    assert text.index("Scene 2:") < text.index("Scene 7:")

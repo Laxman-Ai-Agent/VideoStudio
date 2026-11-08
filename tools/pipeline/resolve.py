@@ -233,7 +233,16 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
     return Resolved(scenes=out)
 
 
-def credits(res: Resolved) -> str:
-    lines = [f"Scene {r.id}: {r.source_url} · {r.author or 'unknown author'} · {r.license or 'see source'}"
-             for r in res.scenes if r.source_url]
+def credits(res: Resolved, va=None) -> str:
+    """One line per third-party file: resolve's own downloads, plus the online / logo files collected for
+    visual-assets.json (main visuals and overlays; their credits live on the asset)."""
+    line = lambda sc, url, author, lic: f"Scene {sc}: {url} · {author or 'unknown author'} · {lic or 'see source'}"  # noqa: E731
+    rows = [(r.id, line(r.id, r.source_url, r.author, r.license)) for r in res.scenes if r.source_url]
+    seen = {r.source_url for r in res.scenes if r.source_url}
+    for a in (va.assets if va else []):
+        c = a.credits or {}
+        if a.status == "validated" and c.get("source_url") and c["source_url"] not in seen:
+            seen.add(c["source_url"])
+            rows.append((min(a.scenes or [0]), line(", ".join(map(str, a.scenes)) or "-", c["source_url"], c.get("author"), c.get("license"))))
+    lines = [t for _, t in sorted(rows, key=lambda x: x[0])]
     return "Image and footage credits\n\n" + ("\n".join(lines) if lines else "No third-party assets.") + "\n"

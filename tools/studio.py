@@ -166,6 +166,8 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
                     [resolved_json, credits_txt], resolve, force=gone,
                     extra=("pexels" if pexels_key else "") + str([(k, v.name, v.stat().st_mtime_ns) for k, v in sorted(mains.items())]))
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8"))
+    from pipeline.resolve import credits
+    atomic_write(credits_txt, credits(resolved, va))  # cheap: also picks up credits of newly collected online assets
     counts = {}
     for r in resolved.scenes:
         counts[r.status] = counts.get(r.status, 0) + 1

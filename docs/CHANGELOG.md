@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · credits.txt lists every third-party file
+- `resolve.credits(res, va)` also lists the validated online / logo files collected for visual-assets.json (mains and overlays; their credits are on the asset), sorted by scene, without duplicates; `studio run` rewrites credits.txt on every run (cheap). Before, 03 listed 1 of 8 credits. Test: `test_credits_include_online_assets_from_visual_assets`.
+
 ## 2026-11-08 · resolve: drawn scenes stay drawn
 - Seen on 03: kinetic scenes (`params.lines`) got a loose library photo whose description matched their query words, so the kinetic text never showed. A template-type scene with template params (lines, rows, items, stat, events, focus/pin, quote, meme, lottie, bars ...) now resolves to `template` before any local match. Test: `test_template_scene_with_template_params_is_never_a_loose_photo`.
 - Project 03 (Chandrayaan-3, 66 s, ElevenLabs voice): no Whisper; Gemini words placed on the audio's real pauses (13 sentence breaks, mean error 0.3 s), then align/plan/assets as usual; 11 template scenes + 7 free photos (Wikimedia/Openverse, credited), no manual download.
