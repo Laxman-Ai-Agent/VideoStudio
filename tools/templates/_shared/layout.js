@@ -6,7 +6,7 @@ window.studioLayout = function (env) {
   // ---- layout zones ----
   // Text zones are measured from the laid-out page (title, kinetic lines, the lower third, cards, tags);
   // the caption band is fixed at the bottom of the safe area. Overlays and the logo grid keep out of them.
-  const TEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .tag";
+  const TEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .tag, .memecap";
   function boxOf(el) {  // layout box in frame px, ignoring GSAP transforms (a tween may start at scale 0)
     let x = 0, y = 0;
     for (let e = el; e && e.id !== "root"; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
@@ -21,7 +21,7 @@ window.studioLayout = function (env) {
 
   // Highlight boxes and labels: pad so the glyph ink (not the font's line box) sits in the middle.
   // Telugu fonts put the ink high or low in the line box, which clipped / off-centred boxed text.
-  const INKED = ".st-box, .lower, .tag";
+  const INKED = ".st-box, .lower, .tag, .memecap";
   let ctx;
   function centreInk() {
     ctx = ctx || document.createElement("canvas").getContext("2d");
@@ -216,5 +216,25 @@ window.studioLayout = function (env) {
   }
   // Fonts change text sizes: measure again once they are in (the render waits for fonts before frames).
   function relayout() { centreInk(); placeOverlays(); }
-  return { centreInk, logoGrid, overlays, relayout };
+  // Meme template: the scene's person / meme overlays stand in slots of #stage (1 = centred, 2 = side by side,
+  // like a dialogue), bottom-anchored and large, with the cut-out treatments; each slides in from its side.
+  const MEME_KINDS = ["character_expression", "reaction", "meme", "transparent_png"];
+  function memeSlots(tl, stage) {
+    const subs = (S.overlays || []).filter(o => MEME_KINDS.includes(o.kind)).slice(0, 2);
+    S.overlays = (S.overlays || []).filter(o => !subs.includes(o));
+    subs.forEach((o, i) => {
+      const slot = document.createElement("div"), img = document.createElement("img"), at = Math.min(+o.at || 0.4, S.duration - 0.3);
+      slot.className = "mslot";
+      img.src = o.src;
+      const tf = treatFilter(o), bd = backdrop(tl, o, at);
+      if (tf) img.style.filter = tf;
+      if (bd) { slot.appendChild(bd); gsap.set(bd, { xPercent: -50, yPercent: -50 }); }
+      slot.appendChild(img);
+      stage.appendChild(slot);
+      const dir = subs.length === 1 ? 0 : (i === 0 ? -1 : 1);
+      tl.fromTo(img, { x: dir * u * 25, y: u * 8, opacity: 0, scale: 0.9 }, { x: 0, y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, at);
+    });
+    return subs.length;
+  }
+  return { centreInk, logoGrid, overlays, relayout, memeSlots };
 };

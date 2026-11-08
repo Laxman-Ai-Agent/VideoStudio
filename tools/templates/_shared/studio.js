@@ -172,6 +172,30 @@
     document.getElementById("root").appendChild(svg);
     list.forEach((m, i) => {
       const at = m.at !== undefined ? m.at : 0.6 + i * 0.3;
+      if (m.type === "callout") {  // circle on a thing, then a label pops beside it (m.side: right | left)
+        const [x, y, w, h] = [m.x * S.w, m.y * S.h, (m.w || 0.1) * S.w, (m.h || 0.1) * S.h];
+        const left = m.side === "left", cy = y + h / 2, ex = left ? x : x + w, lx = ex + (left ? -1 : 1) * u * 5;
+        const stroke = (d, t0, dur) => {
+          const p = document.createElementNS(NS, "path");
+          p.setAttribute("d", d);
+          p.setAttribute("class", "mark");
+          if (m.color) p.style.stroke = m.color;
+          svg.appendChild(p);
+          const len = p.getTotalLength();
+          p.style.strokeDasharray = len;
+          tl.fromTo(p, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease: "power1.inOut" }, t0);
+        };
+        stroke(markPath({ ...m, type: "circle" }), at, 0.45);
+        stroke(`M${ex} ${cy} L${lx} ${cy}`, at + 0.4, 0.15);
+        const t = document.createElement("div");
+        t.className = "tag callout";
+        t.textContent = m.text || "";
+        Object.assign(t.style, { left: lx + "px", top: cy + "px", transformOrigin: left ? "100% 50%" : "0 50%" });
+        document.getElementById("root").appendChild(t);
+        gsap.set(t, { xPercent: left ? -100 : 0, yPercent: -50 });
+        tl.fromTo(t, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.5)" }, at + 0.5);
+        return;
+      }
       if (m.type === "tag") {
         const t = document.createElement("div");
         t.className = "tag";
@@ -220,7 +244,7 @@
     if (tout === "wipe") tl.fromTo(panel, { xPercent: -101 }, { xPercent: 0, duration: TOUT, ease: "power2.out", immediateRender: false }, at);
   }
 
-  const L = window.studioLayout({ S, u, safe, html });
+  const L = window.studioL = window.studioLayout({ S, u, safe, html });
   window.finish = function (tl) {
     if (P.look === "halftone") {  // dot screen over the picture
       const d = document.createElement("div");

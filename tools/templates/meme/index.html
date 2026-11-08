@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+#sun { position: absolute; left: -60%; top: -60%; width: 220%; height: 220%;
+       background: repeating-conic-gradient(var(--accent) 0 6deg, color-mix(in srgb, var(--accent) 62%, #000) 6deg 12deg); }
+#shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,.5)); }
+#caps { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 1.6); padding-top: calc(var(--u) * 1); }
+.memecap { background: #fff; color: #111; font-family: var(--font-head); font-weight: 900; text-align: center; line-height: 1.15;
+           font-size: calc(var(--u) * 6.4); max-width: 92%; border: calc(var(--u) * .7) solid #111; border-radius: calc(var(--u) * 1.2);
+           padding: calc(var(--u) * .6) calc(var(--u) * 2.6); box-shadow: calc(var(--u) * .7) calc(var(--u) * .7) 0 rgba(0,0,0,.6); }
+.portrait .memecap { font-size: calc(var(--u) * 8); }
+#stage { flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: calc(var(--u) * 2); margin-top: calc(var(--u) * 2); }
+.mslot { position: relative; height: 100%; max-width: 50%; display: flex; align-items: flex-end; justify-content: center; }
+.mslot img { height: 100%; max-width: 100%; object-fit: contain; object-position: 50% 100%; filter: drop-shadow(0 calc(var(--u) * .8) calc(var(--u) * 2) rgba(0,0,0,.5)); }
+#stage { --bdc: #fff; }  /* backdrops are white here: the sunburst already is the accent colour */
+.mslot .bd { left: 50%; top: 45%; width: calc(var(--u) * 70); height: calc(var(--u) * 70); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="sun" data-layout-allow-overflow></div><div id="shade"></div>
+  <div class="safe"><div id="caps"></div><div id="stage"></div></div>
+</div>
+<script>
+  // Meme card: params.meme = {lines: [caption, ...], bg: "rays" | "plain"}. Subjects = the scene's person / meme
+  // overlays (studio.js overlays config), placed by layout.js memeSlots into #stage.
+  const S = window.SCENE, m = (S.params || {}).meme || {}, tl = gsap.timeline({ paused: true });
+  const lines = (m.lines && m.lines.length ? m.lines : [S.text]).filter(Boolean).slice(0, 3);
+  if (m.bg === "plain") document.getElementById("sun").style.display = "none";
+  else gsap.set("#sun", { xPercent: 0 }), tl.to("#sun", { rotation: 14, transformOrigin: "50% 50%", duration: S.duration, ease: "none" }, 0);
+  const caps = document.getElementById("caps");
+  lines.forEach((t, i) => {
+    const el = document.createElement("div");
+    el.className = "memecap";
+    el.textContent = t;
+    caps.appendChild(el);
+    tl.fromTo(el, { y: -U * 12, opacity: 0, rotation: i % 2 ? 3 : -3, scale: 1.15 },
+              { y: 0, opacity: 1, rotation: i % 2 ? 1 : -1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 0.1 + i * 0.25);
+  });
+  window.studioL.memeSlots(tl, document.getElementById("stage"));
+  finish(tl);
+</script></body></html>

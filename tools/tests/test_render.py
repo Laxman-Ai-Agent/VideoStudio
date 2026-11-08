@@ -210,3 +210,14 @@ def test_safe_workers_follow_free_ram():
     assert rnd.safe_workers(2, 0.2) == 1      # never zero
     assert rnd.safe_workers(4, float("inf")) == 4  # unknown: as asked
     assert rnd.free_ram_gb() > 0
+
+
+def test_meme_param_picks_the_meme_template_and_callout_is_drawn(tmp_path):
+    plan = _plan()
+    plan.scenes[0].params = {"meme": {"lines": ["x"]}, "marks": [{"type": "callout", "x": .1, "y": .1, "text": "Look"}]}
+    res = Resolved(scenes=[ResolvedScene(id=1, status="template")] + RESOLVED.scenes[1:])
+    job = rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False)[0]
+    assert job.template == "meme"
+    rnd.build(job, tmp_path / "b", job.template)
+    js = (tmp_path / "b" / "studio.js").read_text("utf-8")
+    assert 'm.type === "callout"' in js and "memeSlots" in js and (tmp_path / "b" / "index.html").exists()

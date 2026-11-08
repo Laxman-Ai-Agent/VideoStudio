@@ -1,0 +1,4 @@
+{"name": "meme", "version": 1, "engine": "hyperframes",
+ "visual_types": ["text", "motion_graphic", "photo"],
+ "params": {"meme": "{\"lines\": [\"caption 1\", \"caption 2\"], \"bg\": \"rays\" | \"plain\"} picks this template; the scene's reaction / meme / character overlays are the subjects (1 centred, 2 side by side)"},
+ "description": "Meme / reaction card: accent sunburst background, bold caption boxes at the top, one or two cut-out people below with outline and backdrop treatments"}

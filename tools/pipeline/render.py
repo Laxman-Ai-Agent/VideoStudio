@@ -83,6 +83,8 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
             return "cards"
         if scene.params.get("quote"):
             return "quote"
+        if scene.params.get("meme"):
+            return "meme"
         if scene.params.get("lines") or scene.params.get("bg_word"):
             return "kinetic"
         if scene.visual_type == "chart":

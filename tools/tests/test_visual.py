@@ -148,5 +148,5 @@ def test_cutout_treatments_reach_the_scene_and_layout_js_is_bundled(tmp_path):
     job = rnd.plan_jobs(plan, res, brand, "16:9", tmp_path, tmp_path / "o", False, overlays={1: [(ov, pl)]})[0]
     rnd.build(job, tmp_path / "build", job.template)
     js = (tmp_path / "build" / "studio.js").read_text("utf-8")
-    assert js.index("window.studioLayout = function") < js.index("const L = window.studioLayout(")  # layout.js first, then studio.js
+    assert js.index("window.studioLayout = function") < js.index("window.studioLayout({ S")  # layout.js first, then studio.js
     assert json.loads((tmp_path / "build" / "scene.json").read_text("utf-8"))["overlays"][0]["backdrop"] == "rays"

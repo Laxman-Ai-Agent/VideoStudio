@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08 · Meme template + callout (style plan step 3)
+- Template `meme` (`params.meme = {lines: [...], bg: "rays"|"plain"}`): rotating accent sunburst, bold white caption boxes at the top (bounce in), the scene's person / meme overlays below in `#stage` (1 centred, 2 side by side), with outline / B&W / backdrop treatments (backdrops white on the sunburst). `layout.js memeSlots`. Plan brief mentions it.
+- Mark type `callout` {x, y, w, h, text, side}: circle draws on a thing, a line, then a label pops beside it. Test: `test_meme_param_picks_the_meme_template_and_callout_is_drawn`.
+
 ## 2026-11-08 · Cut-out treatments (style plan step 2)
 - `placement.outline` ("white" | "accent" sticker edge), `placement.bw` (black-and-white subject), `placement.backdrop` ("glow" | "rings" | "rays": accent-colour shape behind the subject; rays turn slowly). Work on the subject panel and on plain overlays; backdrops sit under the text. Brief tells Claude when to use them. 01: A015 white outline + rays, A018 B&W + accent outline + glow.
 - Overlay / layout code moved from `studio.js` to `_shared/layout.js` (file size limit); `render.build` writes both into one `studio.js` (layout first). Test: `test_cutout_treatments_reach_the_scene_and_layout_js_is_bundled`.

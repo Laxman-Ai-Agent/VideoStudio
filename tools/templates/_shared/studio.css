@@ -106,8 +106,10 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 .flash { position: absolute; inset: 0; background: #fff; z-index: 7; opacity: 0; pointer-events: none; }
 /* cut-out backdrops (layout.js backdrop): accent glow disc, rings, sunburst rays */
 .bd { position: absolute; pointer-events: none; border-radius: 50%; }
-.bd-glow { background: radial-gradient(circle, var(--accent) 0%, transparent 68%); opacity: .8; }
-.bd-rings { background: repeating-radial-gradient(circle, transparent 0 calc(var(--u) * 5), var(--accent) calc(var(--u) * 5) calc(var(--u) * 5.7));
+.bd-glow { background: radial-gradient(circle, var(--bdc, var(--accent)) 0%, transparent 68%); opacity: .8; }
+.bd-rings { background: repeating-radial-gradient(circle, transparent 0 calc(var(--u) * 5), var(--bdc, var(--accent)) calc(var(--u) * 5) calc(var(--u) * 5.7));
             -webkit-mask-image: radial-gradient(circle, #000 25%, transparent 70%); mask-image: radial-gradient(circle, #000 25%, transparent 70%); }
-.bd-rays { background: repeating-conic-gradient(var(--accent) 0 6deg, transparent 6deg 12deg); opacity: .6;
+.bd-rays { background: repeating-conic-gradient(var(--bdc, var(--accent)) 0 6deg, transparent 6deg 12deg); opacity: .6;
            -webkit-mask-image: radial-gradient(circle, #000 20%, transparent 72%); mask-image: radial-gradient(circle, #000 20%, transparent 72%); }
+/* callout label (marks type "callout") */
+.tag.callout { z-index: 6; font-size: calc(var(--u) * 4.2); white-space: nowrap; }
