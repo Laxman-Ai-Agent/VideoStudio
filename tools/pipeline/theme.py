@@ -155,11 +155,12 @@ def validate(spec: ThemeSpec, fonts_dir: Path = FONTS) -> ThemeSpec:
     if body != fonts.get("body"):
         issues.append(f"fonts.body {fonts.get('body')!r} not found -> {SAFE_FONT}")
     fonts["body"] = body
-    for role in ("heading", "script"):
+    for role in ("heading", "script", "hero"):  # hero = the one big word per screen (docs/STYLE.md), falls back to heading
         if not font_available(fonts.get(role, ""), fonts_dir):
+            fb = fonts.get("heading", body) if role == "hero" else body
             if fonts.get(role):
-                issues.append(f"fonts.{role} {fonts[role]!r} not found -> {body}")
-            fonts[role] = body
+                issues.append(f"fonts.{role} {fonts[role]!r} not found -> {fb}")
+            fonts[role] = fb
     for role, f in fonts.items():  # every saved family is a Telugu font; others may lack Telugu glyphs
         if f != SAFE_FONT and not (fonts_dir / f).is_dir():
             issues.append(f"fonts.{role} {f!r} is not from _brand/fonts: Telugu glyphs not checked "

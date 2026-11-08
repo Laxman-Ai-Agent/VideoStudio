@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-08 · Hero word, info card, depth props (style plan step 4)
+- Kinetic: line styles `hero` (the one big word, font = theme `fonts.hero`, falls back to heading; `italic` option, size `xxl`) and `pill` (key phrase on a marker-colour capsule). `ThemeSpec.fonts.hero` is validated like heading / script.
+- Cards: `params.rows` = up to 3 info rows `{title, items: [{icon: emoji, label}]}` (icon tiles, staggered pop); picks the `cards` template.
+- Overlay `placement.depth`: a big blurred prop cut by its frame corner, behind the text, drifting slowly (atmosphere, not the hero). Brief + plan prompt describe all three. Test: `test_rows_pick_cards_and_hero_font_falls_back_to_heading`.
+
 ## 2026-11-08 · Meme template + callout (style plan step 3)
 - Template `meme` (`params.meme = {lines: [...], bg: "rays"|"plain"}`): rotating accent sunburst, bold white caption boxes at the top (bounce in), the scene's person / meme overlays below in `#stage` (1 centred, 2 side by side), with outline / B&W / backdrop treatments (backdrops white on the sunburst). `layout.js memeSlots`. Plan brief mentions it.
 - Mark type `callout` {x, y, w, h, text, side}: circle draws on a thing, a line, then a label pops beside it. Test: `test_meme_param_picks_the_meme_template_and_callout_is_drawn`.

@@ -18,6 +18,14 @@
 .chk { flex: none; width: calc(var(--u) * 3.6); height: calc(var(--u) * 3.6); border-radius: 50%; background: var(--accent); position: relative; }
 .chk::after { content: ""; position: absolute; left: 32%; top: 18%; width: 25%; height: 45%; border: solid #fff;
               border-width: 0 calc(var(--u) * .5) calc(var(--u) * .5) 0; transform: rotate(45deg); }
+#col.wide { min-width: 62%; max-width: 86%; }
+.rowcard .rt { font-weight: 900; font-size: calc(var(--u) * 3.8); padding-bottom: calc(var(--u) * .8); margin-bottom: calc(var(--u) * 1.6);
+               border-bottom: calc(var(--u) * .35) solid var(--accent); display: inline-block; align-self: flex-start; }
+.rowcard .tiles { display: flex; gap: calc(var(--u) * 2); }
+.tile { flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.8) calc(var(--u) * 1);
+        background: color-mix(in srgb, var(--accent) 22%, transparent); border-radius: calc(var(--u) * 1.6); }
+.tile .ic { font-size: calc(var(--u) * 7.5); line-height: 1.15; font-family: "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
+.tile .lb { font-weight: 800; font-size: calc(var(--u) * 3.4); text-align: center; line-height: 1.2; }
 #btn { align-self: center; display: flex; align-items: center; gap: calc(var(--u) * 1.4); background: var(--accent); color: #fff;
        font-weight: 900; font-size: calc(var(--u) * 5); padding: calc(var(--u) * 1.6) calc(var(--u) * 4); border-radius: calc(var(--u) * 5);
        box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 2.5) rgba(0,0,0,.25); }
@@ -63,6 +71,28 @@
     });
     t += 0.3 + items.length * step;
   }
+  const rows = (p.rows || []).slice(0, 3);  // info card: [{title, items: [{icon: "⏰", label}]}], up to 4 tiles a row
+  if (rows.length) col.classList.add("wide");
+  rows.forEach(r => {
+    const card = add("", "card rowcard"), items = (r.items || []).slice(0, 4);
+    const title = document.createElement("div");
+    title.className = "rt";
+    title.textContent = r.title || "";
+    const tiles = document.createElement("div");
+    tiles.className = "tiles";
+    card.append(title, tiles);
+    tl.fromTo(card, { opacity: 0, y: U * 5 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, t);
+    items.forEach((it, i) => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.innerHTML = '<div class="ic"></div><div class="lb"></div>';
+      tile.querySelector(".ic").textContent = it.icon || "";
+      tile.querySelector(".lb").textContent = it.label || "";
+      tiles.appendChild(tile);
+      tl.fromTo(tile, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.2)" }, t + 0.25 + i * 0.12);
+    });
+    t += 0.5 + items.length * 0.12;
+  });
   if (p.stat) {
     const up = p.stat.trend === "up", c = up ? "#1f9d55" : "var(--warn)";
     const card = add('<div class="lab"></div><div class="row"><div class="val"></div><div class="arrow"></div></div>' +

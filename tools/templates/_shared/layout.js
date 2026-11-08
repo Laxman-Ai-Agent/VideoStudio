@@ -21,7 +21,7 @@ window.studioLayout = function (env) {
 
   // Highlight boxes and labels: pad so the glyph ink (not the font's line box) sits in the middle.
   // Telugu fonts put the ink high or low in the line box, which clipped / off-centred boxed text.
-  const INKED = ".st-box, .lower, .tag, .memecap";
+  const INKED = ".st-box, .st-pill, .lower, .tag, .memecap";
   let ctx;
   function centreInk() {
     ctx = ctx || document.createElement("canvas").getContext("2d");
@@ -185,11 +185,24 @@ window.studioLayout = function (env) {
     tl.set(el, { x: 0 }, at + 0.4);
     return el;
   }
+  // Depth prop (placement.depth): a big, slightly blurred object cut by the frame corner, behind the text, drifting.
+  function depthProp(tl, o, at) {
+    const el = document.createElement("img"), h = Math.max(0.1, Math.min(0.9, +o.size || 0.4)) * S.h, w = h * (o.w && o.h ? o.w / o.h : 1);
+    const [fx, fy] = ANCHOR[o.position] || ANCHOR["bottom-left"], root = document.getElementById("root");
+    el.className = "ovl depth";
+    el.src = o.src;
+    Object.assign(el.style, { width: w + "px", height: h + "px", filter: `blur(${u * 0.7}px) drop-shadow(0 ${u}px ${u * 2}px rgba(0,0,0,.4))`,
+      left: (fx < 0.5 ? -w * 0.18 : S.w - w * 0.82) + "px", top: (fy < 0.5 ? -h * 0.18 : S.h - h * 0.82) + "px" });
+    root.insertBefore(el, document.querySelector("#root .safe"));
+    tl.fromTo(el, { x: (fx < 0.5 ? -1 : 1) * w * 0.4, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, at);
+    tl.to(el, { y: -u * 1.5, rotation: fx < 0.5 ? 2 : -2, duration: Math.max(1, S.duration - at - 0.6), ease: "sine.inOut" }, at + 0.6);
+  }
   function overlays(tl) {
     let panel = false;
     (S.overlays || []).forEach((o) => {
       const at = Math.min(Math.max(0, +o.at || 0), S.duration - 0.2), anim = o.animation || "pop";
       if (o.text) { placed.push([stamp(tl, o, at), o]); return; }
+      if (o.depth) { depthProp(tl, o, at); return; }
       if (!panel && isSubject(o)) { panel = true; subjectPanel(tl, o, at); return; }
       const el = document.createElement("img");
       el.className = "ovl";

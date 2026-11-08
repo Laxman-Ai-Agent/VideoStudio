@@ -43,6 +43,7 @@
     "--capbg": C.capbg || "rgba(0,0,0,0)",
     "--font": stack, "--font-head": `"${S.fonts.heading || body}", ${stack}`,
     "--font-script": `"${S.fonts.script || body}", ${stack}`,
+    "--font-hero": `"${S.fonts.hero || S.fonts.heading || body}", ${stack}`,
     "--bg-img": bgImg, "--hw": TX.heading_weight || 800, "--bw": TX.body_weight || 600,
     "--tracking": (TX.tracking || 0) + "em", "--tshadow": SHADOW[TX.shadow] || "none", "--tscale": TX.scale || 1,
     "--outline": (u * (TX.outline || 0)).toFixed(2) + "px", "--outline-c": C.background || "#000",

@@ -5,7 +5,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 82. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 83. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
@@ -16,7 +16,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - The 4 local stock videos of 01 are only 832x464 (validation warns); larger ones look better in a final.
 
 ## Pending, our side
-- [ ] Style plan from `docs/STYLE.md`, steps 2-4 (user OK: "proceed"): cut-out treatments (outline, B&W + accent, glow / rays), meme template + callout, kicker + hero-word layout, icon-row info card, corner depth props. Steps 1 (presenter reference photo + dashboard box) 2 (cut-out treatments) and 3 (meme template + callout) done; only step 4 left (kicker + hero-word layout, icon-row info card, corner depth props).
+- [x] Style plan from `docs/STYLE.md` (steps 1-4) built 2026-11-08. Not used in a real video yet: plan the next video with `meme`, `hero` / `pill` lines, `rows`, outline / backdrop / depth placements, and re-render 01 when asked.
 - [ ] Pro-level plan (agreed 2026-11-08, one phase per session, in this order):
   A. Alignment: DONE 2026-11-08 (layout zones, overlay avoidance, ink-centred boxes, caption spacing, logo grid, layout check in Timeline warnings). subject panel + stamp text done; 01 preview fixed; 01 final 16:9 not re-rendered yet (ask first).
   B. Visual grammar: beat type per scene -> format, rhythm rules, one art direction per video.

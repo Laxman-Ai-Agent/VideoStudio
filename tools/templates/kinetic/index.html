@@ -18,6 +18,10 @@
 .st-script { font-family: var(--font-script); color: var(--accent); transform: rotate(-4deg); }
 .st-outline { font-weight: 900; color: transparent; -webkit-text-stroke: calc(var(--u) * .25) var(--text); }
 .c-accent { color: var(--accent); }
+/* hero word: the one big word of the screen (theme fonts.hero, e.g. a serif); pill: key phrase on a marker-colour capsule */
+.st-hero { font-family: var(--font-hero); font-weight: 900; color: var(--accent); line-height: 1; letter-spacing: -.01em; }
+.st-hero.it { font-style: italic; }
+.st-pill { font-weight: 800; background: var(--marker); color: #151515; padding: .02em .55em .1em; border-radius: 999px; transform-origin: 0 50%; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div class="grid"></div><div id="bgw"></div>
@@ -27,17 +31,17 @@
   // Kinetic typography: lines of mixed size/style (params.lines), words blur in one by one,
   // optional giant faded background word (params.bg_word). Without lines: the on-screen text, large.
   const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
-  const SIZE = { s: 4.5, m: 7, l: 10, xl: 15 };
+  const SIZE = { s: 4.5, m: 7, l: 10, xl: 15, xxl: 22 };
   const lines = (p.lines && p.lines.length ? p.lines : [{ text: S.text, size: "l", style: "bold" }]).slice(0, 6);
   if (p.align === "left") document.documentElement.classList.add("left");
   const stack = document.getElementById("stack");
   let t = 0.15;
   lines.forEach(L => {
     const el = document.createElement("div");
-    el.className = `ln st-${L.style || "bold"}` + (L.color === "accent" ? " c-accent" : "");
+    el.className = `ln st-${L.style || "bold"}` + (L.color === "accent" ? " c-accent" : "") + (L.italic ? " it" : "");
     el.style.fontSize = `calc(var(--u) * ${SIZE[L.size] || SIZE.m})`;
     stack.appendChild(el);
-    if (L.style === "box") tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, t);
+    if (L.style === "box" || L.style === "pill") tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, t);
     String(L.text || "").split(/\s+/).filter(Boolean).forEach(w => {
       const s = document.createElement("span");
       s.className = "word";

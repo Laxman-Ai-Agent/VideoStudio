@@ -221,3 +221,14 @@ def test_meme_param_picks_the_meme_template_and_callout_is_drawn(tmp_path):
     rnd.build(job, tmp_path / "b", job.template)
     js = (tmp_path / "b" / "studio.js").read_text("utf-8")
     assert 'm.type === "callout"' in js and "memeSlots" in js and (tmp_path / "b" / "index.html").exists()
+
+
+def test_rows_pick_cards_and_hero_font_falls_back_to_heading(tmp_path):
+    from pipeline import theme
+    plan = _plan()
+    plan.scenes[0].params = {"rows": [{"title": "Have", "items": [{"icon": "x", "label": "Time"}]}]}
+    res = Resolved(scenes=[ResolvedScene(id=1, status="template")] + RESOLVED.scenes[1:])
+    assert rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False)[0].template == "cards"
+    spec = theme.validate(theme.ThemeSpec(name="t", colors={"background": "#000000", "text": "#FFFFFF", "accent": "#FFC400"},
+                                          fonts={"heading": "Gidugu", "body": "Gidugu", "script": "Gidugu", "hero": "NoSuchFont"}))
+    assert spec.fonts["hero"] == "Gidugu" and any("fonts.hero" in i for i in spec.issues)

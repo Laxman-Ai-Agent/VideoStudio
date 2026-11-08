@@ -236,7 +236,7 @@ class ThemeSpec(BaseModel):
     source: str = "auto"          # auto (keywords) | manual (project theme.json) | brand (brand.json fallback)
     scores: dict[str, float] = Field(default_factory=dict)  # keyword hits per preset (auto)
     colors: dict[str, str]        # background text text2 accent highlight warning panel capbg
-    fonts: dict[str, str]         # heading body script (folder names in _brand/fonts, or installed fonts)
+    fonts: dict[str, str]         # heading body script hero (folder names in _brand/fonts, or installed fonts)
     background: dict = Field(default_factory=dict)  # type colors angle pattern pattern_opacity texture texture_opacity
     text: dict = Field(default_factory=dict)        # heading_weight body_weight shadow tracking scale
     issues: list[str] = Field(default_factory=list)  # validation fallbacks that were applied
@@ -290,6 +290,7 @@ class AssetPlacement(BaseModel):
     animation: str = "pop"        # pop | slide | float | fade | none
     outline: str = ""             # cut-out sticker outline: "" | "white" | "accent"
     bw: bool = False              # black-and-white subject (the accent colour then comes from the backdrop)
+    depth: bool = False           # foreground prop: big, blurred, half out of the frame in its corner, under the text
     backdrop: str = ""            # shape behind the subject in the accent colour: "" | "glow" | "rings" | "rays"
 
 

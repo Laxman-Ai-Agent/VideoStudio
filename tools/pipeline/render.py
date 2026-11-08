@@ -79,7 +79,7 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
     if r.status == "template":
         if scene.params.get("lottie") and r.asset:
             return "lottie"
-        if any(scene.params.get(k) for k in ("items", "stat", "button")):
+        if any(scene.params.get(k) for k in ("items", "stat", "button", "rows")):
             return "cards"
         if scene.params.get("quote"):
             return "quote"
@@ -321,7 +321,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
              "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
              "theme": st.name, "style": {"background": st.background, "text": st.text},
-             "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script")},
+             "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
              "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")

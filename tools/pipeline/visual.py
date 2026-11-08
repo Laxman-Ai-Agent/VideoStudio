@@ -141,6 +141,8 @@ fills the frame, transparent or plain background, `processing.remove_background:
 Cut-out treatments (placement, optional; docs/STYLE.md): `outline` \"white\" | \"accent\" (sticker edge), `bw` true
 (black-and-white subject), `backdrop` \"glow\" | \"rings\" | \"rays\" (accent-colour shape behind the subject). Use them
 on the hero cut-out of a scene (a person, an object); at most one treatment set per scene, same set across the video.
+Depth props: `placement.depth` true = a big, blurred object (a plant, a phone, a coin) cut by a frame corner behind the text,
+for atmosphere on a text or card scene; `position` = the corner, `size` ~0.5; ask for the object alone on a plain background.
 Presenter: the user appears in every video as character C1 (memes, reactions, pointing, explaining).
 {presenter}
 Several characters drawn in one image: list each as its own asset with `processing.extract_from` (the

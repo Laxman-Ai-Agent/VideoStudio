@@ -29,7 +29,7 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
 8. Depth: blurred props in the corners (foreground), subject sharp in the middle; slides and scale-ins,
    blur transitions between beats. Concept shots: a head replaced by a bulb or a word bubble.
 
-## How it maps to the pipeline (status)
+## How it maps to the pipeline (status, all built 2026-11-08)
 - Done: subject panel (big side cut-out), stamp words, layout zones, overlap check (phase A).
 - To build (proposed, user OK needed): presenter reference in prompts + dashboard; cut-out treatments
   (outline, B&W + accent, glow disc / circles / rays); meme template; callout (circle/arrow + label);

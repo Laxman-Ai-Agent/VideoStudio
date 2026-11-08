@@ -113,3 +113,4 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
            -webkit-mask-image: radial-gradient(circle, #000 20%, transparent 72%); mask-image: radial-gradient(circle, #000 20%, transparent 72%); }
 /* callout label (marks type "callout") */
 .tag.callout { z-index: 6; font-size: calc(var(--u) * 4.2); white-space: nowrap; }
+.ovl.depth { z-index: 0; max-width: none; }
