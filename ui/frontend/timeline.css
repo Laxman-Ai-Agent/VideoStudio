@@ -133,3 +133,9 @@ html, body { height:100%; } body { display:flex; flex-direction:column; overflow
 #close { color:var(--text); text-decoration:none; font-size:18px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:9px; background:var(--card2); border:1px solid var(--line); }
 #close:hover { background:var(--err); border-color:var(--err); }
 .sub { padding:10px 20px; }
+/* the scene's elements are the main thing of the right column; details / Visual Edit tabs sit below them */
+#assets { flex:1.25 1 0; max-height:none; min-height:0; }
+#info { flex:1 1 0; min-height:0; }
+#assets .cards { flex:1; min-height:0; gap:10px; }
+.acard img, .acard .tt { height:84px; } .acard { padding:6px; } .acard .an { font-size:13px; }
+@media (max-height:760px) { .acard img, .acard .tt { height:56px; } }

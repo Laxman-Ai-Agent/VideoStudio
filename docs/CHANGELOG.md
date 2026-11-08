@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Timeline: elements card is the big one in the right column
+- "Scene N - Elements" gets the larger share of the right column (bigger cards, 84 px pictures); Scene Details / Visual Edit / Animation / Effects tabs sit below it and scroll inside.
+
 ## 2026-11-08 · Timeline: app menu bar removed
 - The top app bar (logo, Timeline Editor, nav, project select) is gone; the project select moved into the project bar, and a close button (x, top right) returns to the dashboard. More height for the preview.
 
