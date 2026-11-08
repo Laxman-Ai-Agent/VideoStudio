@@ -102,3 +102,23 @@ def test_timeline_scripts_parse_and_load_in_order():
     order = [html.index(f'src="{f}"') for f in ("timeline.js", "timeline_live.js", "edit_math.js", "timeline_edit.js", "timeline_panel.js")]
     assert order == sorted(order) and 'id="assets"' in html and "timeline_edit.css" in html
     assert all(t in (ui / "timeline_panel.js").read_text("utf-8") for t in ("Scene Details", "Visual Edit", "Animation", "Effects", "Fit & Align"))
+
+
+def test_scene_thumbnail_is_cached_by_render_key(tmp_path, monkeypatch):
+    from pipeline import preview
+    calls = []
+
+    def fake_run(cmd, **kw):  # stands in for `hyperframes snapshot`: writes the still it would capture
+        calls.append(cmd)
+        out = Path(cmd[cmd.index("-o") + 1])
+        out.mkdir(parents=True, exist_ok=True)
+        Image.new("RGB", (1280, 720), (10, 80, 200)).save(out / "frame-00-at-1.3s.png")
+
+    monkeypatch.setattr(preview.subprocess, "run", fake_run)
+    d = tmp_path / "scene_001"
+    d.mkdir()
+    (d / ".key").write_text("k1", "utf-8")
+    assert preview.make_thumb(d) and preview.thumb_fresh(d) and Image.open(d / "thumb.jpg").size == (480, 270)
+    assert preview.make_thumb(d) and len(calls) == 1  # cached
+    (d / ".key").write_text("k2", "utf-8")  # scene rebuilt (an edit): the still is stale and taken again
+    assert not preview.thumb_fresh(d) and preview.make_thumb(d) and len(calls) == 2

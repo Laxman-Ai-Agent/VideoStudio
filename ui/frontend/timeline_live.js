@@ -59,12 +59,32 @@ async function buildLive() {
     const bad = d.scenes.filter((x) => x.error).length;
     st.cur = null;
     drawAll();
+    fetchThumbs(tok);
     setMsg(bad ? `${bad} scene(s) failed to build (shown as the missing tile)` : "");
   } catch (e) {
     if (tok !== live.token) return;
     setMsg("Live preview off: " + e.message);
     st.cur = null;
     drawAll();
+  }
+}
+
+async function fetchOneThumb(s) {
+  const m = live.data && live.data.map[s.id];
+  if (!m || m.thumb) return;
+  try {
+    const r = await fetch(`/api/projects/${enc(st.pid)}/thumb?fmt=${enc(st.fmt)}&scene=${s.id}`, { method: "POST" });
+    const d = await r.json();
+    if (d.thumb && live.data && live.data.map[s.id] === m) { m.thumb = d.thumb; m.tv = Date.now(); }
+  } catch { /* no thumbnail: the list keeps its empty tile */ }
+}
+
+async function fetchThumbs(tok) {  // one Chrome at a time, current scene first; the list and tracks refresh as stills arrive
+  const todo = [st.cur, ...st.scenes].filter((s, i, a) => s && a.indexOf(s) === i);
+  for (const s of todo) {
+    if (tok !== live.token) return;
+    await fetchOneThumb(s);
+    if (tok === live.token) { drawList(); draw(); }
   }
 }
 

@@ -375,6 +375,22 @@ def preview(pid: str, fmt: str, layout: bool = True) -> dict:
         return build_preview(project_dir(pid), fmt, check_layout=layout)
 
 
+_thumb_lock = threading.Lock()  # one headless Chrome at a time (RAM)
+
+
+def thumb(pid: str, fmt: str, scene: int) -> dict:
+    """Timeline thumbnail of one built scene; "" when the scene is not built yet or the capture failed."""
+    from pipeline import render as rnd
+    from pipeline.preview import make_thumb
+    p = project_dir(pid)
+    d = p / "work" / "preview" / rnd.fmt_dir(fmt, False) / f"scene_{int(scene):03d}"
+    if not (d / "index.html").exists():
+        raise NotFound(f"scene {scene} is not built")
+    with _thumb_lock:
+        ok = make_thumb(d)
+    return {"thumb": (d / "thumb.jpg").relative_to(p).as_posix() if ok else ""}
+
+
 def get_edits(pid: str) -> dict:
     """Manual visual edits (edits.json), all formats."""
     from pipeline import edits

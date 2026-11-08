@@ -8,7 +8,10 @@
 .hd.sw { left:0; top:100%; cursor:nesw-resize; } .hd.w { left:0; top:50%; cursor:ew-resize; }
 .hd.rot { left:50%; top:-26px; border-radius:50%; cursor:grab; background:#8b6bff; }
 #selbox .ro { position:absolute; left:0; top:100%; margin-top:8px; font:11px Consolas, monospace; background:rgba(0,0,0,.8); padding:1px 6px; border-radius:5px; white-space:nowrap; pointer-events:none; }
-#list .sc .thumb { width:44px; height:25px; object-fit:cover; border-radius:4px; flex:none; }
+#list .sc { padding:5px 8px; gap:10px; } #list .sc .thumb { width:64px; height:36px; object-fit:cover; border-radius:5px; flex:none; background:#05060f; }
+#list { max-height:none; }
+.clip .otn { max-height:30px; width:auto; border-radius:4px; flex:none; background:rgba(0,0,0,.35); }
+.clip.k-tpl, .clip.k-video, .clip.k-image { text-shadow:0 1px 3px #000; font-weight:600; }
 
 /* right panel */
 #info { padding:0; overflow:hidden; }

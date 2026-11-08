@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08 · Images in the Timeline (scene stills, overlay thumbnails)
+- `POST /api/projects/<pid>/thumb?fmt=&scene=` -> `pipeline/preview.make_thumb`: `hyperframes snapshot --at 1.3` of the built scene -> `scene_NNN/thumb.jpg` (480 px), cached by the scene render key (`.thumb.key`); one Chrome at a time. The preview answer carries `thumb` per scene.
+- Timeline: scene list shows the still (64x36) per scene, the Visual track clips are film strips of the still, Overlay clips carry their asset thumbnail. Stills arrive one by one after the page loads (~8 s each, current scene first, cached afterwards); an edited scene gets a new still after its rebuild. Test: `test_scene_thumbnail_is_cached_by_render_key`.
+
 ## 2026-11-08 · Timeline Visual Edit UI follows the reference layout
 - Right panel (310 px) with 4 tabs: Scene Details (the old details) | Visual Edit (layer header with thumbnail, file name, "Image Layer (Selected)", eye = hide via opacity 0, trash = delete; Transform: Position, Size + lock icon, Scale slider + %, Rotation + reset, Opacity slider + %; Arrange 4 icons; Fit & Align 6 icons + fit to canvas; Reset Transform, Duplicate) | Animation and Effects (read-only: placement from the built scene.json). Selecting an element switches to Visual Edit.
 - "Scene N - Assets" strip under the preview: All / Images / Video / Graphics chips, cards (thumbnail, file name, natural size, green check, selected highlight); a click selects the element and turns Edit mode on. Toolbar: undo / redo / delete beside the transport; scene list shows thumbnails when the resolved visual is inside the project.

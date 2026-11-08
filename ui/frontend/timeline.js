@@ -35,6 +35,11 @@ function warnsOf(s) {
 const errOf = (s) => (live.data && live.data.map[s.id] && live.data.map[s.id].error) || "";
 
 // ---- scene list (left) ----
+function thumbUrl(s) {  // still of the built scene (Chrome snapshot, cached by render key)
+  const m = live.data && live.data.map[s.id];
+  return m && m.thumb ? url(m.thumb) + "?t=" + (m.tv || 0) : "";
+}
+
 function drawList() {
   const box = $("list");
   box.innerHTML = "";
@@ -45,8 +50,8 @@ function drawList() {
     const k = kindOf(s), b = el("button", "sc" + (st.cur === s ? " sel" : ""));
     b.dataset.id = s.id;
     const dot = el("i", "dot " + k.cls);
-    const th = (st.res[s.id] || {}).thumb, tp = th && th.startsWith("projects/") ? inProject(th) : "";
-    if (tp) b.append(Object.assign(el("img", "thumb"), { src: url(tp), loading: "lazy" }));
+    const tu = thumbUrl(s);
+    b.append(tu ? Object.assign(el("img", "thumb"), { src: tu }) : el("span", "thumb none"));
     b.append(dot, el("b", "", `${s.id} · ${k.label}`), el("span", "n", fmt(s.start)));
     if (w.length) b.append(Object.assign(el("em", "", "!"), { title: w.join("\n") }));
     b.onclick = () => seek(s.start + 0.01);
@@ -110,11 +115,20 @@ function draw() {
     const k = kindOf(s), w = warnsOf(s), go = () => seek(s.start + 0.01);
     const cls = k.cls + (errOf(s) ? " err" : w.length ? " warn" : "") + (st.cur === s ? " sel" : "");
     s.el = clip("L-vis", s.start, s.end, cls, `${s.id} ${k.label}`, go, [`Scene ${s.id}: ${k.label}`, ...w].join("\n"));
+    const tu = thumbUrl(s);
+    if (tu) {  // film strip: the scene still repeated over the clip
+      s.el.style.backgroundImage = `linear-gradient(90deg, rgba(8,10,28,.78), rgba(8,10,28,.1)), url("${tu}")`;
+      s.el.style.backgroundSize = "100% 100%, auto 100%";
+      s.el.style.backgroundRepeat = "no-repeat, repeat-x";
+    }
     if (s.on_screen_text) clip("L-text", s.start, s.end, "t-text", s.on_screen_text, go);
     const p = live.data && live.data.map[s.id];
     for (const [a, b, text] of (p && p.captions) || []) clip("L-cap", a, b, "t-cap", text, () => seek(a + 0.01));
   }
-  for (const o of st.ovls) clip("L-ovl", o.a, o.b, "o-ovl", o.label, () => seek(o.a + 0.01));
+  for (const o of st.ovls) {
+    const c = clip("L-ovl", o.a, o.b, "o-ovl", o.label, () => seek(o.a + 0.01));
+    if (o.file) c.prepend(Object.assign(el("img", "otn"), { src: url(o.file), loading: "lazy" }));
+  }
   clip("L-aud", 0, st.dur, "a-aud", "Narration · input/audio.wav", () => {});
   move();
 }
@@ -258,7 +272,7 @@ async function load(pid) {
       if (!s) continue;
       const pl = a.placement || {};
       st.ovls.push({ scene: id, a: s.start + (+pl.at || 0), b: pl.until ? Math.min(s.end, s.start + +pl.until) : s.end,
-                     label: `${a.id} ${a.name || ""}`.trim() });
+                     label: `${a.id} ${a.name || ""}`.trim(), file: /[.](png|jpe?g|webp)$/i.test(a.file) ? a.file : "" });
     }
   }
   st.dur = st.scenes.length ? st.scenes[st.scenes.length - 1].end : 1;

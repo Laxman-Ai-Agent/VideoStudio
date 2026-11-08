@@ -3,6 +3,8 @@ written to work/preview/<fmt>/scene_NNN/, for the dashboard timeline to play in 
 No frame capture and no encode, so it is ready in seconds; only video scenes run FFmpeg (trim + fit).
 A scene is rebuilt only when its render key changes (same key as the render cache). check_layout adds
 the layout check (pipeline/layout.py, ~8 s per changed scene, cached) to the scene warnings."""
+import shutil
+import subprocess
 from pathlib import Path
 
 from . import layout
@@ -30,6 +32,33 @@ def warnings(va, resolved: Resolved) -> dict[int, list[str]]:
                 for i in a.scenes:
                     out.setdefault(i, []).append(f"{a.id}: {c}")
     return out
+
+
+def thumb_fresh(d: Path) -> bool:
+    k, t = d / ".key", d / ".thumb.key"
+    return (d / "thumb.jpg").exists() and k.exists() and t.exists() and t.read_text("utf-8") == k.read_text("utf-8")
+
+
+def make_thumb(d: Path) -> bool:
+    """One still of a built scene (headless Chrome via `hyperframes snapshot`, ~8 s) -> d/thumb.jpg 480 px wide,
+    cached by the scene's render key. Taken when the overlays have settled (~1.3 s) so the picture shows the scene."""
+    if thumb_fresh(d):
+        return True
+    from PIL import Image
+    snap = d / ".snap"
+    shutil.rmtree(snap, ignore_errors=True)
+    subprocess.run(["node", str(rnd.HF_BIN), "snapshot", str(d), "--at", "1.3", "--no-end", "-o", str(snap)],
+                   capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
+    pngs = sorted(snap.glob("frame-*.png"))
+    if not pngs:
+        return False
+    with Image.open(pngs[0]) as im:
+        im = im.convert("RGB")
+        im.thumbnail((480, 480))
+        im.save(d / "thumb.jpg", quality=80)
+    (d / ".thumb.key").write_text((d / ".key").read_text("utf-8"), "utf-8")
+    shutil.rmtree(snap, ignore_errors=True)
+    return True
 
 
 def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir: Path = BRAND,
@@ -64,6 +93,7 @@ def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir
                 for p in (j.captions or [])]
         scenes.append({"id": j.scene.id, "start": j.scene.start, "end": j.scene.end, "template": j.template,
                        "dir": d.relative_to(project).as_posix(), "status": status, "error": error,
+                       "thumb": (d / "thumb.jpg").relative_to(project).as_posix() if thumb_fresh(d) else "",
                        "warnings": warn.get(j.scene.id, []) + ([f"build failed: {error}"] if error else
                                                          layout.check(d, j.key) if check_layout else []),
                        "captions": caps})
