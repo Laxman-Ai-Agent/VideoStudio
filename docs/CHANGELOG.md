@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Visual Assets page: "Prepare & open Timeline"
+- One button in the page header runs `studio run <pid> --review` in the background (matches uploads, processes, resolves, storyboard; no render), shows the elapsed seconds, then opens the Timeline of that project. `POST /api/projects/<pid>/render?review=1`; a prepare run does not count as a render time. Test: `test_prepare_runs_review_without_render_and_keeps_render_times`. Checked on 02 (~20 s).
+
 ## 2026-11-08 · Whisper: a garbage word over lost speech is a hole; holes are re-transcribed alone
 - Seen on 02: large-v3 returned one word ("bha?") spanning 8.3-27.6 s of real speech; the coverage check only looked at gaps between words, so it passed and align failed later ("no script word matched 7.9-27.6 s").
 - `transcribe.holes()` also counts words longer than MAX_GAP; `patch_holes()` re-transcribes only those stretches (`clip_timestamps`, VAD off) and splices the words in, before the whole-file retry. 02 fixed this way (90 words, no holes). Tests: `test_a_word_spanning_lost_speech_is_a_hole_and_only_that_stretch_is_redone`, retry test updated.

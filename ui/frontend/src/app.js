@@ -144,3 +144,24 @@ setInterval(async () => {
     if (++liveFails === 3) notice("Live update is off: restart the dashboard (close its window, run start-dashboard.bat).");
   }
 }, 1500);
+
+// "Prepare & open Timeline": `studio run <pid> --review` (match uploads, process, resolve, storyboard; no render),
+// then the Timeline page, so everything can be checked there before rendering.
+$("prep").onclick = async () => {
+  const b = $("prep"), pid = state.pid, label = b.innerHTML;
+  b.disabled = true;
+  try {
+    let s = await api.prepare(pid);
+    while (s.state === "running") {
+      b.textContent = `Preparing... ${s.elapsed || 0} s`;
+      await new Promise((r) => setTimeout(r, 2000));
+      s = await api.runStatus(pid);
+    }
+    if (s.state === "done") { location.href = `/timeline.html#p=${encodeURIComponent(pid)}`; return; }
+    notice(`Prepare stopped (${s.state}): ${(s.tail || []).slice(-2).join(" ")}`);
+  } catch (e) {
+    notice("Prepare failed: " + e.message);
+  }
+  b.disabled = false;
+  b.innerHTML = label;
+};

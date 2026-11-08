@@ -141,7 +141,8 @@ class Handler(BaseHTTPRequestHandler):
         m = ASSET.match(url.path)
         try:
             if rm := re.match(r"^/api/projects/([^/]+)/render$", url.path):
-                return self._json(service.start_render(rm[1], urllib.parse.parse_qs(url.query).get("final", ["0"])[0] == "1"))
+                q = urllib.parse.parse_qs(url.query)
+                return self._json(service.start_render(rm[1], q.get("final", ["0"])[0] == "1", q.get("review", ["0"])[0] == "1"))
             if tm := re.match(r"^/api/projects/([^/]+)/thumb$", url.path):
                 q = urllib.parse.parse_qs(url.query)
                 return self._json(service.thumb(tm[1], q.get("fmt", ["16:9"])[0], int(q.get("scene", ["0"])[0])))

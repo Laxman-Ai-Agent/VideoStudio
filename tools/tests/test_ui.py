@@ -208,3 +208,17 @@ def test_edits_api_saves_per_project_and_leaves_assets_alone(api):
     assert call("GET", "/api/projects/02/edits")[1] == {}  # other project untouched
     assert call("PUT", "/api/projects/01/edits", {"fmt": "4:3", "scene": 1, "items": {}}, h)[0] == 400
     assert (root / "01_Alpha" / "visual-assets.json").read_bytes() == before
+
+
+def test_prepare_runs_review_without_render_and_keeps_render_times(tmp_path, monkeypatch):
+    import subprocess
+    from types import SimpleNamespace as NS
+    proj = tmp_path / "02_T"
+    (proj / "work" / "logs").mkdir(parents=True)
+    seen = []
+    monkeypatch.setattr(service, "project_dir", lambda pid: proj)
+    monkeypatch.setattr(service, "_renders", {})
+    monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
+    s = service.start_render("02", False, review=True)
+    assert seen[0][-2:] == ["02", "--review"] and s["review"] is True and s["state"] == "done"
+    assert not service._times(proj).exists()  # a prepare run is not a render time
