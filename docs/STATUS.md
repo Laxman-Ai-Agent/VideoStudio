@@ -20,6 +20,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 - Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): plan (15 scenes, theme space) + visual-assets.json (20 assets: 10 mains, 5 templates, 3 presenter reactions C1 in a white bomber jacket, 2 depth props) done; `run 02 --review` OK, storyboard written. 13 assets to generate (prompts in the dashboard); scenes 4 and 12 use free downloads (Wikimedia / Openverse) until their own files arrive. Not rendered yet.
 
+- Project 03 (Chandrayaan-3, 66 s): fully automatic 16:9 preview rendered, QA PASS (`projects/03/output/preview_16x9.mp4`). Known gap: `output/credits.txt` lists only resolve downloads, not the online photos fetched through visual-assets.json (their credits are in visual-assets.json); flag emoji show as letters (US, RU ...) on this PC.
+
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.
 - Music in `_library/music/calm/` (and whoosh files in `_library/sfx/whoosh/` if wanted); `PEXELS_API_KEY` in `tools/.env` for stock footage.
