@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Timeline: app menu bar removed
+- The top app bar (logo, Timeline Editor, nav, project select) is gone; the project select moved into the project bar, and a close button (x, top right) returns to the dashboard. More height for the preview.
+
 ## 2026-11-08 · Bigger preview; elements card moved to the right column
 - The preview card now takes the whole centre height (1500x850: 647x364 instead of 487x274). The "Scene N - Elements" card sits at the top of the right column (2 cards per row, scrolls inside), the tabbed panel below it.
 
