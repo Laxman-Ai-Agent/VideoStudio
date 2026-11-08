@@ -7,7 +7,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from . import layout
+from . import edits, layout
 from . import render as rnd
 from . import visual
 from .config import BRAND, ROOT
@@ -75,7 +75,7 @@ def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir
     va = visual.load(project)
     jobs = rnd.plan_jobs(plan, resolved, brand, fmt, root, out, False, tr.words if tr else None,
                          _load(Prepared, w / "prepared" / "prepared.json"), _load(ThemeSpec, w / "theme.json"),
-                         visual.overlays(va, project, fmt))
+                         visual.overlays(va, project, fmt), edits.layers(project, fmt))
     warn = warnings(va, resolved)
     scenes = []
     for j in jobs:

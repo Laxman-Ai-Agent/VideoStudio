@@ -1,6 +1,7 @@
 """Manual visual edits: clamping, persistence, apply (hidden / duplicate), cache key, built scene, JS math (node), API."""
 import json
 import shutil
+import sys
 import subprocess
 from pathlib import Path
 
@@ -25,6 +26,8 @@ def test_clean_clamps_and_save_replaces_one_scene(tmp_path):
     assert d["16:9"]["1"]["A1"]["x"] == 0.1 and d["9:16"]["1"]["A1"]["x"] == 0.5 and "2" not in d["16:9"]
     with pytest.raises(ValueError):
         edits.save_scene(tmp_path, "4:3", 1, {})
+    stored = edits.save_scene(tmp_path, "16:9", 3, {"null": {"x": 0}, "undefined": {"x": 0}, "A9": {"x": 0.1}})
+    assert list(stored) == ["A9"]  # elements without an id are never stored
 
 
 def test_apply_sets_manual_hides_and_duplicates():
@@ -122,3 +125,42 @@ def test_scene_thumbnail_is_cached_by_render_key(tmp_path, monkeypatch):
     assert preview.make_thumb(d) and len(calls) == 1  # cached
     (d / ".key").write_text("k2", "utf-8")  # scene rebuilt (an edit): the still is stale and taken again
     assert not preview.thumb_fresh(d) and preview.make_thumb(d) and len(calls) == 2
+
+
+def test_background_and_text_layers_reach_the_build_and_the_key(tmp_path):
+    edits.save_scene(tmp_path, "16:9", 1, {"L:t1": {"x": 0.1, "y": 0.2, "w": 0.5, "h": 0.1, "rot": 5}, "L:bg": {"x": 0, "y": 0, "w": 1, "h": 1, "hidden": True}})
+    lay = edits.layers(tmp_path, "16:9")
+    assert set(lay) == {1} and set(lay[1]) == {"L:t1", "L:bg"} and edits.layers(tmp_path, "9:16") == {}
+    assert edits.apply([(Path("a.png"), {"id": "A1"})], edits.scene_items(tmp_path, "16:9", 1))[0][1].get("manual") is None  # overlays ignore L: items
+    jobs = []
+    for ly in (None, lay):
+        jobs.append(_jobs_with_layers(tmp_path, ly))
+    assert jobs[0][0].key != jobs[1][0].key and jobs[0][1].key == jobs[1][1].key  # only scene 1 changes
+    rnd.build(jobs[1][0], tmp_path / "bl", jobs[1][0].template)
+    sc = json.loads((tmp_path / "bl" / "scene.json").read_text("utf-8"))
+    assert sc["layers"]["L:t1"]["w"] == 0.5 and sc["layers"]["L:bg"]["hidden"] is True
+    assert "L:t1" in (tmp_path / "bl" / "studio.js").read_text("utf-8")  # layout.js bundled with the layer code
+
+
+def _jobs_with_layers(tmp_path, layers):
+    brand = Brand(formats={"16:9": {"width": 1920, "height": 1080}}, colors={"background": "#000000", "accent": "#FFC400", "text": "#FFFFFF"},
+                  fonts={"telugu": "Gidugu"})
+    s = lambda i: {"id": i, "start": i - 1, "end": i, "narration": "x", "visual_type": "text", "query": "q"}  # noqa: E731
+    return rnd.plan_jobs(ScenePlan(scenes=[s(1), s(2)]), Resolved(scenes=[{"id": 1, "status": "template"}, {"id": 2, "status": "template"}]),
+                         brand, "16:9", tmp_path, tmp_path / "o", False, manual=layers)
+
+
+def test_render_key_does_not_depend_on_the_python_process(tmp_path):
+    """The font families were hashed in set order: two processes (dashboard preview vs `studio run`) got different keys."""
+    code = ("import sys; sys.path.insert(0, 'tools')\n"
+            "from pathlib import Path\n"
+            "from pipeline import render as rnd\n"
+            "from pipeline.contracts import Brand, Resolved, ScenePlan\n"
+            "b = Brand(formats={'16:9': {'width': 1920, 'height': 1080}}, colors={'background': '#000000', 'accent': '#FFC400', 'text': '#FFFFFF'},\n"
+            "          fonts={'telugu': 'Gidugu', 'heading': 'Anton', 'script': 'Caveat'})\n"
+            "s = {'id': 1, 'start': 0, 'end': 1, 'narration': 'x', 'visual_type': 'text', 'query': 'q'}\n"
+            "print(rnd.plan_jobs(ScenePlan(scenes=[s]), Resolved(scenes=[{'id': 1, 'status': 'template'}]), b, '16:9', Path('.'), Path('o'), False)[0].key)\n")
+    root = MATH.parents[2]
+    keys = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=root,
+                           env={**__import__("os").environ, "PYTHONHASHSEED": seed}).stdout.strip() for seed in ("1", "2", "3", "4")}
+    assert len(keys) == 1 and "" not in keys

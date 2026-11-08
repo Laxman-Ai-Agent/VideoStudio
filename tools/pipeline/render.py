@@ -160,6 +160,7 @@ class Job:
     trans: tuple = ("", "")  # (in, out) transition at this scene's cuts, see transitions()
     style: ThemeSpec = None  # the video's visual theme (work/theme.json), see theme.py
     overlays: list = None  # [(file, placement)] from visual-assets.json (role "overlay")
+    manual_layers: dict = None  # {layer id: manual} from edits.json: moved / scaled background and text blocks
 
     @property
     def duration(self) -> float:
@@ -169,14 +170,14 @@ class Job:
 def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root: Path,
               out_dir: Path, final: bool, words: list[Word] | None = None,
               prepared: Prepared | None = None, theme: ThemeSpec | None = None,
-              overlays: dict[int, list] | None = None) -> list[Job]:
+              overlays: dict[int, list] | None = None, manual: dict[int, dict] | None = None) -> list[Job]:
     """Cheap: hashes inputs only. Key = scene JSON + asset hash + template (version + files)
     + brand.json + theme + output size/fps."""
     from .theme import from_brand
     style = theme or from_brand(brand)
     of = brand.formats[fmt]
     w, h = size_for(of.width, of.height, final)
-    fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in set(style.fonts.values()) if fam
+    fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in sorted(set(style.fonts.values())) if fam
              for f in sorted((FONTS / fam).glob("*.ttf"))]  # adding/removing a font file re-renders
     look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name"})
     brand_hash = hashlib.sha256((brand.model_dump_json() + str(fonts) + look).encode()).hexdigest()[:16]
@@ -206,9 +207,9 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
                 if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
-                                         brand_hash, fmt, w, h, brand.fps, caps, trans[s.id], ovl_key]).encode()).hexdigest()[:16]
+                                         brand_hash, fmt, w, h, brand.fps, caps, trans[s.id], ovl_key] + ([(manual or {})[s.id]] if (manual or {}).get(s.id) else [])).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style, ovl))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style, ovl, (manual or {}).get(s.id)))
     return jobs
 
 
@@ -323,7 +324,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "theme": st.name, "style": {"background": st.background, "text": st.text},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
              "error": error,
-             "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl}
+             "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl,
+             "layers": job.manual_layers or {}}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")
     (build_dir / "scene.json").write_text(json.dumps(scene, ensure_ascii=False), "utf-8")
     if load_template(template).engine == "remotion":

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-08 · Layer-based editing: background + text blocks are layers too
+- Generic layers ids in `edits.json`: `L:bg` (the main picture / footage `.fill`) and `L:t1..` (each text block of the template: kinetic lines, title, lower third, cards items; nested blocks count once). Same schema as overlays; `manual` = the wanted visual box (fractions of the frame), reached with CSS `translate / scale / rotate` + `filter: opacity()` (GSAP only writes `transform`, so template animations keep working); hidden = invisible. `edits.layers()` -> `plan_jobs(..., manual=)` (in the scene key) -> `scene.json["layers"]` -> `layout.js layers()/placeLayer`; preview, `studio run` and the Timeline use the same call.
+- Timeline: the selected scene lists its layers under it in the left list (Background / Images / Logos / Text / Overlays, thumbnail, name, eye); list, canvas and right panel share one selection (`ed.sel`). Canvas click prefers pictures over text; the background is picked from the list or the strip only (an empty click still clears). Background / text have no Duplicate.
+- Fix: the render key hashed font families in set order, so two Python processes (dashboard preview vs `studio run`) could get different keys for the same scene (needless re-renders). Now sorted. Test `test_render_key_does_not_depend_on_the_python_process`. All scene keys changed once.
+- Fix: elements without an id are never stored in edits.json ("null" keys were seen); the UI ignores edits without a selected element.
+- Checked on 01 scene 1: single-scene render shows the moved / scaled / rotated text block like the preview (same key).
+
 ## 2026-11-08 · Timeline page re-laid out like the reference
 - `timeline.html` restructured (new `timeline.css`): app bar (logo, Timeline Editor pill, nav, project select), project bar (back, title, scene count, 16:9 / 9:16, Preview / Final, Render Video), three card columns (scene list with still + time range + type badge + green check | preview card with round play, prev / next / loop, time, scene seek slider, speed + Scene Assets strip | right tabs), tracks card with toolbar (undo / redo / delete, zoom, Fit) and track icons. All element ids unchanged, so the render bar, live preview and edit code work as before.
 

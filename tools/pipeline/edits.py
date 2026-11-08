@@ -8,6 +8,7 @@ from pathlib import Path
 
 FILE = "edits.json"
 FORMATS = ("16:9", "9:16")
+BAD_KEYS = ("", "null", "undefined")  # a UI bug must never store an element without an id
 
 
 def _num(v, lo, hi, default):
@@ -47,7 +48,7 @@ def save_scene(project: Path, fmt: str, scene: int, items: dict) -> dict:
         raise ValueError(f"format must be one of {FORMATS}")
     data = load(project)
     data["version"] = 1
-    stored = {str(k): clean(v) for k, v in (items or {}).items() if isinstance(v, dict)}
+    stored = {str(k): clean(v) for k, v in (items or {}).items() if isinstance(v, dict) and str(k) not in BAD_KEYS}
     per = data.setdefault(fmt, {})
     if stored:
         per[str(int(scene))] = stored
@@ -55,6 +56,20 @@ def save_scene(project: Path, fmt: str, scene: int, items: dict) -> dict:
         per.pop(str(int(scene)), None)
     (Path(project) / FILE).write_text(json.dumps(data, indent=1), "utf-8")
     return stored
+
+
+LAYER = "L:"  # generic layers of the built scene (L:bg = background media, L:t1.. = text blocks), see layout.js
+
+
+def layers(project: Path, fmt: str | None) -> dict[int, dict]:
+    """scene id -> {layer id: manual} for the non-overlay layers of edits.json (background, text)."""
+    per = (load(project).get(fmt or "", {}) or {})
+    out = {}
+    for sid, items in per.items():
+        ls = {k: clean(m) for k, m in items.items() if k.startswith(LAYER) and isinstance(m, dict)}
+        if ls:
+            out[int(sid)] = ls
+    return out
 
 
 def apply(ovls: list, items: dict) -> list:

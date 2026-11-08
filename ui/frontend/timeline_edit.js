@@ -42,6 +42,7 @@ function stateOf(id) {
   return { x: b.x, y: b.y, w: b.w, h: b.h, rot: b.rot + b.base, base: b.base, opacity: m.opacity ?? b.opacity, z: m.z ?? b.z, lock: m.lock ?? true, dup: m.dup };
 }
 function put(id, s) {  // apply live in the iframe, keep in memory
+  if (!id || !box(id)) return;
   const { W, H } = dims(), m = { ...M.toFrac(s, W, H), opacity: s.opacity, z: s.z, lock: s.lock, hidden: false };
   m.rot = s.rot - s.base;
   if (s.dup) m.dup = s.dup;
@@ -105,7 +106,7 @@ function del() {
 }
 function dup() {
   const s = sel();
-  if (!s) return;
+  if (!s || ed.sel.startsWith("L:")) return;  // background and text blocks belong to the template: no copies
   snap();
   const orig = ed.sel.split("#")[0], it = { ...getItems() }, { W, H } = dims();
   let n = 2;
@@ -154,7 +155,8 @@ function down(e) {
     snap();
     ed.drag = { h, s0: stateOf(ed.sel), moved: false };
   } else {
-    const hit = ed.boxes.filter((b) => M.hit(vis(b), p)).sort((a, b) => zOf(a) - zOf(b)).pop();
+    const rank = (b) => (b.kind === "text" ? 1 : 2) * 1000 + zOf(b);  // pictures over text; the background is picked from the list only
+    const hit = ed.boxes.filter((b) => b.kind !== "background" && M.hit(vis(b), p)).sort((a, b) => rank(a) - rank(b)).pop();
     ed.sel = hit ? hit.id : null;
     if (hit) ed.tab = "edit";
     drawSel(); drawEdit();

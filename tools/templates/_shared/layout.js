@@ -218,6 +218,39 @@ window.studioLayout = function (env) {
     tl.fromTo(el, { x: (ax < 0.5 ? -1 : 1) * w * 0.4, opacity: 0 }, { x: 0, opacity: op(o), duration: 0.6, ease: "power3.out" }, at);
     tl.to(el, { y: -u * 1.5, rotation: ax < 0.5 ? 2 : -2, duration: Math.max(1, S.duration - at - 0.6), ease: "sine.inOut" }, at + 0.6);
   }
+  // ---- Generic layers: the background picture / footage and every text block of the template ("L:bg", "L:t1" ...).
+  // S.layers[id] = manual {x,y,w,h (the wanted visual box, fractions of the frame), rot, opacity, z, hidden}. The box is
+  // reached with CSS translate / scale / rotate and filter: opacity(), which GSAP (it only writes `transform`) leaves alone.
+  const LTEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .memecap";
+  const gl = [];
+  function findLayers() {
+    const bg = [...document.querySelectorAll("#root .fill:not(.blurbg)")].filter(e => e.offsetWidth).pop();
+    const txt = [...document.querySelectorAll(LTEXT)].filter(e => e.offsetWidth && e.textContent.trim());
+    const outer = txt.filter(e => !txt.some(o => o !== e && o.contains(e)));  // a block inside another block is not its own layer
+    const man = S.layers || {};
+    if (bg) gl.push({ el: bg, kind: "background", o: { id: "L:bg", manual: man["L:bg"], name: "Background", src: bg.getAttribute("src") || "" } });
+    outer.forEach((e, i) => gl.push({ el: e, kind: "text", o: { id: "L:t" + (i + 1), manual: man["L:t" + (i + 1)],
+      name: e.textContent.trim().replace(/\s+/g, " ").slice(0, 28), src: "" } }));
+    gl.forEach(g => { g.f0 = getComputedStyle(g.el).filter; if (g.f0 === "none") g.f0 = ""; });
+  }
+  function placeLayer(g) {
+    const { el, o } = g, st = el.style;
+    st.translate = st.scale = st.rotate = st.transformOrigin = "";
+    st.zIndex = ""; st.visibility = ""; st.filter = "";
+    g.nat = boxOf(el);
+    const m = o.manual;
+    if (!m) return;
+    if (m.hidden) { st.visibility = "hidden"; return; }
+    if (window.gsap) gsap.getProperty(el, "x");  // make GSAP read the element's own transform first
+    const b = mbox(m), n = g.nat;
+    st.transformOrigin = "50% 50%";
+    st.translate = `${b.x + b.w / 2 - (n.x + n.w / 2)}px ${b.y + b.h / 2 - (n.y + n.h / 2)}px`;
+    st.scale = `${b.w / Math.max(1, n.w)} ${b.h / Math.max(1, n.h)}`;
+    st.rotate = m.rot + "deg";
+    st.filter = (g.f0 ? g.f0 + " " : "") + `opacity(${m.opacity})`;
+    if (m.z) st.zIndex = m.z;
+  }
+  const placeLayers = () => gl.forEach(placeLayer);
   function overlays(tl) {
     let panel = false;
     (S.overlays || []).forEach((o) => {
@@ -249,8 +282,9 @@ window.studioLayout = function (env) {
     });
     placeOverlays();
   }
+  function layers() { findLayers(); placeLayers(); }
   // Fonts change text sizes: measure again once they are in (the render waits for fonts before frames).
-  function relayout() { centreInk(); placeOverlays(); }
+  function relayout() { centreInk(); placeLayers(); placeOverlays(); }
   // Meme template: the scene's person / meme overlays stand in slots of #stage (1 = centred, 2 = side by side,
   // like a dialogue), bottom-anchored and large, with the cut-out treatments; each slides in from its side.
   const MEME_KINDS = ["character_expression", "reaction", "meme", "transparent_png"];
@@ -272,10 +306,15 @@ window.studioLayout = function (env) {
     return subs.length;
   }
   // Dashboard editor hooks (same-origin iframe): boxes of editable elements, live apply, a time when all are on screen.
-  window.__boxes = () => reg.map(({ el, o, kind }) => ({ id: o.id, kind, src: o.src, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth,
+  const gbox = (g) => { const m = g.o.manual, b = m ? mbox(m) : g.nat;
+    return { id: g.o.id, kind: g.kind, name: g.o.name, src: g.o.src, x: b.x, y: b.y, w: b.w, h: b.h, rot: m ? m.rot : 0, base: 0,
+             z: m ? m.z : 0, opacity: m ? m.opacity : 1, edited: !!m, auto: g.nat, hidden: !!(m && m.hidden) }; };
+  window.__boxes = () => gl.map(gbox).concat(reg.map(({ el, o, kind }) => ({ id: o.id, kind, cat: o.kind, src: o.src, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth,
     h: el.offsetHeight, rot: o.manual ? o.manual.rot : 0, base: kind === "stamp" ? -6 : 0, z: o.manual ? o.manual.z : 0,
-    opacity: o.manual ? o.manual.opacity : 1, edited: !!o.manual, auto: o.auto || null }));
+    opacity: o.manual ? o.manual.opacity : 1, edited: !!o.manual, auto: o.auto || null })));
   window.__manual = (id, m) => {
+    const g = gl.find(x => x.o.id === id);
+    if (g) { if (m) g.o.manual = m; else delete g.o.manual; placeLayer(g); return; }
     const e = reg.find(x => x.o.id === id);
     if (!e || !m) return;
     e.o.manual = m;
@@ -283,5 +322,5 @@ window.studioLayout = function (env) {
     fx(e.el, e.o, true);
   };
   window.__settle = () => Math.max(0.3, Math.min(S.duration - 0.05, Math.max(0, ...(S.overlays || []).map(o => +o.at || 0)) + 0.8));
-  return { centreInk, logoGrid, overlays, relayout, memeSlots };
+  return { centreInk, logoGrid, overlays, relayout, memeSlots, layers };
 };

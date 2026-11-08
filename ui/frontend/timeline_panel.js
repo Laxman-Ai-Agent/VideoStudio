@@ -22,7 +22,12 @@ const IC = {
 };
 const TABS = [["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
 const assetOf = (id) => (st.va || []).find((a) => a.id === id.split("#")[0]) || {};
-const fileName = (id) => ((assetOf(id).file || id).split("/").pop());
+const fileName = (id) => { const b = box(id); return b && b.name ? b.name : (assetOf(id).file || id).split("/").pop(); };
+const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : "Image Layer");
+const OVL_CATS = ["sticker", "character_expression", "reaction", "meme", "transparent_png", "graphic", "icon", "emoji"];
+const LGROUP = (b) => (b.kind === "background" ? "Background" : b.kind === "text" || b.kind === "stamp" ? "Text"
+  : b.cat === "logo" ? "Logos" : OVL_CATS.includes(b.cat) ? "Overlays" : "Images");
+const isVid = (b) => /[.](mp4|webm|mov|mkv)$/i.test(b.src || "");
 const srcUrl = (b) => (live.data && st.cur && live.data.map[st.cur.id] ? url(live.data.map[st.cur.id].dir + "/" + b.src) : "");
 let fields = {};
 
@@ -54,6 +59,7 @@ function drawEdit() {
   fields = {};
   if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
   drawStrip();
+  drawLayers();
   syncPanel();
 }
 
@@ -74,8 +80,8 @@ function pane(tab) {
 
 function layerHead(s, tools) {
   const b = box(ed.sel), h = el("div", "lay"), nm = el("div", "nm"), btn = (ic, tip, f, on) => Object.assign(el("button", "ib" + (on ? " on" : "")), { innerHTML: svg(IC[ic]), title: tip, onclick: f });
-  nm.append(el("b", "", fileName(ed.sel)), el("span", "n", (b.kind === "stamp" ? "Text Layer" : "Image Layer") + " (Selected)"));
-  h.append(Object.assign(el("img"), { src: srcUrl(b) }), nm);
+  nm.append(el("b", "", fileName(ed.sel)), el("span", "n", KIND_LABEL(b) + " (Selected)"));
+  h.append(b.src && !isVid(b) ? Object.assign(el("img"), { src: srcUrl(b) }) : el("span", "lt", b.kind === "text" ? "T" : "▣"), nm);
   if (tools) h.append(btn(s.opacity > 0 ? "eye" : "eyeoff", "Show / hide", () => act((c) => { const v = c.opacity > 0 ? 0 : (ed.prevOp || 1); if (c.opacity > 0) ed.prevOp = c.opacity; return { ...c, opacity: v }; })), btn("trash", "Delete (Del)", del));
   return h;
 }
@@ -125,7 +131,8 @@ function editPane(p, s) {
   for (const a of ["left", "center", "right", "top", "middle", "bottom"]) fa.append(btn(a, "Align " + a, () => act((c) => ({ ...c, ...M.align(c, a, W, H) }))));
   fa.append(btn("fit", "Fit to canvas", () => act((c) => ({ ...c, ...M.fit(c, W, H) }))));
   const ex = el("div", "btns");
-  ex.append(btn("reset", "Reset transform", resetEl, "Reset Transform"), btn("", "Duplicate (Ctrl+D)", dup, "Duplicate"));
+  ex.append(btn("reset", "Reset transform", resetEl, "Reset Transform"));
+  if (!ed.sel.startsWith("L:")) ex.append(btn("", "Duplicate (Ctrl+D)", dup, "Duplicate"));
   p.append(fa, ex);
   if (Object.keys(getItems()).length) p.append(Object.assign(el("button", "wide", "Reset scene edits"), { onclick: resetScene, style: "margin-top:8px;width:100%" }));
   return p;
@@ -153,15 +160,15 @@ function setEdit(on) {
 }
 
 // ---- "Scene N - Assets" strip under the preview ----
-const GROUP = (b) => (b.kind === "stamp" ? "graphics" : "images");
+const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "images");
 function drawStrip() {
   const root = $("assets");
   root.innerHTML = "";
   if (!st.cur || !live.data) return;
-  const all = ed.boxes, n = (g) => all.filter((b) => GROUP(b) === g).length;
+  const all = ed.boxes.filter((b) => b.kind !== "text"), n = (g) => all.filter((b) => GROUP(b) === g).length;
   const head = el("div", "ah");
   head.append(el("b", "", `Scene ${st.cur.id} – Assets`), el("span", "n", `Elements you can edit in this scene (${all.length})`), el("span", "grow"));
-  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", 0], ["graphics", "Graphics", n("graphics")]]) {
+  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")]]) {
     head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
   }
   const cards = el("div", "cards");
@@ -172,7 +179,32 @@ function drawStrip() {
     c.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
     cards.append(c);
   }
-  root.append(head, all.length ? cards : el("div", "n", "No overlay elements in this scene (the main visual and template text are not editable yet)."));
+  root.append(head, all.length ? cards : el("div", "n", "No pictures in this scene. Text blocks are listed under the scene in the left list."));
+}
+
+// ---- layers of the selected scene, listed under it in the scene list (kept in sync with the canvas) ----
+function drawLayers() {
+  const box0 = $("layers");
+  if (!box0) return;
+  box0.innerHTML = "";
+  if (!st.cur || !live.data) return;
+  const order = ["Background", "Images", "Logos", "Text", "Overlays"];
+  for (const g of order) {
+    const rows = ed.boxes.filter((b) => LGROUP(b) === g);
+    if (!rows.length) continue;
+    box0.append(el("div", "lg", g));
+    for (const b of rows) {
+      const m = getItems()[b.id] || {}, off = (m.opacity === 0) || m.hidden;
+      const r = el("div", "lr" + (b.id === ed.sel ? " on" : "") + (off ? " off" : ""));
+      r.append(b.src && !isVid(b) ? Object.assign(el("img"), { src: srcUrl(b) }) : el("span", "lt", b.kind === "text" || b.kind === "stamp" ? "T" : "▣"),
+               el("span", "ln", b.kind === "stamp" ? (b.name || fileName(b.id)) : fileName(b.id)), Object.assign(el("button", "ib", ""), {
+        innerHTML: svg(IC[off ? "eyeoff" : "eye"]), title: "Show / hide",
+        onclick: (e) => { e.stopPropagation(); ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); act((c) => { const v = c.opacity > 0 ? 0 : (ed.prevOp || 1); if (c.opacity > 0) ed.prevOp = c.opacity; return { ...c, opacity: v }; }); } }));
+      r.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
+      box0.append(r);
+    }
+  }
+  if (!ed.boxes.length) box0.append(el("div", "n lg", "Loading layers..."));
 }
 
 $("tUndo").onclick = undo;

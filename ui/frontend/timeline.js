@@ -56,7 +56,9 @@ function drawList() {
              Object.assign(el("i", "ok" + (bad ? " e" : w.length ? " w" : ""), bad || w.length ? "!" : "✓"), { title: w.join("\n") || "OK" }));
     b.onclick = () => seek(s.start + 0.01);
     box.append(b);
+    if (st.cur === s) box.append(Object.assign(el("div", "layers"), { id: "layers" }));
   }
+  if (window.drawLayers) drawLayers();
   const n = st.scenes.filter((s) => warnsOf(s).length).length;
   $("warnBtn").hidden = !n;
   $("warnBtn").textContent = `⚠ ${n} scene${n > 1 ? "s" : ""} with warnings`;

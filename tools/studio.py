@@ -208,6 +208,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
     print(f"  prepare: {'done' if ran else 'up to date'} ({len(prepared.scenes)} parallax scene(s))")
 
     # Phase 3: render each scene per format (per-scene cache), then assemble with the narration
+    from pipeline import edits
     from pipeline import render as rnd
     from pipeline.assemble import assemble, pick_music, sfx_cues
     brand = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8"))
@@ -219,7 +220,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
             continue
         d = rnd.fmt_dir(fmt, final)
         jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
-                             prepared, theme, visual.overlays(va, p, fmt))
+                             prepared, theme, visual.overlays(va, p, fmt), edits.layers(p, fmt))
         clips = [j.out for j in jobs]
         keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
         report_json = w / "scenes" / d / "report.json"
