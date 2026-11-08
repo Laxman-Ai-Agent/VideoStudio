@@ -35,7 +35,7 @@ def _one(folder: Path, stem: str) -> Path | None:
     return found[0] if found else None
 
 
-def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
+def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = False) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
     drop = [f for f in (p / "drop").iterdir() if f.is_file()]
@@ -186,6 +186,9 @@ def run_project(p: Path, final: bool = False, workers: int = 2) -> int:
 
     sb_inputs = [scenes_json, resolved_json] + brand_in
     print(f"  storyboard: {'done' if run_stage(p, 'storyboard', sb_inputs, [html_out, png_out], storyboard) else 'up to date'}")
+    if review:  # stop before render: check work/storyboard.html (scene timings + chosen assets)
+        print(f"  review: open {html_out}")
+        return 0
 
     # Phase 4: cut-out layers for scenes that opt into parallax (failures fall back to a plain photo)
     from pipeline.contracts import Prepared
@@ -390,6 +393,7 @@ def main() -> int:
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
     run.add_argument("--workers", type=int, default=2, help="parallel scene renders (default 2)")
+    run.add_argument("--review", action="store_true", help="stop after the storyboard (no render)")
     a = ap.parse_args()
 
     if a.cmd == "doctor":
@@ -399,7 +403,7 @@ def main() -> int:
         return 0
     if a.cmd == "run":
         try:
-            return run_project(find_project(a.project), a.final, a.workers)
+            return run_project(find_project(a.project), a.final, a.workers, a.review)
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
