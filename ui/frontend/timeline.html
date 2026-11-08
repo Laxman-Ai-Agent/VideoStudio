@@ -1,56 +1,114 @@
 <!doctype html><html><head><meta charset="utf-8"><title>Timeline</title>
 <style>
-:root { --bg:#1f1f24; --panel:#2a2a31; --line:#3a3a44; --text:#eee; --muted:#9a9aa8; --head:150px; }
-* { box-sizing: border-box; }
+:root { --bg:#0b0d1c; --side:#0f1124; --card:#141734; --line:#262a52; --text:#f3f4ff; --muted:#a3a8cc;
+        --accent:#8b6bff; --warn:#f5b942; --err:#ef4444; --head:96px; }
+* { box-sizing:border-box; }
 body { margin:0; background:var(--bg); color:var(--text); font:14px "Segoe UI", Inter, sans-serif; }
-header { display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
-header a { color:var(--muted); text-decoration:none; }
-header h1 { font-size:20px; margin:0 12px 0 0; }
-select, button, input { font:inherit; color:var(--text); }
-select, button { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:6px 10px; cursor:pointer; }
-#sum { color:var(--muted); }
-#mon { display:flex; gap:18px; padding:14px 18px; align-items:flex-start; }
-#screen { width:640px; height:360px; background:#000; border-radius:8px; overflow:hidden; display:grid; place-items:center; flex:none; position:relative; }
-#screen iframe { position:absolute; left:0; top:0; border:0; transform-origin:0 0; background:#000; }
-#screen .msg { position:absolute; left:8px; bottom:6px; font-size:12px; color:var(--muted); z-index:2; }
-#screen img, #screen video { width:100%; height:100%; object-fit:contain; }
-#screen .tpl { color:#ffc400; font-weight:800; font-size:22px; text-align:center; padding:20px; }
-#info { flex:1; min-width:0; line-height:1.6; }
-#info b { color:#ffc400; }
+button, select, input { font:inherit; color:inherit; }
+button, select { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:5px 10px; cursor:pointer; }
+button:hover { border-color:#3b3f72; }
+button.on, .seg button.on { background:var(--accent); border-color:var(--accent); color:#fff; }
 .n { color:var(--muted); }
-#bar { display:flex; align-items:center; gap:14px; padding:0 18px 10px; flex-wrap:wrap; }
-#time { font-variant-numeric:tabular-nums; min-width:120px; }
-#hint { color:var(--muted); font-size:13px; }
-#tl { display:flex; border-top:1px solid var(--line); }
-#heads { width:var(--head); flex:none; border-right:1px solid var(--line); }
-#heads div { height:56px; border-bottom:1px solid var(--line); display:flex; align-items:center; padding-left:14px; color:#ccc; }
-#heads .rh { height:30px; }
+
+header { display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--line); background:var(--side); flex-wrap:wrap; }
+header a { color:var(--muted); text-decoration:none; }
+header h1 { font-size:18px; font-weight:600; margin:0 6px 0 0; }
+.seg { display:flex; } .seg button { border-radius:0; } .seg button:first-child { border-radius:8px 0 0 8px; } .seg button:last-child { border-radius:0 8px 8px 0; }
+.grow { flex:1; }
+#warnBtn { background:rgba(245,185,66,.12); border-color:rgba(245,185,66,.4); color:var(--warn); }
+#warnBtn.on { background:var(--warn); color:#1a1300; }
+#render { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+#render:disabled { opacity:.6; cursor:default; }
+#rstate { color:var(--muted); font-size:12px; max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+#main { display:grid; grid-template-columns:210px minmax(0,1fr) 270px; gap:14px; padding:12px 16px; }
+body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big #info { display:none; }
+#list { display:flex; flex-direction:column; gap:3px; max-height:52vh; overflow-y:auto; }
+#list .ttl { color:var(--muted); font-size:12px; margin-bottom:4px; }
+.sc { display:flex; align-items:center; gap:8px; text-align:left; background:none; border:1px solid transparent; padding:6px 8px; }
+.sc:hover { background:var(--card); }
+.sc.sel { background:var(--card); border-color:var(--accent); }
+.sc b { font-weight:500; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sc em { font-style:normal; color:var(--warn); font-weight:700; }
+.dot { width:9px; height:9px; border-radius:50%; flex:none; }
+#stage { display:flex; justify-content:center; min-width:0; }
+#screen { background:#000; border-radius:10px; overflow:hidden; position:relative; display:grid; place-items:center; }
+#screen iframe { position:absolute; left:0; top:0; border:0; transform-origin:0 0; background:#000; }
+#screen img, #screen video { width:100%; height:100%; object-fit:contain; }
+#screen .tpl { color:#ffc400; font-weight:800; font-size:20px; text-align:center; padding:20px; white-space:pre-line; }
+#screen .msg { position:absolute; left:8px; bottom:8px; font-size:12px; color:#ddd; background:rgba(0,0,0,.55); padding:2px 8px; border-radius:6px; z-index:3; }
+#screen .msg:empty { display:none; }
+#badge { position:absolute; left:8px; top:8px; font-size:12px; background:rgba(0,0,0,.55); padding:2px 8px; border-radius:6px; z-index:3; }
+#expand { position:absolute; right:8px; top:8px; z-index:3; background:rgba(0,0,0,.55); border:0; padding:3px 8px; }
+#info { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; line-height:1.55; font-size:13px; align-self:start; }
+#info h3 { margin:0 0 2px; font-size:16px; }
+#info .row { margin-top:6px; } #info .row span:first-child { color:var(--muted); display:block; font-size:12px; }
+#info .w { color:var(--warn); margin-top:6px; } #info .e { color:var(--err); margin-top:6px; }
+
+#bar { display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--side); flex-wrap:wrap; }
+#bar button { padding:4px 9px; }
+#play { min-width:70px; font-weight:600; }
+#time { font-variant-numeric:tabular-nums; font-family:Consolas, monospace; min-width:130px; }
+#keys { color:var(--muted); font-size:12px; }
+
+#tl { display:flex; }
+#heads { width:var(--head); flex:none; border-right:1px solid var(--line); background:var(--side); }
+#heads div { height:44px; border-bottom:1px solid var(--line); display:flex; align-items:center; padding-left:12px; color:var(--muted); font-size:12px; }
+#heads .rh, .ruler { height:26px !important; }
+#heads .vh, #L-vis { height:58px; }
 #scroll { flex:1; overflow-x:auto; min-width:0; }
 #inner { position:relative; }
-.ruler { position:relative; height:30px; border-bottom:1px solid var(--line); cursor:pointer; background:#25252b; }
-.ruler span { position:absolute; top:7px; font-size:11px; color:var(--muted); transform:translateX(-50%); }
+.ruler { position:relative; border-bottom:1px solid var(--line); cursor:pointer; }
+.ruler span { position:absolute; top:5px; font-size:11px; color:var(--muted); transform:translateX(-50%); font-family:Consolas, monospace; }
 .ruler i { position:absolute; bottom:0; width:1px; height:6px; background:var(--muted); }
-.lane { position:relative; height:56px; border-bottom:1px solid var(--line); }
-.clip { position:absolute; top:6px; bottom:6px; border-radius:6px; overflow:hidden; display:flex; align-items:center; gap:6px;
-        padding:0 8px; font-size:12px; white-space:nowrap; cursor:pointer; border:1px solid rgba(255,255,255,.15); }
-.clip img, .clip video { height:100%; aspect-ratio:16/9; object-fit:cover; flex:none; }
-.clip.sel { outline:2px solid #4aa3ff; }
-.v-video { background:#3f6f99; } .v-image { background:#4e6b4c; } .v-tpl { background:#6b5a99; } .v-miss { background:#8a3b3b; }
-.t-text { background:#7a6bb5; } .o-ovl { background:#9a7a35; } .a-aud { background:#2f6f6a; }
-#ph { position:absolute; top:0; bottom:0; width:2px; background:#4aa3ff; pointer-events:none; z-index:5; }
-#ph::before { content:""; position:absolute; top:0; left:-6px; width:14px; height:14px; background:#4aa3ff; border-radius:0 0 4px 4px; }
+.lane { position:relative; height:44px; border-bottom:1px solid var(--line); }
+.clip { position:absolute; top:5px; bottom:5px; border-radius:6px; overflow:hidden; display:flex; align-items:center; gap:6px;
+        padding:0 7px; font-size:12px; white-space:nowrap; cursor:pointer; border:1px solid rgba(255,255,255,.12); }
+.clip:hover { filter:brightness(1.2); }
+.clip.sel { outline:2px solid var(--accent); outline-offset:1px; }
+.clip.warn { border:2px solid var(--warn); } .clip.err { border:2px solid var(--err); }
+.k-tpl { background:#4b3a9e; } .k-video { background:#2b5f93; } .k-image { background:#33693d; } .k-miss { background:#8a2f2f; }
+.t-text { background:#3b3470; } .t-cap { background:#252d5a; color:#cfd3f5; } .o-ovl { background:#7a5a22; } .a-aud { background:#1f5550; }
+#ph { position:absolute; top:0; bottom:0; width:2px; background:var(--accent); pointer-events:none; z-index:5; }
+#ph::before { content:""; position:absolute; top:0; left:-6px; width:14px; height:12px; background:var(--accent); border-radius:0 0 4px 4px; }
 </style></head><body>
-<header><a href="/">&larr; Dashboard</a><h1>Timeline</h1><select id="proj"></select><select id="fmt"><option>16:9</option><option>9:16</option></select>
-  <label>Zoom <input id="zoom" type="range" min="20" max="300" value="90"></label><span id="sum"></span></header>
-<div id="mon"><div id="screen"></div><div id="info"></div></div>
-<div id="bar"><button id="play">Play</button><span id="time">0:00.0</span>
-  <span id="hint">Space = play / pause. Click the ruler or a clip to jump. Live preview = the real templates in the browser (no render); music, sound effects and loudness only in the render. View only.</span></div>
-<div id="tl"><div id="heads"><div class="rh"></div><div>Text</div><div>Overlays</div><div>Visual</div><div>Narration</div></div>
+<header>
+  <a href="/">&larr; Dashboard</a><h1>Timeline</h1>
+  <select id="proj" aria-label="Project"></select>
+  <div class="seg" id="fmtSeg"><button data-f="16:9" class="on">16:9</button><button data-f="9:16">9:16</button></div>
+  <span id="sum" class="n"></span>
+  <span class="grow"></span>
+  <button id="warnBtn" hidden title="Show only scenes with warnings"></button>
+  <span id="rstate"></span>
+  <select id="rmode" aria-label="Render mode"><option value="preview">Preview 720p</option><option value="final">Final</option></select>
+  <button id="render">Render</button>
+</header>
+<div id="main">
+  <div id="list"></div>
+  <div id="stage"><div id="screen"></div></div>
+  <div id="info"></div>
+</div>
+<div id="bar">
+  <button id="prev" title="Previous scene (Up)">&#9198;</button>
+  <button id="play">Play</button>
+  <button id="next" title="Next scene (Down)">&#9197;</button>
+  <button id="loop" title="Loop this scene (L)">Loop</button>
+  <span id="time">0:00.0 / 0:00.0</span>
+  <select id="speed" aria-label="Speed"><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="1.5">1.5x</option></select>
+  <span class="grow"></span>
+  <span id="keys">Space play · &larr;&rarr; frame (Shift 1 s) · &uarr;&darr; scene · L loop · F expand</span>
+  <button id="zout" title="Zoom out">&minus;</button>
+  <input id="zoom" type="range" min="10" max="300" value="60" aria-label="Zoom">
+  <button id="zin" title="Zoom in">+</button>
+  <button id="fit">Fit</button>
+</div>
+<div id="tl"><div id="heads"><div class="rh"></div><div>Captions</div><div>Text</div><div>Overlays</div><div class="vh">Visual</div><div>Narration</div></div>
   <div id="scroll"><div id="inner">
     <div class="ruler" id="ruler"></div>
-    <div class="lane" id="L-text"></div><div class="lane" id="L-ovl"></div><div class="lane" id="L-vis"></div><div class="lane" id="L-aud"></div>
+    <div class="lane" id="L-cap"></div><div class="lane" id="L-text"></div><div class="lane" id="L-ovl"></div>
+    <div class="lane" id="L-vis"></div><div class="lane" id="L-aud"></div>
     <div id="ph"></div>
   </div></div></div>
 <audio id="aud" preload="auto"></audio>
-<script src="timeline.js"></script>
+<script src="timeline.js"></script><script src="timeline_live.js"></script>
 </body></html>

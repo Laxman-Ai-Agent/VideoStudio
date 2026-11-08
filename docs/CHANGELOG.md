@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-08 · Timeline UI redesign
+- Layout: scene list (left, warning marks, "only warnings" filter), large live preview with scene badge and Expand (F), details panel (narration, visual, text, overlays, warnings). Dashboard colours.
+- Transport: previous / next scene, loop scene, speed 0.5-1.5x, zoom - / + / Fit, keys (Space, arrows, Shift+arrows, L, F, Home/End).
+- Tracks: Captions (from the scene builds), Text, Overlays, Visual coloured by kind (template / video / image / missing), yellow border = warning, red = build failure.
+- Header Render button: `POST /api/projects/<pid>/render[?final=1]` runs `studio run` in the background; status line shows the last log line (`work/logs/ui_render.log`).
+- Preview API adds per-scene `warnings` (missing visual, asset validation warn/fail) and `captions`.
+- Fix: dashboard server no longer shares a busy port on Windows (SO_REUSEADDR); a second `studio ui` now moves to the next port. Test: `test_busy_port_is_not_shared`.
+
 ## 2026-11-08 · Live preview in the Timeline
 - `pipeline/preview.py` + `POST /api/projects/<pid>/preview?fmt=`: scene builds in `work/preview/<fmt>/` (01: 2.5 s for 16:9, 0.2 s cached). Timeline plays the real templates (animation, overlays, captions, theme) synced to the narration, 16:9 / 9:16 switch, next scene preloads (two iframes only). Not in preview: music, SFX, loudness. Test: `test_preview.py`.
 

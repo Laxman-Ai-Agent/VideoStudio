@@ -14,6 +14,22 @@ def _load(model, f: Path):
     return model.model_validate_json(f.read_text("utf-8")) if f.exists() else None
 
 
+def warnings(va, resolved: Resolved) -> dict[int, list[str]]:
+    """Scene id -> problems worth a look before a render: missing visuals and asset validation warnings."""
+    out: dict[int, list[str]] = {}
+    for r in resolved.scenes:
+        if r.status == "missing":
+            out.setdefault(r.id, []).append("no visual found (missing tile)")
+    for a in (va.assets if va else []):
+        if a.role == "reference":
+            continue
+        for c in a.validation.get("checks", []):
+            if isinstance(c, str) and c.split(":")[0] in ("warn", "fail"):
+                for i in a.scenes:
+                    out.setdefault(i, []).append(f"{a.id}: {c}")
+    return out
+
+
 def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir: Path = BRAND) -> dict:
     w = project / "work"
     plan, resolved = _load(ScenePlan, w / "scenes.json"), _load(Resolved, w / "resolved.json")
@@ -24,9 +40,11 @@ def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir
         raise ValueError(f"format {fmt} not in brand.json")
     tr = _load(Transcript, w / "transcript.json")
     out = w / "preview" / rnd.fmt_dir(fmt, False)
+    va = visual.load(project)
     jobs = rnd.plan_jobs(plan, resolved, brand, fmt, root, out, False, tr.words if tr else None,
                          _load(Prepared, w / "prepared" / "prepared.json"), _load(ThemeSpec, w / "theme.json"),
-                         visual.overlays(visual.load(project), project))
+                         visual.overlays(va, project))
+    warn = warnings(va, resolved)
     scenes = []
     for j in jobs:
         d, status, error = out / f"scene_{j.scene.id:03d}", "cached", ""
@@ -39,6 +57,10 @@ def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir
             except Exception as e:  # noqa: BLE001 - same as render: the scene shows the missing tile
                 error = f"{j.template}: {type(e).__name__}: {e}"
                 rnd.build(j, d, "missing", error)
+        caps = [[round(j.scene.start + p[0]["s"], 3), round(j.scene.start + p[-1]["e"], 3), " ".join(x["t"] for x in p)]
+                for p in (j.captions or [])]
         scenes.append({"id": j.scene.id, "start": j.scene.start, "end": j.scene.end, "template": j.template,
-                       "dir": d.relative_to(project).as_posix(), "status": status, "error": error})
+                       "dir": d.relative_to(project).as_posix(), "status": status, "error": error,
+                       "warnings": warn.get(j.scene.id, []) + ([f"build failed: {error}"] if error else []),
+                       "captions": caps})
     return {"format": fmt, "width": jobs[0].w if jobs else 0, "height": jobs[0].h if jobs else 0, "scenes": scenes}

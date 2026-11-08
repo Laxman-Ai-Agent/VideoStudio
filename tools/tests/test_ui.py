@@ -142,3 +142,13 @@ def test_media_framing_and_video_trim_keep_originals(api, tmp_path):
     assert st == 200 and abs(dur - 1.0) < 0.15 and (a["media"]["out_w"], a["media"]["out_h"]) == (36, 64)
     assert (root / "01_Alpha" / a["source_file"]).stat().st_size == clip.stat().st_size  # the upload is untouched
     assert put("A004", {"trim_start": 2, "trim_end": 1})[0] == 400
+
+
+def test_busy_port_is_not_shared():
+    """Bug: on Windows a second dashboard bound the same port (SO_REUSEADDR) and requests reached the old one."""
+    a = server.Server(("127.0.0.1", 0), server.Handler)
+    try:
+        with pytest.raises(OSError):
+            server.Server(("127.0.0.1", a.server_address[1]), server.Handler)
+    finally:
+        a.server_close()

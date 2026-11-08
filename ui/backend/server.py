@@ -7,6 +7,7 @@
     PUT  /api/projects/<pid>/assets/<aid>/media         {aspect, fit, crop_x, crop_y, zoom, trim_start, trim_end}
     POST /api/projects/<pid>/assets/<aid>/upload[?replace=1]   raw file body, header X-Filename
     POST /api/projects/<pid>/assets/<aid>/replace/confirm | /replace/cancel
+    POST /api/projects/<pid>/render[?final=1] | GET .../render   start `studio run` in the background / its state + log tail
     POST /api/projects/<pid>/preview?fmt=16:9             live preview: build scenes into work/preview/ (pipeline/preview.py)
     GET  /files/<pid>/<path inside the project>         previews (Range supported for video)
     GET  /                                              the dashboard (ui/frontend)
@@ -93,6 +94,8 @@ class Handler(BaseHTTPRequestHandler):
                 except Exception:  # noqa: BLE001 - no project / no file yet
                     data = 0
                 return self._json({"ui": ui, "data": data})
+            if m := re.match(r"^/api/projects/([^/]+)/render$", path):
+                return self._json(service.render_status(m[1]))
             if m := re.match(r"^/api/projects/([^/]+)/assets$", path):
                 return self._json(service.project_assets(m[1]))
             if (m := ASSET.match(path)) and not m[3]:
@@ -127,6 +130,8 @@ class Handler(BaseHTTPRequestHandler):
         url = urllib.parse.urlparse(self.path)
         m = ASSET.match(url.path)
         try:
+            if rm := re.match(r"^/api/projects/([^/]+)/render$", url.path):
+                return self._json(service.start_render(rm[1], urllib.parse.parse_qs(url.query).get("final", ["0"])[0] == "1"))
             if pm := re.match(r"^/api/projects/([^/]+)/preview$", url.path):
                 return self._json(service.preview(pm[1], urllib.parse.parse_qs(url.query).get("fmt", ["16:9"])[0]))
             if m and m[3] == "/replace/confirm":
@@ -145,11 +150,17 @@ class Handler(BaseHTTPRequestHandler):
 PORT = 8790
 
 
+class Server(ThreadingHTTPServer):
+    # Windows SO_REUSEADDR lets a second server bind a port that is already in use, and requests then
+    # reach the old one; without it a busy port raises OSError and serve() moves to the next port.
+    allow_reuse_address = False
+
+
 def serve(port: int = PORT, open_browser: bool = True) -> None:
     """Listen on 127.0.0.1:port, or the next free port if another app already uses it."""
     for p in range(port, port + 20):
         try:
-            httpd = ThreadingHTTPServer(("127.0.0.1", p), Handler)
+            httpd = Server(("127.0.0.1", p), Handler)
             break
         except OSError:
             continue

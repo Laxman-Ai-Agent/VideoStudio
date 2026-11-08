@@ -349,3 +349,35 @@ def preview(pid: str, fmt: str) -> dict:
     from pipeline.preview import build_preview
     with _preview_lock:
         return build_preview(project_dir(pid), fmt)
+
+
+_renders: dict[str, tuple] = {}  # project folder -> (Popen, log file, final)
+
+
+def start_render(pid: str, final: bool) -> dict:
+    """`studio run <pid> [--final]` in the background (same as the command line); one at a time per project."""
+    import subprocess
+    p = project_dir(pid)
+    if (cur := _renders.get(p.name)) and cur[0].poll() is None:
+        return render_status(pid)
+    log = p / "work" / "logs" / "ui_render.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    fh = open(log, "w", encoding="utf-8")
+    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name.split("_")[0]] + (["--final"] if final else [])
+    proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                            env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})
+    _renders[p.name] = (proc, log, final)
+    return render_status(pid)
+
+
+def render_status(pid: str) -> dict:
+    p = project_dir(pid)
+    cur = _renders.get(p.name)
+    log = p / "work" / "logs" / "ui_render.log"
+    tail = log.read_text("utf-8", errors="replace").splitlines()[-8:] if log.exists() else []
+    if not cur:
+        return {"state": "idle", "tail": tail}
+    code = cur[0].poll()
+    state = "running" if code is None else "done" if code == 0 else "waiting" if code == 2 else "failed"
+    return {"state": state, "code": code, "final": cur[2], "tail": tail}

@@ -25,3 +25,12 @@ def test_preview_builds_once_and_falls_back(tmp_path):
 
     again = build_preview(proj, "16:9", root=tmp_path, brand_dir=brand)
     assert [s["status"] for s in again["scenes"]] == ["cached", "cached", "built"]  # the failed scene retries
+
+
+def test_warnings_list_missing_and_validation_problems():
+    from types import SimpleNamespace as NS
+    from pipeline.preview import warnings
+    va = NS(assets=[NS(id="A2", role="main", scenes=[2], validation={"checks": ["video 832x464", "warn: low resolution video"]}),
+                    NS(id="R1", role="reference", scenes=[1], validation={"checks": ["warn: ignored"]})])
+    res = Resolved(scenes=[ResolvedScene(id=1, status="template"), ResolvedScene(id=3, status="missing")])
+    assert warnings(va, res) == {3: ["no visual found (missing tile)"], 2: ["A2: warn: low resolution video"]}
