@@ -51,7 +51,7 @@ Write `work/scenes.json` for this narration, then run `studio.cmd run {project.n
   timeline `events` [{{"date", "label"}}]; map `focus` (country/state name), `pin` {{"lat", "lon", "label"}}, `from`;
   screenshot `url` (captured automatically), `highlight` [x, y, w, h]; photo `parallax: true`; any scene `sfx`.
   Real people / brands: `entity` (exact name, e.g. "Sam Altman", "Anthropic") fetches the photo or logo for free.
-  Template scenes: `lottie` (an emoji like "🚀") for an animated icon; `lines`, `items`, `stat`, `marker`, `marks`, `look`.
+  Template scenes: `lottie` (an emoji like "🚀") for an animated icon; `lines`, `items`, `stat`, `quote` {{"text", "by", "role"}} (real quotes only), `marker`, `marks`, `look`.
 
 Example:
 ```json

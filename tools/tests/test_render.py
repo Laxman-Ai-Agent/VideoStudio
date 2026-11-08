@@ -195,3 +195,8 @@ def test_kinetic_and_cards_pick_by_params():
     t = ResolvedScene(id=1, status="template")
     assert rnd.pick_template(s.model_copy(update={"params": {"lines": [{"text": "a"}]}}), t) == "kinetic"
     assert rnd.pick_template(s.model_copy(update={"params": {"items": ["a"], "lines": [{"text": "a"}]}}), t) == "cards"
+
+
+def test_quote_picks_by_params():
+    s = _plan().scenes[0].model_copy(update={"params": {"quote": {"text": "a", "by": "b"}}})
+    assert rnd.pick_template(s, ResolvedScene(id=1, status="template")) == "quote"

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Quote template
+- `quote` template: accent quote mark, text revealed word by word, bar + speaker name / role. Picked by `params.quote` {text, by, role}; the plan prompt lists it (real quotes only). Test: `test_quote_picks_by_params`.
+
 ## 2026-11-07 · Dashboard: narration context, framing, trim, safe replacement
 - Contract: `VisualAsset.narration`, `context`, `prompt_original`, `media` (`AssetMedia`: aspect 16:9 / 9:16 / 4:5 / 1:1, fill / fit, crop focus, zoom, trim start / end, required and source duration, source and output size), `pending_file`, `pending_preview`, `history` (additive).
 - `visual.sync(words=...)` fills the narration from the transcript (an overlay's own time window, a main visual's scene) and the required duration; `visual.process` frames images (fill / fit at the chosen aspect) and trims / frames videos with FFmpeg into a new file. Brief asks for `context`, full video prompts (max 10 s, start / end) and narration-linked memes.

@@ -59,6 +59,8 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
             return "lottie"
         if any(scene.params.get(k) for k in ("items", "stat", "button")):
             return "cards"
+        if scene.params.get("quote"):
+            return "quote"
         if scene.params.get("lines") or scene.params.get("bg_word"):
             return "kinetic"
         if scene.visual_type == "chart":

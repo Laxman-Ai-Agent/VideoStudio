@@ -1,0 +1,4 @@
+{"name": "quote", "version": 1, "engine": "hyperframes",
+ "visual_types": ["text", "motion_graphic"],
+ "params": {"quote": "{\"text\": \"exact words\", \"by\": \"Name\", \"role\": \"Title, Company (optional)\"} words must be the real quote from the script/source; picks this template"},
+ "description": "Quote card on the themed background: big accent quote mark, the quote text revealed word by word, a bar and the speaker's name / role"}
