@@ -4,6 +4,7 @@ Updated 2026-11-08. Phases 0-5 done, plus paper style, transitions, kinetic text
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## Where we are
+- 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
 - `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 76. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
@@ -15,6 +16,11 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - The 4 local stock videos of 01 are only 832x464 (validation warns); larger ones look better in a final.
 
 ## Pending, our side
+- [ ] Pro-level plan (agreed 2026-11-08, one phase per session, in this order):
+  A. Alignment: layout zones (title / fixed lower-third / captions / sticker corners), overlap check text vs overlays, Telugu text centred in highlight boxes, caption word-spacing bug, logo grid. 01 final showed stickers over labels (scenes 2, 7), unbalanced logos (3), clipped highlight text (1, 8, 9).
+  B. Visual grammar: beat type per scene -> format, rhythm rules, one art direction per video.
+  C. Templates: logo wall, split-screen, meme/reaction, news card, process diagram, character + speech bubble, end card.
+  D. Sound: music library + SFX (01 final has no music).
 - [ ] Re-render 01 in the chosen theme once the user says so (~11 min, background).
 - [ ] One small test render of the new theme presets (gradients, textures, fonts) before a real video.
 - [ ] Not built yet (from the style references): logo watermark + CTA end card (needs the channel logo), duotone tint, several floating cut-outs per scene, dark glow style. Dashboard Settings page is a placeholder.
