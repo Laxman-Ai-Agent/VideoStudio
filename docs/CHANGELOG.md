@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Timeline page re-laid out like the reference
+- `timeline.html` restructured (new `timeline.css`): app bar (logo, Timeline Editor pill, nav, project select), project bar (back, title, scene count, 16:9 / 9:16, Preview / Final, Render Video), three card columns (scene list with still + time range + type badge + green check | preview card with round play, prev / next / loop, time, scene seek slider, speed + Scene Assets strip | right tabs), tracks card with toolbar (undo / redo / delete, zoom, Fit) and track icons. All element ids unchanged, so the render bar, live preview and edit code work as before.
+
 ## 2026-11-08 · Images in the Timeline (scene stills, overlay thumbnails)
 - `POST /api/projects/<pid>/thumb?fmt=&scene=` -> `pipeline/preview.make_thumb`: `hyperframes snapshot --at 1.3` of the built scene -> `scene_NNN/thumb.jpg` (480 px), cached by the scene render key (`.thumb.key`); one Chrome at a time. The preview answer carries `thumb` per scene.
 - Timeline: scene list shows the still (64x36) per scene, the Visual track clips are film strips of the still, Overlay clips carry their asset thumbnail. Stills arrive one by one after the page loads (~8 s each, current scene first, cached afterwards); an edited scene gets a new still after its rebuild. Test: `test_scene_thumbnail_is_cached_by_render_key`.

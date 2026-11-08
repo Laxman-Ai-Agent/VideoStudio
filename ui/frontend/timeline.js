@@ -49,11 +49,11 @@ function drawList() {
     if (st.onlyWarn && !w.length) continue;
     const k = kindOf(s), b = el("button", "sc" + (st.cur === s ? " sel" : ""));
     b.dataset.id = s.id;
-    const dot = el("i", "dot " + k.cls);
-    const tu = thumbUrl(s);
+    const tu = thumbUrl(s), tx = el("div", "tx"), bad = errOf(s);
     b.append(tu ? Object.assign(el("img", "thumb"), { src: tu }) : el("span", "thumb none"));
-    b.append(dot, el("b", "", `${s.id} · ${k.label}`), el("span", "n", fmt(s.start)));
-    if (w.length) b.append(Object.assign(el("em", "", "!"), { title: w.join("\n") }));
+    tx.append(el("b", "", `${s.id}. ${k.label}`), el("span", "", `${fmt(s.start)} – ${fmt(s.end)} (${(s.end - s.start).toFixed(1)}s)`));
+    b.append(tx, el("span", "badge", k.label.replace(/^./, (c) => c.toUpperCase())),
+             Object.assign(el("i", "ok" + (bad ? " e" : w.length ? " w" : ""), bad || w.length ? "!" : "✓"), { title: w.join("\n") || "OK" }));
     b.onclick = () => seek(s.start + 0.01);
     box.append(b);
   }
@@ -173,6 +173,8 @@ function move() {
   }
   $("ph").style.left = t * st.pps + "px";
   $("time").textContent = `${fmt(t)} / ${fmt(st.dur)}`;
+  const sk = $("seek");
+  if (st.cur && document.activeElement !== sk) { sk.max = (st.cur.end - st.cur.start).toFixed(2); sk.value = Math.max(0, t - st.cur.start).toFixed(2); }
   const s = st.loop && st.cur ? st.cur : sceneAt(t);
   showScene(s);
   const b = $("badge");
@@ -265,6 +267,7 @@ async function load(pid) {
   ((rj && rj.scenes) || []).forEach((r) => (st.res[r.id] = r));
   st.ovls = [];
   st.va = (va && va.assets) || [];
+  $("ptitle").textContent = ($("proj").selectedOptions[0] || {}).text || pid;
   for (const a of (va && va.assets) || []) {
     if (a.role !== "overlay" || !a.file) continue;
     for (const id of a.scenes || []) {
@@ -286,8 +289,9 @@ async function load(pid) {
 }
 
 // ---- controls ----
-aud.onplay = () => { $("play").textContent = "Pause"; loop(); };
-aud.onpause = () => { $("play").textContent = "Play"; move(); };
+aud.onplay = () => { $("play").innerHTML = "&#10074;&#10074;"; loop(); };
+aud.onpause = () => { $("play").innerHTML = "&#9654;"; move(); };
+$("seek").oninput = () => { if (st.cur) seek(st.cur.start + +$("seek").value); };
 aud.ontimeupdate = () => { if (!aud.paused) move(); };  // keeps cuts on time when rAF is throttled (hidden tab)
 aud.onloadedmetadata = () => { st.dur = Math.max(st.dur, aud.duration || 0); draw(); };
 $("play").onclick = () => (aud.paused ? aud.play() : aud.pause());
