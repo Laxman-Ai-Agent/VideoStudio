@@ -35,7 +35,7 @@ def _one(folder: Path, stem: str) -> Path | None:
     return found[0] if found else None
 
 
-def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = False) -> int:
+def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = False, only: str | None = None) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
     drop = [f for f in (p / "drop").iterdir() if f.is_file()]
@@ -215,7 +215,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
     mode = "final" if final else "preview"
     failed, assembled = 0, []
     for fmt in ("16:9", "9:16"):
-        if fmt not in brand.formats:
+        if fmt not in brand.formats or (only and fmt != only):  # --format: one aspect only, cache untouched
             continue
         d = rnd.fmt_dir(fmt, final)
         jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
@@ -394,6 +394,7 @@ def main() -> int:
     run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
     run.add_argument("--workers", type=int, default=2, help="parallel scene renders (default 2)")
     run.add_argument("--review", action="store_true", help="stop after the storyboard (no render)")
+    run.add_argument("--format", choices=["16:9", "9:16"], help="render only this aspect (default: every format in brand.json)")
     a = ap.parse_args()
 
     if a.cmd == "doctor":
@@ -403,7 +404,7 @@ def main() -> int:
         return 0
     if a.cmd == "run":
         try:
-            return run_project(find_project(a.project), a.final, a.workers, a.review)
+            return run_project(find_project(a.project), a.final, a.workers, a.review, a.format)
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1

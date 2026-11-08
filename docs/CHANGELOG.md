@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · One aspect only
+- `studio run 01 --format 16:9|9:16`: skip the other format's render/assemble (its cache is untouched).
+
 ## 2026-11-08 · Timeline UI redesign
 - Layout: scene list (left, warning marks, "only warnings" filter), large live preview with scene badge and Expand (F), details panel (narration, visual, text, overlays, warnings). Dashboard colours.
 - Transport: previous / next scene, loop scene, speed 0.5-1.5x, zoom - / + / Fit, keys (Space, arrows, Shift+arrows, L, F, Home/End).
