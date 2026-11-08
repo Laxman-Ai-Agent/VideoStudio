@@ -3,7 +3,8 @@
 const $ = (id) => document.getElementById(id);
 const aud = $("aud");
 const VID = /\.(mp4|mov|webm|mkv)$/i;
-const st = { pid: "", scenes: [], res: {}, ovls: [], pps: 90, dur: 1, cur: null };
+const st = { pid: "", scenes: [], res: {}, ovls: [], pps: 90, dur: 1, cur: null, fmt: "16:9" };
+const live = { data: null, slots: [], active: null, token: 0 };  // live preview state (see the block below)
 
 const fmt = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, "0")}`;
 const url = (rel) => `/files/${encodeURIComponent(st.pid)}/${rel.split("/").map(encodeURIComponent).join("/")}`;
@@ -81,15 +82,19 @@ function showScene(s) {
   const r = st.res[s.id] || {};
   const rel = inProject(r.asset);
   const scr = $("screen");
-  scr.innerHTML = "";
-  if (r.status === "template" || !rel) {
-    const d = document.createElement("div");
-    d.className = "tpl";
-    d.textContent = (r.status === "template" ? "TEMPLATE" : "MISSING") + (s.on_screen_text ? "\n" + s.on_screen_text : "");
-    d.style.whiteSpace = "pre-line";
-    scr.append(d);
-  } else {
-    scr.append(media(rel, false));
+  if (!liveShow(s)) {  // no live preview (yet): the asset itself, or a tile for template scenes
+    scr.innerHTML = "";
+    live.slots = [];
+    live.active = null;
+    if (r.status === "template" || !rel) {
+      const d = document.createElement("div");
+      d.className = "tpl";
+      d.textContent = (r.status === "template" ? "TEMPLATE" : "MISSING") + (s.on_screen_text ? "\n" + s.on_screen_text : "");
+      d.style.whiteSpace = "pre-line";
+      scr.append(d);
+    } else {
+      scr.append(media(rel, false));
+    }
   }
   const ov = st.ovls.filter((x) => x.scene === s.id).map((x) => x.label).join(", ");
   const info = $("info");
@@ -114,6 +119,7 @@ function move() {
   $("ph").style.left = t * st.pps + "px";
   $("time").textContent = `${fmt(t)} / ${fmt(st.dur)}`;
   showScene(sceneAt(t));
+  liveSync(t);
   const sc = $("scroll"), x = t * st.pps;
   if (!aud.paused && (x < sc.scrollLeft || x > sc.scrollLeft + sc.clientWidth - 40)) sc.scrollLeft = x - 60;
 }
@@ -155,10 +161,123 @@ async function load(pid) {
   aud.pause();
   aud.src = url("input/audio.wav");
   draw();
+  buildLive();
+}
+
+// ---- live preview: the render's scene builds (work/preview/<fmt>/scene_NNN, pipeline/preview.py) played
+// in the browser. Two iframes: the visible scene and the next one preloading, so cuts do not flash.
+// Only these two scenes are loaded at a time (low RAM). The parent drives each scene's GSAP timeline
+// and <video> elements from the narration clock.
+function setMsg(text) {
+  let m = $("screen").querySelector(".msg");
+  if (!m) { m = Object.assign(document.createElement("div"), { className: "msg" }); $("screen").append(m); }
+  m.textContent = text;
+}
+
+function fitScreen() {
+  const port = st.fmt === "9:16", scr = $("screen");
+  scr.style.width = (port ? 270 : 640) + "px";
+  scr.style.height = (port ? 480 : 360) + "px";
+}
+
+async function buildLive() {
+  const tok = ++live.token;
+  live.data = null;
+  live.slots = [];
+  live.active = null;
+  $("screen").innerHTML = "";
+  fitScreen();
+  setMsg("building live preview...");
+  try {
+    const r = await fetch(`/api/projects/${encodeURIComponent(st.pid)}/preview?fmt=${encodeURIComponent(st.fmt)}`, { method: "POST" });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || `${r.status}`);
+    if (tok !== live.token) return;  // project or format changed meanwhile
+    live.data = { w: d.width, h: d.height, map: Object.fromEntries(d.scenes.map((x) => [x.id, x])) };
+    const bad = d.scenes.filter((x) => x.error).length;
+    st.cur = null;
+    move();
+    setMsg(bad ? `${bad} scene(s) failed to build (shown as the missing tile)` : "");
+  } catch (e) {
+    if (tok === live.token) setMsg("live preview off: " + e.message);
+  }
+}
+
+function slot(i) {
+  let f = live.slots[i];
+  if (!f || !f.isConnected) {
+    f = document.createElement("iframe");
+    f.setAttribute("scrolling", "no");
+    f.setAttribute("tabindex", "-1");
+    $("screen").append(f);
+    live.slots[i] = f;
+  }
+  const k = $("screen").clientWidth / live.data.w;
+  f.style.width = live.data.w + "px";
+  f.style.height = live.data.h + "px";
+  f.style.transform = `scale(${k})`;
+  return f;
+}
+
+function loadInto(f, s) {
+  const p = live.data.map[s.id];
+  if (!p || f.dataset.sid === String(s.id)) return;
+  f.dataset.sid = String(s.id);
+  f.dataset.ready = "";
+  f.onload = () => { f.dataset.ready = "1"; if (st.cur === s) liveSync(aud.currentTime || 0); };
+  f.src = url(p.dir + "/index.html");
+}
+
+function videosOf(f) {
+  try { return [...f.contentDocument.querySelectorAll("video")]; } catch { return []; }
+}
+
+function liveShow(s) {  // true when the live preview took over the screen for scene s
+  if (!live.data || !live.data.map[s.id]) return false;
+  $("screen").querySelectorAll(":scope > :not(iframe):not(.msg)").forEach((e) => e.remove());
+  const a = slot(0), b = slot(1), id = String(s.id);
+  const f = a.dataset.sid === id ? a : b.dataset.sid === id ? b : live.active === a ? b : a;
+  loadInto(f, s);
+  live.active = f;
+  for (const x of [a, b]) {
+    x.style.visibility = x === f ? "visible" : "hidden";
+    if (x !== f) videosOf(x).forEach((v) => v.pause());
+  }
+  return true;
+}
+
+function liveSync(t) {
+  const s = st.cur, f = live.active;
+  if (!live.data || !s || !f) return;
+  if (f.dataset.ready && f.dataset.sid === String(s.id)) {
+    const local = Math.max(0, t - s.start);
+    try {
+      const tl = f.contentWindow.__timelines && f.contentWindow.__timelines.root;
+      if (tl) tl.seek(Math.min(local, tl.duration()), false);
+    } catch { /* frame still loading */ }
+    for (const v of videosOf(f)) {
+      const want = Math.min(local, (v.duration || 1e9) - 0.05);
+      if (aud.paused) {
+        v.pause();
+        if (Math.abs(v.currentTime - want) > 0.04) v.currentTime = want;
+      } else if (v.paused) {
+        v.currentTime = want;
+        v.play().catch(() => {});
+      } else if (Math.abs(v.currentTime - want) > 0.25) {
+        v.currentTime = want;
+      }
+    }
+  }
+  const nx = st.scenes[st.scenes.indexOf(s) + 1];  // preload the next scene into the hidden frame
+  if (nx && live.data.map[nx.id] && s.end - t < 1.5) {
+    const a = slot(0), b = slot(1);
+    loadInto(f === a ? b : a, nx);
+  }
 }
 
 aud.onplay = () => { $("play").textContent = "Pause"; loop(); };
 aud.onpause = () => { $("play").textContent = "Play"; move(); };
+aud.ontimeupdate = () => { if (!aud.paused) move(); };  // keeps cuts on time when rAF is throttled (hidden tab)
 aud.onloadedmetadata = () => { st.dur = Math.max(st.dur, aud.duration || 0); draw(); };
 $("play").onclick = () => (aud.paused ? aud.play() : aud.pause());
 document.onkeydown = (e) => {
@@ -167,6 +286,7 @@ document.onkeydown = (e) => {
 $("ruler").onclick = (e) => seek((e.clientX - $("ruler").getBoundingClientRect().left) / st.pps);
 $("zoom").oninput = (e) => { st.pps = +e.target.value; draw(); };
 $("proj").onchange = () => load($("proj").value);
+$("fmt").onchange = () => { st.fmt = $("fmt").value; buildLive(); };
 
 fetch("/api/projects", { cache: "no-store" }).then((r) => r.json()).then((ps) => {
   const want = decodeURIComponent((location.hash.match(/p=([^&]+)/) || [])[1] || "");

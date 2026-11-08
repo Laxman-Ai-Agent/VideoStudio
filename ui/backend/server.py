@@ -7,6 +7,7 @@
     PUT  /api/projects/<pid>/assets/<aid>/media         {aspect, fit, crop_x, crop_y, zoom, trim_start, trim_end}
     POST /api/projects/<pid>/assets/<aid>/upload[?replace=1]   raw file body, header X-Filename
     POST /api/projects/<pid>/assets/<aid>/replace/confirm | /replace/cancel
+    POST /api/projects/<pid>/preview?fmt=16:9             live preview: build scenes into work/preview/ (pipeline/preview.py)
     GET  /files/<pid>/<path inside the project>         previews (Range supported for video)
     GET  /                                              the dashboard (ui/frontend)
 """
@@ -126,6 +127,8 @@ class Handler(BaseHTTPRequestHandler):
         url = urllib.parse.urlparse(self.path)
         m = ASSET.match(url.path)
         try:
+            if pm := re.match(r"^/api/projects/([^/]+)/preview$", url.path):
+                return self._json(service.preview(pm[1], urllib.parse.parse_qs(url.query).get("fmt", ["16:9"])[0]))
             if m and m[3] == "/replace/confirm":
                 return self._json(service.confirm_replace(m[1], m[2]))
             if m and m[3] == "/replace/cancel":

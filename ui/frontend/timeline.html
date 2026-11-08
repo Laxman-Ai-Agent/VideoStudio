@@ -10,7 +10,9 @@ select, button, input { font:inherit; color:var(--text); }
 select, button { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:6px 10px; cursor:pointer; }
 #sum { color:var(--muted); }
 #mon { display:flex; gap:18px; padding:14px 18px; align-items:flex-start; }
-#screen { width:480px; aspect-ratio:16/9; background:#000; border-radius:8px; overflow:hidden; display:grid; place-items:center; flex:none; }
+#screen { width:640px; height:360px; background:#000; border-radius:8px; overflow:hidden; display:grid; place-items:center; flex:none; position:relative; }
+#screen iframe { position:absolute; left:0; top:0; border:0; transform-origin:0 0; background:#000; }
+#screen .msg { position:absolute; left:8px; bottom:6px; font-size:12px; color:var(--muted); z-index:2; }
 #screen img, #screen video { width:100%; height:100%; object-fit:contain; }
 #screen .tpl { color:#ffc400; font-weight:800; font-size:22px; text-align:center; padding:20px; }
 #info { flex:1; min-width:0; line-height:1.6; }
@@ -38,11 +40,11 @@ select, button { background:var(--panel); border:1px solid var(--line); border-r
 #ph { position:absolute; top:0; bottom:0; width:2px; background:#4aa3ff; pointer-events:none; z-index:5; }
 #ph::before { content:""; position:absolute; top:0; left:-6px; width:14px; height:14px; background:#4aa3ff; border-radius:0 0 4px 4px; }
 </style></head><body>
-<header><a href="/">&larr; Dashboard</a><h1>Timeline</h1><select id="proj"></select>
+<header><a href="/">&larr; Dashboard</a><h1>Timeline</h1><select id="proj"></select><select id="fmt"><option>16:9</option><option>9:16</option></select>
   <label>Zoom <input id="zoom" type="range" min="20" max="300" value="90"></label><span id="sum"></span></header>
 <div id="mon"><div id="screen"></div><div id="info"></div></div>
 <div id="bar"><button id="play">Play</button><span id="time">0:00.0</span>
-  <span id="hint">Space = play / pause. Click the ruler or a clip to jump. View only: edit in Visual Assets or scenes.json.</span></div>
+  <span id="hint">Space = play / pause. Click the ruler or a clip to jump. Live preview = the real templates in the browser (no render); music, sound effects and loudness only in the render. View only.</span></div>
 <div id="tl"><div id="heads"><div class="rh"></div><div>Text</div><div>Overlays</div><div>Visual</div><div>Narration</div></div>
   <div id="scroll"><div id="inner">
     <div class="ruler" id="ruler"></div>

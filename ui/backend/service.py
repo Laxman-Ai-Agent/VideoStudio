@@ -339,3 +339,13 @@ def file_path(pid: str, rel: str) -> Path:
     if not f.is_relative_to(p.resolve()) or not f.is_file():
         raise NotFound(rel)
     return f
+
+
+_preview_lock = threading.Lock()  # one build at a time: two requests must not write the same scene folder
+
+
+def preview(pid: str, fmt: str) -> dict:
+    """Timeline live preview: scene builds in work/preview/<fmt>/ (changed scenes only)."""
+    from pipeline.preview import build_preview
+    with _preview_lock:
+        return build_preview(project_dir(pid), fmt)

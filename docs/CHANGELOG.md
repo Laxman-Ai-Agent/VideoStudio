@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Live preview in the Timeline
+- `pipeline/preview.py` + `POST /api/projects/<pid>/preview?fmt=`: scene builds in `work/preview/<fmt>/` (01: 2.5 s for 16:9, 0.2 s cached). Timeline plays the real templates (animation, overlays, captions, theme) synced to the narration, 16:9 / 9:16 switch, next scene preloads (two iframes only). Not in preview: music, SFX, loudness. Test: `test_preview.py`.
+
 ## 2026-11-08 · RAM-aware rendering
 - Render lowers parallel workers to what free RAM allows (`safe_workers`: 0.6 GB per worker + 1 GB headroom, never below 1) and says so; `doctor` shows free RAM and warns under 2 GB. Test: `test_safe_workers_follow_free_ram`.
 
