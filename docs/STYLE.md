@@ -30,7 +30,9 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
    blur transitions between beats. Concept shots: a head replaced by a bulb or a word bubble.
 
 ## How it maps to the pipeline (status, all built 2026-11-08)
-- Done: subject panel (big side cut-out), stamp words, layout zones, overlap check (phase A).
-- To build (proposed, user OK needed): presenter reference in prompts + dashboard; cut-out treatments
-  (outline, B&W + accent, glow disc / circles / rays); meme template; callout (circle/arrow + label);
-  kicker + hero-word kinetic layout; icon-row info card; corner depth props.
+- Subject panel (big side cut-out), stamp words, layout zones, overlap check (phase A).
+- Presenter reference photo in prompts + dashboard box (`Character.reference_image`, `outfit`).
+- Cut-out treatments: `placement.outline` / `bw` / `backdrop` (glow, rings, rays).
+- `meme` template (sunburst + caption boxes + 1-2 subjects), `callout` mark (circle + label).
+- Kinetic `hero` / `pill` styles + theme `fonts.hero`; cards `rows` (icon tiles); `placement.depth` corner props.
+- Not built: pinned paper notes / curved road, head-replaced-by-bulb concept shots, duotone tint.
