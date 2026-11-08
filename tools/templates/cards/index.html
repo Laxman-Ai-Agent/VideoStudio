@@ -5,7 +5,7 @@
 .grid { position: absolute; inset: 0; opacity: .06;
         background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
         background-size: calc(var(--u) * 6) calc(var(--u) * 6); }
-#col { margin: auto; width: 62%; display: flex; flex-direction: column; gap: calc(var(--u) * 2.2); align-items: stretch; }
+#col { margin: auto; width: fit-content; min-width: 40%; max-width: 70%; display: flex; flex-direction: column; gap: calc(var(--u) * 2.2); align-items: stretch; }
 .portrait #col { width: 100%; }
 #t { font-weight: 900; font-size: calc(var(--u) * 8); text-align: center; line-height: 1.1; }
 #t:empty { display: none; }

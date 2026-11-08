@@ -1,9 +1,11 @@
 """Live preview: the render stage's scene builds (same template HTML, assets, theme, overlays, captions)
 written to work/preview/<fmt>/scene_NNN/, for the dashboard timeline to play in the browser.
 No frame capture and no encode, so it is ready in seconds; only video scenes run FFmpeg (trim + fit).
-A scene is rebuilt only when its render key changes (same key as the render cache)."""
+A scene is rebuilt only when its render key changes (same key as the render cache). check_layout adds
+the layout check (pipeline/layout.py, ~8 s per changed scene, cached) to the scene warnings."""
 from pathlib import Path
 
+from . import layout
 from . import render as rnd
 from . import visual
 from .config import BRAND, ROOT
@@ -30,7 +32,8 @@ def warnings(va, resolved: Resolved) -> dict[int, list[str]]:
     return out
 
 
-def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir: Path = BRAND) -> dict:
+def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir: Path = BRAND,
+                  check_layout: bool = True) -> dict:
     w = project / "work"
     plan, resolved = _load(ScenePlan, w / "scenes.json"), _load(Resolved, w / "resolved.json")
     if not plan or not resolved:
@@ -61,6 +64,7 @@ def build_preview(project: Path, fmt: str = "16:9", root: Path = ROOT, brand_dir
                 for p in (j.captions or [])]
         scenes.append({"id": j.scene.id, "start": j.scene.start, "end": j.scene.end, "template": j.template,
                        "dir": d.relative_to(project).as_posix(), "status": status, "error": error,
-                       "warnings": warn.get(j.scene.id, []) + ([f"build failed: {error}"] if error else []),
+                       "warnings": warn.get(j.scene.id, []) + ([f"build failed: {error}"] if error else
+                                                         layout.check(d, j.key) if check_layout else []),
                        "captions": caps})
     return {"format": fmt, "width": jobs[0].w if jobs else 0, "height": jobs[0].h if jobs else 0, "scenes": scenes}

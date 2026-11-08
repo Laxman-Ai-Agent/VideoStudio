@@ -100,7 +100,7 @@
         s.textContent = w.t;
         el.appendChild(s);
         if (j < page.length - 1) el.appendChild(document.createTextNode(" "));
-        tl.fromTo(s, { color: base, scale: 1 }, { color: hot, scale: 1.08, duration: 0.08, ease: "power1.out" }, w.s);
+        tl.fromTo(s, { color: base, scale: 1 }, { color: hot, scale: 1.05, duration: 0.08, ease: "power1.out" }, w.s);
         tl.to(s, { color: base, scale: 1, duration: 0.1 }, Math.max(w.e, w.s + 0.1));
       });
     });
@@ -220,26 +220,111 @@
     if (tout === "wipe") tl.fromTo(panel, { xPercent: -101 }, { xPercent: 0, duration: TOUT, ease: "power2.out", immediateRender: false }, at);
   }
 
-  // Overlays from visual-assets.json (S.overlays: [{src, position, size, at, until, animation}]):
-  // stickers, logos, reactions, character expressions on top of the scene, inside the safe area and
-  // above the captions band. size = height as a fraction of the safe-area height.
+  // ---- layout zones ----
+  // Text zones are measured from the laid-out page (title, kinetic lines, the lower third, cards, tags);
+  // the caption band is fixed at the bottom of the safe area. Overlays and the logo grid keep out of them.
+  const TEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .tag";
+  function boxOf(el) {  // layout box in frame px, ignoring GSAP transforms (a tween may start at scale 0)
+    let x = 0, y = 0;
+    for (let e = el; e && e.id !== "root"; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
+    return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+  const capBand = () => ((S.captions || []).length
+    ? [{ x: safe.l * S.w, y: S.h * (1 - safe.b) - u * 16, w: S.w * (1 - safe.l - safe.r), h: u * 16 }] : []);
+  const textBoxes = () => [...document.querySelectorAll(TEXT)]
+    .filter(e => e.offsetWidth && e.textContent.trim()).map(boxOf).concat(capBand());
+  const overlap = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
+                            Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+
+  // Highlight boxes and labels: pad so the glyph ink (not the font's line box) sits in the middle.
+  // Telugu fonts put the ink high or low in the line box, which clipped / off-centred boxed text.
+  const INKED = ".st-box, .lower, .tag";
+  let ctx;
+  function centreInk() {
+    ctx = ctx || document.createElement("canvas").getContext("2d");
+    document.querySelectorAll(INKED).forEach(el => {
+      const txt = el.textContent.trim();
+      if (!txt) return;
+      const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+      ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const m = ctx.measureText(txt), asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
+      if (!asc || !m.actualBoundingBoxAscent) return;
+      const lh = parseFloat(cs.lineHeight) || (asc + desc), half = (lh - asc - desc) / 2;
+      const inkTop = half + asc - m.actualBoundingBoxAscent, inkBot = lh - (half + asc + m.actualBoundingBoxDescent);
+      const pad = fs * (el.classList.contains("lower") ? 0.22 : 0.12);
+      const top = pad - inkTop, bot = pad - inkBot, lift = Math.max(0, -top, -bot);  // never negative padding
+      el.style.paddingTop = (top + lift).toFixed(1) + "px";
+      el.style.paddingBottom = (bot + lift).toFixed(1) + "px";
+    });
+  }
+
+  // Logo scenes with logo overlays: one row of same-size white cards, centred above the lower third,
+  // instead of a huge main logo plus small pop-up cards. Cards pop in at their overlay's `at`.
+  function logoGrid(tl) {
+    const img = document.getElementById("img"), logos = (S.overlays || []).filter(o => o.kind === "logo");
+    if (!html.contains("logo-mode") || !img || !logos.length) return;
+    S.overlays = S.overlays.filter(o => o.kind !== "logo");
+    const all = [{ src: img.getAttribute("src"), at: 0.3 }, ...logos].sort((a, b) => (+a.at || 0) - (+b.at || 0));
+    const row = document.createElement("div");
+    row.className = "logos";
+    row.style.setProperty("--card", { 2: 44, 3: 32 }[all.length] || 24);
+    all.forEach(o => {
+      const c = document.createElement("div"), im = document.createElement("img");
+      c.className = "logo-card";
+      im.src = o.src;
+      c.appendChild(im);
+      row.appendChild(c);
+      tl.fromTo(c, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
+                Math.min(Math.max(0, +o.at || 0), S.duration - 0.5));
+    });
+    img.style.display = "none";
+    document.querySelector("#root .safe").prepend(row);
+    tl.fromTo(row, { scale: 1 }, { scale: 1.04, duration: S.duration, ease: "none" }, 0);
+  }
+
+  // Overlays from visual-assets.json (S.overlays: [{src, w, h, kind, position, size, at, until, animation}]):
+  // stickers, reactions, character expressions inside the safe area and above the captions band.
+  // size = height as a fraction of that area. An overlay that would cover text (or another overlay)
+  // moves to the first free corner, then shrinks (down to MIN_OVL); the layout check reports what is left.
   const ANCHOR = { center: [0.5, 0.5, -50, -50], left: [0, 0.5, 0, -50], right: [1, 0.5, -100, -50],
                    top: [0.5, 0, -50, 0], bottom: [0.5, 1, -50, -100], "top-left": [0, 0, 0, 0],
                    "top-right": [1, 0, -100, 0], "bottom-left": [0, 1, 0, -100], "bottom-right": [1, 1, -100, -100] };
+  const SPOTS = ["top-right", "top-left", "bottom-right", "bottom-left", "right", "left"], MIN_OVL = 0.2;
+  function spot(o, area, busy) {
+    const ar = o.w && o.h ? o.w / o.h : 1, spots = [o.position || "center", ...SPOTS.filter(s => s !== o.position)];
+    let best = null;
+    for (let k = Math.max(MIN_OVL, Math.min(1, +o.size || 0.4)); ; k = Math.max(MIN_OVL, k * 0.8)) {
+      for (const pos of spots) {
+        const [fx, fy, xp, yp] = ANCHOR[pos] || ANCHOR.center;
+        let h = k * area.h, w = h * ar;
+        if (w > area.w * 0.6) { w = area.w * 0.6; h = w / ar; }
+        const r = { x: area.x + fx * area.w + xp / 100 * w, y: area.y + fy * area.h + yp / 100 * h, w, h };
+        const hit = busy.reduce((s, b) => s + overlap(r, b), 0);
+        if (!best || hit < best.hit) best = { r, hit };
+        if (!hit) return r;
+      }
+      if (k <= MIN_OVL) return best.r;
+    }
+  }
+  const placed = [];
+  function placeOverlays() {
+    const area = { x: safe.l * S.w, y: safe.t * S.h, w: S.w * (1 - safe.l - safe.r),
+                   h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0) };
+    const busy = textBoxes();
+    placed.forEach(([el, o]) => {
+      const r = spot(o, area, busy);
+      busy.push(r);
+      Object.assign(el.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: r.h + "px" });
+    });
+  }
   function overlays(tl) {
-    const list = S.overlays || [];
-    if (!list.length) return;
-    const top = safe.t * S.h, left = safe.l * S.w, w = S.w * (1 - safe.l - safe.r);
-    const h = S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0);
-    list.forEach((o) => {
-      const [fx, fy, xp, yp] = ANCHOR[o.position] || ANCHOR.center;
+    (S.overlays || []).forEach((o) => {
       const el = document.createElement("img");
       el.className = "ovl";
       el.src = o.src;
-      Object.assign(el.style, { left: left + fx * w + "px", top: top + fy * h + "px",
-                                height: Math.max(0.05, Math.min(1, +o.size || 0.4)) * h + "px" });
       document.getElementById("root").appendChild(el);
-      gsap.set(el, { xPercent: xp, yPercent: yp });
+      placed.push([el, o]);
+      const fx = (ANCHOR[o.position] || ANCHOR.center)[0];
       const at = Math.min(Math.max(0, +o.at || 0), S.duration - 0.2), anim = o.animation || "pop";
       const from = { pop: { scale: 0, opacity: 0 }, fade: { opacity: 0 }, float: { scale: 0.6, opacity: 0 },
                      slide: { x: (fx < 0.5 ? -1 : 1) * u * 30, opacity: 0 }, none: { opacity: 0 } }[anim] || { scale: 0, opacity: 0 };
@@ -253,7 +338,10 @@
       }
       if (o.until && end < S.duration) tl.to(el, { opacity: 0, scale: 0.9, duration: 0.2 }, end);
     });
+    placeOverlays();
   }
+  // Fonts change text sizes: measure again once they are in (the render waits for fonts before frames).
+  function relayout() { centreInk(); placeOverlays(); }
 
   window.finish = function (tl) {
     if (P.look === "halftone") {  // dot screen over the picture
@@ -262,11 +350,14 @@
       document.getElementById("root").insertBefore(d, document.querySelector("#root .safe"));
     }
     scaleText();
+    centreInk();
     marks(tl);
+    logoGrid(tl);
     overlays(tl);
     captions(tl);
     transitions(tl);
     texture(tl);
+    if (document.fonts) document.fonts.ready.then(relayout);
     // pin the timeline length to the scene so the runtime never trims or pads it
     tl.set({}, {}, S.duration);
     window.__timelines = { root: tl };

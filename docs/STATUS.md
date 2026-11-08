@@ -5,7 +5,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 76. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 78. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
@@ -17,7 +17,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Pending, our side
 - [ ] Pro-level plan (agreed 2026-11-08, one phase per session, in this order):
-  A. Alignment: layout zones (title / fixed lower-third / captions / sticker corners), overlap check text vs overlays, Telugu text centred in highlight boxes, caption word-spacing bug, logo grid. 01 final showed stickers over labels (scenes 2, 7), unbalanced logos (3), clipped highlight text (1, 8, 9).
+  A. Alignment: DONE 2026-11-08 (layout zones, overlay avoidance, ink-centred boxes, caption spacing, logo grid, layout check in Timeline warnings). 01 preview fixed; 01 final 16:9 not re-rendered yet (ask first).
   B. Visual grammar: beat type per scene -> format, rhythm rules, one art direction per video.
   C. Templates: logo wall, split-screen, meme/reaction, news card, process diagram, character + speech bubble, end card.
   D. Sound: music library + SFX (01 final has no music).
@@ -26,6 +26,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - [ ] Not built yet (from the style references): logo watermark + CTA end card (needs the channel logo), duotone tint, several floating cut-outs per scene, dark glow style. Dashboard Settings page is a placeholder.
 
 ## Known issues / notes
+- Layout check makes the first Timeline preview slow (~8 s per changed scene, 01: ~90 s once), then cached.
 - Open sessions in `E:\VideoStudio`: its `.claude/settings.local.json` (local) turns off the ECC and Superpowers plugins here (verified: no edit gate, smaller start-up context).
 - `marks` positions are fractions of the frame; the 9:16 crop needs its own `marks_v`.
 - Auto-capture: some sites block headless Chrome (Wikipedia did). Drop your own `scene_NNN.png` when a capture is wrong.

@@ -297,7 +297,8 @@ def main_files(va: VisualAssets | None, project: Path) -> dict[int, Path]:
 
 
 def overlays(va: VisualAssets | None, project: Path) -> dict[int, list[tuple[Path, dict]]]:
-    """scene id -> [(file, placement)] for validated overlay images, in list order."""
+    """scene id -> [(file, placement + kind)] for validated overlay images, in list order.
+    kind = the asset category ("logo" overlays join the logo grid of a logo scene)."""
     out: dict[int, list] = {}
     for a in (va.assets if va else []):
         if a.role != "overlay" or a.status != "validated" or not a.file:
@@ -305,7 +306,7 @@ def overlays(va: VisualAssets | None, project: Path) -> dict[int, list[tuple[Pat
         f = project / a.file
         if f.exists() and f.suffix.lower() in IMAGE:
             for i in a.scenes:
-                out.setdefault(i, []).append((f, a.placement.model_dump()))
+                out.setdefault(i, []).append((f, {**a.placement.model_dump(), "kind": a.category}))
     return out
 
 

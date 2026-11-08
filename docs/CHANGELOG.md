@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-08 · Phase A: alignment
+- Layout zones in `_shared/studio.js`: text boxes are measured (lower third, kinetic lines, titles, card items, tags) plus the fixed caption band; overlays that would cover text or another overlay move to the first free corner, then shrink (min 0.2 of the area). Overlays get their pixel size from render (`w`, `h`) and their asset `kind`.
+- Highlight boxes, lower thirds and tags are padded from canvas glyph metrics so Telugu ink sits centred (01 scenes 1, 8, 9 were clipped at the top).
+- Captions: hot word grows 5% (was 8%) and words get a 0.12 em margin; Hind Guntur's narrow space was covered ("cutచేయడం"). Test: `test_caption_words_keep_a_gap`.
+- Logo grid: a logo scene with `logo` overlays shows same-size white cards centred above the lower third; logo scenes never use parallax (01 scene 3 cropped the Grok logo huge). Test: `test_parallax_only_when_cutout_exists`.
+- Cards: the checklist column shrinks to its content (no empty right half).
+- Layout check `pipeline/layout.py`: `hyperframes inspect` per built preview scene (~8 s, cached by render key in `.layout.json`), "layout: text hidden under an image ..." lines in the Timeline warnings; `text_box_overflow` ignored (line box, not ink). Test: `test_layout_check_summary_and_cache`.
+
 ## 2026-11-08 · Render clock in the Timeline
 - Render bar under the header while a render runs: big elapsed clock (ticks every second), "usually takes" from the last finished run of the same mode (`work/logs/ui_render_times.json`) with a progress bar and time left, and the latest log line. Stays visible after the run (green done / red failed). Test: `test_render_status_reports_elapsed_and_remembers_duration`.
 

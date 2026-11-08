@@ -20,7 +20,7 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
             line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9);
             background: var(--capbg); border-radius: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.6); }
 .portrait .cap-page { font-size: calc(var(--u) * 6.4 * var(--tscale, 1)); }
-.cap-word { transform-origin: 50% 70%; }
+.cap-word { transform-origin: 50% 70%; margin: 0 .12em; }  /* the hot word grows; Telugu fonts have narrow spaces */
 .has-captions .safe { bottom: calc(var(--sb) + var(--u) * 16); }
 
 /* ---- paper theme (brand.json "theme": "paper"): light page, dark ink, softer photo shade ---- */
@@ -83,6 +83,13 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
              background-position: 0 0, calc(var(--u) * 4) calc(var(--u) * 6), calc(var(--u) * 12) calc(var(--u) * 2); }
 
 /* ---- overlays from visual-assets.json (studio.js) ---- */
-.ovl { position: absolute; width: auto; max-width: 60%; object-fit: contain; z-index: 4; transform-origin: 50% 80%;
+.ovl { position: absolute; object-fit: contain; z-index: 4; transform-origin: 50% 80%;
         filter: drop-shadow(0 calc(var(--u) * .6) calc(var(--u) * 1.2) rgba(0,0,0,.35)); }
 .captions { z-index: 5; }
+/* logo grid (studio.js logoGrid): same-size cards, centred above the lower third */
+.logos { margin: auto 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: calc(var(--u) * 4); }
+.logos + .lower { margin-top: 0; }  /* the grid takes the free space above the label, centred */
+.logo-card { width: calc(var(--u) * var(--card)); height: calc(var(--u) * var(--card) * .6); padding: calc(var(--u) * 2.5);
+             box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2.2); display: flex;
+             box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) rgba(0,0,0,.3); }
+.logo-card img { width: 100%; height: 100%; object-fit: contain; }

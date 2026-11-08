@@ -99,7 +99,7 @@ def test_render_puts_overlays_into_the_scene(tmp_path):
     assert a.key != b.key
     rnd.build(b, tmp_path / "build", b.template)
     scene = json.loads((tmp_path / "build" / "scene.json").read_text("utf-8"))
-    assert scene["overlays"] == [{"src": "ov0.png", **pl}] and (tmp_path / "build" / "ov0.png").exists()
+    assert scene["overlays"] == [{"src": "ov0.png", **pl, "w": 64, "h": 64}] and (tmp_path / "build" / "ov0.png").exists()
 
 
 def test_brief_lists_scenes_rules_and_local_files(tmp_path):

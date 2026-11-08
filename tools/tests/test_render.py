@@ -117,6 +117,8 @@ def test_parallax_only_when_cutout_exists(tmp_path):
     assert pick(None) == "photo"
     assert pick(Prepared(scenes=[PreparedScene(id=3, error="no clear subject")])) == "photo"  # fallback
     assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo_parallax"
+    plan.scenes[2].visual_type = "logo"  # a logo split into layers was cropped huge (01 scene 3): keep it whole
+    assert pick(Prepared(scenes=[PreparedScene(id=3, fg="p.png", bg="p.png")])) == "photo"
 
 
 def test_qa_flags_black_and_frozen_video(tmp_path):

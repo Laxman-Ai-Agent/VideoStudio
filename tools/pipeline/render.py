@@ -190,7 +190,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         c, layers = (prep.get(s.id) if name == "photo" else None), ()
         if c and s.params.get("cutout") and c.cut and (root / c.cut).exists():
             name, layers = "cutout_title", (root / c.cut,)
-        elif c and s.params.get("parallax") and c.fg and c.bg and (root / c.fg).exists() and (root / c.bg).exists():
+        elif c and s.params.get("parallax") and s.visual_type != "logo" and c.fg and c.bg and (root / c.fg).exists() and (root / c.bg).exists():
             name, layers = "photo_parallax", (root / c.fg, root / c.bg)
         if name not in tpl_hash:
             tpl_hash[name] = f"{load_template(name).version}:{_dir_hash(TEMPLATES / name)}:{shared}"
@@ -301,7 +301,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     for i, (src, pl) in enumerate(job.overlays or []):  # visual-assets.json overlays (stickers, logos, ...)
         name = f"ov{i}{src.suffix.lower()}"
         shutil.copy2(src, build_dir / name)
-        ovl.append({"src": name, **pl})
+        d = _dims(src)  # pixel size: studio.js places overlays before the image has loaded
+        ovl.append({"src": name, **pl, "w": d["asset_w"], "h": d["asset_h"]})
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
