@@ -221,6 +221,17 @@ def _ffmpeg(args: list[str]) -> None:
         raise RuntimeError(f"ffmpeg failed: {p.stderr.strip()[-400:]}")
 
 
+def _centre_x(img: Path) -> float:
+    """Where the subject stands in its picture: alpha-weighted mean x, 0..1 (0.5 when opaque or unreadable)."""
+    from PIL import Image
+    try:
+        a = Image.open(img).convert("RGBA").getchannel("A").resize((32, 1), Image.BOX)
+    except OSError:
+        return 0.5
+    col = list(a.getdata())
+    return round(sum((i + 0.5) * v for i, v in enumerate(col)) / (32 * max(1, sum(col))), 3)
+
+
 def _dims(asset: Path | None) -> dict:
     info = probe(asset) if asset else {}
     return {"asset_w": info.get("width", 0), "asset_h": info.get("height", 0)}
@@ -302,7 +313,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         name = f"ov{i}{src.suffix.lower()}"
         shutil.copy2(src, build_dir / name)
         d = _dims(src)  # pixel size: studio.js places overlays before the image has loaded
-        ovl.append({"src": name, **pl, "w": d["asset_w"], "h": d["asset_h"]})
+        ovl.append({"src": name, **pl, "w": d["asset_w"], "h": d["asset_h"], "cx": _centre_x(src)})
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),

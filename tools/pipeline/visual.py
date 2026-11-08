@@ -306,7 +306,8 @@ def overlays(va: VisualAssets | None, project: Path) -> dict[int, list[tuple[Pat
         f = project / a.file
         if f.exists() and f.suffix.lower() in IMAGE:
             for i in a.scenes:
-                out.setdefault(i, []).append((f, {**a.placement.model_dump(), "kind": a.category}))
+                out.setdefault(i, []).append((f, {**a.placement.model_dump(), "kind": a.category,
+                                                      **({"text": a.prompt.text_in_image} if a.subcategory == "text_sticker" and a.prompt.text_in_image else {})}))
     return out
 
 

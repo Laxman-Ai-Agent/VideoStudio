@@ -306,26 +306,86 @@
       if (k <= MIN_OVL) return best.r;
     }
   }
-  const placed = [];
+  const placed = [], panels = [];
+  const area = () => ({ x: safe.l * S.w, y: safe.t * S.h, w: S.w * (1 - safe.l - safe.r),
+                        h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0) });
   function placeOverlays() {
-    const area = { x: safe.l * S.w, y: safe.t * S.h, w: S.w * (1 - safe.l - safe.r),
-                   h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0) };
-    const busy = textBoxes();
+    const a = area(), busy = textBoxes().concat(panels);
     placed.forEach(([el, o]) => {
-      const r = spot(o, area, busy);
+      const r = spot(o, a, busy);
       busy.push(r);
-      Object.assign(el.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: r.h + "px" });
+      if (o.text) {  // typography: only the size changes (font-size follows the box height)
+        Object.assign(el.style, { left: r.x + "px", top: r.y + "px", fontSize: parseFloat(el.dataset.fs) * r.h / o.h + "px" });
+      } else Object.assign(el.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: r.h + "px" });
     });
   }
+
+  // Subject panel: a person / character cut-out on a photo or footage scene stands large in a 9:16 panel
+  // at the left or right edge (full height down to the caption band). Side = away from where the subject
+  // stands in its own picture (o.cx = alpha centroid, 0..1), unless that side holds the lower third.
+  const SUBJECT = ["character_expression", "reaction"];
+  const isSubject = o => SUBJECT.includes(o.kind) && document.querySelector("#root .fill") && !html.contains("logo-mode");
+  function subjectPanel(tl, o, at) {
+    const bottom = S.h * (1 - safe.b) - ((S.captions || []).length ? u * 16 : 0), w = bottom * 9 / 16;
+    const rect = side => ({ x: side === "right" ? S.w - w : 0, y: 0, w, h: bottom });
+    const pref = (o.cx === undefined || o.cx >= 0.4) ? (o.cx > 0.6 ? "left" : "right") : "right";
+    const texts = textBoxes().filter(b => b.y + b.h < bottom);
+    const hit = side => texts.reduce((s, b) => s + overlap(rect(side), b), 0);
+    const other = pref === "right" ? "left" : "right", side = hit(other) < hit(pref) * 0.5 ? other : pref;
+    const r = rect(side), el = document.createElement("div"), img = document.createElement("img");
+    el.className = "subject " + side;
+    img.src = o.src;
+    el.appendChild(img);
+    Object.assign(el.style, { left: r.x + "px", top: "0px", width: r.w + "px", height: r.h + "px" });
+    const dim = document.createElement("div");
+    dim.className = "dim";
+    const root = document.getElementById("root");
+    root.appendChild(dim);
+    root.appendChild(el);
+    panels.push(r);
+    document.querySelectorAll(".lower").forEach(l => {  // the label wraps before the panel instead of under it
+      const room = side === "right" ? r.x - safe.l * S.w - u * 2 : S.w * (1 - safe.r) - r.w - u * 2;
+      l.style.maxWidth = Math.max(u * 20, room) + "px";
+      if (side === "left") l.style.marginLeft = r.w - safe.l * S.w + u * 2 + "px";
+    });
+    const dir = side === "right" ? 1 : -1;
+    tl.fromTo(dim, { opacity: 0 }, { opacity: 1, duration: 0.4 }, at);
+    tl.fromTo(el, { x: dir * r.w, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, at);
+    tl.fromTo(img, { scale: 1.08 }, { scale: 1, duration: Math.max(0.5, S.duration - at), ease: "none" }, at);
+  }
+
+  // Stamp word (overlay with o.text, e.g. LAYOFFS): drawn as big bold type that slams in, not as a picture.
+  function stamp(tl, o, at) {
+    const el = document.createElement("div");
+    el.className = "stamp";
+    el.setAttribute("data-layout-allow-occlusion", "");  // the rotated box corners are empty: false "hidden under video"
+    el.textContent = o.text;
+    el.style.fontSize = u * 13 + "px";
+    el.dataset.fs = u * 13;
+    document.getElementById("root").appendChild(el);
+    o.w = el.offsetWidth; o.h = el.offsetHeight; o.size = o.h / area().h;
+    const flash = document.createElement("div");
+    flash.className = "flash";
+    flash.setAttribute("data-layout-allow-occlusion", "");  // a one-frame white pop over the stamp is intended
+    document.getElementById("root").appendChild(flash);
+    tl.fromTo(el, { scale: 3.2, opacity: 0, rotation: -16 }, { scale: 1, opacity: 1, rotation: -6, duration: 0.16, ease: "power4.in" }, at);
+    tl.fromTo(flash, { opacity: 0.55 }, { opacity: 0, duration: 0.25 }, at + 0.16);
+    tl.fromTo(el, { x: -u * 0.8 }, { x: u * 0.8, duration: 0.035, yoyo: true, repeat: 5, ease: "none" }, at + 0.16);
+    tl.set(el, { x: 0 }, at + 0.4);
+    return el;
+  }
   function overlays(tl) {
+    let panel = false;
     (S.overlays || []).forEach((o) => {
+      const at = Math.min(Math.max(0, +o.at || 0), S.duration - 0.2), anim = o.animation || "pop";
+      if (o.text) { placed.push([stamp(tl, o, at), o]); return; }
+      if (!panel && isSubject(o)) { panel = true; subjectPanel(tl, o, at); return; }
       const el = document.createElement("img");
       el.className = "ovl";
       el.src = o.src;
       document.getElementById("root").appendChild(el);
       placed.push([el, o]);
       const fx = (ANCHOR[o.position] || ANCHOR.center)[0];
-      const at = Math.min(Math.max(0, +o.at || 0), S.duration - 0.2), anim = o.animation || "pop";
       const from = { pop: { scale: 0, opacity: 0 }, fade: { opacity: 0 }, float: { scale: 0.6, opacity: 0 },
                      slide: { x: (fx < 0.5 ? -1 : 1) * u * 30, opacity: 0 }, none: { opacity: 0 } }[anim] || { scale: 0, opacity: 0 };
       const to = { scale: 1, x: 0, opacity: 1, duration: anim === "none" ? 0.01 : 0.4,

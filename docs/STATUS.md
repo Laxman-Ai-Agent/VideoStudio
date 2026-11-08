@@ -5,7 +5,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 78. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 79. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
@@ -17,7 +17,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Pending, our side
 - [ ] Pro-level plan (agreed 2026-11-08, one phase per session, in this order):
-  A. Alignment: DONE 2026-11-08 (layout zones, overlay avoidance, ink-centred boxes, caption spacing, logo grid, layout check in Timeline warnings). 01 preview fixed; 01 final 16:9 not re-rendered yet (ask first).
+  A. Alignment: DONE 2026-11-08 (layout zones, overlay avoidance, ink-centred boxes, caption spacing, logo grid, layout check in Timeline warnings). subject panel + stamp text done; 01 preview fixed; 01 final 16:9 not re-rendered yet (ask first).
   B. Visual grammar: beat type per scene -> format, rhythm rules, one art direction per video.
   C. Templates: logo wall, split-screen, meme/reaction, news card, process diagram, character + speech bubble, end card.
   D. Sound: music library + SFX (01 final has no music).
