@@ -40,7 +40,7 @@ header.top nav a.on { background:var(--accent); } header.top nav a:hover:not(.on
 #rbar .pbar i { display:block; height:100%; background:var(--accent); width:0; transition:width .5s; }
 
 /* three columns */
-#main { display:grid; grid-template-columns:320px minmax(0,1fr) 380px; gap:14px; padding:14px 20px 0; align-items:start; }
+#main { display:grid; grid-template-columns:300px minmax(0,1fr) 390px; gap:14px; padding:14px 20px 0; align-items:start; }
 body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big #info, body.big #assets { display:none; }
 #list { padding:12px 10px; display:flex; flex-direction:column; gap:6px; max-height:calc(100vh - 150px); overflow-y:auto; }
 #list .ttl { display:flex; align-items:center; justify-content:space-between; font-size:17px; font-weight:600; padding:2px 6px 6px; }
@@ -117,3 +117,15 @@ html, body { height:100%; } body { display:flex; flex-direction:column; overflow
 #scroll { overflow-y:hidden; }
 .acard img, .acard .tt { height:60px; } .acard { width:118px; }
 @media (max-height:760px) { .sub { padding:6px 20px; } header.top { padding:6px 20px; } #assets { max-height:150px; } .acard img, .acard .tt { height:46px; } }
+
+/* right column: the scene's elements on top, the tabbed panel below; the preview gets the whole centre */
+#side { display:flex; flex-direction:column; gap:12px; min-height:0; }
+#assets { flex:none; max-height:40%; overflow:hidden; display:flex; flex-direction:column; }
+#assets .ah .n { display:none; }
+#assets .cards { flex-wrap:wrap; overflow-y:auto; overflow-x:hidden; gap:8px; }
+#assets .acard { width:calc(50% - 4px); } .acard img, .acard .tt { height:52px; }
+#info { flex:1; min-height:0; align-self:auto; }
+@media (max-width:1300px) { #main { grid-template-columns:240px minmax(0,1fr) 340px; } }
+#assets .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; }
+#assets .acard { width:auto; min-width:0; }
+.acard img, .acard .tt { height:56px; }

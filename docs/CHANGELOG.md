@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Bigger preview; elements card moved to the right column
+- The preview card now takes the whole centre height (1500x850: 647x364 instead of 487x274). The "Scene N - Elements" card sits at the top of the right column (2 cards per row, scrolls inside), the tabbed panel below it.
+
 ## 2026-11-08 · Timeline page fits the window; elements below the preview
 - No page scroll: body is a 100vh flex column; scene list, right panel and tracks scroll inside their own cards; the preview fills the free height of its card (`fitScreen` reads the stage size); track lanes are shorter.
 - The left list shows scenes only. The "Scene N - Elements" card under the preview lists every element of the selected scene (background, pictures, text blocks, overlays) as cards with chips All / Images / Video / Graphics / Text; a card click selects it (same selection as canvas and panel). The layer rows under the scene (previous change) were removed.
