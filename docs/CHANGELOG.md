@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Timeline view (read-only)
+- Dashboard page `ui/frontend/timeline.html` + `timeline.js` (nav link "Timeline"): Text / Overlays / Visual / Narration tracks, playhead, Play (input/audio.wav), zoom, click to seek, preview of the selected scene. Reads work/scenes.json, work/resolved.json, visual-assets.json. Writes nothing.
+
 ## 2026-11-08 · Quote template
 - `quote` template: accent quote mark, text revealed word by word, bar + speaker name / role. Picked by `params.quote` {text, by, role}; the plan prompt lists it (real quotes only). Test: `test_quote_picks_by_params`.
 

@@ -1,7 +1,7 @@
 # Status
 
 Updated 2026-11-08. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
-per-video themes, quote template, visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
+per-video themes, quote template, read-only timeline page (dashboard `/timeline.html`), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## Where we are
 - `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 71. Doctor: all green.
