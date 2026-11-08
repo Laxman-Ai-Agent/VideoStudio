@@ -100,3 +100,20 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
 #ph { position:absolute; top:0; bottom:0; width:2px; background:var(--accent2); pointer-events:none; z-index:5; }
 #ph::before { content:""; position:absolute; top:0; left:-7px; width:16px; height:14px; background:var(--accent2); clip-path:polygon(0 0, 100% 0, 50% 100%); }
 @media (max-width:1300px) { #main { grid-template-columns:240px minmax(0,1fr) 320px; padding:12px 12px 0; } .sc .thumb { width:60px; height:34px; } .sc .badge { display:none; } header.top nav { display:none; } }
+
+/* the whole page fits the window: no page scroll; list, panel and tracks scroll inside their own cards */
+html, body { height:100%; } body { display:flex; flex-direction:column; overflow:hidden; }
+#main { flex:1; min-height:0; align-items:stretch; padding-bottom:0; }
+#list { max-height:none; min-height:0; }
+#center { min-height:0; }
+#pcard { flex:1; min-height:0; display:flex; flex-direction:column; }
+#stage { flex:1; min-height:0; align-items:center; overflow:hidden; }
+#ctrl { flex:none; }
+#assets { flex:none; max-height:176px; overflow:hidden; display:flex; flex-direction:column; }
+#assets .cards { overflow-x:auto; overflow-y:hidden; }
+#info { min-height:0; overflow-y:auto; }
+#tlcard { flex:none; margin:12px 20px 14px; }
+.lane { height:32px; } #heads div { height:32px; } #heads .vh, #L-vis { height:46px; } #heads .rh, .ruler { height:24px !important; }
+#scroll { overflow-y:hidden; }
+.acard img, .acard .tt { height:60px; } .acard { width:118px; }
+@media (max-height:760px) { .sub { padding:6px 20px; } header.top { padding:6px 20px; } #assets { max-height:150px; } .acard img, .acard .tt { height:46px; } }

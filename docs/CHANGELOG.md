@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08 · Timeline page fits the window; elements below the preview
+- No page scroll: body is a 100vh flex column; scene list, right panel and tracks scroll inside their own cards; the preview fills the free height of its card (`fitScreen` reads the stage size); track lanes are shorter.
+- The left list shows scenes only. The "Scene N - Elements" card under the preview lists every element of the selected scene (background, pictures, text blocks, overlays) as cards with chips All / Images / Video / Graphics / Text; a card click selects it (same selection as canvas and panel). The layer rows under the scene (previous change) were removed.
+
 ## 2026-11-08 · Layer-based editing: background + text blocks are layers too
 - Generic layers ids in `edits.json`: `L:bg` (the main picture / footage `.fill`) and `L:t1..` (each text block of the template: kinetic lines, title, lower third, cards items; nested blocks count once). Same schema as overlays; `manual` = the wanted visual box (fractions of the frame), reached with CSS `translate / scale / rotate` + `filter: opacity()` (GSAP only writes `transform`, so template animations keep working); hidden = invisible. `edits.layers()` -> `plan_jobs(..., manual=)` (in the scene key) -> `scene.json["layers"]` -> `layout.js layers()/placeLayer`; preview, `studio run` and the Timeline use the same call.
 - Timeline: the selected scene lists its layers under it in the left list (Background / Images / Logos / Text / Overlays, thumbnail, name, eye); list, canvas and right panel share one selection (`ed.sel`). Canvas click prefers pictures over text; the background is picked from the list or the strip only (an empty click still clears). Background / text have no Duplicate.

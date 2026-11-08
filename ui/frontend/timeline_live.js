@@ -25,8 +25,8 @@ function toggleBig() {
 
 function fitScreen() {
   const port = st.fmt === "9:16", scr = $("screen");
-  const maxW = $("stage").clientWidth || 640;
-  const maxH = Math.max(220, window.innerHeight * (document.body.classList.contains("big") ? 0.72 : 0.46));
+  const stg = $("stage"), maxW = stg.clientWidth || 640;
+  const maxH = Math.max(120, stg.clientHeight || window.innerHeight * 0.4);  // the stage fills the card; the page itself never scrolls
   let w = maxW, h = w * (port ? 16 / 9 : 9 / 16);
   if (h > maxH) { h = maxH; w = h * (port ? 9 / 16 : 16 / 9); }
   scr.style.width = Math.round(w) + "px";

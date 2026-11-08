@@ -59,7 +59,6 @@ function drawEdit() {
   fields = {};
   if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
   drawStrip();
-  drawLayers();
   syncPanel();
 }
 
@@ -161,50 +160,30 @@ function setEdit(on) {
 
 // ---- "Scene N - Assets" strip under the preview ----
 const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "images");
-function drawStrip() {
+function drawStrip() {  // every element of the selected scene, below the preview; shares the selection with canvas + panel
   const root = $("assets");
   root.innerHTML = "";
   if (!st.cur || !live.data) return;
-  const all = ed.boxes.filter((b) => b.kind !== "text"), n = (g) => all.filter((b) => GROUP(b) === g).length;
+  const all = ed.boxes, grp = (b) => (b.kind === "text" ? "text" : GROUP(b)), n = (g) => all.filter((b) => grp(b) === g).length;
   const head = el("div", "ah");
-  head.append(el("b", "", `Scene ${st.cur.id} – Assets`), el("span", "n", `Elements you can edit in this scene (${all.length})`), el("span", "grow"));
-  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")]]) {
+  head.append(el("b", "", `Scene ${st.cur.id} – Elements`), el("span", "n", `Everything in this scene (${all.length}): background, pictures, text, overlays`), el("span", "grow"));
+  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")], ["text", "Text", n("text")]]) {
     head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
   }
   const cards = el("div", "cards");
-  for (const b of all.filter((x) => ed.filter === "all" || GROUP(x) === ed.filter)) {
-    const c = el("button", "acard" + (b.id === ed.sel ? " on" : "")), im = Object.assign(el("img"), { src: srcUrl(b) }), sz = el("span", "as", "");
-    im.onload = () => { sz.textContent = `${im.naturalWidth} × ${im.naturalHeight}`; };
-    c.append(im, el("i", "ck", "✓"), el("span", "an", fileName(b.id)), sz);
+  for (const b of all.filter((x) => ed.filter === "all" || grp(x) === ed.filter)) {
+    const m = getItems()[b.id] || {}, off = m.opacity === 0 || m.hidden;
+    const c = el("button", "acard" + (b.id === ed.sel ? " on" : "") + (off ? " off" : "")), sz = el("span", "as", LGROUP(b));
+    if (b.src && !isVid(b)) {
+      const im = Object.assign(el("img"), { src: srcUrl(b) });
+      im.onload = () => { sz.textContent = `${LGROUP(b)} · ${im.naturalWidth} × ${im.naturalHeight}`; };
+      c.append(im);
+    } else c.append(el("span", "tt", b.kind === "text" || b.kind === "stamp" ? (b.name || "T") : "▣"));
+    c.append(el("i", "ck", "✓"), el("span", "an", fileName(b.id)), sz);
     c.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
     cards.append(c);
   }
-  root.append(head, all.length ? cards : el("div", "n", "No pictures in this scene. Text blocks are listed under the scene in the left list."));
-}
-
-// ---- layers of the selected scene, listed under it in the scene list (kept in sync with the canvas) ----
-function drawLayers() {
-  const box0 = $("layers");
-  if (!box0) return;
-  box0.innerHTML = "";
-  if (!st.cur || !live.data) return;
-  const order = ["Background", "Images", "Logos", "Text", "Overlays"];
-  for (const g of order) {
-    const rows = ed.boxes.filter((b) => LGROUP(b) === g);
-    if (!rows.length) continue;
-    box0.append(el("div", "lg", g));
-    for (const b of rows) {
-      const m = getItems()[b.id] || {}, off = (m.opacity === 0) || m.hidden;
-      const r = el("div", "lr" + (b.id === ed.sel ? " on" : "") + (off ? " off" : ""));
-      r.append(b.src && !isVid(b) ? Object.assign(el("img"), { src: srcUrl(b) }) : el("span", "lt", b.kind === "text" || b.kind === "stamp" ? "T" : "▣"),
-               el("span", "ln", b.kind === "stamp" ? (b.name || fileName(b.id)) : fileName(b.id)), Object.assign(el("button", "ib", ""), {
-        innerHTML: svg(IC[off ? "eyeoff" : "eye"]), title: "Show / hide",
-        onclick: (e) => { e.stopPropagation(); ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); act((c) => { const v = c.opacity > 0 ? 0 : (ed.prevOp || 1); if (c.opacity > 0) ed.prevOp = c.opacity; return { ...c, opacity: v }; }); } }));
-      r.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
-      box0.append(r);
-    }
-  }
-  if (!ed.boxes.length) box0.append(el("div", "n lg", "Loading layers..."));
+  root.append(head, all.length ? cards : el("div", "n", "Loading elements..."));
 }
 
 $("tUndo").onclick = undo;
