@@ -3,7 +3,7 @@
 // (POST /preview?layout=0) by the same code the render uses, so preview and final output carry the same transform.
 // Boxes come from the scene iframe (layout.js __boxes / __manual). Math: edit_math.js. Globals of timeline.js / timeline_live.js.
 const M = EditMath;
-const ed = { on: false, all: {}, sel: null, boxes: [], hist: {}, drag: null, timer: 0, base: {}, scene: "", want: null };
+const ed = { on: false, all: {}, sel: null, boxes: [], hist: {}, drag: null, timer: 0, base: {}, scene: "", want: null, tab: "details", meta: {}, filter: "all" };
 const sceneKey = () => st.fmt + "/" + (st.cur ? st.cur.id : 0);
 const dims = () => ({ W: live.data ? live.data.w : 1920, H: live.data ? live.data.h : 1080 });
 const kScr = () => $("screen").clientWidth / dims().W;
@@ -28,7 +28,8 @@ function refresh() {  // read the element boxes of the active scene
 function editLoaded() {
   ensureLayer();
   refresh();
-  if (ed.want && box(ed.want)) { ed.sel = ed.want; ed.want = null; }
+  if (ed.want && box(ed.want)) { ed.sel = ed.want; ed.want = null; ed.tab = "edit"; }
+  loadMeta();
   drawEdit();
 }
 function edLocal(f) {  // while editing a paused scene show the settled frame (all overlays in)
@@ -154,6 +155,7 @@ function down(e) {
   } else {
     const hit = ed.boxes.filter((b) => M.hit(vis(b), p)).sort((a, b) => zOf(a) - zOf(b)).pop();
     ed.sel = hit ? hit.id : null;
+    if (hit) ed.tab = "edit";
     drawSel(); drawEdit();
     if (!hit) return;
     snap();
@@ -194,92 +196,7 @@ function drawSel() {
   if (!s) return;
   const k = kScr();
   Object.assign(sb.style, { left: s.x * k + "px", top: s.y * k + "px", width: s.w * k + "px", height: s.h * k + "px", transform: `rotate(${s.rot}deg)` });
-  sb.querySelector(".ro").textContent = `X ${Math.round(s.x)}  Y ${Math.round(s.y)}  W ${Math.round(s.w)}  H ${Math.round(s.h)}  ${Math.round(s.rot)}°`;
-}
-
-// ---- right panel ----
-let fields = {};
-function drawEdit() {
-  const info = $("info");
-  info.querySelector(".ed") && info.querySelector(".ed").remove();
-  if (!st.cur) return;
-  if (ed.scene !== sceneKey()) { ed.scene = sceneKey(); ed.boxes = []; ed.sel = null; }
-  const p = el("div", "ed");
-  fields = {};
-  const row = (...c) => { const d = el("div", "er"); d.append(...c); p.append(d); return d; };
-  const btn = (t, f, tip) => Object.assign(el("button", "", t), { onclick: f, title: tip || t });
-  row(el("b", "", "Visual Edit"), btn(ed.on ? "Editing" : "Edit", () => setEdit(!ed.on), "Toggle edit mode (E)"),
-      btn("↶", undo, "Undo (Ctrl+Z)"), btn("↷", redo, "Redo (Ctrl+Y)")).classList.add("hdr");
-  if (!live.data) { p.append(el("div", "n", "Live preview needed.")); info.append(p); return; }
-  if (ed.on) {
-    const list = el("div", "chips");
-    for (const b of ed.boxes) {
-      const c = el("button", "chip" + (b.id === ed.sel ? " on" : ""), b.id + (b.kind === "stamp" ? " T" : ""));
-      c.onclick = () => { ed.sel = b.id; drawSel(); drawEdit(); };
-      list.append(c);
-    }
-    for (const [id, m] of Object.entries(getItems())) if (m.hidden) list.append(Object.assign(el("button", "chip del", "↺ " + id),
-      { title: "Restore", onclick: () => { snap(); const it = { ...getItems() }; delete it[id]; setItems(it); commit(); } }));
-    p.append(list.children.length ? list : el("div", "n", "No editable elements in this scene."));
-  } else p.append(el("div", "n", "Press Edit (E), then click an element in the preview."));
-  const s = ed.on ? sel() : null;
-  if (s) {
-    const num = (name, key, f) => {
-      const i = Object.assign(el("input"), { type: "number", step: 1 }), l = el("label", "", name);
-      fields[key] = i;
-      i.onchange = () => act((c) => f(c, +i.value));
-      l.append(i);
-      return l;
-    };
-    p.append(el("div", "sec", "Transform"));
-    row(num("X", "x", (c, v) => ({ ...c, x: v })), num("Y", "y", (c, v) => ({ ...c, y: v })));
-    row(num("W", "w", (c, v) => (c.lock ? { ...c, w: v, h: v * c.h / c.w } : { ...c, w: v })),
-        num("H", "h", (c, v) => (c.lock ? { ...c, h: v, w: v * c.w / c.h } : { ...c, h: v })));
-    const sc = Object.assign(el("input"), { type: "range", min: 10, max: 300 }), so = Object.assign(el("input"), { type: "range", min: 0, max: 100 });
-    fields.scale = sc; fields.opacity = so;
-    sc.onpointerdown = so.onpointerdown = snap;
-    sc.oninput = () => { const c = sel(); if (c) put(ed.sel, { ...c, ...M.scaleTo(c, +sc.value, baseOf(ed.sel)) }); };
-    so.oninput = () => { const c = sel(); if (c) put(ed.sel, { ...c, opacity: +so.value / 100 }); };
-    sc.onchange = so.onchange = commit;
-    row(el("label", "", "Scale %"), sc);
-    row(num("Rotation", "rot", (c, v) => ({ ...c, rot: v })));
-    row(el("label", "", "Opacity"), so);
-    const lk = Object.assign(el("input"), { type: "checkbox", onchange: () => act((c) => ({ ...c, lock: lk.checked })) }), ll = el("label", "", "Lock aspect ratio");
-    fields.lock = lk;
-    ll.append(lk);
-    row(ll);
-    p.append(el("div", "sec", "Arrange"));
-    row(...[["Forward", "forward"], ["Backward", "backward"], ["To front", "front"], ["To back", "back"]].map(([t, k]) => btn(t, () => act(arrange[k]))));
-    p.append(el("div", "sec", "Fit & Align"));
-    const { W, H } = dims();
-    row(...["left", "center", "right", "top", "middle", "bottom"].map((a) => btn(a[0].toUpperCase() + a.slice(1), () => act((c) => ({ ...c, ...M.align(c, a, W, H) })))));
-    row(btn("Fit to canvas", () => act((c) => ({ ...c, ...M.fit(c, W, H) }))), btn("Reset transform", resetEl));
-    row(btn("Duplicate", dup, "Ctrl+D"), btn("Delete", del, "Delete"));
-  }
-  if (ed.on && Object.keys(getItems()).length) row(btn("Reset scene edits", resetScene));
-  info.append(p);
-  syncPanel();
-}
-function baseOf(id) {  // the automatic size (scale 100 %); duplicates and panels fall back to the size first seen
-  const b = box(id);
-  return b.auto || ed.base[id] || (ed.base[id] = { w: b.w, h: b.h });
-}
-function syncPanel() {
-  const s = ed.on ? sel() : null;
-  if (!s || !fields.x) return;
-  const set = (k, v) => { if (fields[k] && document.activeElement !== fields[k]) fields[k].value = v; };
-  set("x", Math.round(s.x)); set("y", Math.round(s.y)); set("w", Math.round(s.w)); set("h", Math.round(s.h));
-  set("rot", Math.round(s.rot * 10) / 10); set("opacity", Math.round(s.opacity * 100));
-  set("scale", Math.round(s.w / baseOf(ed.sel).w * 100));
-  fields.lock.checked = s.lock;
-}
-function setEdit(on) {
-  ed.on = on;
-  if (!on) { ed.sel = null; ed.drag = null; }
-  ensureLayer().classList.toggle("on", on);
-  if (on && !aud.paused) aud.pause();
-  if (st.cur) liveSync(aud.currentTime || 0);
-  setTimeout(() => { refresh(); drawEdit(); }, 80);
+  sb.querySelector(".ro").textContent = `${Math.round(s.x)}, ${Math.round(s.y)}  ${Math.round(s.w)} × ${Math.round(s.h)}`;
 }
 
 // ---- keys (captured before the timeline's own shortcuts) ----
@@ -296,6 +213,5 @@ window.addEventListener("keydown", (e) => {
   e.preventDefault(); e.stopImmediatePropagation();
   f();
 }, true);
-window.drawEdit = drawEdit;
 window.editLoaded = editLoaded;
 async function loadEdits() { ed.all = (await getJson("edits.json")) || {}; ed.sel = null; ed.hist = {}; ed.base = {}; }

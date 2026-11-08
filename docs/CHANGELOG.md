@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-08 · Timeline Visual Edit UI follows the reference layout
+- Right panel (310 px) with 4 tabs: Scene Details (the old details) | Visual Edit (layer header with thumbnail, file name, "Image Layer (Selected)", eye = hide via opacity 0, trash = delete; Transform: Position, Size + lock icon, Scale slider + %, Rotation + reset, Opacity slider + %; Arrange 4 icons; Fit & Align 6 icons + fit to canvas; Reset Transform, Duplicate) | Animation and Effects (read-only: placement from the built scene.json). Selecting an element switches to Visual Edit.
+- "Scene N - Assets" strip under the preview: All / Images / Video / Graphics chips, cards (thumbnail, file name, natural size, green check, selected highlight); a click selects the element and turns Edit mode on. Toolbar: undo / redo / delete beside the transport; scene list shows thumbnails when the resolved visual is inside the project.
+- Files: `timeline_panel.js` (panel + strip), `timeline_edit.css`; `timeline_edit.js` keeps the edit logic. Readout on the box is "x, y  w x h". Test: `test_timeline_scripts_parse_and_load_in_order`.
+- Left out: Split (no engine), Video filter is always 0 (the main visual is not editable yet), no new animation / effects editing.
+
 ## 2026-11-08 · Manual Visual Editing (Timeline "Visual Edit")
 - Data: `<project>/edits.json` = `{fmt: {scene: {asset id: {x,y,w,h (fractions of the frame), rot, opacity, z, lock, hidden, dup?}}}}` (`pipeline/edits.py`, values clamped; 16:9 and 9:16 independent). `visual.overlays(va, project, fmt)` merges it as `placement.manual` (hidden = dropped, duplicate = extra overlay `A012#2`) and adds `placement.id`. `manual` is in the scene render key (a bare `id` is not, so no scene re-renders just from this change); `preview`, `studio run` and the Timeline use the same call, so preview build = render build. Originals never touched.
 - Render: `layout.js` lets `o.manual` replace the automatic box of that element only (image overlays, stamp text, subject panel, depth prop), rotation via CSS `rotate` (no clash with GSAP), opacity as the tween target, layer = zIndex offset. It exposes `__boxes / __manual / __settle` to the dashboard.

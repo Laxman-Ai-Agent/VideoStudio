@@ -91,3 +91,14 @@ def test_transform_math():
     assert _node("M.hit({x:0,y:0,w:100,h:20,rot:0},{x:50,y:60})") is False
     b = _node("M.toFrac({x:960,y:540,w:192,h:108,rot:5},1920,1080,{})")
     assert b == {"x": 0.5, "y": 0.5, "w": 0.1, "h": 0.1, "rot": 5}
+
+
+@pytest.mark.skipif(not shutil.which("node"), reason="node missing")
+def test_timeline_scripts_parse_and_load_in_order():
+    ui = MATH.parent
+    for f in ("timeline.js", "timeline_live.js", "timeline_edit.js", "timeline_panel.js", "edit_math.js"):
+        subprocess.run(["node", "--check", str(ui / f)], check=True)
+    html = (ui / "timeline.html").read_text("utf-8")
+    order = [html.index(f'src="{f}"') for f in ("timeline.js", "timeline_live.js", "edit_math.js", "timeline_edit.js", "timeline_panel.js")]
+    assert order == sorted(order) and 'id="assets"' in html and "timeline_edit.css" in html
+    assert all(t in (ui / "timeline_panel.js").read_text("utf-8") for t in ("Scene Details", "Visual Edit", "Animation", "Effects", "Fit & Align"))

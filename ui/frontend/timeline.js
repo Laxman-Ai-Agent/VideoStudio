@@ -45,6 +45,8 @@ function drawList() {
     const k = kindOf(s), b = el("button", "sc" + (st.cur === s ? " sel" : ""));
     b.dataset.id = s.id;
     const dot = el("i", "dot " + k.cls);
+    const th = (st.res[s.id] || {}).thumb, tp = th && th.startsWith("projects/") ? inProject(th) : "";
+    if (tp) b.append(Object.assign(el("img", "thumb"), { src: url(tp), loading: "lazy" }));
     b.append(dot, el("b", "", `${s.id} · ${k.label}`), el("span", "n", fmt(s.start)));
     if (w.length) b.append(Object.assign(el("em", "", "!"), { title: w.join("\n") }));
     b.onclick = () => seek(s.start + 0.01);
@@ -248,6 +250,7 @@ async function load(pid) {
   st.res = {};
   ((rj && rj.scenes) || []).forEach((r) => (st.res[r.id] = r));
   st.ovls = [];
+  st.va = (va && va.assets) || [];
   for (const a of (va && va.assets) || []) {
     if (a.role !== "overlay" || !a.file) continue;
     for (const id of a.scenes || []) {
