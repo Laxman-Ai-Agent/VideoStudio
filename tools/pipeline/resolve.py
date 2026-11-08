@@ -18,6 +18,7 @@ from . import assets, providers
 from .contracts import AssetEntry, Resolved, ResolvedScene, Scene, ScenePlan
 
 TEMPLATE_TYPES = {"motion_graphic", "diagram", "chart", "text", "map"}
+TEMPLATE_PARAMS = ("lines", "bg_word", "items", "stat", "button", "rows", "quote", "meme", "events", "focus", "pin", "lottie", "bars", "number")
 THRESHOLD = 0.34  # share of query keywords found in the description
 STOP = set("""the and for with from into onto that this these those its are was were has have had
 not but out off over under about than then them they their there here what when where which who
@@ -210,6 +211,8 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
                 r.asset_9x16 = _rel(base / got[True].file, root)
         elif s.params.get("entity") and s.visual_type not in TEMPLATE_TYPES:
             r = _named(s, library, lib_index, root, entity, icon, download)
+        if r is None and s.visual_type in TEMPLATE_TYPES and any(s.params.get(k) for k in TEMPLATE_PARAMS):
+            r = ResolvedScene(id=0, status="template")  # the plan asked for a drawn scene: a loose photo match must not replace it
         if r is None:  # local match (also when an entity lookup found nothing)
             for status, b, idx in (("project", base, proj), ("library", library, assets.load(lib_index))):
                 sc, h = _best(s, b, idx, used)

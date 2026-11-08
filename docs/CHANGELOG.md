@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08 · resolve: drawn scenes stay drawn
+- Seen on 03: kinetic scenes (`params.lines`) got a loose library photo whose description matched their query words, so the kinetic text never showed. A template-type scene with template params (lines, rows, items, stat, events, focus/pin, quote, meme, lottie, bars ...) now resolves to `template` before any local match. Test: `test_template_scene_with_template_params_is_never_a_loose_photo`.
+- Project 03 (Chandrayaan-3, 66 s, ElevenLabs voice): no Whisper; Gemini words placed on the audio's real pauses (13 sentence breaks, mean error 0.3 s), then align/plan/assets as usual; 11 template scenes + 7 free photos (Wikimedia/Openverse, credited), no manual download.
+
 ## 2026-11-08 · Visual Assets page: "Prepare & open Timeline"
 - One button in the page header runs `studio run <pid> --review` in the background (matches uploads, processes, resolves, storyboard; no render), shows the elapsed seconds, then opens the Timeline of that project. `POST /api/projects/<pid>/render?review=1`; a prepare run does not count as a render time. Test: `test_prepare_runs_review_without_render_and_keeps_render_times`. Checked on 02 (~20 s).
 

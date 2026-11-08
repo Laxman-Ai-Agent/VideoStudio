@@ -81,3 +81,17 @@ def test_storyboard_shows_missing_tile(tmp_path):
 
 def test_keywords():
     assert keywords("ChatGPT, Gemini and Grok logos side by side") == ["chatgpt", "gemini", "grok", "logo"]
+
+
+def test_template_scene_with_template_params_is_never_a_loose_photo(tmp_path):
+    """Seen on 03: kinetic `lines` scenes got a library photo that matched their query words."""
+    root, proj, lib = _setup(tmp_path)
+    idx = assets.update(proj / "assets", proj / "assets" / "index.json", **NO_PROBE)
+    for e in idx.assets.values():
+        e.description = "corporate office employees working at computers"
+    assets.save(proj / "assets" / "index.json", idx)
+    s = lambda i, p: {"id": i, "start": i - 1, "end": i, "narration": "x", "visual_type": "motion_graphic",  # noqa: E731
+                      "query": "corporate office employees working at computers", "params": p}
+    plan = ScenePlan(scenes=[s(1, {"lines": [{"text": "x"}]}), s(2, {})])
+    got = {r.id: r.status for r in resolve(plan, proj, lib, root, search=lambda *a: [], download=None).scenes}
+    assert got[1] == "template" and got[2] == "project"  # without template params the local match still wins
