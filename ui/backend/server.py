@@ -96,6 +96,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ui": ui, "data": data})
             if m := re.match(r"^/api/projects/([^/]+)/render$", path):
                 return self._json(service.render_status(m[1]))
+            if m := re.match(r"^/api/projects/([^/]+)/edits$", path):
+                return self._json(service.get_edits(m[1]))
             if m := re.match(r"^/api/projects/([^/]+)/assets$", path):
                 return self._json(service.project_assets(m[1]))
             if (m := ASSET.match(path)) and not m[3]:
@@ -120,6 +122,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_PUT(self):
         m = ASSET.match(urllib.parse.urlparse(self.path).path)
         try:
+            if em := re.match(r"^/api/projects/([^/]+)/edits$", urllib.parse.urlparse(self.path).path):
+                d = json.loads(self._body() or b"{}")
+                return self._json(service.save_edits(em[1], d.get("fmt", ""), d.get("scene", 0), d.get("items") or {}))
             if not m or m[3] not in ("/prompt", "/media"):
                 raise service.NotFound(self.path)
             data = json.loads(self._body() or b"{}")
@@ -138,7 +143,8 @@ class Handler(BaseHTTPRequestHandler):
             if rm := re.match(r"^/api/projects/([^/]+)/render$", url.path):
                 return self._json(service.start_render(rm[1], urllib.parse.parse_qs(url.query).get("final", ["0"])[0] == "1"))
             if pm := re.match(r"^/api/projects/([^/]+)/preview$", url.path):
-                return self._json(service.preview(pm[1], urllib.parse.parse_qs(url.query).get("fmt", ["16:9"])[0]))
+                q = urllib.parse.parse_qs(url.query)
+                return self._json(service.preview(pm[1], q.get("fmt", ["16:9"])[0], q.get("layout", ["1"])[0] != "0"))
             if m and m[3] == "/replace/confirm":
                 return self._json(service.confirm_replace(m[1], m[2]))
             if m and m[3] == "/replace/cancel":

@@ -106,13 +106,26 @@ window.studioLayout = function (env) {
     if (o.backdrop === "rays") tl.to(bd, { rotation: 24, duration: Math.max(0.5, S.duration - at), ease: "none" }, at);
     return bd;
   }
-  const placed = [], panels = [];
+  const placed = [], panels = [], reg = [];
+  // Manual edits (Timeline "Visual Edit", pipeline/edits.py): o.manual = {x,y,w,h (fractions of the frame), rot, opacity, z}
+  // overrides the automatic placement of that one element. reg = editable elements, read by the dashboard (__boxes).
+  const mbox = m => ({ x: m.x * S.w, y: m.y * S.h, w: m.w * S.w, h: m.h * S.h });
+  const op = o => (o.manual ? o.manual.opacity : 1);
+  function fx(el, o, live) {  // rotation (CSS rotate: does not fight GSAP's transform), layer; opacity only when live-editing
+    const m = o.manual;
+    if (!m) return;
+    if (el.dataset.z0 === undefined) el.dataset.z0 = parseInt(getComputedStyle(el).zIndex, 10) || 0;
+    Object.assign(el.style, { rotate: m.rot + "deg", transformOrigin: "50% 50%", zIndex: +el.dataset.z0 + m.z });
+    if (live) gsap.set(el, { opacity: m.opacity });
+  }
+  const add = (el, o, kind, place) => { el.dataset.eid = o.id || ""; reg.push({ el, o, kind, place }); };
   const area = () => ({ x: safe.l * S.w, y: safe.t * S.h, w: S.w * (1 - safe.l - safe.r),
                         h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0) });
   function placeOverlays() {
     const a = area(), busy = textBoxes().concat(panels);
     placed.forEach(([el, o, bd]) => {
-      const r = spot(o, a, busy);
+      const auto = spot(o, a, busy), r = o.manual ? mbox(o.manual) : auto;
+      o.auto = auto;  // the automatic box, kept for the editor (scale % and reset)
       busy.push(r);
       if (bd) {  // backdrop centred on the subject, a bit larger
         const d = Math.max(r.w, r.h) * 1.4;
@@ -121,6 +134,7 @@ window.studioLayout = function (env) {
       if (o.text) {  // typography: only the size changes (font-size follows the box height)
         Object.assign(el.style, { left: r.x + "px", top: r.y + "px", fontSize: parseFloat(el.dataset.fs) * r.h / o.h + "px" });
       } else Object.assign(el.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: r.h + "px" });
+      fx(el, o);
     });
   }
 
@@ -136,7 +150,7 @@ window.studioLayout = function (env) {
     const texts = textBoxes().filter(b => b.y + b.h < bottom);
     const hit = side => texts.reduce((s, b) => s + overlap(rect(side), b), 0);
     const other = pref === "right" ? "left" : "right", side = hit(other) < hit(pref) * 0.5 ? other : pref;
-    const r = rect(side), el = document.createElement("div"), img = document.createElement("img");
+    const r = o.manual ? mbox(o.manual) : rect(side), el = document.createElement("div"), img = document.createElement("img");
     el.className = "subject " + side;
     img.src = o.src;
     const tf = treatFilter(o), bd = backdrop(tl, o, at);
@@ -147,7 +161,9 @@ window.studioLayout = function (env) {
       el.appendChild(bd);
     }
     el.appendChild(img);
-    Object.assign(el.style, { left: r.x + "px", top: "0px", width: r.w + "px", height: r.h + "px" });
+    Object.assign(el.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: r.h + "px" });
+    add(el, o, "subject", () => { const q = mbox(o.manual); Object.assign(el.style, { left: q.x + "px", top: q.y + "px", width: q.w + "px", height: q.h + "px" }); });
+    fx(el, o);
     const dim = document.createElement("div");
     dim.className = "dim";
     const root = document.getElementById("root");
@@ -161,7 +177,7 @@ window.studioLayout = function (env) {
     });
     const dir = side === "right" ? 1 : -1;
     tl.fromTo(dim, { opacity: 0 }, { opacity: 1, duration: 0.4 }, at);
-    tl.fromTo(el, { x: dir * r.w, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, at);
+    tl.fromTo(el, { x: dir * r.w, opacity: 0 }, { x: 0, opacity: op(o), duration: 0.5, ease: "power3.out" }, at);
     tl.fromTo(img, { scale: 1.08 }, { scale: 1, duration: Math.max(0.5, S.duration - at), ease: "none" }, at);
   }
 
@@ -174,12 +190,13 @@ window.studioLayout = function (env) {
     el.style.fontSize = u * 13 + "px";
     el.dataset.fs = u * 13;
     document.getElementById("root").appendChild(el);
+    add(el, o, "stamp");
     o.w = el.offsetWidth; o.h = el.offsetHeight; o.size = o.h / area().h;
     const flash = document.createElement("div");
     flash.className = "flash";
     flash.setAttribute("data-layout-allow-occlusion", "");  // a one-frame white pop over the stamp is intended
     document.getElementById("root").appendChild(flash);
-    tl.fromTo(el, { scale: 3.2, opacity: 0, rotation: -16 }, { scale: 1, opacity: 1, rotation: -6, duration: 0.16, ease: "power4.in" }, at);
+    tl.fromTo(el, { scale: 3.2, opacity: 0, rotation: -16 }, { scale: 1, opacity: op(o), rotation: -6, duration: 0.16, ease: "power4.in" }, at);
     tl.fromTo(flash, { opacity: 0.55 }, { opacity: 0, duration: 0.25 }, at + 0.16);
     tl.fromTo(el, { x: -u * 0.8 }, { x: u * 0.8, duration: 0.035, yoyo: true, repeat: 5, ease: "none" }, at + 0.16);
     tl.set(el, { x: 0 }, at + 0.4);
@@ -188,14 +205,18 @@ window.studioLayout = function (env) {
   // Depth prop (placement.depth): a big, slightly blurred object cut by the frame corner, behind the text, drifting.
   function depthProp(tl, o, at) {
     const el = document.createElement("img"), h = Math.max(0.1, Math.min(0.9, +o.size || 0.4)) * S.h, w = h * (o.w && o.h ? o.w / o.h : 1);
-    const [fx, fy] = ANCHOR[o.position] || ANCHOR["bottom-left"], root = document.getElementById("root");
+    const [ax, fy] = ANCHOR[o.position] || ANCHOR["bottom-left"], root = document.getElementById("root");
     el.className = "ovl depth";
     el.src = o.src;
     Object.assign(el.style, { width: w + "px", height: h + "px", filter: `blur(${u * 0.7}px) drop-shadow(0 ${u}px ${u * 2}px rgba(0,0,0,.4))`,
-      left: (fx < 0.5 ? -w * 0.18 : S.w - w * 0.82) + "px", top: (fy < 0.5 ? -h * 0.18 : S.h - h * 0.82) + "px" });
+      left: (ax < 0.5 ? -w * 0.18 : S.w - w * 0.82) + "px", top: (fy < 0.5 ? -h * 0.18 : S.h - h * 0.82) + "px" });
     root.insertBefore(el, document.querySelector("#root .safe"));
-    tl.fromTo(el, { x: (fx < 0.5 ? -1 : 1) * w * 0.4, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, at);
-    tl.to(el, { y: -u * 1.5, rotation: fx < 0.5 ? 2 : -2, duration: Math.max(1, S.duration - at - 0.6), ease: "sine.inOut" }, at + 0.6);
+    const put = () => { const q = mbox(o.manual); Object.assign(el.style, { left: q.x + "px", top: q.y + "px", width: q.w + "px", height: q.h + "px" }); };
+    add(el, o, "depth", put);
+    if (o.manual) put();
+    fx(el, o);
+    tl.fromTo(el, { x: (ax < 0.5 ? -1 : 1) * w * 0.4, opacity: 0 }, { x: 0, opacity: op(o), duration: 0.6, ease: "power3.out" }, at);
+    tl.to(el, { y: -u * 1.5, rotation: ax < 0.5 ? 2 : -2, duration: Math.max(1, S.duration - at - 0.6), ease: "sine.inOut" }, at + 0.6);
   }
   function overlays(tl) {
     let panel = false;
@@ -212,10 +233,11 @@ window.studioLayout = function (env) {
       if (bd) document.getElementById("root").insertBefore(bd, document.querySelector("#root .safe"));  // under the text
       document.getElementById("root").appendChild(el);
       placed.push([el, o, bd]);
+      add(el, o, "image");
       const fx = (ANCHOR[o.position] || ANCHOR.center)[0];
       const from = { pop: { scale: 0, opacity: 0 }, fade: { opacity: 0 }, float: { scale: 0.6, opacity: 0 },
                      slide: { x: (fx < 0.5 ? -1 : 1) * u * 30, opacity: 0 }, none: { opacity: 0 } }[anim] || { scale: 0, opacity: 0 };
-      const to = { scale: 1, x: 0, opacity: 1, duration: anim === "none" ? 0.01 : 0.4,
+      const to = { scale: 1, x: 0, opacity: op(o), duration: anim === "none" ? 0.01 : 0.4,
                    ease: anim === "pop" || anim === "float" ? "back.out(2)" : "power2.out" };
       tl.fromTo(el, from, to, at);
       const end = o.until ? Math.min(+o.until, S.duration) : S.duration;
@@ -249,5 +271,17 @@ window.studioLayout = function (env) {
     });
     return subs.length;
   }
+  // Dashboard editor hooks (same-origin iframe): boxes of editable elements, live apply, a time when all are on screen.
+  window.__boxes = () => reg.map(({ el, o, kind }) => ({ id: o.id, kind, src: o.src, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth,
+    h: el.offsetHeight, rot: o.manual ? o.manual.rot : 0, base: kind === "stamp" ? -6 : 0, z: o.manual ? o.manual.z : 0,
+    opacity: o.manual ? o.manual.opacity : 1, edited: !!o.manual, auto: o.auto || null }));
+  window.__manual = (id, m) => {
+    const e = reg.find(x => x.o.id === id);
+    if (!e || !m) return;
+    e.o.manual = m;
+    if (e.place) e.place(); else placeOverlays();
+    fx(e.el, e.o, true);
+  };
+  window.__settle = () => Math.max(0.3, Math.min(S.duration - 0.05, Math.max(0, ...(S.overlays || []).map(o => +o.at || 0)) + 0.8));
   return { centreInk, logoGrid, overlays, relayout, memeSlots };
 };

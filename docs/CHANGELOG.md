@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-08 · Manual Visual Editing (Timeline "Visual Edit")
+- Data: `<project>/edits.json` = `{fmt: {scene: {asset id: {x,y,w,h (fractions of the frame), rot, opacity, z, lock, hidden, dup?}}}}` (`pipeline/edits.py`, values clamped; 16:9 and 9:16 independent). `visual.overlays(va, project, fmt)` merges it as `placement.manual` (hidden = dropped, duplicate = extra overlay `A012#2`) and adds `placement.id`. `manual` is in the scene render key (a bare `id` is not, so no scene re-renders just from this change); `preview`, `studio run` and the Timeline use the same call, so preview build = render build. Originals never touched.
+- Render: `layout.js` lets `o.manual` replace the automatic box of that element only (image overlays, stamp text, subject panel, depth prop), rotation via CSS `rotate` (no clash with GSAP), opacity as the tween target, layer = zIndex offset. It exposes `__boxes / __manual / __settle` to the dashboard.
+- Timeline: Edit mode (E): click an element in the live preview, 8 handles + rotation handle (Shift = 15 deg snap / flip aspect lock), live X/Y/W/H readout, right panel (Transform, Arrange, Fit & Align, Duplicate, Delete, Reset), undo/redo (Ctrl+Z / Ctrl+Y), Ctrl+D, Delete, arrows nudge. Saves with `PUT /api/projects/<pid>/edits`, then `POST /preview?layout=0` rebuilds only that scene. Files `ui/frontend/edit_math.js` (pure math) + `timeline_edit.js`.
+- Fix: `timeline.js` started loading before the later scripts were parsed (race); it now waits for DOMContentLoaded.
+- Tests: `tools/tests/test_edits.py` (clamp, persistence, apply, only the edited scene's key changes, preview build = render build, node math), `test_ui.py::test_edits_api_...`. Checked on 01 scene 8: preview and a single-scene render show the same moved / enlarged / rotated robot, same render key.
+
 ## 2026-11-08 · Hero word, info card, depth props (style plan step 4)
 - Kinetic: line styles `hero` (the one big word, font = theme `fonts.hero`, falls back to heading; `italic` option, size `xxl`) and `pill` (key phrase on a marker-colour capsule). `ThemeSpec.fonts.hero` is validated like heading / script.
 - Cards: `params.rows` = up to 3 info rows `{title, items: [{icon: emoji, label}]}` (icon tiles, staggered pop); picks the `cards` template.

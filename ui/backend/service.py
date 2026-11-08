@@ -367,11 +367,27 @@ def file_path(pid: str, rel: str) -> Path:
 _preview_lock = threading.Lock()  # one build at a time: two requests must not write the same scene folder
 
 
-def preview(pid: str, fmt: str) -> dict:
-    """Timeline live preview: scene builds in work/preview/<fmt>/ (changed scenes only)."""
+def preview(pid: str, fmt: str, layout: bool = True) -> dict:
+    """Timeline live preview: scene builds in work/preview/<fmt>/ (changed scenes only).
+    layout=False skips the slow layout check (used after every manual edit)."""
     from pipeline.preview import build_preview
     with _preview_lock:
-        return build_preview(project_dir(pid), fmt)
+        return build_preview(project_dir(pid), fmt, check_layout=layout)
+
+
+def get_edits(pid: str) -> dict:
+    """Manual visual edits (edits.json), all formats."""
+    from pipeline import edits
+    return edits.load(project_dir(pid))
+
+
+def save_edits(pid: str, fmt: str, scene, items: dict) -> dict:
+    """Replace one scene's manual edits for one format; the next /preview rebuilds only that scene."""
+    from pipeline import edits
+    try:
+        return {"items": edits.save_scene(project_dir(pid), fmt, int(scene), items)}
+    except (ValueError, TypeError) as e:
+        raise Invalid(str(e)) from e
 
 
 _renders: dict[str, dict] = {}  # project folder -> {proc, final, t0, t1}

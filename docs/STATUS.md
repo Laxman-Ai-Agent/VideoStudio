@@ -5,10 +5,12 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 83. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 88. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
+
+- Manual Visual Editing built 2026-11-08 (Timeline Edit mode, `edits.json`, see CHANGELOG). Covers overlay images / stamp / subject panel / depth props. Not yet: template text blocks (kinetic title etc.), the main full-frame visual, meme-slot people, text editing, 9:16 hands-on check (math is fraction-based, only 16:9 tried).
 
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.

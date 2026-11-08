@@ -54,6 +54,22 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
 #info .row { margin-top:6px; } #info .row span:first-child { color:var(--muted); display:block; font-size:12px; }
 #info .w { color:var(--warn); margin-top:6px; } #info .e { color:var(--err); margin-top:6px; }
 
+/* Visual Edit */
+#editlayer { position:absolute; inset:0; z-index:2; pointer-events:none; touch-action:none; }
+#editlayer.on { pointer-events:auto; cursor:default; outline:2px dashed rgba(139,107,255,.7); outline-offset:-2px; }
+#selbox { display:none; position:absolute; border:1.5px solid #8b6bff; transform-origin:50% 50%; pointer-events:none; }
+#selbox .hd { position:absolute; width:11px; height:11px; margin:-6px 0 0 -6px; background:#fff; border:1.5px solid #8b6bff; border-radius:3px; pointer-events:auto; }
+.hd.nw { left:0; top:0; cursor:nwse-resize; } .hd.n { left:50%; top:0; cursor:ns-resize; } .hd.ne { left:100%; top:0; cursor:nesw-resize; }
+.hd.e { left:100%; top:50%; cursor:ew-resize; } .hd.se { left:100%; top:100%; cursor:nwse-resize; } .hd.s { left:50%; top:100%; cursor:ns-resize; }
+.hd.sw { left:0; top:100%; cursor:nesw-resize; } .hd.w { left:0; top:50%; cursor:ew-resize; }
+.hd.rot { left:50%; top:-26px; border-radius:50%; cursor:grab; background:#8b6bff; }
+#selbox .ro { position:absolute; left:0; top:100%; margin-top:8px; font:11px Consolas, monospace; background:rgba(0,0,0,.75); padding:1px 6px; border-radius:5px; white-space:nowrap; pointer-events:none; }
+.ed { margin-top:12px; border-top:1px solid var(--line); padding-top:8px; }
+.ed .er { display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:6px; } .ed .er.hdr b { flex:1; }
+.ed .er label { display:flex; align-items:center; gap:4px; color:var(--muted); font-size:12px; flex:1; } .ed .er label input[type=number] { width:100%; min-width:0; background:var(--bg); border:1px solid var(--line); border-radius:6px; padding:2px 4px; }
+.ed .er input[type=range] { flex:1; min-width:0; } .ed .er button { padding:3px 7px; font-size:12px; }
+.ed .sec { margin-top:10px; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.ed .chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; } .chip { padding:2px 7px !important; font-size:12px; } .chip.on { background:var(--accent); border-color:var(--accent); } .chip.del { color:var(--warn); }
 #bar { display:flex; align-items:center; gap:8px; padding:8px 16px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--side); flex-wrap:wrap; }
 #bar button { padding:4px 9px; }
 #play { min-width:70px; font-weight:600; }
@@ -108,7 +124,7 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
   <span id="time">0:00.0 / 0:00.0</span>
   <select id="speed" aria-label="Speed"><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="1.5">1.5x</option></select>
   <span class="grow"></span>
-  <span id="keys">Space play · &larr;&rarr; frame (Shift 1 s) · &uarr;&darr; scene · L loop · F expand</span>
+  <span id="keys">E edit · Space play · &larr;&rarr; frame (Shift 1 s) · &uarr;&darr; scene · L loop · F expand</span>
   <button id="zout" title="Zoom out">&minus;</button>
   <input id="zoom" type="range" min="10" max="300" value="60" aria-label="Zoom">
   <button id="zin" title="Zoom in">+</button>
@@ -122,5 +138,5 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
     <div id="ph"></div>
   </div></div></div>
 <audio id="aud" preload="auto"></audio>
-<script src="timeline.js"></script><script src="timeline_live.js"></script>
+<script src="timeline.js"></script><script src="timeline_live.js"></script><script src="edit_math.js"></script><script src="timeline_edit.js"></script>
 </body></html>

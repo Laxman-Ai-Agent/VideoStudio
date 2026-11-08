@@ -202,7 +202,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         if layers:
             asset_hash += ":" + ":".join(file_hash(f) for f in layers)
         ovl = [(f, pl) for f, pl in (overlays or {}).get(s.id, []) if f.exists()]
-        ovl_key = [(file_hash(f), pl) for f, pl in ovl]
+        ovl_key = [(file_hash(f), {k: v for k, v in pl.items() if k != "id" or "manual" in pl}) for f, pl in ovl]  # a bare id changes nothing
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
                 if brand.captions and words else None)
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,

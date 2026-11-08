@@ -32,6 +32,7 @@ function fitScreen() {
   scr.style.width = Math.round(w) + "px";
   scr.style.height = Math.round(h) + "px";
   live.slots.forEach((f) => f && live.data && scale(f));
+  if (window.drawSel) drawSel();
 }
 
 function scale(f) {
@@ -85,7 +86,7 @@ function loadInto(f, s) {
   if (!p || f.dataset.sid === String(s.id)) return;
   f.dataset.sid = String(s.id);
   f.dataset.ready = "";
-  f.onload = () => { f.dataset.ready = "1"; if (st.cur === s) liveSync(aud.currentTime || 0); };
+  f.onload = () => { f.dataset.ready = "1"; if (st.cur === s) { liveSync(aud.currentTime || 0); if (window.editLoaded) editLoaded(); } };
   f.src = url(p.dir + "/index.html");
 }
 
@@ -111,7 +112,8 @@ function liveSync(t) {
   const s = st.cur, f = live.active;
   if (!live.data || !s || !f) return;
   if (f.dataset.ready && f.dataset.sid === String(s.id)) {
-    const local = Math.max(0, t - s.start);
+    const hold = window.edLocal ? edLocal(f) : null;  // Visual Edit shows the settled frame
+    const local = hold ?? Math.max(0, t - s.start);
     try {
       const tl = f.contentWindow.__timelines && f.contentWindow.__timelines.root;
       if (tl) tl.seek(Math.min(local, tl.duration()), false);

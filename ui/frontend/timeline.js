@@ -72,6 +72,7 @@ function drawInfo(s) {
   row("On-screen text", s.on_screen_text);
   row("Overlays", st.ovls.filter((x) => x.scene === s.id).map((x) => x.label).join(", "));
   for (const w of warnsOf(s)) info.append(el("div", w.startsWith("build failed") ? "e" : "w", "⚠ " + w));
+  if (window.drawEdit) drawEdit();
 }
 
 // ---- tracks ----
@@ -241,6 +242,7 @@ async function load(pid) {
   st.pid = pid;
   location.hash = "p=" + enc(pid);
   st.cur = null;
+  await loadEdits();
   const [sj, rj, va] = await Promise.all([getJson("work/scenes.json"), getJson("work/resolved.json"), getJson("visual-assets.json")]);
   st.scenes = (sj && sj.scenes) || [];
   st.res = {};
@@ -300,9 +302,9 @@ document.onkeydown = (e) => {
   if (keys[e.code]) { e.preventDefault(); keys[e.code](); }
 };
 
-fetch("/api/projects", { cache: "no-store" }).then((r) => r.json()).then((ps) => {
+document.addEventListener("DOMContentLoaded", () => fetch("/api/projects", { cache: "no-store" }).then((r) => r.json()).then((ps) => {
   const want = decodeURIComponent((location.hash.match(/p=([^&]+)/) || [])[1] || "");
   for (const p of ps) $("proj").append(new Option(p.title || p.name, p.id));
   if (ps.some((p) => p.id === want)) $("proj").value = want;
   if (ps.length) load($("proj").value);
-});
+}));

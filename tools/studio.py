@@ -219,7 +219,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
             continue
         d = rnd.fmt_dir(fmt, final)
         jobs = rnd.plan_jobs(plan, resolved, brand, fmt, ROOT, w / "scenes" / d, final, transcript.words,
-                             prepared, theme, visual.overlays(va, p))
+                             prepared, theme, visual.overlays(va, p, fmt))
         clips = [j.out for j in jobs]
         keys = ",".join(j.key for j in jobs)  # per-scene cache keys; any change re-runs the stage
         report_json = w / "scenes" / d / "report.json"

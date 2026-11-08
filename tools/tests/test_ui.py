@@ -196,3 +196,15 @@ def test_asset_view_gives_the_character_reference_photo(tmp_path, monkeypatch):
         httpd.shutdown()
     from pipeline.visual import presenter_rules
     assert "me.png" in presenter_rules(tmp_path) and "none yet" in presenter_rules(tmp_path / "empty")
+
+
+def test_edits_api_saves_per_project_and_leaves_assets_alone(api):
+    call, root = api
+    h = {"Content-Type": "application/json"}
+    before = (root / "01_Alpha" / "visual-assets.json").read_bytes()
+    st, r = call("PUT", "/api/projects/01/edits", {"fmt": "16:9", "scene": 1, "items": {"A002": {"x": 0.2, "y": 0.1, "w": 0.3, "h": 0.4, "rot": 400}}}, h)
+    assert st == 200 and r["items"]["A002"]["rot"] == 360
+    assert call("GET", "/api/projects/01/edits")[1]["16:9"]["1"]["A002"]["w"] == 0.3
+    assert call("GET", "/api/projects/02/edits")[1] == {}  # other project untouched
+    assert call("PUT", "/api/projects/01/edits", {"fmt": "4:3", "scene": 1, "items": {}}, h)[0] == 400
+    assert (root / "01_Alpha" / "visual-assets.json").read_bytes() == before
