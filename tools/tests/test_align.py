@@ -96,8 +96,26 @@ def test_transcribe_checked_retries_until_coverage_ok(monkeypatch):
     good = Transcript.model_validate_json((FIXTURE / "transcript.json").read_text("utf-8"))
     bad = good.model_copy(update={"words": good.words[:5]})
     results = iter([bad, good])
-    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: next(results))
+    none = good.model_copy(update={"words": []})  # the hole re-runs (clip_timestamps) find nothing here
+    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: none if "clip_timestamps" in k else next(results))
     assert tr.transcribe_checked(FIXTURE / "audio.wav", attempts=3) is good
-    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: bad)
+    monkeypatch.setattr(tr, "transcribe", lambda *a, **k: none if "clip_timestamps" in k else bad)
     with pytest.raises(ValueError, match="no words for"):
         tr.transcribe_checked(FIXTURE / "audio.wav", attempts=2)
+
+
+def test_a_word_spanning_lost_speech_is_a_hole_and_only_that_stretch_is_redone():
+    """Seen on 02: Whisper put one garbage word over 8.3-27.6 s; coverage passed and align failed later."""
+    from pipeline.transcribe import holes, patch_holes
+    w = lambda t, a, b: Word(text=t, start=a, end=b)  # noqa: E731
+    t = Transcript(language="te", duration=30, source="whisper", model="x",
+                   words=[w("a", 0.5, 1.0), w("b", 1.0, 8.2), w("bad", 8.3, 27.6), w("z", 27.6, 29.9)])
+    assert holes(t) == [(1.0, 8.2), (8.3, 27.6)]
+    calls = []
+
+    def redo(a, b):
+        calls.append((a, b))
+        return [w("x", a + 0.1, a + 1.0), w("y", a + 1.0, a + 2.0)]
+    out = patch_holes(t, redo)
+    assert calls == [(1.0, 8.2), (8.3, 27.6)]
+    assert [x.text for x in out.words] == ["a", "x", "y", "x", "y", "z"] and not any(x.text in ("b", "bad") for x in out.words)

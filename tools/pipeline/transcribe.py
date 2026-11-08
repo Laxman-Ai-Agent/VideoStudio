@@ -39,20 +39,45 @@ def transcribe(audio: Path, language: str = "te", model_size: str = MODEL, **opt
 MAX_GAP = 4.0  # seconds without a word that we treat as "Whisper lost speech", not a pause
 
 
+def holes(t: Transcript, max_gap: float = MAX_GAP) -> list[tuple[float, float]]:
+    """Stretches where Whisper lost speech: gaps between words, and single words longer than max_gap
+    (seen on Telugu: one garbage word spanning 19 s of real speech)."""
+    edges = [0.0] + [x for w in t.words for x in (w.start, w.end)] + [t.duration]
+    gaps = [(a, b) for a, b in zip(edges[::2], edges[1::2]) if b - a > max_gap]
+    return sorted(gaps + [(w.start, w.end) for w in t.words if w.end - w.start > max_gap])
+
+
 def check_coverage(t: Transcript, max_gap: float = MAX_GAP) -> None:
     """Raise when Whisper silently dropped speech (seen on Telugu: 7-30 s of a 30 s clip missing)."""
-    edges = [0.0] + [x for w in t.words for x in (w.start, w.end)] + [t.duration]
-    holes = [(a, b) for a, b in zip(edges[::2], edges[1::2]) if b - a > max_gap]
-    if not t.words or holes:
-        where = ", ".join(f"{a:.1f}-{b:.1f}s" for a, b in holes) or "everything"
+    hs = holes(t, max_gap)
+    if not t.words or hs:
+        where = ", ".join(f"{a:.1f}-{b:.1f}s" for a, b in hs) or "everything"
         raise ValueError(f"Whisper returned no words for {where}. Check the audio there "
                          f"(music/silence?) and the Whisper settings (DECISIONS.md).")
 
 
+def patch_holes(t: Transcript, redo, max_gap: float = MAX_GAP) -> Transcript:
+    """Transcribe only the lost stretches again (redo(a, b) -> words) and splice them in; cheaper and
+    more reliable than re-running the whole file. Words outside the holes stay as they are."""
+    for a, b in holes(t, max_gap):
+        new = [w for w in redo(a, b) if a - 0.05 <= w.start and w.end <= b + 0.05 and w.end - w.start <= max_gap]
+        if new:
+            keep = [w for w in t.words if w.end <= a + 0.05 or w.start >= b - 0.05]
+            keep = [w for w in keep if not (w.start >= a - 0.05 and w.end <= b + 0.05)]
+            t = t.model_copy(update={"words": sorted(keep + new, key=lambda w: w.start)})
+    return t
+
+
 def transcribe_checked(audio: Path, model_size: str = MODEL, attempts: int = ATTEMPTS) -> Transcript:
-    """transcribe() + check_coverage(), retried. Raises the last coverage error if every attempt fails."""
+    """transcribe() + check_coverage(); lost stretches are transcribed again on their own (clip_timestamps),
+    then the whole file is retried. Raises the last coverage error if every attempt fails."""
+    redo = lambda a, b: transcribe(audio, model_size=model_size, clip_timestamps=[a, b], vad_filter=False).words  # noqa: E731
     for n in range(1, attempts + 1):
         t = transcribe(audio, model_size=model_size)
+        for _ in range(attempts):
+            if not holes(t):
+                break
+            t = patch_holes(t, redo)
         try:
             check_coverage(t)
             return t

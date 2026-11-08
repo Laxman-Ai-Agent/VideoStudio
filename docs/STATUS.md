@@ -18,6 +18,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
   4. 01 `edits.json` is not created (test edit removed); 01 final 16:9 still not re-rendered (ask first).
 - Dev notes: pane must be visible for the browser checks (hidden pane = 0 width, slow timers); `live` is a `const` (not on `window`).
 
+- Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): transcribe + align + plan done (15 scenes, theme space). Next: write `visual-assets.json` from `work/assets_brief.md` (run stops there, exit 2). Note: the project was made by hand (no drop/ folder; `input/script.json` copied from `gemini_transcript.json`).
+
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.
 - Music in `_library/music/calm/` (and whoosh files in `_library/sfx/whoosh/` if wanted); `PEXELS_API_KEY` in `tools/.env` for stock footage.
