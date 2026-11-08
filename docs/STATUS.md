@@ -18,7 +18,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
   4. 01 `edits.json` is not created (test edit removed); 01 final 16:9 still not re-rendered (ask first).
 - Dev notes: pane must be visible for the browser checks (hidden pane = 0 width, slow timers); `live` is a `const` (not on `window`).
 
-- Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): transcribe + align + plan done (15 scenes, theme space). Next: write `visual-assets.json` from `work/assets_brief.md` (run stops there, exit 2). Note: the project was made by hand (no drop/ folder; `input/script.json` copied from `gemini_transcript.json`).
+- Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): plan (15 scenes, theme space) + visual-assets.json (20 assets: 10 mains, 5 templates, 3 presenter reactions C1 in a white bomber jacket, 2 depth props) done; `run 02 --review` OK, storyboard written. 13 assets to generate (prompts in the dashboard); scenes 4 and 12 use free downloads (Wikimedia / Openverse) until their own files arrive. Not rendered yet.
 
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.
