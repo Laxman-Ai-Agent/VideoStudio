@@ -4,7 +4,7 @@ Updated 2026-11-08. Phases 0-5 done, plus paper style, transitions, kinetic text
 per-video themes, quote template, read-only timeline page (dashboard `/timeline.html`), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## Where we are
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 71. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 72. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
@@ -33,5 +33,5 @@ per-video themes, quote template, read-only timeline page (dashboard `/timeline.
 - Keyword matching (threshold 0.34) can pick loose files; prefer `params.entity` for named people / brands.
 - Whisper large-v3 is ~8x real time here (20 min audio ~2.5 h, cached once). small/turbo cannot anchor Telugu.
 - Hugging Face host sometimes does not resolve from Python; set `HF_HUB_OFFLINE=1` (large-v3 is cached).
-- Free RAM can be low (~1.6 GB seen); close heavy apps before long renders.
+- Free RAM can be low (~1.6 GB seen); render now drops to 1 worker by itself (slower, not a crash). Biggest users seen: Chrome tabs (~2.2 GB), Claude, ChatGPT app, VS Code.
 - `projects/01_AI_Agents` uses the 30 s sample audio; the full script is at `E:\Youtube\13-AI agents\ai agents content.txt`.

@@ -68,6 +68,10 @@ def checks() -> list[tuple[str, str, str]]:
                   f"{len(names)} presets" + (f"; font fallback in {weak}" if weak else "")))
     except Exception as e:  # noqa: BLE001
         r.append(("fail", "Themes", f"{type(e).__name__}: {e}"))
+    from .render import free_ram_gb, safe_workers
+    ram = free_ram_gb()
+    r.append(("ok" if ram >= 2 else "warn", "Free RAM", f"{ram:.1f} GB -> {safe_workers(2, ram)} render worker(s)"
+              + ("" if ram >= 2 else "; close Chrome tabs / other apps before a render")))
     chrome = next((p for p in CHROME_PATHS if p.exists()), None)
     r.append(("ok" if chrome else "fail", "Chrome (render)", str(chrome) if chrome else "not found"))
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · RAM-aware rendering
+- Render lowers parallel workers to what free RAM allows (`safe_workers`: 0.6 GB per worker + 1 GB headroom, never below 1) and says so; `doctor` shows free RAM and warns under 2 GB. Test: `test_safe_workers_follow_free_ram`.
+
 ## 2026-11-08 · Timeline view (read-only)
 - Dashboard page `ui/frontend/timeline.html` + `timeline.js` (nav link "Timeline"): Text / Overlays / Visual / Narration tracks, playhead, Play (input/audio.wav), zoom, click to seek, preview of the selected scene. Reads work/scenes.json, work/resolved.json, visual-assets.json. Writes nothing.
 

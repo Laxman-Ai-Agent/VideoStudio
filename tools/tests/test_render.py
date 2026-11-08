@@ -200,3 +200,11 @@ def test_kinetic_and_cards_pick_by_params():
 def test_quote_picks_by_params():
     s = _plan().scenes[0].model_copy(update={"params": {"quote": {"text": "a", "by": "b"}}})
     assert rnd.pick_template(s, ResolvedScene(id=1, status="template")) == "quote"
+
+
+def test_safe_workers_follow_free_ram():
+    assert rnd.safe_workers(2, 3.7) == 2      # plenty: as asked
+    assert rnd.safe_workers(2, 1.6) == 1      # low: one at a time
+    assert rnd.safe_workers(2, 0.2) == 1      # never zero
+    assert rnd.safe_workers(4, float("inf")) == 4  # unknown: as asked
+    assert rnd.free_ram_gb() > 0

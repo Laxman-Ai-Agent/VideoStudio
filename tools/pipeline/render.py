@@ -28,6 +28,28 @@ GSAP = HF / "dist" / "vendor" / "npm" / "gsap@3.15.0" / "dist" / "gsap.min.js"
 PREVIEW_SHORT_SIDE = 720
 FIT_TOLERANCE = 0.35  # aspect mismatch above this -> blurred backdrop instead of a hard crop
 RENDER_TIMEOUT = 900
+GB_PER_WORKER = 0.6    # one HyperFrames render (node + Chrome), ~0.5 GB seen
+RAM_HEADROOM_GB = 1.0  # left for Windows and the open apps
+
+
+def free_ram_gb() -> float:
+    """Free physical RAM in GB (Windows GlobalMemoryStatusEx); inf when it cannot be read."""
+    import ctypes
+
+    class MS(ctypes.Structure):
+        _fields_ = [("len", ctypes.c_ulong), ("load", ctypes.c_ulong)] +                    [(n, ctypes.c_ulonglong) for n in ("tot", "avail", "tpf", "apf", "tv", "av", "aev")]
+    try:
+        m = MS(len=ctypes.sizeof(MS))
+        return m.avail / 2**30 if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(m)) else float("inf")
+    except Exception:  # noqa: BLE001 - not Windows: keep the requested worker count
+        return float("inf")
+
+
+def safe_workers(requested: int, free_gb: float) -> int:
+    """Parallel renders that fit in free RAM (never below 1), so low memory slows a run instead of killing it."""
+    if free_gb == float("inf"):
+        return max(1, requested)
+    return max(1, min(requested, int((free_gb - RAM_HEADROOM_GB) / GB_PER_WORKER)))
 REMOTION = ENGINES / "remotion" / "render.mjs"
 FONTS = BRAND / "fonts"  # _brand/fonts/<Family>/*.ttf (Google Fonts, OFL), loaded by @font-face
 WEIGHTS = {"thin": 100, "extralight": 200, "light": 300, "regular": 400, "medium": 500, "semibold": 600,
@@ -396,7 +418,10 @@ def render_format(jobs: list[Job], fmt: str, final: bool, workers: int = 2,
             + (f"  ({r.error[:120]})" if r.error else ""))
         return r
 
-    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+    n = safe_workers(workers, free_ram_gb()) if todo else 1
+    if n < workers:
+        log(f"    low free RAM: {n} worker(s) instead of {workers} (close other apps for speed)")
+    with ThreadPoolExecutor(max_workers=n) as pool:
         for r in pool.map(one, todo):
             results[r.id] = r
     j0 = jobs[0]
