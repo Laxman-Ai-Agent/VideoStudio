@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 · Render clock in the Timeline
+- Render bar under the header while a render runs: big elapsed clock (ticks every second), "usually takes" from the last finished run of the same mode (`work/logs/ui_render_times.json`) with a progress bar and time left, and the latest log line. Stays visible after the run (green done / red failed). Test: `test_render_status_reports_elapsed_and_remembers_duration`.
+
 ## 2026-11-08 · One aspect only
 - `studio run 01 --format 16:9|9:16`: skip the other format's render/assemble (its cache is untouched).
 

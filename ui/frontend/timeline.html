@@ -21,6 +21,15 @@ header h1 { font-size:18px; font-weight:600; margin:0 6px 0 0; }
 #render:disabled { opacity:.6; cursor:default; }
 #rstate { color:var(--muted); font-size:12px; max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
+#rbar { display:none; align-items:center; gap:22px; padding:12px 18px; border-bottom:1px solid var(--line); background:var(--card); }
+#rbar.show { display:flex; }
+#rbar .big { font-family:Consolas, monospace; font-size:44px; font-weight:700; line-height:1; letter-spacing:1px; }
+#rbar .lab { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+#rbar .val { font-size:22px; font-weight:600; }
+#rbar .step { flex:1; min-width:0; font-size:15px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#rbar.done .big { color:#4ade80; } #rbar.failed .big, #rbar.waiting .big { color:var(--err); }
+#rbar .pbar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin-top:6px; width:220px; }
+#rbar .pbar i { display:block; height:100%; background:var(--accent); width:0; transition:width .5s; }
 #main { display:grid; grid-template-columns:210px minmax(0,1fr) 270px; gap:14px; padding:12px 16px; }
 body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big #info { display:none; }
 #list { display:flex; flex-direction:column; gap:3px; max-height:52vh; overflow-y:auto; }
@@ -83,6 +92,9 @@ body.big #main { grid-template-columns:minmax(0,1fr); } body.big #list, body.big
   <select id="rmode" aria-label="Render mode"><option value="preview">Preview 720p</option><option value="final">Final</option></select>
   <button id="render">Render</button>
 </header>
+<div id="rbar"><div><div class="lab" id="rlab">Render time</div><div class="big" id="rtime">0:00</div></div>
+  <div><div class="lab">Usually takes</div><div class="val" id="rlast">-</div><div class="pbar"><i id="rprog"></i></div></div>
+  <div class="step" id="rstep"></div></div>
 <div id="main">
   <div id="list"></div>
   <div id="stage"><div id="screen"></div></div>

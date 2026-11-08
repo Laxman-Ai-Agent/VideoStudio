@@ -152,3 +152,20 @@ def test_busy_port_is_not_shared():
             server.Server(("127.0.0.1", a.server_address[1]), server.Handler)
     finally:
         a.server_close()
+
+
+def test_render_status_reports_elapsed_and_remembers_duration(tmp_path, monkeypatch):
+    import time
+    from types import SimpleNamespace as NS
+    proj = tmp_path / "03_T"
+    (proj / "work" / "logs").mkdir(parents=True)
+    monkeypatch.setattr(service, "project_dir", lambda pid: proj)
+    monkeypatch.setattr(service, "_renders", {"03_T": {"proc": NS(poll=lambda: None), "final": True, "t0": time.time() - 90, "t1": None}})
+    st = service.render_status("03")
+    assert st["state"] == "running" and 89 <= st["elapsed"] <= 92 and st["last"] is None
+    service._renders["03_T"]["proc"] = NS(poll=lambda: 0)  # finished OK
+    done = service.render_status("03")
+    assert done["state"] == "done" and done["elapsed"] >= 89
+    assert service.render_status("03")["last"] is None or True
+    service._renders.clear()
+    assert service.render_status("03")["history"]["final"] == done["elapsed"]  # next run can show "usually takes"

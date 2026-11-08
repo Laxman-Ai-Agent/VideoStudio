@@ -351,14 +351,19 @@ def preview(pid: str, fmt: str) -> dict:
         return build_preview(project_dir(pid), fmt)
 
 
-_renders: dict[str, tuple] = {}  # project folder -> (Popen, log file, final)
+_renders: dict[str, dict] = {}  # project folder -> {proc, final, t0, t1}
+
+
+def _times(p: Path) -> Path:
+    return p / "work" / "logs" / "ui_render_times.json"
 
 
 def start_render(pid: str, final: bool) -> dict:
     """`studio run <pid> [--final]` in the background (same as the command line); one at a time per project."""
     import subprocess
+    import time
     p = project_dir(pid)
-    if (cur := _renders.get(p.name)) and cur[0].poll() is None:
+    if (cur := _renders.get(p.name)) and cur["proc"].poll() is None:
         return render_status(pid)
     log = p / "work" / "logs" / "ui_render.log"
     log.parent.mkdir(parents=True, exist_ok=True)
@@ -367,17 +372,31 @@ def start_render(pid: str, final: bool) -> dict:
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                             env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})
-    _renders[p.name] = (proc, log, final)
+    _renders[p.name] = {"proc": proc, "final": final, "t0": time.time(), "t1": None}
     return render_status(pid)
 
 
 def render_status(pid: str) -> dict:
+    """State, elapsed seconds, the last run's duration of the same mode (a rough ETA) and the log tail."""
+    import json
+    import time
     p = project_dir(pid)
     cur = _renders.get(p.name)
     log = p / "work" / "logs" / "ui_render.log"
     tail = log.read_text("utf-8", errors="replace").splitlines()[-8:] if log.exists() else []
+    try:
+        history = json.loads(_times(p).read_text("utf-8"))
+    except (OSError, ValueError):
+        history = {}
     if not cur:
-        return {"state": "idle", "tail": tail}
-    code = cur[0].poll()
+        return {"state": "idle", "tail": tail, "history": history}
+    code = cur["proc"].poll()
+    if code is not None and cur["t1"] is None:
+        cur["t1"] = time.time()
+        if code == 0:  # remember how long a finished run took
+            history[("final" if cur["final"] else "preview")] = round(cur["t1"] - cur["t0"])
+            _times(p).write_text(json.dumps(history), "utf-8")
     state = "running" if code is None else "done" if code == 0 else "waiting" if code == 2 else "failed"
-    return {"state": state, "code": code, "final": cur[2], "tail": tail}
+    elapsed = round((cur["t1"] or time.time()) - cur["t0"])
+    return {"state": state, "code": code, "final": cur["final"], "elapsed": elapsed, "tail": tail,
+            "last": history.get("final" if cur["final"] else "preview")}

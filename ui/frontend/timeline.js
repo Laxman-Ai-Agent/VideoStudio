@@ -187,14 +187,35 @@ function setZoom(pps) {
 
 // ---- render (the same command as `studio.cmd run <id> [--final]`) ----
 let renderTimer = 0;
+const mmss = (n) => `${Math.floor(n / 60)}:${String(Math.round(n % 60)).padStart(2, "0")}`;
+let tick = 0, shown = null;
+function paintRender() {  // big clock: elapsed since the render started (ticks every second between polls)
+  const d = shown;
+  if (!d) return;
+  const el_ = d.state === "running" ? d.elapsed + Math.round((Date.now() - d.at) / 1000) : d.elapsed || 0;
+  $("rtime").textContent = mmss(el_);
+  $("rprog").style.width = d.last ? Math.min(100, (100 * el_) / d.last) + "%" : "0";
+  if (d.state === "running" && d.last) {
+    const left = d.last - el_;
+    $("rlab").textContent = left > 0 ? `Elapsed · about ${mmss(left)} left` : "Elapsed · taking longer than last time";
+  }
+}
 function showRender(d) {
   const last = (d.tail || []).filter((x) => x.trim()).slice(-1)[0] || "";
-  const text = { running: "Rendering... " + last.trim(), done: "Render done: see the project's output folder",
-                 failed: "Render failed: " + last.trim(), waiting: "Waiting for you: " + last.trim() }[d.state] || "";
-  $("rstate").textContent = text;
-  $("rstate").title = (d.tail || []).join("\n");
+  const names = { running: "Rendering", done: "Render finished", failed: "Render failed", waiting: "Waiting for you" };
+  const box = $("rbar");
+  box.className = d.state === "idle" ? "" : "show " + d.state;
+  shown = { ...d, at: Date.now() };
+  $("rlab").textContent = d.state === "running" ? "Elapsed" : (names[d.state] || "") + " in";
+  $("rlast").textContent = d.last ? mmss(d.last) : "first run: unknown";
+  $("rstep").textContent = d.state === "done" ? "Done: see the project's output folder" : last.trim();
+  $("rstep").title = (d.tail || []).join("\n");
+  $("rstate").textContent = "";
   $("render").disabled = d.state === "running";
   $("render").textContent = d.state === "running" ? "Rendering..." : "Render";
+  clearInterval(tick);
+  paintRender();
+  if (d.state === "running") tick = setInterval(paintRender, 1000);
 }
 async function renderStatus() {
   clearTimeout(renderTimer);

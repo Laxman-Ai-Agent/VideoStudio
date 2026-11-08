@@ -4,7 +4,7 @@ Updated 2026-11-08. Phases 0-5 done, plus paper style, transitions, kinetic text
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## Where we are
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 75. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 76. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
