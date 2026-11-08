@@ -169,3 +169,30 @@ def test_render_status_reports_elapsed_and_remembers_duration(tmp_path, monkeypa
     assert service.render_status("03")["last"] is None or True
     service._renders.clear()
     assert service.render_status("03")["history"]["final"] == done["elapsed"]  # next run can show "usually takes"
+
+
+def test_asset_view_gives_the_character_reference_photo(tmp_path, monkeypatch):
+    # the user is the presenter: the asset page shows which photo to attach in the image tool
+    monkeypatch.setattr(service, "PROJECTS", tmp_path)
+    monkeypatch.setattr(service, "ROOT", tmp_path)
+    (tmp_path / "_brand" / "presenter").mkdir(parents=True)
+    Image.new("RGB", (8, 8)).save(tmp_path / "_brand" / "presenter" / "me.png")
+    p = _project(tmp_path, "01_Alpha", [{"id": "A001", "name": "Shock", "category": "character_expression", "scenes": [1],
+                                         "role": "overlay", "character": "C1", "prompt": {"text": "hands on head"}}])
+    va = json.loads((p / "visual-assets.json").read_text("utf-8"))
+    va["characters"] = [{"id": "C1", "name": "Presenter", "description": "d", "outfit": "red t-shirt",
+                         "reference_image": "_brand/presenter/me.png"}]
+    (p / "visual-assets.json").write_text(json.dumps(va), "utf-8")
+    ref = service.asset("01", "A001")["reference"]
+    assert ref["name"] == "me.png" and ref["src"] == "/brand/presenter/me.png" and ref["outfit"] == "red t-shirt"
+    httpd = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    try:
+        base = f"http://127.0.0.1:{httpd.server_address[1]}"
+        assert urllib.request.urlopen(base + "/brand/presenter/me.png").status == 200
+        with pytest.raises(urllib.error.HTTPError):
+            urllib.request.urlopen(base + "/brand/presenter/..%2F..%2Fsecret.txt")
+    finally:
+        httpd.shutdown()
+    from pipeline.visual import presenter_rules
+    assert "me.png" in presenter_rules(tmp_path) and "none yet" in presenter_rules(tmp_path / "empty")

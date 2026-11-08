@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-08 · Presenter reference photo
+- `Character.reference_image` + `outfit`; the user is C1 in every video (photos in `_brand/presenter/`, git-ignored; two shock samples are there now). The assets brief tells Claude the presenter rules: every C1 prompt starts "Attach reference image: <file>", outfit word for word, per-video outfit.
+- Dashboard asset page: "Attach this reference image" box (photo / character sheet, outfit, path); Copy Prompt puts the attach line first. Route `GET /brand/presenter/<file>`. Test: `test_asset_view_gives_the_character_reference_photo`.
+- English font families (13) added to `_brand/fonts/` (see LIBRARIES.md).
+
 ## 2026-11-08 · Subject panel + stamp words
 - Person / character overlays (category `character_expression`, `reaction`) on photo or footage scenes: a full-height 9:16 panel at the left or right edge (slides in, background dims, subject large and bottom-anchored). Side = away from where the subject stands in its own picture (`cx` = alpha centroid from `render._centre_x`), or the other side if that one holds the lower third; the lower third wraps before the panel. Text scenes keep corner stickers.
 - Overlays with `subcategory: text_sticker` + `prompt.text_in_image` (LAYOFFS) are drawn as type, not as the picture: big bold red stamp that slams in with a flash and shake. Layout check skips the stamp and flash (rotated box corners gave a false "hidden under video"). Test: `test_overlay_subject_side_and_stamp_text`.

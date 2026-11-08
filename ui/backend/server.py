@@ -100,6 +100,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(service.project_assets(m[1]))
             if (m := ASSET.match(path)) and not m[3]:
                 return self._json(service.asset(m[1], m[2]))
+            if m := re.match(r"^/brand/presenter/([^/\\]+)$", path):  # the user's reference photos
+                f = (service.ROOT / "_brand" / "presenter" / m[1]).resolve()
+                if f.is_file() and f.parent == (service.ROOT / "_brand" / "presenter").resolve():
+                    return self._file(f)
+                raise service.NotFound(path)
             if m := re.match(r"^/files/([^/]+)/(.+)$", path):
                 return self._file(service.file_path(m[1], m[2]))
             rel = "index.html" if path in ("/", "/index.html") else path.lstrip("/")

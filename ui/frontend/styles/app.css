@@ -271,3 +271,7 @@ details summary { font-size: 12.5px; }
 .grid.has-active .tile { transition: transform .15s, border-color .15s, opacity .2s, filter .2s; }
 .grid.has-active .tile:not(.active) { opacity: .5; filter: saturate(.55) brightness(.85); }
 .grid.has-active .tile:not(.active):hover, .grid.has-active .tile:not(.active):focus-visible { opacity: 1; filter: none; }
+.d-ref { display: flex; gap: 12px; align-items: center; margin: 8px 0; padding: 8px; border: 1px dashed var(--accent, #2a7);
+         border-radius: 8px; }
+.d-ref img { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; }
+.d-ref p { margin: 4px 0 0; font-size: 13px; color: var(--muted); word-break: break-all; }

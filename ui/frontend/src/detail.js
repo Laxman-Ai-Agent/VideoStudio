@@ -60,6 +60,8 @@ export function fullPrompt(a) {
   if ((p.transparent || a.output?.transparent) && !/transparent/i.test(t))
     t += "\n\nTransparent background (PNG with alpha channel): only the subject, no backdrop, no shadow box.";
   if (neg && !t.includes(neg)) t += `\n\nAvoid: ${neg}`;
+  const ref = a.reference && a.reference.name;
+  if (ref && !t.includes(ref)) t = `Attach reference image: ${ref}. Keep this exact person's face.\n\n` + t;
   return t;
 }
 
@@ -171,6 +173,15 @@ function show(a, keepEdits = false) {
     $("d-prompt").value = fullPrompt(a);
     promptDirty = false;
     setEditing(false);
+  }
+  const ref = a.reference;  // character photo / sheet to attach in the image tool
+  $("d-ref").hidden = !ref;
+  if (ref) {
+    $("d-ref-img").src = ref.src || "";
+    $("d-ref-img").hidden = !ref.src;
+    $("d-ref-txt").textContent = ref.path
+      ? `${ref.character}: ${ref.path}${ref.outfit ? ` · outfit: ${ref.outfit}` : ""}`
+      : `${ref.character}: no reference photo yet (put one in _brand/presenter/)`;
   }
   const pr = a.prompt;
   $("d-settings").textContent = pr.text

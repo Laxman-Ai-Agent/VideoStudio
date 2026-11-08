@@ -21,6 +21,7 @@ from pathlib import Path
 
 from .contracts import Resolved, ScenePlan, VisualAsset, VisualAssets
 from .ingest import IMAGE
+from .config import ROOT
 from .project import atomic_write
 from .visual_media import (ASPECTS, PROCESSED, _frame, _video, _video_seconds, check,  # noqa: F401
                            crop_window, is_transparent, out_size, process)
@@ -59,6 +60,17 @@ def save(project: Path, va: VisualAssets) -> None:
 
 # ---- 1. brief for Claude --------------------------------------------------------
 
+def presenter_rules(root: Path) -> str:
+    """Brief lines for C1 = the user, with the photo in _brand/presenter/ when there is one."""
+    photos = sorted(f for f in (root / "_brand" / "presenter").glob("*") if f.suffix.lower() in IMAGE)
+    ref = f"_brand/presenter/{photos[0].name}" if photos else ""
+    return (f'C1: name "Presenter (you)", reference_image "{ref or "(none yet: ask the user to put a photo in _brand/presenter/)"}", '
+            'description = face, hair, beard, build only (from the photo), outfit = clothes for THIS video '
+            '(new outfit per video, same in every shot of it). Every C1 prompt starts with: "Attach reference image: '
+            f'{Path(ref).name or "<photo>"}. Keep this exact person\'s face, hair and beard." then the outfit word for word, '
+            'the expression and pose (shock = hands on head, mouth open; pointing = arm out to one side; ...), '
+            'half body (waist up) or full body, plain light grey background, transparent PNG. See docs/STYLE.md.')
+
 def brief(project: Path, plan: ScenePlan, transcript_text: str, formats: dict, theme: dict | None,
           local_assets: list[str], out: Path) -> None:
     rows = "\n".join(f"| {s.id} | {s.start:.2f}-{s.end:.2f} | {s.visual_type} | {s.on_screen_text} | {s.query} | {s.narration} |"
@@ -66,6 +78,7 @@ def brief(project: Path, plan: ScenePlan, transcript_text: str, formats: dict, t
     sizes = ", ".join(f"{k} = {v['width']}x{v['height']}" for k, v in formats.items())
     th = f"{theme.get('name')} ({theme.get('category', '')}), colours {theme.get('colors', {})}" if theme else "default"
     have = "\n".join(f"- {a}" for a in local_assets) or "- (none)"
+    presenter = presenter_rules(ROOT)
     example = {
         "project": {"name": project.name, "title": "..."}, "style": "one shared look line for every generated image",
         "characters": [{"id": "C1", "name": "Ravi", "description": "28-year-old Telugu man, short black hair, light "
@@ -125,6 +138,8 @@ Every asset also gets `context`: one or two sentences on what situation it shows
 what the viewer should understand. (`narration` is filled from the transcript automatically.)
 Keep 16:9 main visuals centred (they are centre-cropped for 9:16). Overlays: square or portrait, subject
 fills the frame, transparent or plain background, `processing.remove_background: true`.
+Presenter: the user appears in every video as character C1 (memes, reactions, pointing, explaining).
+{presenter}
 Several characters drawn in one image: list each as its own asset with `processing.extract_from` (the
 composite's id) and `processing.crop` [x, y, w, h] fractions.
 

@@ -346,6 +346,8 @@ class Character(BaseModel):
     name: str
     description: str              # fixed appearance text, repeated in every prompt that uses the character
     reference_asset: str = ""     # asset id of the reference sheet, if any
+    reference_image: str = ""     # photo to attach when generating: "_brand/presenter/<file>" (the user) or a project path
+    outfit: str = ""              # clothes in this video (the presenter's outfit changes per video)
 
 
 class VisualAssets(BaseModel):

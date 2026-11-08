@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import threading
+import urllib.parse
 from datetime import datetime
 from pathlib import Path
 
@@ -74,7 +75,24 @@ def _scenes(p: Path) -> dict:
     return {s.id: s for s in ScenePlan.model_validate_json(f.read_text("utf-8")).scenes}
 
 
-def view(a, p: Path, scenes: dict | None = None) -> dict:
+def reference(a, p: Path, chars: dict) -> dict | None:
+    """The photo / sheet to attach when generating this asset (its character's reference)."""
+    c = chars.get(a.character)
+    if not c:
+        return None
+    rel = c.reference_image
+    if rel.startswith("_brand/presenter/") and (ROOT / rel).is_file():
+        src = "/brand/presenter/" + urllib.parse.quote(Path(rel).name)
+    elif rel and _inside(p, rel):
+        src = f"/files/{p.name}/{urllib.parse.quote(rel)}"
+    elif (r := next((x for x in chars.get('_assets', []) if x.id == c.reference_asset), None)) and _inside(p, r.file):
+        rel, src = r.file, f"/files/{p.name}/{urllib.parse.quote(r.file)}"
+    else:
+        rel, src = rel, ""
+    return {"character": c.name, "name": Path(rel).name if rel else "", "path": rel, "src": src, "outfit": c.outfit}
+
+
+def view(a, p: Path, scenes: dict | None = None, chars: dict | None = None) -> dict:
     d = a.model_dump()
     d["found"] = _found(a, p)
     d["preview"] = next((r for r in (a.file, a.source_file) if _inside(p, r)), "")
@@ -88,6 +106,11 @@ def view(a, p: Path, scenes: dict | None = None) -> dict:
                         "on_screen_text": sc[i].on_screen_text, "visual_type": sc[i].visual_type}
                        for i in a.scenes if i in sc]
     d["out_size"] = list(visual.out_size(a))
+    if a.character:
+        if chars is None:
+            va = visual.load(p)
+            chars = {c.id: c for c in (va.characters if va else [])} | {"_assets": va.assets if va else []}
+        d["reference"] = reference(a, p, chars)
     return d
 
 
@@ -131,7 +154,7 @@ def project_assets(pid: str) -> dict:
     sc = _scenes(p)
     return {"project": {**va.project, "id": p.name.split("_")[0], "name": p.name}, "counts": counts(va, p),
             "summary": va.summary, "characters": [c.model_dump() for c in va.characters],
-            "assets": [view(a, p, sc) for a in va.assets]}
+            "assets": [view(a, p, sc, {c.id: c for c in va.characters} | {"_assets": va.assets}) for a in va.assets]}
 
 
 def asset(pid: str, aid: str) -> dict:
