@@ -20,6 +20,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 - Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): plan (15 scenes, theme space) + visual-assets.json (20 assets: 10 mains, 5 templates, 3 presenter reactions C1 in a white bomber jacket, 2 depth props) done; `run 02 --review` OK, storyboard written. 13 assets to generate (prompts in the dashboard); scenes 4 and 12 use free downloads (Wikimedia / Openverse, kept in `_library/downloads`) until their own files arrive. Not rendered yet.
 
+- Project 07_Mars_Mission (Mars part 1, 77 s, `E:\Youtube8-Mars Missionudio.wav`): final 16:9 rendered 2026-11-09, QA PASS, with music. Fully done by Claude: transcript hand-aligned to the script (align fails when Whisper writes English words in Telugu letters: 44/171 matched), 16 images collected from Wikimedia Commons, no user uploads. Audio 02-10 of the same folder not done yet.
+
 - Project 03 (Chandrayaan-3, 66 s): fully automatic 16:9 preview rendered, QA PASS (`projects/03/output/preview_16x9.mp4`). credits.txt now lists all 8 sources (fixed 2026-11-08). Flag emoji show as letters (US, RU ...) on this PC.
 
 ## Pending, user side
