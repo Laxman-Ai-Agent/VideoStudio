@@ -24,6 +24,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 - Project 03 (Chandrayaan-3, 66 s): fully automatic 16:9 preview rendered, QA PASS (`projects/03/output/preview_16x9.mp4`). credits.txt now lists all 8 sources (fixed 2026-11-08). Flag emoji show as letters (US, RU ...) on this PC.
 
+- Timing correction (2026-11-09): user gives audio + Gemini JSON -> `tools\.venv\Scripts\python.exe -m pipeline.align_mms audio json out` (MMS, no Whisper). Keep every word, fix timings only, deliver the finished JSON. Not wired into `studio run` yet; 07 video still uses the older Whisper timing (~0.5 s early).
+
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.
 - Music in `_library/music/calm/` (and whoosh files in `_library/sfx/whoosh/` if wanted). Loose images / stock: ask Claude to use the asset-collector MCP (keyword web search removed from the pipeline 2026-11-09).
