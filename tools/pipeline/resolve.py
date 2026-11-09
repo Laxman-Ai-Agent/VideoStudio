@@ -6,8 +6,7 @@ Per scene, first hit wins:
 3. best description match in project assets, then `_library` (each asset used once per video)
 4. motion_graphic / diagram / chart / text / map: no asset needed -> 'template' (`params.lottie` fetches
    the animation: an emoji -> Google's animated Noto emoji in `_library/lottie`, or a project .json)
-5. internet (providers.search: Pexels, Openverse, Wikimedia), downloaded to `_library/downloads`, credits kept
-6. 'missing' -> visual-assets.json holds its generation prompt (visual.sync adds one if needed)
+5. 'missing' -> visual-assets.json holds its generation prompt (visual.sync adds one if needed)
 """
 import hashlib
 import re
@@ -25,7 +24,6 @@ not but out off over under about than then them they their there here what when 
 why how all any each few more most other some such only own same too very can will just shot
 side wide close looking working own using used use one two three because of to in on at by an as
 is it or be we do so up no my""".split())
-NET_THRESHOLD = 0.5  # internet titles must cover half the query: search engines match loosely
 
 
 def keywords(text: str) -> list[str]:
@@ -93,22 +91,6 @@ def _take(c, scene: Scene, library: Path, lib_index: Path, root: Path, download:
     return None
 
 
-def _internet(scene: Scene, library: Path, lib_index: Path, root: Path, pexels_key: str,
-              search: Callable, download: Callable) -> ResolvedScene | None:
-    kind = "video" if scene.visual_type == "footage" else "image"
-    q = keywords(scene.query)
-    if not q:
-        return None
-    need = max(min(2, len(q)), NET_THRESHOLD * len(q))
-    for words in dict.fromkeys((" ".join(q[:4]), " ".join(q[:2]))):
-        for c in search(words, kind, scene.visual_type, pexels_key):
-            if sum(w in set(keywords(c.title)) for w in q) < need:
-                continue  # search engines return loose matches; skip off-topic files
-            if r := _take(c, scene, library, lib_index, root, download):
-                return r
-    return None
-
-
 def _icon_card(svg: str, dest: Path) -> None:
     """Simple Icons SVG -> 1920x1080 PNG on a transparent background, logo centred (headless Chrome)."""
     from .chrome import screenshot
@@ -166,27 +148,24 @@ def _lottie(scene: Scene, project: Path, library: Path, root: Path, download: Ca
 CATEGORY_VISUAL = {"logo": "logo", "video_broll": "footage", "screenshot": "screenshot"}
 
 
-def fetch_asset(a, library: Path, root: Path, pexels_key: str = "", search: Callable = providers.search,
-                download: Callable = providers.download, entity: Callable = providers.entity,
-                icon: Callable = providers.simple_icon) -> tuple[Path, dict] | None:
-    """One visual-assets.json entry (method online / real_logo) through the same providers as scenes:
-    exact name (Wikidata, Simple Icons) for logos and "entity:Name" hints, else keyword search."""
+def fetch_asset(a, library: Path, root: Path, download: Callable = providers.download,
+                entity: Callable = providers.entity, icon: Callable = providers.simple_icon) -> tuple[Path, dict] | None:
+    """One visual-assets.json entry (method online / real_logo) by exact name (Wikidata, Simple Icons):
+    logos and "entity:Name" hints. Anything else stays 'needed' (collect it with the asset-collector MCP)."""
     hint = a.source_hint or a.name
-    named = a.method == "real_logo" or hint.startswith("entity:")
+    if not (a.method == "real_logo" or hint.startswith("entity:")):
+        return None
     name = hint.removeprefix("entity:").strip()
     s = Scene(id=a.scenes[0] if a.scenes else 1, start=0, end=1, narration="", query=a.description or name,
               visual_type=CATEGORY_VISUAL.get(a.category, "logo" if a.method == "real_logo" else "photo"),
-              params={"entity": name} if named else {})
-    lib_index = library / "index.json"
-    r = (_named(s, library, lib_index, root, entity, icon, download) if named
-         else _internet(s.model_copy(update={"query": hint}), library, lib_index, root, pexels_key, search, download))
+              params={"entity": name})
+    r = _named(s, library, library / "index.json", root, entity, icon, download)
     if not r or not r.asset:
         return None
     return root / r.asset, {"source_url": r.source_url, "license": r.license, "author": r.author}
 
 
-def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_key: str = "",
-            search: Callable = providers.search, download: Callable = providers.download,
+def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, download: Callable = providers.download,
             entity: Callable = providers.entity, icon: Callable = providers.simple_icon,
             main_assets: dict[int, Path] | None = None) -> Resolved:
     """`main_assets`: scene id -> validated main file from visual-assets.json (wins over everything)."""
@@ -224,8 +203,6 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, pexels_ke
             r = ResolvedScene(id=0, status="template")
         if s.params.get("lottie") and r and r.status == "template":
             r = _lottie(s, project, library, root, download) or r
-        if r is None:
-            r = _internet(s, library, lib_index, root, pexels_key, search, download)
         r = r or ResolvedScene(id=0, status="missing")
         r.id = s.id
         print(f"    scene {s.id:>3}: {r.status:<10} {r.asset or ''}")

@@ -40,16 +40,3 @@ def setup_env() -> None:
     for key, path in CACHE_ENV.items():
         path.mkdir(parents=True, exist_ok=True)
         os.environ[key] = str(path)
-
-
-def secret(name: str) -> str:
-    """Env var, else `tools/.env` (KEY=VALUE lines, git-ignored). Empty string if absent."""
-    if os.environ.get(name):
-        return os.environ[name]
-    env = TOOLS / ".env"
-    if env.exists():
-        for line in env.read_text("utf-8").splitlines():
-            k, _, v = line.partition("=")
-            if k.strip() == name:
-                return v.strip().strip('"').strip("'")
-    return ""

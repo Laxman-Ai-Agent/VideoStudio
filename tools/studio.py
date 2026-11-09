@@ -17,7 +17,7 @@ from pathlib import Path
 
 from pipeline import doctor
 from pipeline import assets
-from pipeline.config import BRAND, LIBRARY, ROOT, secret, setup_env
+from pipeline.config import BRAND, LIBRARY, ROOT, setup_env
 from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
 from pipeline.ingest import AmbiguousInput, ingest
 from pipeline.plan import RULES, validate, write_brief
@@ -141,20 +141,18 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
 
     resolved_json, credits_txt = w / "resolved.json", p / "output" / "credits.txt"
     lib_idx, proj_idx = LIBRARY / "index.json", p / "assets" / "index.json"
-    pexels_key = secret("PEXELS_API_KEY")
 
-    # visual assets, pass 1: uploads by id, processing, online collection (same providers as resolve)
+    # visual assets, pass 1: uploads by id, processing, exact-name logos / people (same providers as resolve)
     from pipeline.resolve import fetch_asset
     remover = visual.rembg_remover()
-    va = visual.sync(visual.load(p), p, plan, ROOT, None, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, pexels_key),
+    va = visual.sync(visual.load(p), p, plan, ROOT, None, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT),
                      remove_bg=remover, words=transcript.words)
     visual.save(p, va)
     mains = visual.main_files(va, p)  # validated main visuals win over any search in resolve
 
     def resolve():
         from pipeline.resolve import credits, resolve as pick
-        res = pick(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, LIBRARY, ROOT, pexels_key,
-                   main_assets=mains)
+        res = pick(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, LIBRARY, ROOT, main_assets=mains)
         atomic_write(resolved_json, res.model_dump_json(indent=2))
         atomic_write(credits_txt, credits(res))
 
@@ -164,7 +162,7 @@ def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = F
         for r in Resolved.model_validate_json(resolved_json.read_text("utf-8")).scenes)
     ran = run_stage(p, "resolve", [scenes_json, proj_idx] + ([lib_idx] if lib_idx.exists() else []),
                     [resolved_json, credits_txt], resolve, force=gone,
-                    extra=("pexels" if pexels_key else "") + str([(k, v.name, v.stat().st_mtime_ns) for k, v in sorted(mains.items())]))
+                    extra=str([(k, v.name, v.stat().st_mtime_ns) for k, v in sorted(mains.items())]))
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8"))
     from pipeline.resolve import credits
     atomic_write(credits_txt, credits(resolved, va))  # cheap: also picks up credits of newly collected online assets
@@ -334,8 +332,7 @@ def assets_command(project: Path) -> int:
         return NEEDS_USER
     plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8")) if resolved_json.exists() else None
-    key = secret("PEXELS_API_KEY")
-    va = visual.sync(va, project, plan, ROOT, resolved, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT, key),
+    va = visual.sync(va, project, plan, ROOT, resolved, fetch=lambda a: fetch_asset(a, LIBRARY, ROOT),
                      remove_bg=visual.rembg_remover(), words=transcript_words(project))
     visual.save(project, va)
     print_assets(va, project)

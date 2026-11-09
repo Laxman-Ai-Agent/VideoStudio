@@ -114,8 +114,9 @@ infographic, map, reaction, sticker, photo, screenshot, other.
 
 ## Method per asset
 - real_logo: company/product logos. ALWAYS the authentic logo (source_hint = exact name). Never ai_generate a logo.
-- online: real people, real places, real events, stock photos/footage (source_hint = search words, or
-  "entity:Exact Name" for a named person/brand). Give a prompt too when an AI version is an acceptable fallback.
+- online: real people, real places, real events, stock photos/footage (source_hint = "entity:Exact Name" for a
+  named person/brand, fetched automatically; else search words for the asset-collector MCP, collected by hand
+  and dropped as <id>.png). Give a prompt too when an AI version is an acceptable fallback.
 - ai_generate: script-specific visuals that do not exist online. The prompt is what the user pastes.
 - capture: a real web page (source_hint = url). template: drawn by a template, no file. local: a file in
   the project already (source_hint = its path from the list below).

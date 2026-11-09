@@ -19,5 +19,5 @@ tools/tests/fixtures/**/work/
 .pytest_cache/
 *.tmp
 
-# secrets (PEXELS_API_KEY)
+# secrets
 tools/.env

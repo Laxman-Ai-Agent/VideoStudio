@@ -1,11 +1,11 @@
 # Status
 
-Updated 2026-11-08. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
+Updated 2026-11-09. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
-- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 93. Doctor: all green.
+- `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 96. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
 - 01 `visual-assets.json`: 24 assets (context written for all), 12 ready, 12 prompts to generate.
 - Dashboard: `studio.cmd ui` -> http://127.0.0.1:8790 (8765 is taken by another app).
@@ -18,13 +18,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
   4. 01 `edits.json` is not created (test edit removed); 01 final 16:9 still not re-rendered (ask first).
 - Dev notes: pane must be visible for the browser checks (hidden pane = 0 width, slow timers); `live` is a `const` (not on `window`).
 
-- Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): plan (15 scenes, theme space) + visual-assets.json (20 assets: 10 mains, 5 templates, 3 presenter reactions C1 in a white bomber jacket, 2 depth props) done; `run 02 --review` OK, storyboard written. 13 assets to generate (prompts in the dashboard); scenes 4 and 12 use free downloads (Wikimedia / Openverse) until their own files arrive. Not rendered yet.
+- Project 02_test-01 (Mars colony / terraforming, 50 s, Gemini JSON as script): plan (15 scenes, theme space) + visual-assets.json (20 assets: 10 mains, 5 templates, 3 presenter reactions C1 in a white bomber jacket, 2 depth props) done; `run 02 --review` OK, storyboard written. 13 assets to generate (prompts in the dashboard); scenes 4 and 12 use free downloads (Wikimedia / Openverse, kept in `_library/downloads`) until their own files arrive. Not rendered yet.
 
 - Project 03 (Chandrayaan-3, 66 s): fully automatic 16:9 preview rendered, QA PASS (`projects/03/output/preview_16x9.mp4`). credits.txt now lists all 8 sources (fixed 2026-11-08). Flag emoji show as letters (US, RU ...) on this PC.
 
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.
-- Music in `_library/music/calm/` (and whoosh files in `_library/sfx/whoosh/` if wanted); `PEXELS_API_KEY` in `tools/.env` for stock footage.
+- Music in `_library/music/calm/` (and whoosh files in `_library/sfx/whoosh/` if wanted). Loose images / stock: ask Claude to use the asset-collector MCP (keyword web search removed from the pipeline 2026-11-09).
 - The 4 local stock videos of 01 are only 832x464 (validation warns); larger ones look better in a final.
 
 ## Pending, our side

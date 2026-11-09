@@ -44,10 +44,8 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | Source | Used for | License of what we fetch |
 |---|---|---|
 | Wikidata + Wikimedia Commons (`providers.entity`) | exact person photo (P18) / brand logo (P154) from `params.entity` | per file (CC BY / CC BY-SA / public domain), kept in credits |
-| Openverse API (`providers.openverse`) | CC / public-domain photos by keyword (anonymous, rate-limited) | per file, commercial-use licences only |
 | Simple Icons CDN (`providers.simple_icon`) | brand icon fallback for logo scenes, rendered to a transparent PNG | CC0 data; trademarks stay with their owners |
 | Google animated Noto emoji (`providers.noto_lottie`) | Lottie icons from `params.lottie` emoji | CC BY 4.0, credited |
-| Pexels (free key in `tools/.env`) | stock photos and footage | Pexels License |
 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |

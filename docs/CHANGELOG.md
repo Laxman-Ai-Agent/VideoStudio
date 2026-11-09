@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-09 · keyword web search removed (asset-collector MCP instead)
+- Removed `providers.wikimedia / openverse / pexels / search`, `resolve._internet`, `config.secret` and `PEXELS_API_KEY`. Scenes with no local or exact-name match now resolve to `missing`; `fetch_asset` only handles `real_logo` and `entity:` hints. Loose images: asset-collector MCP, then drop `<id>.png` + `studio.cmd assets NN`. Already downloaded files in `_library/downloads` stay and are still matched locally. Tests updated (`test_resolve_order_template_missing`).
+
 ## 2026-11-08 · credits.txt lists every third-party file
 - `resolve.credits(res, va)` also lists the validated online / logo files collected for visual-assets.json (mains and overlays; their credits are on the asset), sorted by scene, without duplicates; `studio run` rewrites credits.txt on every run (cheap). Before, 03 listed 1 of 8 credits. Test: `test_credits_include_online_assets_from_visual_assets`.
 

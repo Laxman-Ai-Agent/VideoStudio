@@ -86,7 +86,7 @@ drop/ -> 1 ingest -> 2 transcribe (+align) -> 3 plan -> theme -> visual assets (
 Experimental features ship behind a config flag, default off.
 
 ## Asset search order
-project `assets/` -> `_library/` (+ `_library/downloads` cache) -> Wikimedia / Pexels -> missing (write prompt).
+project `assets/` -> `_library/` (+ `_library/downloads` cache) -> missing (write prompt; loose web images come from the asset-collector MCP, dropped by asset id).
 Each asset is analysed once and its description is cached in `index.json`, keyed by file hash.
 
 ## Caches (C: is nearly full)

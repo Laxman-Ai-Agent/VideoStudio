@@ -30,7 +30,7 @@ def test_entity_and_lottie_are_fetched_with_credits(tmp_path):
         return [providers.Candidate(url="https://x/sam.jpg", ext=".png", title="Sam Altman", source_url="https://commons/sam",
                                     license="CC BY 2.0", author="Steve", provider="wikidata")]
 
-    res = resolve(_plan(), project, library, tmp_path, search=lambda *a: [], download=download, entity=entity,
+    res = resolve(_plan(), project, library, tmp_path, download=download, entity=entity,
                   icon=lambda name: None)
     s1, s2, s3 = res.scenes
     assert s1.status == "downloaded" and s1.license == "CC BY 2.0" and s1.asset.startswith("lib/downloads/wikidata_")
