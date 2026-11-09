@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-09 · align_mms: timing correction for a word-timed JSON
+- `python -m pipeline.align_mms audio json out` keeps the JSON's text and replaces every word / scene time with times measured by Meta's MMS forced aligner (torchaudio 2.8, optional `uv` group `align`, model cached in `tools/models/torch` via `TORCH_HOME`). On 07 the Gemini JSON was off by 5.5 s on average (max 11.8 s, it stretched 77 s to 89 s); corrected sentence starts match the audio pauses within 0.05 s. Not wired into `studio run`. Model licence CC-BY-NC 4.0 (user's own experiments). Tests: `test_align_mms.py`.
+
 ## 2026-11-09 · keyword web search removed (asset-collector MCP instead)
 - Removed `providers.wikimedia / openverse / pexels / search`, `resolve._internet`, `config.secret` and `PEXELS_API_KEY`. Scenes with no local or exact-name match now resolve to `missing`; `fetch_asset` only handles `real_logo` and `entity:` hints. Loose images: asset-collector MCP, then drop `<id>.png` + `studio.cmd assets NN`. Already downloaded files in `_library/downloads` stay and are still matched locally. Tests updated (`test_resolve_order_template_missing`).
 

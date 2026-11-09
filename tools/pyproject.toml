@@ -12,6 +12,11 @@ dependencies = [
 ]
 
 [dependency-groups]
+align = [
+    "torch==2.8.0",
+    "torchaudio==2.8.0",
+    "uroman==1.*",
+]
 dev = ["pytest==8.*"]
 
 [tool.uv]

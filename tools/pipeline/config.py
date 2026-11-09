@@ -25,6 +25,7 @@ PROJECT_DIRS = [
 # Tools that would otherwise write big caches to C:. Child processes inherit these.
 CACHE_ENV = {
     "HF_HOME": MODELS / "huggingface",               # Whisper and other Hugging Face models
+    "TORCH_HOME": MODELS / "torch",                  # MMS forced-aligner model (align_mms)
     "UV_CACHE_DIR": CACHE / "uv",
     "PIP_CACHE_DIR": CACHE / "pip",
     "npm_config_cache": CACHE / "npm",
