@@ -58,6 +58,7 @@ function render() {
     return $("grid").replaceChildren(p);
   }
   $("grid").classList.toggle("has-active", list.some((x) => x.id === state.active));
+  $("grid").classList.toggle("portrait", list.filter((x) => x.out_size[1] > x.out_size[0]).length * 2 > list.length);  // a 9:16 project shows 9:16 tiles
   $("grid").replaceChildren(...list.map(tile));
 }
 

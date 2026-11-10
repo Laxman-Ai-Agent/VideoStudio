@@ -352,3 +352,8 @@ html { scroll-behavior: smooth; }
 .tabs .sub .stat-icon svg { width: 9px; height: 9px; }
 .tabs .row[hidden], .tabs .sub:has(> .stats[hidden]) > .stats { display: none; }
 .tabs [hidden] { display: none; }
+
+/* 9:16 project: portrait tiles, narrower columns; more air between the buttons and the gallery */
+.tabs { margin-bottom: 30px; }
+.grid.portrait { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 16px; }
+.grid.portrait .thumb, .grid.portrait .ph { aspect-ratio: 9 / 16; }
