@@ -222,7 +222,7 @@ window.studioLayout = function (env) {
   // ---- Generic layers: the background picture / footage and every text block of the template ("L:bg", "L:t1" ...).
   // S.layers[id] = manual {x,y,w,h (the wanted visual box, fractions of the frame), rot, opacity, z, hidden}. The box is
   // reached with CSS translate / scale / rotate and filter: opacity(), which GSAP (it only writes `transform`) leaves alone.
-  const LTEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .memecap";
+  const LTEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat .lab, #stat .val, .label, .date, .memecap";  // a stat card: its label and its value are separate layers
   const gl = [];
   function findLayers() {
     const bg = [...document.querySelectorAll("#root .fill:not(.blurbg)")].filter(e => e.offsetWidth).pop();

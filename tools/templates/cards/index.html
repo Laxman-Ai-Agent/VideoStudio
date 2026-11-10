@@ -32,7 +32,7 @@
 #btn svg { width: calc(var(--u) * 5); height: calc(var(--u) * 5); }
 #stat .lab { font-weight: 700; font-size: calc(var(--u) * 4); opacity: .7; }
 #stat .row { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--u) * 2); }
-#stat .val { font-weight: 900; font-size: calc(var(--u) * 13); line-height: 1; }
+#stat .val { font-weight: 900; font-size: calc(var(--u) * 13); line-height: 1; white-space: nowrap; }
 .portrait #stat .val { font-size: calc(var(--u) * 20); }
 .portrait #stat .lab { font-size: calc(var(--u) * 5.5); }
 #stat .arrow { font-weight: 900; font-size: calc(var(--u) * 10); line-height: 1; }
@@ -100,11 +100,19 @@
     const card = add('<div class="lab"></div><div class="row"><div class="val"></div><div class="arrow"></div></div>' +
                      '<svg viewBox="0 0 100 30" preserveAspectRatio="none"><path/></svg>', "card", "stat");
     card.querySelector(".lab").textContent = p.stat.label || "";
-    card.querySelector(".val").textContent = p.stat.value || "";
+    const val = card.querySelector(".val");
+    val.textContent = String(p.stat.value || "").replace(/(\d)\s*:\s*(\d)/g, "$1:$2");  // "1 : 811" reads as the ratio 1:811
     const ar = card.querySelector(".arrow");  // SVG arrow: brand fonts may not have the arrow glyph
     ar.innerHTML = `<svg viewBox="0 0 24 24" style="width:calc(var(--u)*10);height:calc(var(--u)*10)"><path fill="${up ? "#1f9d55" : "currentColor"}" d="${
       up ? "M12 3l8 9h-5v9H9v-9H4z" : "M12 21l8-9h-5V3H9v9H4z"}"/></svg>`;
     ar.style.color = c;
+    const row = card.querySelector(".row");  // the value stays on ONE line: shrink the font until it fits next to the arrow
+    const fit = () => {
+      let fs = parseFloat(getComputedStyle(val).fontSize);
+      for (let i = 0; i < 40 && val.offsetWidth + ar.offsetWidth + U * 2 > row.clientWidth && fs > U * 4; i++) { fs *= 0.94; val.style.fontSize = fs + "px"; }
+    };
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
     const path = card.querySelector(":scope > svg path");  // trend line (the arrow svg has its own path)
     path.setAttribute("d", up ? "M2 26 L20 22 L34 24 L50 15 L64 17 L80 8 L98 3" : "M2 4 L18 8 L32 6 L48 15 L62 13 L80 22 L98 27");
     path.style.stroke = c;
