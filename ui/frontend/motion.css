@@ -21,3 +21,5 @@ button:active:not(:disabled) { transform: translateY(0) scale(.97); }
 .tab:hover { background: #1a1d3d; transform: translateY(-1px); }
 .tab.active { border-color: var(--accent2); color: #fff; box-shadow: 0 0 0 2px rgba(139, 107, 255, .25); }
 .tabs { animation: fade-up .4s var(--ease) both; }
+
+.views { animation: fade-up .4s var(--ease) both; }

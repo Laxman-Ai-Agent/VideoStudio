@@ -329,6 +329,19 @@ document.querySelectorAll("#fmtSeg button").forEach((b) => (b.onclick = () => {
   try { localStorage.setItem("fmt:" + st.pid, st.fmt); } catch { /* not remembered */ }
   buildLive();
 }));
+// Scene / Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
+function setView(v) {
+  document.body.dataset.view = v;
+  document.querySelectorAll(".views .tab").forEach((b) => b.classList.toggle("active", b.dataset.view === v));
+  try { localStorage.setItem("tl-view", v); } catch { /* not remembered */ }
+  if (v === "timeline" && st.dur > 1) $("fit").click();  // the tracks had no width while hidden
+  if (v === "preview" && window.fitScreen) fitScreen();
+}
+document.querySelectorAll(".views .tab").forEach((b) => (b.onclick = () => setView(b.dataset.view)));
+let startView = "preview";
+try { startView = localStorage.getItem("tl-view") || "preview"; } catch { /* default */ }
+setView(["scene", "preview", "timeline"].includes(startView) ? startView : "preview");
+
 document.onkeydown = (e) => {
   if (["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName) && e.code !== "Space") return;
   const t = aud.currentTime || 0, big = e.shiftKey ? 1 : 1 / FPS;
