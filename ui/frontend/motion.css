@@ -16,10 +16,10 @@ button:active:not(:disabled) { transform: translateY(0) scale(.97); }
 }
 
 /* page tabs, same look as the dashboard's */
-.tabs { display: flex; justify-content: center; gap: 8px; padding: 14px 20px 4px; }
+.pagetabs { display: flex; justify-content: center; gap: 8px; padding: 18px 20px 6px; }
 .tab { padding: 0 20px; height: 34px; display: inline-flex; align-items: center; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: #dfe1f5; font-size: 14px; text-decoration: none; white-space: nowrap; }
 .tab:hover { background: #1a1d3d; transform: translateY(-1px); }
 .tab.active { border-color: var(--accent2); color: #fff; box-shadow: 0 0 0 2px rgba(139, 107, 255, .25); }
-.tabs { animation: fade-up .4s var(--ease) both; }
+.pagetabs { animation: fade-up .4s var(--ease) both; }
 
 .views { animation: fade-up .4s var(--ease) both; }

@@ -162,3 +162,11 @@ body[data-view="timeline"] #tlcard { flex:1; }
 #resSeg button.on span { color:#cfc6ff; }
 #outSize { margin-top:4px; padding:10px 12px; border-radius:10px; background:#0d1024; color:var(--muted); font-size:13px; } #outSize b { color:var(--text); font-weight:600; margin-left:4px; }
 #opts #render { margin-top:8px; padding:12px; font-size:15px; }
+
+/* alignment: one centred column, equal-height cards, even gaps */
+.views { padding:4px 20px 14px; }
+#main { width:100%; max-width:1320px; margin:0 auto; padding:0 20px 20px; gap:16px; align-items:stretch; }
+body[data-view="preview"] #main { grid-template-columns:minmax(0,1fr) 320px; }
+#opts { align-self:stretch; }
+#opts #render { margin-top:auto; }
+#tlcard { width:calc(100% - 40px); max-width:1320px; margin:0 auto 20px; }
