@@ -253,3 +253,5 @@ body[data-view="preview"].editing #side #assets, body[data-view="preview"].editi
 body[data-view="preview"].editing #side #info { border-top:1px solid var(--line); padding-top:10px; margin-top:4px; }
 
 #info #assets { border:0; background:transparent; padding:12px 4px 0; max-height:none; }
+/* the filter buttons stay on one line */
+#assets .ah { flex-wrap:nowrap; gap:6px; } #assets .ah .chp { padding:5px 9px; font-size:12px; white-space:nowrap; flex:1 1 auto; }

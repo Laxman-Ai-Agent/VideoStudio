@@ -20,7 +20,6 @@ const IC = {
   bottom: '<path d="M2 14h12"/><rect x="4" y="3" width="3" height="9"/><rect x="9" y="6" width="3" height="6"/>',
   fit: '<rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 6.5L3.5 8 5 9.5M11 6.5L12.5 8 11 9.5"/>',
 };
-const TABS = [["elements", "Elements"], ["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
 const assetOf = (id) => (st.va || []).find((a) => a.id === id.split("#")[0]) || {};
 const fileName = (id) => { const b = box(id); return b && b.name ? b.name : (assetOf(id).file || id).split("/").pop(); };
 const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : "Image Layer");
@@ -50,17 +49,11 @@ function drawEdit() {
     info.append(det);
   }
   info.querySelectorAll(".tabs, .pane:not(.details)").forEach((n) => n.remove());
-  const tabs = el("div", "tabs");
-  for (const [k, label] of TABS) {
-    tabs.append(Object.assign(el("button", ed.tab === k ? "on" : "", label), { onclick: () => { ed.tab = k; drawEdit(); } }));
-  }
-  info.prepend(tabs);
-  det.classList.toggle("on", ed.tab === "details");
+  det.classList.remove("on");  // Scene Details / Animation / Effects were read-only info: no tabs any more
   fields = {};
-  if (ed.tab !== "details" && ed.tab !== "elements") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
-  const assets = $("assets");  // one card, one tab bar: the Elements list lives inside it while its tab is open
-  if (ed.tab === "elements") { assets.style.display = ""; info.append(assets); }
-  else { assets.style.display = "none"; $("side").prepend(assets); }
+  const assets = $("assets");  // one card: the filter buttons + element cards, and under them the edit controls of the picked element
+  assets.style.display = "";
+  info.append(assets, Object.assign(pane("edit"), { className: "pane on edit" }));
   drawStrip();
   syncPanel();
 }
@@ -170,7 +163,7 @@ function drawStrip() {  // every element of the selected scene, below the previe
   root.innerHTML = "";
   const all = ed.boxes, grp = (b) => (b.kind === "text" ? "text" : GROUP(b)), n = (g) => all.filter((b) => grp(b) === g).length;
   const head = el("div", "ah");
-  head.append(el("b", "", `Scene ${st.cur.id} – Elements`), el("span", "grow"));
+  
   for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")], ["text", "Text", n("text")]]) {
     head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
   }
