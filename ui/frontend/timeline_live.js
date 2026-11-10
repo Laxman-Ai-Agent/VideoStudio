@@ -70,6 +70,7 @@ async function buildLive() {
   } catch (e) {
     if (tok !== live.token) return;
     setMsg("Live preview off: " + e.message);
+    if (window.showError) showError(e.message, "Live preview could not be built");
     st.cur = null;
     drawAll();
   }

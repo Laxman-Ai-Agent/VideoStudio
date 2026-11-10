@@ -229,6 +229,20 @@ function paintRender() {  // big clock: elapsed since the render started (ticks 
     $("rlab").textContent = left > 0 ? `Elapsed · about ${mmss(left)} left` : "Elapsed · taking longer than last time";
   }
 }
+// every error comes up as a red popup (the old messages were a thin line that was easy to miss)
+function showError(text, title = "Something went wrong") {
+  $("err-title").textContent = title;
+  $("err-text").textContent = String(text || "").slice(0, 900);
+  const box = $("errpop"), close = () => { box.hidden = true; document.removeEventListener("keydown", key); };
+  const key = (e) => { if (e.key === "Escape" || e.key === "Enter") close(); };
+  box.hidden = false;
+  document.addEventListener("keydown", key);
+  $("err-ok").onclick = close;
+  box.onclick = (e) => { if (e.target === box) close(); };
+  $("err-ok").focus();
+}
+window.showError = showError;
+let lastFailShown = "";
 function showRender(d) {
   const last = (d.tail || []).filter((x) => x.trim()).slice(-1)[0] || "";
   const names = { running: "Rendering", done: "Render finished", failed: "Render failed", waiting: "Waiting for you" };
@@ -240,6 +254,10 @@ function showRender(d) {
   $("rstep").textContent = d.state === "done" ? "Done: see the project's output folder" : last.trim();
   $("rstep").title = (d.tail || []).join("\n");
   $("rstate").textContent = "";
+  if (d.state === "failed") {  // once per failed run
+    const key = st.pid + ":" + (d.elapsed || 0) + ":" + last;
+    if (key !== lastFailShown) { lastFailShown = key; showError(last || "The render stopped. See work/logs/ui_render.log in the project folder.", "Render failed"); }
+  }
   $("render").disabled = d.state === "running";
   $("render").textContent = d.state === "running" ? "Rendering..." : "Render";
   clearInterval(tick);
@@ -260,7 +278,7 @@ async function startRender() {
   if (!confirm(ask)) return;
   const r = await fetch(`/api/projects/${enc(st.pid)}/render?fmt=${enc(st.fmt)}${final ? "&final=1" : ""}`, { method: "POST" });
   const d = await r.json().catch(() => ({}));
-  if (!r.ok) { $("rstate").textContent = "Render did not start: " + (d.error || r.status); return; }
+  if (!r.ok) { showError(d.error || r.status, "Render did not start"); return; }
   showRender(d);
   renderStatus();
 }

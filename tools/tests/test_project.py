@@ -54,3 +54,23 @@ def test_hash_changes_with_content(tmp_path):
     h1 = hash_inputs([f])
     f.write_bytes(b"2")
     assert hash_inputs([f]) != h1
+
+
+def test_atomic_write_survives_a_briefly_locked_target(tmp_path, monkeypatch):
+    """Bug 2026-11-10: render failed with WinError 5 on visual-assets.json.tmp -> .json (the dashboard had the file open)."""
+    import os
+    import time
+    from pipeline.project import atomic_write
+    real, calls = os.replace, []
+
+    def flaky(a, b):
+        calls.append(1)
+        if len(calls) < 3:
+            raise PermissionError(5, "Access is denied")
+        return real(a, b)
+
+    monkeypatch.setattr(os, "replace", flaky)
+    monkeypatch.setattr(time, "sleep", lambda s: None)
+    f = tmp_path / "visual-assets.json"
+    atomic_write(f, "{}")
+    assert f.read_text("utf-8") == "{}" and len(calls) == 3

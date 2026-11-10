@@ -66,6 +66,14 @@
     <button id="render">Render</button>
   </aside>
 </div>
+<div id="errpop" class="cmodal" hidden>
+  <div class="cbox" role="alertdialog" aria-modal="true" aria-labelledby="err-title">
+    <div class="cicon"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+    <h3 id="err-title">Something went wrong</h3>
+    <p id="err-text"></p>
+    <div class="cbtns"><button type="button" class="cbtn red" id="err-ok">OK</button></div>
+  </div>
+</div>
 <div id="rconfirm" class="cmodal" hidden>
   <div class="cbox" role="alertdialog" aria-modal="true">
     <div class="cicon"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/></svg></div>

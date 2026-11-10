@@ -19,7 +19,14 @@ def atomic_write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".tmp")
     tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    for attempt in range(40):  # Windows: the target may be open for a moment (the dashboard polls it, antivirus scans it) -> WinError 5
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if attempt == 39:
+                raise
+            time.sleep(0.15)
 
 
 def slug(name: str) -> str:
