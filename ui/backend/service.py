@@ -375,7 +375,7 @@ def preview(pid: str, fmt: str, layout: bool = True) -> dict:
         return build_preview(project_dir(pid), fmt, check_layout=layout)
 
 
-_thumb_lock = threading.Lock()  # one headless Chrome at a time (RAM)
+_thumb_lock = threading.Semaphore(3)  # 3 headless Chromes at a time (RAM; the render uses 4 workers)
 
 
 def thumb(pid: str, fmt: str, scene: int) -> dict:

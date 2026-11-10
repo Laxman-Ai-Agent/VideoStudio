@@ -51,7 +51,7 @@ async function buildLive() {
   fitScreen();
   setMsg("Building live preview...");
   try {
-    const r = await fetch(`/api/projects/${enc(st.pid)}/preview?fmt=${enc(st.fmt)}`, { method: "POST" });
+    const r = await fetch(`/api/projects/${enc(st.pid)}/preview?fmt=${enc(st.fmt)}&layout=0`, { method: "POST" });  // fast: builds only, no ~8 s/scene layout check
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.error || `${r.status}`);
     if (tok !== live.token) return;  // project or format changed meanwhile
@@ -60,6 +60,7 @@ async function buildLive() {
     st.cur = null;
     drawAll();
     fetchThumbs(tok);
+    layoutLater(tok);
     setMsg(bad ? `${bad} scene(s) failed to build (shown as the missing tile)` : "");
   } catch (e) {
     if (tok !== live.token) return;
@@ -67,6 +68,16 @@ async function buildLive() {
     st.cur = null;
     drawAll();
   }
+}
+
+async function layoutLater(tok) {  // the slow layout check runs after the preview is already usable; warnings fill in when done
+  try {
+    const r = await fetch(`/api/projects/${enc(st.pid)}/preview?fmt=${enc(st.fmt)}`, { method: "POST" });
+    const d = await r.json();
+    if (!r.ok || tok !== live.token) return;
+    for (const x of d.scenes) if (live.data.map[x.id]) live.data.map[x.id].warnings = x.warnings;
+    drawList(); draw();
+  } catch { /* warnings stay as they were */ }
 }
 
 async function fetchOneThumb(s) {
@@ -79,13 +90,16 @@ async function fetchOneThumb(s) {
   } catch { /* no thumbnail: the list keeps its empty tile */ }
 }
 
-async function fetchThumbs(tok) {  // one Chrome at a time, current scene first; the list and tracks refresh as stills arrive
+async function fetchThumbs(tok) {  // 3 Chromes at a time (server limit), current scene first; the list and tracks refresh as stills arrive
   const todo = [st.cur, ...st.scenes].filter((s, i, a) => s && a.indexOf(s) === i);
-  for (const s of todo) {
-    if (tok !== live.token) return;
-    await fetchOneThumb(s);
-    if (tok === live.token) { drawList(); draw(); }
-  }
+  const worker = async () => {
+    for (let s; (s = todo.shift()); ) {
+      if (tok !== live.token) return;
+      await fetchOneThumb(s);
+      if (tok === live.token) { drawList(); draw(); }
+    }
+  };
+  await Promise.all([worker(), worker(), worker()]);
 }
 
 function slot(i) {

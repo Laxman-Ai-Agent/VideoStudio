@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-10 - Timeline loads fast
+
+- Live preview is requested with `layout=0` (builds only, ~1 s when cached); the layout check (~8 s/scene, headless Chrome) runs afterwards and fills in warnings. Before, a first 9:16 open waited ~4.5 min on it.
+- Thumbnails: 3 headless Chromes at a time (was 1, ~14 s each).
+
 ## 2026-11-10 - images_pending.txt is no longer deleted
 
 - Fix: `studio assets` used to delete `output/images_pending.txt` the moment every image arrived, so the user never saw the prompts. Now it stays: header `ALL IMAGES ARE IN` + every prompt for reference. Test updated.
