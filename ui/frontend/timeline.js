@@ -173,15 +173,18 @@ function showAsset(s) {  // no live preview (yet): the asset itself, or a tile f
 function move() {
   let t = aud.currentTime || 0;
   if (st.stopAt && !aud.paused && t >= st.stopAt - 0.02) { aud.pause(); st.stopAt = 0; }  // "Play scene" ends with its scene
+  const one = document.body.classList.contains("editing") && st.cur;  // editor: this one scene is the whole video
+  if (one && (t < st.cur.start - 0.01 || t > st.cur.end)) { t = st.cur.start; aud.currentTime = t; }
+  else if (one && !aud.paused && t >= st.cur.end - 0.02) { aud.pause(); t = st.cur.end - 0.02; aud.currentTime = t; }
   if (st.loop && st.cur && !aud.paused && t >= st.cur.end - 0.02) {  // loop the selected scene
     t = st.cur.start;
     aud.currentTime = t;
   }
   $("ph").style.left = t * st.pps + "px";
-  $("time").textContent = `${fmt(t)} / ${fmt(st.dur)}`;
+  $("time").textContent = one ? `${fmt(Math.max(0, t - st.cur.start))} / ${fmt(st.cur.end - st.cur.start)}` : `${fmt(t)} / ${fmt(st.dur)}`;
   const sk = $("seek");
   if (st.cur && document.activeElement !== sk) { sk.max = (st.cur.end - st.cur.start).toFixed(2); sk.value = Math.max(0, t - st.cur.start).toFixed(2); }
-  const s = st.loop && st.cur ? st.cur : sceneAt(t);
+  const s = (st.loop || one) && st.cur ? st.cur : sceneAt(t);
   showScene(s);
   const b = $("badge");
   if (b && s) b.textContent = `Scene ${s.id} · ${fmt(t)}`;
@@ -191,7 +194,8 @@ function move() {
 }
 
 function seek(t) {
-  aud.currentTime = Math.max(0, Math.min(st.dur - 0.01, t));
+  const c = st.cur, one = c && document.body.classList.contains("editing");  // editor: stay inside the scene
+  aud.currentTime = one ? Math.max(c.start, Math.min(c.end - 0.02, t)) : Math.max(0, Math.min(st.dur - 0.01, t));
   if (st.loop) st.cur = null;  // jumping elsewhere re-picks the looped scene
   if (st.loop) showScene(sceneAt(aud.currentTime));
   move();
@@ -327,7 +331,12 @@ aud.onpause = () => { $("play").innerHTML = "&#9654;"; $("tPlay").innerHTML = "&
 $("seek").oninput = () => { if (st.cur) seek(st.cur.start + +$("seek").value); };
 aud.ontimeupdate = () => { if (!aud.paused) move(); };  // keeps cuts on time when rAF is throttled (hidden tab)
 aud.onloadedmetadata = () => { st.dur = Math.max(st.dur, aud.duration || 0); draw(); };
-$("play").onclick = () => (aud.paused ? aud.play() : aud.pause());
+$("play").onclick = () => {
+  if (!aud.paused) return aud.pause();
+  const c = st.cur;
+  if (c && document.body.classList.contains("editing") && (aud.currentTime >= c.end - 0.05 || aud.currentTime < c.start)) seek(c.start);  // replay this scene
+  aud.play();
+};
 $("tPlay").onclick = () => { st.stopAt = 0; $("play").click(); };  // whole timeline: play / pause
 $("tStop").onclick = () => { st.stopAt = 0; aud.pause(); seek(0); };  // stop = pause and back to the start
 $("prev").onclick = () => stepScene(-1);

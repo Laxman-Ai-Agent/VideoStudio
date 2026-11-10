@@ -152,6 +152,7 @@ function setEdit(on) {
   ensureLayer().classList.toggle("on", on);
   document.body.classList.toggle("editing", on);  // Video Preview then shows the layer panel beside the picture
   if (on && !aud.paused) aud.pause();
+  setTimeout(move, 0);  // the clock shows this scene only while editing, the whole video otherwise
   if (st.cur) liveSync(aud.currentTime || 0);
   setTimeout(() => { refresh(); drawEdit(); }, 80);
 }

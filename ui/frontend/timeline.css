@@ -280,3 +280,5 @@ body.editing #assets .acard { flex:none; width:96px; }
 body.editing #assets .acard img, body.editing #assets .acard .tt { height:46px; }
 body.editing #assets .ah b { font-size:13px; }
 body[data-view="preview"].editing #side #info { flex:none; overflow:visible; max-height:none; }
+
+body.editing #prev, body.editing #next { display:none; }  /* the editor plays this one scene only */
