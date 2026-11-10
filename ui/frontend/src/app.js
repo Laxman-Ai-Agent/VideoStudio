@@ -115,7 +115,14 @@ function showView(name) {
 
 async function showProjects() {
   showView("projects");
-  try { projectList = await api.projects(); } catch (e) { return notice(`Cannot reach the dashboard server: ${e.message}`); }
+  await drawProjects();
+}
+
+async function drawProjects() {
+  let fresh;
+  try { fresh = await api.projects(); } catch (e) { return notice(`Cannot reach the dashboard server: ${e.message}`); }
+  if (JSON.stringify(fresh) === JSON.stringify(projectList) && $("ptbody").children.length) return;  // unchanged: keep the rows
+  projectList = fresh;
   $("ptbody").replaceChildren(...projectList.map((p) => {
     const tr = document.createElement("tr");
     const cell = (...nodes) => { const td = document.createElement("td"); td.append(...nodes); tr.append(td); return td; };
@@ -124,7 +131,7 @@ async function showProjects() {
     cell(t, i);
     cell(p.duration ? mmss(p.duration) : "-");
     cell(p.has_assets ? `${p.found} / ${p.total} found` : "no assets yet");
-    const badges = (p.renders.length ? p.renders : [{ mode: "pending", fmt: "" }]).map((r) => {
+    const badges = ((p.renders || []).length ? p.renders : [{ mode: "pending", fmt: "" }]).map((r) => {
       const b = document.createElement("span");
       b.className = `rbadge ${r.mode}`;
       b.textContent = r.mode === "pending" ? "Render pending" : `${r.mode === "final" ? "Final" : "Preview"} ${r.fmt}`.trim();
@@ -171,6 +178,7 @@ init();
 let seen = null, liveFails = 0;
 setInterval(async () => {
   if (document.hidden || !state.pid) return;
+  if (!$("projects").hidden) drawProjects();  // the Projects table follows new renders / assets while it is open
   try {
     const v = await api.version(state.pid);
     if (seen && v.ui !== seen.ui && !hasUnsaved()) return location.reload();
