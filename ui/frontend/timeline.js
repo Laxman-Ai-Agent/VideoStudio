@@ -272,6 +272,7 @@ async function pickFormat(pid) {  // open in the project's own format: last one 
 async function load(pid) {
   st.pid = pid;
   location.hash = "p=" + enc(pid);
+  $("tab-assets").href = "/#p=" + enc(pid);
   st.cur = null;
   await pickFormat(pid);
   await loadEdits();

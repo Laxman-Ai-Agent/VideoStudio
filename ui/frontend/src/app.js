@@ -190,6 +190,7 @@ async function init() {
     return;
   }
   if (!projects.length) return notice('No projects yet. Create one with studio.cmd new "Name".');
+  const wantProjects = /view=projects/.test(location.hash);
   const fromHash = decodeURIComponent((location.hash.match(/p=([^&]+)/) || [])[1] || "");
   const saved = localStorage.getItem("va-project");
   const ids = projects.map((p) => p.id);
@@ -198,6 +199,7 @@ async function init() {
   $("nav-assets").addEventListener("click", () => { showView("assets"); window.scrollTo({ top: 0, behavior: "smooth" }); });
   $("nav-timeline").addEventListener("click", () => { location.href = `/timeline.html#p=${encodeURIComponent(state.pid)}`; });
   await select(pid);
+  if (wantProjects) showProjects();  // coming back from the Timeline's Projects tab
 }
 
 init();
