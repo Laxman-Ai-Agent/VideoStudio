@@ -223,7 +223,7 @@ function showRender(d) {
   const last = (d.tail || []).filter((x) => x.trim()).slice(-1)[0] || "";
   const names = { running: "Rendering", done: "Render finished", failed: "Render failed", waiting: "Waiting for you" };
   const box = $("rbar");
-  box.className = d.state === "idle" ? "" : "show " + d.state;
+  box.className = d.state === "idle" || d.state === "done" ? "" : "show " + d.state;  // a finished render needs no bar
   shown = { ...d, at: Date.now() };
   $("rlab").textContent = d.state === "running" ? "Elapsed" : (names[d.state] || "") + " in";
   $("rlast").textContent = d.last ? mmss(d.last) : "first run: unknown";
