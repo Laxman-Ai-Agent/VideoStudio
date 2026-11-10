@@ -69,7 +69,8 @@ def test_captions_are_small():
     css = (TOOLS / "templates" / "_shared" / "studio.css").read_text("utf-8")
     land = float(re.search(r"\.cap-page \{[^}]*?font-size: calc\(var\(--u\) \* ([\d.]+)", css).group(1))
     port = float(re.search(r"\.portrait \.cap-page \{ font-size: calc\(var\(--u\) \* ([\d.]+)", css).group(1))
-    assert land <= 3.0 and port <= 4.4  # was 5.2 / 6.4 (user 2026-11-10: half the size)
+    # 2026-11-10: first halved (5.2 / 6.4 -> 2.9 / 4.3), then the user asked for bigger again -> 3.6 / 5.2; stay below the old big size
+    assert land <= 3.7 and port <= 5.3
 
 
 def test_title_goes_to_the_calm_part_of_the_picture(tmp_path):
