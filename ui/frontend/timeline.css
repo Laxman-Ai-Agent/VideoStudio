@@ -194,3 +194,5 @@ body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }
 .cbtns { display:flex; gap:10px; justify-content:center; margin-top:18px; }
 .cbtn { min-width:110px; padding:9px 18px; border-radius:10px; font-size:14.5px; }
 .cbtn.red { background:#dc2640; border-color:#dc2640; color:#fff; font-weight:600; } .cbtn.red:hover { background:#ef4258; }
+/* wider: the timeline (and the preview card) use the full page width, only the options box stays 320 px */
+#main { max-width:none; }
