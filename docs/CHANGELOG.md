@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Projects table
+
+- Sidebar `Projects` now opens a table of every project: title, duration (last scene end), assets found/total, render state (Final / Preview per format, or `Render pending`). A row opens that project's Visual Assets. `GET /api/projects` gained `duration` and `renders`. Test added; checked in the browser (10 rows, row click opens 03).
+
 ## 2026-11-10 - Preview is 480p (was 720p)
 
 - `PREVIEW_SHORT_SIDE` 720 -> 480 (9:16 preview = 480x854). Final is unchanged (1080p). Measured on 10_AI_Doctor 9:16, 26 scenes, 4 workers: 5 min 26 s wall (sum of scene times 1190 s, photo scenes ~38 s each). Per-scene fixed cost (Chrome start + per-frame capture) dominates, so expect a modest gain over 720p, not 2x. 2 lottie scenes failed with Windows ERR_NETWORK_CHANGED (network change, not size); a re-run redoes only those.

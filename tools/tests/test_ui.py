@@ -236,3 +236,17 @@ def test_timeline_render_passes_the_chosen_format(tmp_path, monkeypatch):
     monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
     service.start_render("10", True, fmt="9:16")
     assert seen[0][-4:] == ["10", "--final", "--format", "9:16"]
+
+
+def test_project_list_has_duration_and_render_state(tmp_path, monkeypatch):
+    """Projects table: duration from work/scenes.json, preview/final videos found in output/."""
+    p = tmp_path / "05_X"
+    (p / "work").mkdir(parents=True)
+    (p / "output").mkdir()
+    (p / "work" / "scenes.json").write_text('{"scenes": [{"end": 12.34}, {"end": 61.0}]}', "utf-8")
+    (p / "output" / "preview_9x16.mp4").write_bytes(b"x")
+    (p / "output" / "final_16x9.mp4").write_bytes(b"x")
+    monkeypatch.setattr(service, "PROJECTS", tmp_path)
+    (row,) = service.list_projects()
+    assert row["duration"] == 61.0
+    assert {(r["mode"], r["fmt"]) for r in row["renders"]} == {("preview", "9:16"), ("final", "16:9")}

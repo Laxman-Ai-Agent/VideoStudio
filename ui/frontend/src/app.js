@@ -97,6 +97,45 @@ document.querySelectorAll(".stat").forEach((b) => b.addEventListener("click", ()
   render();
 }));
 
+let projectList = [];
+const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.round(t % 60)).padStart(2, "0")}`;
+
+// "Projects" in the sidebar: every project as a table row (title, duration, assets, render state); a row opens its assets
+function showView(name) {
+  const p = name === "projects";
+  document.querySelectorAll(".stats, #grid").forEach((e) => { e.hidden = p; });
+  $("projects").hidden = !p;
+  $("prep").hidden = p;
+  document.querySelector(".picker").hidden = p;
+  document.querySelector(".top h1").textContent = p ? "Projects" : "Visual Assets";
+  document.querySelector(".top p").textContent = p ? "Click a project to open its visual assets" : "Project wise visual assets";
+  $("nav-projects").classList.toggle("active", p);
+  $("nav-assets").classList.toggle("active", !p);
+}
+
+async function showProjects() {
+  showView("projects");
+  try { projectList = await api.projects(); } catch (e) { return notice(`Cannot reach the dashboard server: ${e.message}`); }
+  $("ptbody").replaceChildren(...projectList.map((p) => {
+    const tr = document.createElement("tr");
+    const cell = (...nodes) => { const td = document.createElement("td"); td.append(...nodes); tr.append(td); return td; };
+    const t = document.createElement("div"); t.className = "pt"; t.textContent = p.title;
+    const i = document.createElement("div"); i.className = "pid"; i.textContent = p.name;
+    cell(t, i);
+    cell(p.duration ? mmss(p.duration) : "-");
+    cell(p.has_assets ? `${p.found} / ${p.total} found` : "no assets yet");
+    const badges = (p.renders.length ? p.renders : [{ mode: "pending", fmt: "" }]).map((r) => {
+      const b = document.createElement("span");
+      b.className = `rbadge ${r.mode}`;
+      b.textContent = r.mode === "pending" ? "Render pending" : `${r.mode === "final" ? "Final" : "Preview"} ${r.fmt}`.trim();
+      return b;
+    });
+    cell(...badges);
+    tr.onclick = async () => { showView("assets"); $("project").value = p.id; await select(p.id); };
+    return tr;
+  }));
+}
+
 async function init() {
   let projects = [];
   try {
@@ -119,10 +158,9 @@ async function init() {
   const pid = [fromHash, saved].find((x) => ids.includes(x)) || (projects.find((p) => p.has_assets) || projects[0]).id;
   sel.value = pid;
   sel.addEventListener("change", () => select(sel.value));
-  document.querySelectorAll("[data-nav='projects']").forEach((n) =>
-    n.addEventListener("click", () => { sel.focus(); sel.showPicker?.(); }));
+  $("nav-projects").addEventListener("click", showProjects);
   document.querySelectorAll("[data-nav='assets']").forEach((n) =>
-    n.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" })));
+    n.addEventListener("click", () => { showView("assets"); window.scrollTo({ top: 0, behavior: "smooth" }); }));
   await select(pid);
 }
 

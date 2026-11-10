@@ -275,3 +275,18 @@ details summary { font-size: 12.5px; }
          border-radius: 8px; }
 .d-ref img { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; }
 .d-ref p { margin: 4px 0 0; font-size: 13px; color: var(--muted); word-break: break-all; }
+
+/* projects table */
+.ptable-wrap { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.ptable { width: 100%; border-collapse: collapse; }
+.ptable th { text-align: left; font-size: 13px; color: var(--muted); font-weight: 600; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.ptable td { padding: 16px 18px; border-bottom: 1px solid #1c1f42; }
+.ptable tbody tr { cursor: pointer; }
+.ptable tbody tr:hover { background: #1a1d3d; }
+.ptable tbody tr:last-child td { border-bottom: 0; }
+.ptable .pt { font-weight: 600; }
+.ptable .pid { color: var(--muted); font-size: 13px; }
+.rbadge { display: inline-block; margin: 0 6px 4px 0; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #232756; color: #c9bfff; }
+.rbadge.final { background: #13803f; color: #fff; }
+.rbadge.pending { background: #7a5b0e; color: #ffe39a; }
+.stats[hidden], .grid[hidden], .ptable-wrap[hidden], .picker[hidden] { display: none; }

@@ -10,7 +10,9 @@ and saves through pipeline.visual (atomic write). Media work reuses pipeline.vis
 - Media settings (aspect, fill/fit, crop focus, zoom, video trim) re-process from the original
   upload into a new processed file. Every change is appended to the asset's `history`.
 """
+import json
 import os
+import re
 import shutil
 import sys
 import threading
@@ -119,6 +121,22 @@ def counts(va, p: Path) -> dict:
     return {"total": len(va.assets), "found": found, "missing": len(va.assets) - found}
 
 
+def _overview(d: Path) -> dict:
+    """Projects table: narration length (last scene end) and which videos exist in output/ (preview / final per format)."""
+    dur, f = 0.0, d / "work" / "scenes.json"
+    try:
+        sc = json.loads(f.read_text("utf-8")).get("scenes") if f.exists() else None
+        dur = float(sc[-1]["end"]) if sc else 0.0
+    except (ValueError, KeyError, TypeError, OSError):
+        pass
+    renders = []
+    for m in sorted((d / "output").glob("*.mp4")) if (d / "output").is_dir() else []:
+        fm = re.search(r"(\d+)x(\d+)", m.name)
+        renders.append({"mode": "preview" if m.name.startswith("preview_") else "final",
+                        "fmt": f"{fm[1]}:{fm[2]}" if fm else ""})
+    return {"duration": round(dur, 1), "renders": renders}
+
+
 def list_projects() -> list[dict]:
     out = []
     for d in sorted(PROJECTS.iterdir()) if PROJECTS.is_dir() else []:
@@ -126,7 +144,7 @@ def list_projects() -> list[dict]:
             continue
         va = visual.load(d) if visual.path(d).exists() else None
         out.append({"id": d.name.split("_")[0], "name": d.name, "title": (va.project.get("title") if va else "") or d.name,
-                    "has_assets": va is not None, **(counts(va, d) if va else {"total": 0, "found": 0, "missing": 0})})
+                    "has_assets": va is not None, **_overview(d), **(counts(va, d) if va else {"total": 0, "found": 0, "missing": 0})})
     return out
 
 
