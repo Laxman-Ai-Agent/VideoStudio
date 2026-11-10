@@ -23,6 +23,15 @@ Without Kaggle: the user gives audio + Gemini JSON and only step 3 runs.
   `kernel_sources`, so the model is mounted under `/kaggle/input/` and GPU time never downloads it.
   Re-run: `kg.cmd kernels push -p kaggle\kernels\whisper-model` (CPU, no GPU quota).
 
+## Transcribe on Kaggle GPU
+`kaggleun.cmd 07 [08 ...]` (tools venv python): audio -> 16 kHz mono FLAC -> private dataset `videostudio-audio`
+-> GPU kernel `videostudio-transcribe` (runs the local `tools/pipeline/transcribe.py` code, CUDA float16)
+-> `projects/NN/work/whisper.json`, checkpointed as stage `transcribe` (same key as `studio run`, so studio
+does not re-transcribe locally; finished projects are skipped here without using the GPU). Several projects = one run.
+Kernel pins faster-whisper 1.2.1 + av 15.1.0 (Kaggle's newer av breaks it) and preloads pip CUDA 12 cuBLAS/cuDNN
+(the Kaggle image has no libcublas.so.12). First test (07 audio, 77 s): 121 s on a T4, ~140 s GPU session,
+~170 s wall clock; local CPU was ~10 min. Scratch files: `kaggle/.work/` (git-ignored).
+
 ## GPU quota rules
 - Test new code on a CPU session first; GPU only for proven code.
 - Models and wheels come from private Kaggle datasets (no download time on GPU).

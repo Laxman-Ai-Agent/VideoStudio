@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10 · kaggle/ add-on: CLI + token
+- `kaggleun.cmd NN`: Whisper large-v3 on Kaggle GPU writes `work/whisper.json` with the studio `transcribe` checkpoint. Fixes found on the way: pin av 15.1.0 (Kaggle's newer av: `open() got an unexpected keyword argument 'metadata_errors'`), preload pip CUDA 12 cuBLAS/cuDNN (`libcublas.so.12` missing in the Kaggle image). 07 audio: 161 words, 121 s on T4.
 - New self-contained `kaggle/` folder (own venv, `requirements.lock.txt`, `kg.cmd` wrapper reading the git-ignored `kaggle/access_token`, README). Token verified (`kg.cmd kernels list --mine`). Plan: audio-only videos -> Whisper large-v3 on Kaggle GPU -> Claude fixes words into a Gemini-style JSON -> local `align_mms`. Nothing in `tools/` changed.
 - Model: CPU kernel `kaggle/kernels/whisper-model` downloads the pinned faster-whisper large-v3 snapshot on Kaggle (8 s) into its output; GPU kernels attach it via `kernel_sources`. A private dataset upload from this PC was stopped (~2 MB/s upload, ~30 min).
 

@@ -1,0 +1,14 @@
+{
+  "id": "laxmand7221/videostudio-transcribe",
+  "title": "videostudio-transcribe",
+  "code_file": "runner.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["laxmand7221/videostudio-audio"],
+  "competition_sources": [],
+  "kernel_sources": ["laxmand7221/videostudio-whisper-model"]
+}

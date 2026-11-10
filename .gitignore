@@ -24,3 +24,4 @@ tools/.env
 kaggle/kaggle.json
 kaggle/access_token
 kaggle/.venv/
+kaggle/.work/
