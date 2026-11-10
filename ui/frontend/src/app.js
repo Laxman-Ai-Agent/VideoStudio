@@ -157,18 +157,23 @@ async function drawProjects() {
     const i = document.createElement("div"); i.className = "pid"; i.textContent = p.name;
     cell(t, i);
     cell(p.duration ? mmss(p.duration) : "-");
-    cell(p.has_assets ? `${p.found} / ${p.total} found` : "no assets yet");
-    const badges = ((p.renders || []).length ? p.renders : [{ mode: "pending", fmt: "" }]).map((r) => {
-      const b = document.createElement("span");
-      b.className = `rbadge ${r.mode}`;
-      b.textContent = r.mode === "pending" ? "Render pending" : `${r.mode === "final" ? "Final" : "Preview"} ${r.fmt}`.trim();
-      return b;
-    });
-    cell(...badges);
+    cell(p.has_assets ? `${p.found}/${p.total}` : "-");
+    const miss = cell(p.has_assets ? String(p.missing) : "-");
+    if (p.missing) miss.className = "miss";
+    const TICK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg>', WAIT = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>';
+    const badge = (mode, label) => {
+      const fm = (p.renders || []).filter((r) => r.mode === mode).map((r) => r.fmt).filter(Boolean);
+      const el = document.createElement("span");
+      el.className = `rbadge ${fm.length || (p.renders || []).some((r) => r.mode === mode) ? "done" : "wait"}`;
+      el.innerHTML = (el.className.includes("done") ? TICK : WAIT) + `<span></span>`;
+      el.lastChild.textContent = el.className.includes("done") ? `${label} ${fm.join(" · ")}`.trim() : `${label} pending`;
+      return el;
+    };
+    cell(badge("preview", "Preview"), badge("final", "Final"));
     const open = async () => { showView("assets"); await select(p.id); };
     const btn = (svg, tip, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `ico ${cls}`, title: tip,
       innerHTML: `<svg viewBox="0 0 24 24">${svg}</svg>`, onclick: (e) => { e.stopPropagation(); fn(); } });
-    cell(btn('<path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14 7 3 3"/>', "Edit: open this project's assets", "", open),
+    cell(btn('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', "View: open this project's assets", "", open),
          btn('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>', "Delete this project", "danger", () => removeProject(p)));
     tr.onclick = open;
     return tr;
