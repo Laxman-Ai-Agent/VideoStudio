@@ -3,7 +3,7 @@
 // (POST /preview?layout=0) by the same code the render uses, so preview and final output carry the same transform.
 // Boxes come from the scene iframe (layout.js __boxes / __manual). Math: edit_math.js. Globals of timeline.js / timeline_live.js.
 const M = EditMath;
-const ed = { on: false, all: {}, sel: null, boxes: [], hist: {}, drag: null, timer: 0, base: {}, scene: "", want: null, tab: "scene", meta: {}, filter: "all" };
+const ed = { on: false, all: {}, sel: null, boxes: [], hist: {}, drag: null, timer: 0, base: {}, scene: "", want: null, tab: "details", meta: {}, filter: "all" };
 const sceneKey = () => st.fmt + "/" + (st.cur ? st.cur.id : 0);
 const dims = () => ({ W: live.data ? live.data.w : 1920, H: live.data ? live.data.h : 1080 });
 const kScr = () => $("screen").clientWidth / dims().W;
@@ -67,7 +67,6 @@ async function save() {
     for (const x of d.scenes) if (live.data.map[x.id]) live.data.map[x.id] = { ...live.data.map[x.id], ...x };
     if (st.cur && st.cur.id === sid && live.active) { live.active.dataset.sid = ""; loadInto(live.active, st.cur); }
     setMsg("");
-    reloadSceneBox();
     fetchOneThumb(st.cur).then(() => { drawList(); draw(); });  // the edited scene gets a new still
   } catch (e) { setMsg("Edit not saved: " + e.message); }
 }

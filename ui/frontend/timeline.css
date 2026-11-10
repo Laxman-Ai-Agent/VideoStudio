@@ -247,3 +247,8 @@ body[data-view="preview"].editing #opts { display:none; }
 body[data-view="preview"].editing #side { display:flex; flex-direction:column; gap:12px; min-width:0; overflow:auto; max-height:calc(100vh - 110px); }
 body[data-view="preview"].editing #backScenes { display:block; align-self:flex-start; padding:7px 16px; }
 body[data-view="preview"].editing #assets { display:block; }
+
+/* editor: Elements and the edit panels are ONE card */
+body[data-view="preview"].editing #side { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; gap:10px; }
+body[data-view="preview"].editing #side #assets, body[data-view="preview"].editing #side #info { background:transparent; border:0; border-radius:0; box-shadow:none; }
+body[data-view="preview"].editing #side #info { border-top:1px solid var(--line); padding-top:10px; margin-top:4px; }
