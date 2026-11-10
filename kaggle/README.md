@@ -31,6 +31,8 @@ does not re-transcribe locally; finished projects are skipped here without using
 Kernel pins faster-whisper 1.2.1 + av 15.1.0 (Kaggle's newer av breaks it) and preloads pip CUDA 12 cuBLAS/cuDNN
 (the Kaggle image has no libcublas.so.12). First test (07 audio, 77 s): 121 s on a T4, ~140 s GPU session,
 ~170 s wall clock; local CPU was ~10 min. Scratch files: `kaggle/.work/` (git-ignored).
+Resume: a rerun with the same files reuses the last Kaggle run (`.work/last_push.json`): still running -> wait,
+finished -> download only; no second upload or GPU run. Failed or cancelled runs are pushed again. Test: `kaggle/test_run.py`.
 
 ## GPU quota rules
 - Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).

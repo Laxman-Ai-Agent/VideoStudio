@@ -23,6 +23,7 @@ USER = "laxmand7221"
 AUDIO_DS, KERNEL = f"{USER}/videostudio-audio", f"{USER}/videostudio-transcribe"
 WORK = HERE / ".work"  # git-ignored scratch: audio upload folder, filled kernel, downloaded output
 POLL = 20  # seconds between Kaggle status checks
+MARKER = WORK / "last_push.json"  # job keys of the last kernel push
 
 
 def kg(*args: str, check: bool = True) -> str:
@@ -78,6 +79,12 @@ def run_kernel(jobs: dict[str, Path]) -> Path:
     (k / "runner.py").write_text(runner.replace("SOURCES = {}", "SOURCES = " + repr(src), 1), encoding="utf-8")
     shutil.copy(HERE / "kernels" / "transcribe" / "kernel-metadata.json", k)
     print("  " + kg("kernels", "push", "-p", str(k)).strip().splitlines()[-1])
+    MARKER.write_text(json.dumps(sorted(jobs)), encoding="utf-8")  # lets a rerun resume this push
+    return fetch()
+
+
+def fetch() -> Path:
+    """Wait for the pushed kernel to finish, then download its output."""
     t0 = time.monotonic()
     wait("kernel", ["kernels", "status", KERNEL], ("COMPLETE",), ("ERROR", "CANCEL"))
     print(f"  kernel finished in {time.monotonic() - t0:.0f} s (wall clock, includes queue)")
@@ -85,6 +92,18 @@ def run_kernel(jobs: dict[str, Path]) -> Path:
     shutil.rmtree(out, ignore_errors=True)
     kg("kernels", "output", KERNEL, "-p", str(out))
     return out
+
+
+def resume(jobs: dict[str, Path]) -> Path | None:
+    """Same jobs as the last push (script was stopped, PC slept, network dropped)? Then reuse that Kaggle run:
+    still running -> wait for it; finished -> just download. No new upload, no second GPU run."""
+    if not MARKER.exists() or json.loads(MARKER.read_text("utf-8")) != sorted(jobs):
+        return None
+    s = kg("kernels", "status", KERNEL, check=False)
+    if any(x in s for x in ("RUNNING", "QUEUED", "COMPLETE")):
+        print("  resuming the previous Kaggle run of these files (no new GPU run)")
+        return fetch()
+    return None  # failed / cancelled / unknown: run again
 
 
 def main(refs: list[str]) -> int:
@@ -101,8 +120,10 @@ def main(refs: list[str]) -> int:
             jobs[key], projects[key] = audio, p
     if not jobs:
         return 0
-    upload_audio(jobs)
-    out = run_kernel(jobs)
+    out = resume(jobs)
+    if out is None:
+        upload_audio(jobs)
+        out = run_kernel(jobs)
     report = json.loads(next(out.rglob("report.json")).read_text("utf-8"))
     print("  report:", json.dumps(report))
     failed = 0
@@ -117,6 +138,7 @@ def main(refs: list[str]) -> int:
                   lambda: atomic_write(p / "work" / "whisper.json", t.model_dump_json(indent=2)),
                   force=True, extra=WHISPER_MODEL)
         print(f"{p.name}: whisper.json written ({len(t.words)} words, {t.duration} s audio)")
+    MARKER.unlink(missing_ok=True)  # results used: a rerun of failed files must push a fresh run
     return 1 if failed else 0
 
 
