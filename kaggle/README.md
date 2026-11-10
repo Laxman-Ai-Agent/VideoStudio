@@ -33,6 +33,6 @@ Kernel pins faster-whisper 1.2.1 + av 15.1.0 (Kaggle's newer av breaks it) and p
 ~170 s wall clock; local CPU was ~10 min. Scratch files: `kaggle/.work/` (git-ignored).
 
 ## GPU quota rules
-- Test new code on a CPU session first; GPU only for proven code.
-- Models and wheels come from private Kaggle datasets (no download time on GPU).
+- Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).
+- Models come from the CPU model kernel (no download on GPU time); pip installs take ~15 s.
 - One batch run for many audio files; skip files already done (content hash); save per file.
