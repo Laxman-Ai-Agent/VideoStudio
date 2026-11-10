@@ -39,7 +39,7 @@ def slug(name: str) -> str:
 
 def next_number(projects_dir: Path = PROJECTS) -> int:
     nums = [int(m.group(1)) for p in projects_dir.glob("*")
-            if p.is_dir() and (m := re.match(r"(\d+)_", p.name))]
+            if p.is_dir() and (m := re.match(r"(\d+)[_-]", p.name))]
     return max(nums, default=0) + 1
 
 
@@ -62,7 +62,7 @@ def find_project(ref: str, projects_dir: Path = PROJECTS) -> Path:
     if p.is_dir():
         return p
     for d in sorted(projects_dir.glob("*")):
-        m = re.match(r"(\d+)_", d.name)
+        m = re.match(r"(\d+)[_-]", d.name)
         if d.is_dir() and (d.name == ref or (m and ref.isdigit() and int(m.group(1)) == int(ref))):
             return d
     raise FileNotFoundError(f"project not found: {ref}")

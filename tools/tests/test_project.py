@@ -74,3 +74,10 @@ def test_atomic_write_survives_a_briefly_locked_target(tmp_path, monkeypatch):
     f = tmp_path / "visual-assets.json"
     atomic_write(f, "{}")
     assert f.read_text("utf-8") == "{}" and len(calls) == 3
+
+
+def test_find_project_accepts_hyphen_folder(tmp_path):
+    d = tmp_path / "11-AI_doctor"
+    d.mkdir()
+    assert find_project("11", tmp_path) == d
+    assert next_number(tmp_path) == 12
