@@ -183,7 +183,36 @@ function drawSceneSel() {  // outline the picked element on the scene preview of
   const k = box.clientWidth / live.data.w;
   const g = el("div", "selmark");
   g.style.cssText = `left:${b.x * k}px;top:${b.y * k}px;width:${b.w * k}px;height:${b.h * k}px;transform:rotate(${b.rot || 0}deg)`;
+  g.title = "Drag to move this layer";
+  g.onclick = (e) => e.stopPropagation();  // a click on the outline is not "open the editor"
+  g.onpointerdown = (e) => startSceneDrag(e, box, g);
   box.append(g);
+}
+// Drag the outlined element right on the Scene-tab preview: same put / commit as the canvas drag (undo, save, rebuild).
+function startSceneDrag(e, box, g) {
+  const s0 = sel();
+  if (e.button || !s0) return;
+  e.preventDefault(); e.stopPropagation();
+  snap();
+  const k = box.clientWidth / live.data.w, p0 = { x: e.clientX, y: e.clientY }, id = ed.sel;
+  let moved = false;
+  const inner = box.querySelector("iframe");
+  const move = (ev) => {
+    const dx = (ev.clientX - p0.x) / k, dy = (ev.clientY - p0.y) / k;
+    if (!moved && Math.abs(dx) + Math.abs(dy) < 2) return;
+    moved = true;
+    put(id, { ...s0, x: s0.x + dx, y: s0.y + dy });  // live in the hidden preview + memory
+    try { inner.contentWindow.__manual(id, getItems()[id]); } catch { /* frame not ready */ }  // and in this preview
+    const b = sel();
+    if (b) Object.assign(g.style, { left: b.x * k + "px", top: b.y * k + "px" });
+  };
+  const up = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", up);
+    if (moved) commit(); else hist().u.pop();  // a plain click is no edit
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
 }
 function scenePane() {  // the "Scene" tab: this scene's own preview (click = edit layers) with Play / Stop
   const d = el("div", "pane on scenepane");
