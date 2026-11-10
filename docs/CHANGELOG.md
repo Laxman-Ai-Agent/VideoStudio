@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-10 · voice.cmd: approved narration chain
+- `voice.cmd audio.mp3` -> 1.10x / 1.15x / 1.20x MP3s next to the original: atempo (Rubberband sounded bad), low cut, light denoise, strong bass, warmth, clarity, de-esser, compressor, two-pass loudnorm -14 LUFS. User picked it on "ai doctor" (A/B: atempo > rubberband, bass +7 > +4).
+
 ## 2026-11-10 · Specimen-style English titles
 - 19 more English display fonts in `_brand/fonts` (google/fonts repo, OFL, ~7 MB; listed in its README): Bricolage Grotesque, Space Grotesk, Outfit, Sora, Jost, Fjalla One, Barlow Condensed, Alfa Slab One, Titan One, Lora, Cinzel, EB Garamond, Libre Baskerville, Audiowide, Exo 2, Share Tech, Dancing Script, Lobster, Black Ops One. All load through render.font_css (checked on a specimen sheet).
 - Batch 2 (31 more, ~25 MB): Syne, Unbounded, Righteous, Bungee, Rubik, Raleway, Manrope, Lexend, Plus Jakarta Sans, DM Sans, Archivo Narrow, Teko, Rajdhani, Orbitron, Chakra Petch, Merriweather, Cormorant Garamond, Abril Fatface, Bodoni Moda, Fraunces, Big Shoulders Display, Staatliches, Russo One, Permanent Marker, Shrikhand, Special Elite, Creepster, Rye, Space Mono, Zilla Slab, Kanit (all checked).
