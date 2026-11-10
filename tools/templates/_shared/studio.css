@@ -1,4 +1,5 @@
 html, body { margin: 0; padding: 0; background: var(--bg); }
+.bgplate { position: absolute; inset: 0; background: var(--bg); background-image: var(--bg-img, none); background-size: cover; }
 #root { position: relative; overflow: hidden; width: var(--w); height: var(--h); background: var(--bg); background-image: var(--bg-img, none);
         font-family: var(--font); color: var(--text); }
 .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }

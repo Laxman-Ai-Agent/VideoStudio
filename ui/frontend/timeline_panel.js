@@ -22,7 +22,7 @@ const IC = {
 };
 const assetOf = (id) => (st.va || []).find((a) => a.id === id.split("#")[0]) || {};
 const fileName = (id) => { const b = box(id); return b && b.name ? b.name : (assetOf(id).file || id).split("/").pop(); };
-const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : "Image Layer");
+const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : b.kind === "graphic" ? "Graphic Layer" : "Image Layer");
 const OVL_CATS = ["sticker", "character_expression", "reaction", "meme", "transparent_png", "graphic", "icon", "emoji"];
 const LGROUP = (b) => (b.kind === "background" ? "Background" : b.kind === "text" || b.kind === "stamp" ? "Text"
   : b.cat === "logo" ? "Logos" : OVL_CATS.includes(b.cat) ? "Overlays" : "Images");

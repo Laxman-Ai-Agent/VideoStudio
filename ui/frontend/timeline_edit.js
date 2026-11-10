@@ -184,6 +184,8 @@ function ensureLayer() {
   return l;
 }
 function pt(e) { const r = $("screen").getBoundingClientRect(), k = kScr(); return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k }; }
+// a drawn part that covers (nearly) the whole frame (grid, shade, map) is picked from the cards list, not by clicking the picture
+const pickable = (b) => b.kind !== "background" && !(b.kind === "graphic" && b.w * b.h > 0.8 * dims().W * dims().H);
 const vis = (b) => ({ x: b.x, y: b.y, w: b.w, h: b.h, rot: b.rot + b.base });
 function down(e) {
   if (!ed.on || e.button) return;
@@ -194,8 +196,8 @@ function down(e) {
     snap();
     ed.drag = { h, s0: stateOf(ed.sel), moved: false };
   } else {
-    const rank = (b) => (b.kind === "text" ? 1 : 2) * 1000 + zOf(b);  // pictures over text; the background is picked from the list only
-    const hit = ed.boxes.filter((b) => b.kind !== "background" && M.hit(vis(b), p)).sort((a, b) => rank(a) - rank(b)).pop();
+    const rank = (b) => (b.kind === "graphic" ? 500 : b.kind === "text" ? 1000 : 2000) + zOf(b);  // pictures over text over drawn parts; the background is picked from the list only
+    const hit = ed.boxes.filter((b) => pickable(b) && M.hit(vis(b), p)).sort((a, b) => rank(a) - rank(b)).pop();
     const add = e.shiftKey || e.ctrlKey || e.metaKey, g = group();
     if (hit) {
       if (add) {  // Shift / Ctrl + click adds or removes one element
@@ -241,7 +243,7 @@ function bandTo(d, p) {  // the picking frame
   if (!bd) { bd = Object.assign(el("div"), { id: "band" }); $("editlayer").append(bd); }
   Object.assign(bd.style, { display: "block", left: x1 * k + "px", top: y1 * k + "px", width: (x2 - x1) * k + "px", height: (y2 - y1) * k + "px" });
   if (x2 - x1 + y2 - y1 > 4) d.moved = true;
-  const ids = ed.boxes.filter((b) => b.kind !== "background").filter((b) => { const a = M.bounds(vis(b)); return a.l < x2 && a.r > x1 && a.t < y2 && a.b > y1; }).map((b) => b.id);
+  const ids = ed.boxes.filter(pickable).filter((b) => { const a = M.bounds(vis(b)); return a.l < x2 && a.r > x1 && a.t < y2 && a.b > y1; }).map((b) => b.id);
   setGroup([...new Set([...d.base, ...ids])]);
   drawSel();
 }
@@ -278,7 +280,7 @@ function drawSel() {
   sb.querySelector(".ro").textContent = `${Math.round(s.x)}, ${Math.round(s.y)}  ${Math.round(s.w)} × ${Math.round(s.h)}`;
 }
 
-function selectAll() { setGroup(ed.boxes.filter((b) => b.kind !== "background").map((b) => b.id)); drawSel(); drawEdit(); }
+function selectAll() { setGroup(ed.boxes.filter(pickable).map((b) => b.id)); drawSel(); drawEdit(); }
 
 // ---- keys (captured before the timeline's own shortcuts) ----
 window.addEventListener("keydown", (e) => {

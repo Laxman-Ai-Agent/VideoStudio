@@ -8,6 +8,10 @@ window.studioLayout = function (env) {
   // the caption band is fixed at the bottom of the safe area. Overlays and the logo grid keep out of them.
   const TEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat, .label, .date, .tag, .memecap";
   function boxOf(el) {  // layout box in frame px, ignoring GSAP transforms (a tween may start at scale 0)
+    if (!(el instanceof HTMLElement)) {  // an <svg> (map, arrow, trend line) has no offsetLeft: measure it against the root
+      const r = el.getBoundingClientRect(), rr = document.getElementById("root").getBoundingClientRect();
+      return { x: r.left - rr.left, y: r.top - rr.top, w: r.width, h: r.height };
+    }
     let x = 0, y = 0;
     for (let e = el; e && e.id !== "root"; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
     return { x, y, w: el.offsetWidth, h: el.offsetHeight };
@@ -224,14 +228,45 @@ window.studioLayout = function (env) {
   // reached with CSS translate / scale / rotate and filter: opacity(), which GSAP (it only writes `transform`) leaves alone.
   const LTEXT = "#t, #title, #sub, #kicker, #q, .ln, .lower, .item, #stat .lab, #stat .val, .label, .date, .memecap";  // a stat card: its label and its value are separate layers
   const gl = [];
+  // Every other visible part of a scene is a layer too (2026-11-10, user: each part of a scene must be editable): [name, selector, kind].
+  // Ids are named (L:g-grid, L:g-card2 ...) so adding a part never renumbers the older L:tN / edits. A template can add its own
+  // parts with window.LAYER_PARTS = [[name, selector, kind], ...]. "text" parts get the Words box in the editor.
+  const PARTS = [
+    ["Grid", ".grid", "graphic"], ["Shade", ".shade", "graphic"], ["Glow", "#glow", "graphic"], ["Big word", "#bgw", "text"],
+    ["Animation", "#anim", "graphic"], ["Map", "#map", "graphic"], ["Bars", "#bars", "graphic"], ["Number", "#num", "text"],
+    ["Source", "#src", "text"], ["Card", ".card", "graphic"], ["Tile", ".tile", "graphic"], ["Button", "#btn", "text"],
+    ["Arrow", "#stat .arrow", "graphic"], ["Trend line", "#stat > svg", "graphic"], ["Accent bar", "#bar", "graphic"],
+    ["Quote mark", "#qm", "text"], ["Name", "#by", "text"], ["Role", "#role", "text"], ["Timeline line", "#line", "graphic"],
+    ["Dot", ".dot", "graphic"], ["Window", "#win", "graphic"], ["Cut-out", "#cut", "graphic"], ["Frame", "#frame", "graphic"],
+    ["Corner", ".br", "graphic"], ["Foreground", "#fg", "graphic"], ["Logos", ".logo-grid", "graphic"], ["Sun", "#sun", "graphic"],
+    ...(window.LAYER_PARTS || []),
+  ];
+  const shown = e => (e instanceof HTMLElement ? e.offsetWidth && e.offsetHeight : (() => { const r = e.getBoundingClientRect(); return r.width > 1 && r.height > 1; })());
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   function findLayers() {
-    const bg = [...document.querySelectorAll("#root .fill:not(.blurbg)")].filter(e => e.offsetWidth).pop();
+    const root = document.getElementById("root");
+    let bg = [...document.querySelectorAll("#root .fill:not(.blurbg)")].filter(e => e.offsetWidth).pop();
+    if (!bg) {  // scenes without a picture: the theme backdrop becomes its own "Background" layer
+      bg = document.createElement("div");
+      bg.className = "bgplate";
+      root.insertBefore(bg, root.firstChild);
+    }
     const txt = [...document.querySelectorAll(LTEXT)].filter(e => e.offsetWidth && e.textContent.trim());
     const outer = txt.filter(e => !txt.some(o => o !== e && o.contains(e)));  // a block inside another block is not its own layer
     const man = S.layers || {};
     if (bg) gl.push({ el: bg, kind: "background", o: { id: "L:bg", manual: man["L:bg"], name: "Background", src: bg.getAttribute("src") || "" } });
     outer.forEach((e, i) => gl.push({ el: e, kind: "text", o: { id: "L:t" + (i + 1), manual: man["L:t" + (i + 1)],
       name: e.textContent.trim().replace(/\s+/g, " ").slice(0, 28), src: "" } }));
+    const used = new Set(gl.map(g => g.el)), textEls = gl.filter(g => g.kind === "text").map(g => g.el);
+    for (const [name, sel, kind] of PARTS) {
+      const els = [...document.querySelectorAll("#root " + sel)].filter(e => !used.has(e) && shown(e) &&
+        (kind !== "text" || (e.textContent.trim() && !textEls.some(t => t.contains(e) || e.contains(t)))));
+      els.forEach((e, i) => {
+        used.add(e);
+        const id = "L:g-" + slug(name) + (els.length > 1 ? i + 1 : "");
+        gl.push({ el: e, kind, o: { id, manual: man[id], name: name + (els.length > 1 ? " " + (i + 1) : ""), src: "" } });
+      });
+    }
     gl.forEach(g => { g.f0 = getComputedStyle(g.el).filter; if (g.f0 === "none") g.f0 = ""; });
   }
   // Replacement words for a text block (manual.text): put them into the block's existing text nodes (word spans keep
