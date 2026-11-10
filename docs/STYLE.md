@@ -45,3 +45,6 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
 - Visual kinds by topic, never all at once: geopolitics footage/maps/data; science diagrams/2D animation; history
   archival photos/maps; mystery atmosphere/dramatic light; tech UI/diagrams/futuristic motion.
 - Transitions subtle for normal story, dramatic (flash, zoom) only where the moment needs it. Captions small and readable.
+- Captions (user, 2026-11-10): no card behind them; the spoken word gets a colour (box in the accent colour,
+  highlighter, underline or colour pop), a different caption style per video.
+- Photo titles: big and bold, placed in the empty part of the picture, never a small panel.

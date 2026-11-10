@@ -53,7 +53,7 @@ def similarity(a: ThemeSpec, b: ThemeSpec, brand_transitions=()) -> tuple[float,
         "text animation": (0.12, eq(ma["text_in"], mb["text_in"])),
         "camera move": (0.05, eq(ma["camera"], mb["camera"])),
         "transitions": (0.10, len(ta & tb) / len(ta | tb) if ta | tb else 1.0),
-        "text shadow": (0.05, eq(a.text.get("shadow"), b.text.get("shadow"))),
+        "caption style": (0.05, eq(a.captions.get("style", "box"), b.captions.get("style", "box"))),
     }
     return round(sum(w * v for w, v in parts.values()), 2), [k for k, (_, v) in parts.items() if v >= 0.5]
 
@@ -79,7 +79,7 @@ def describe(t: ThemeSpec, brand_transitions=()) -> str:
     look = f"{d.get('look', '')} | " if d.get("look") else ""
     return (f"{look}theme {t.name}; fonts {t.fonts.get('heading')} / {t.fonts.get('body')} / hero {t.fonts.get('hero')}; "
             f"bg {t.colors.get('background')} {t.background.get('type')} {t.background.get('pattern')} "
-            f"{t.background.get('texture')}; accent {t.colors.get('accent')}; shadow {t.text.get('shadow')}; "
+            f"{t.background.get('texture')}; accent {t.colors.get('accent')}; captions {t.captions.get('style', 'box')}; "
             f"text_in {m['text_in']}; camera {m['camera']}; transitions {m['transitions']}")
 
 

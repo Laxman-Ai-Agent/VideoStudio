@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-10 · Captions without a card, big photo titles in the calm part of the picture
+- Captions: card background removed (white + dark outline); spoken word styles box / marker / underline / pop from the theme's new `captions` field (default box), part of the similarity score (replaces text shadow).
+- `pipeline/textzone.py`: calmest zone of a photo -> `scene.zone`; photo template puts the title there, big, heading font, white or dark by tone.
+- 09: heading Baloo Tammudu 2 800, captions box in coral, heading font.
+
 ## 2026-11-10 · Creative direction per video, smaller captions
 - Captions ~45% smaller (2.9u / 3.6u in 9:16, band 15-16u -> 8-9u, lighter weight, small padding); `CAP_BAND` in layout.js.
 - `ThemeSpec.motion` (text_in, camera, transitions) + `direction` (optional, no schema bump); `transitions()` moved to theme.py (render re-exports), new transitions slide / dip / flash, 7 word entrances, 5 camera moves.

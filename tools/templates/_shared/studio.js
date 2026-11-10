@@ -97,7 +97,13 @@
     const box = document.createElement("div");
     box.className = "captions";
     document.getElementById("root").appendChild(box);
-    const base = "#FFFFFF", hot = C.marker || C.accent || "#FFC400";  // on photos or the caption pill
+    // No card: white words with a dark outline; the spoken word gets the video's caption style
+    // (theme captions.style): box = accent box behind it, marker = highlighter, underline, pop = colour + grow.
+    const CS = ST.captions || {}, kind = CS.style || "box", acc = C.accent || "#FFC400", hl = C.marker || acc;
+    const ink = c => (lum(c) > 0.4 ? "#111111" : "#FFFFFF");
+    if (CS.font === "heading") box.style.fontFamily = "var(--font-head)";
+    html.add("cap-" + kind);
+    if (S.asset) html.add("has-media");  // light theme without a picture: dark caption words (CSS)
     pages.forEach((page, i) => {
       const el = document.createElement("div");
       el.className = "cap-page";
@@ -112,8 +118,19 @@
         s.textContent = w.t;
         el.appendChild(s);
         if (j < page.length - 1) el.appendChild(document.createTextNode(" "));
-        tl.fromTo(s, { color: base, scale: 1 }, { color: hot, scale: 1.05, duration: 0.08, ease: "power1.out" }, w.s);
-        tl.to(s, { color: base, scale: 1, duration: 0.1 }, Math.max(w.e, w.s + 0.1));
+        const off = Math.max(w.e, w.s + 0.1), base = getComputedStyle(el).color;
+        if (kind === "pop") {
+          tl.fromTo(s, { color: base, scale: 1 }, { color: hl, scale: 1.1, duration: 0.08, ease: "power1.out" }, w.s);
+          tl.to(s, { color: base, scale: 1, duration: 0.1 }, off);
+        } else {
+          const bgc = kind === "box" ? acc : hl, size = { box: "100% 100%", marker: "100% 62%", underline: "100% 14%" }[kind];
+          s.style.backgroundImage = `linear-gradient(${bgc}, ${bgc})`;
+          s.style.backgroundSize = "0% " + size.split(" ")[1];
+          const sh = getComputedStyle(el).textShadow;
+          tl.to(s, { backgroundSize: size, duration: 0.08, ease: "power1.out" }, w.s);
+          if (kind !== "underline") tl.set(s, { color: ink(bgc), textShadow: "none" }, w.s);
+          tl.set(s, { backgroundSize: "0% " + size.split(" ")[1], color: base, textShadow: sh }, off);
+        }
       });
     });
   }

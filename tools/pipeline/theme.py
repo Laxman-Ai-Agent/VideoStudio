@@ -44,6 +44,8 @@ SHADOWS = {"none", "soft", "hard", "glow"}
 TEXT_IN = {"pop", "rise", "blur", "slide", "mask", "type", "fade"}
 CAMERA = {"drift", "push", "pull", "tilt", "still"}
 TRANSITIONS = {"blur", "wipe", "zoom", "circle", "slide", "dip", "flash", "cut"}
+CAPTION_STYLES = {"box", "marker", "underline", "pop"}  # spoken-word look; no card behind captions (2026-11-10)
+CAPTION_DEFAULT = {"style": "box", "font": "body"}
 MOTION_DEFAULT = {"text_in": "pop", "camera": "drift", "transitions": []}  # [] = brand.json list
 SYSTEM_FONT_DIRS = [Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts",
                     Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "Windows" / "Fonts"]
@@ -182,7 +184,13 @@ def validate(spec: ThemeSpec, fonts_dir: Path = FONTS) -> ThemeSpec:
         if bad:
             issues.append(f"motion.transitions {bad} unsupported -> dropped")
         motion["transitions"] = [t for t in motion["transitions"] if t in TRANSITIONS]
+    caps = {**CAPTION_DEFAULT, **spec.captions}
+    for k, allowed in (("style", CAPTION_STYLES), ("font", {"body", "heading"})):
+        if caps[k] not in allowed:
+            issues.append(f"captions.{k} {caps[k]!r} unsupported -> {CAPTION_DEFAULT[k]}")
+            caps[k] = CAPTION_DEFAULT[k]
     return spec.model_copy(update={"colors": colors, "background": bg, "text": text, "fonts": fonts, "motion": motion,
+                                   "captions": caps,
                                    "issues": spec.issues + issues})
 
 
@@ -199,12 +207,13 @@ def build(text: str, override: dict | None = None, table: dict | None = None,
     if ov.get("preset") and ov["preset"] not in table:
         source = f"auto (unknown preset {ov['preset']!r})"
     base = table.get(name) or {"name": name}
-    merged = _merge(base, {k: ov[k] for k in ("colors", "fonts", "background", "text", "category", "motion", "direction")
+    merged = _merge(base, {k: ov[k] for k in ("colors", "fonts", "background", "text", "category", "motion", "direction", "captions")
                               if k in ov})
     spec = ThemeSpec(name=name, category=merged.get("category", ""), source=source, scores=scores,
                      colors=merged.get("colors", {}), fonts=merged.get("fonts", {}),
                      background=merged.get("background", {}), text=merged.get("text", {}),
-                     motion=merged.get("motion", {}), direction=merged.get("direction", {}))
+                     motion=merged.get("motion", {}), direction=merged.get("direction", {}),
+                     captions=merged.get("captions", {}))
     return validate(spec, fonts_dir)
 
 

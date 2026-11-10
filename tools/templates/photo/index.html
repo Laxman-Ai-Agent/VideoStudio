@@ -45,5 +45,24 @@
   }
   kinetic(document.getElementById("t"), S.text, tl, 0.3);
   tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, 0.25);
+  // render's textzone.pick: the calmest part of the picture -> the title goes there, big and bold
+  const Z = S.zone, t = document.getElementById("t");
+  if (Z && S.text) {
+    t.className = "zone zone-" + Z.tone + " zone-" + Z.name;
+    document.getElementById("root").appendChild(t);
+  }
+  function fitZone() {
+    if (!Z || !S.text) return;
+    const zw = Z.w * S.w, zh = Z.h * S.h;
+    Object.assign(t.style, { left: Z.x * S.w + "px", width: zw + "px", top: Z.y * S.h + "px" });
+    let fs = U * 16;  // biggest first, shrink until it fits the zone (min 6u)
+    for (; fs > U * 6; fs *= 0.92) {
+      t.style.fontSize = fs + "px";
+      if (t.scrollWidth <= zw + 1 && t.offsetHeight <= zh) break;
+    }
+    t.style.top = (Z.y * S.h + Math.max(0, (zh - t.offsetHeight) / 2)) + "px";
+  }
   finish(tl);
+  fitZone();
+  if (document.fonts) document.fonts.ready.then(fitZone);
 </script></body></html>

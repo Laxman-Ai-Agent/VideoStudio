@@ -70,3 +70,21 @@ def test_captions_are_small():
     land = float(re.search(r"\.cap-page \{[^}]*?font-size: calc\(var\(--u\) \* ([\d.]+)", css).group(1))
     port = float(re.search(r"\.portrait \.cap-page \{ font-size: calc\(var\(--u\) \* ([\d.]+)", css).group(1))
     assert land <= 3.0 and port <= 3.7  # was 5.2 / 6.4 (user 2026-11-10: half the size)
+
+
+def test_title_goes_to_the_calm_part_of_the_picture(tmp_path):
+    from PIL import Image, ImageDraw
+    from pipeline import textzone
+    img = Image.new("RGB", (1600, 900), "#202020")
+    d = ImageDraw.Draw(img)
+    for x in range(0, 800, 16):  # busy stripes on the left half, the right half stays empty
+        d.line([(x, 0), (x, 900)], fill="#F0F0F0", width=6)
+    img.save(tmp_path / "p.png")
+    z = textzone.pick(tmp_path / "p.png", 1920, 1080)
+    assert z["name"] in ("right", "top-right", "bottom-right") and z["tone"] == "dark"
+    assert textzone.pick(tmp_path / "missing.png", 1920, 1080) is None
+
+
+def test_caption_style_is_validated():
+    t = th.validate(ThemeSpec(name="x", colors={}, fonts={}, captions={"style": "card"}))
+    assert t.captions == {"style": "box", "font": "body"} and any("captions.style" in i for i in t.issues)

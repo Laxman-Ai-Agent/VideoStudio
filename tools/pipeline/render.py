@@ -19,6 +19,7 @@ from .config import BRAND, ENGINES, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
                         TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
+from . import textzone
 from .theme import TRANSITIONS, transitions  # noqa: F401  (moved to theme.py 2026-11-10; render.transitions kept)
 
 TEMPLATES = TOOLS / "templates"
@@ -165,7 +166,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
     w, h = size_for(of.width, of.height, final)
     fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in sorted(set(style.fonts.values())) if fam
              for f in sorted((FONTS / fam).glob("*.ttf"))]  # adding/removing a font file re-renders
-    look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name", "motion"})
+    look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name", "motion", "captions"})
     brand_hash = hashlib.sha256((brand.model_dump_json() + str(fonts) + look).encode()).hexdigest()[:16]
     shared = _dir_hash(SHARED)
     jobs, tpl_hash = [], {}
@@ -307,9 +308,10 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
              "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
-             "theme": st.name, "style": {"background": st.background, "text": st.text, "motion": st.motion},
+             "theme": st.name, "style": {"background": st.background, "text": st.text, "motion": st.motion, "captions": st.captions},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
-             "error": error,
+             "zone": textzone.pick(job.asset, job.w, job.h, fit) if template == "photo" and s.visual_type != "logo"
+             and s.on_screen_text and job.asset.suffix.lower() != ".svg" else None, "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl,
              "layers": job.manual_layers or {}}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")

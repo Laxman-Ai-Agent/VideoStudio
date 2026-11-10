@@ -10,7 +10,7 @@ from pathlib import Path
 from .config import BRAND, ROOT
 from .contracts import ScenePlan, Transcript
 from .identity import memory_md
-from .theme import CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
+from .theme import CAPTION_STYLES, CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
 
 RULES = ROOT / ".claude" / "skills" / "my-editor" / "rules.md"
 END_SLACK = 1.0  # last scene must end within this many seconds of the audio end
@@ -74,6 +74,8 @@ QA fails a final above it). Consistent inside this video, readable always, quali
  "motion": {{"text_in": {"|".join(sorted(TEXT_IN))}, "camera": {"|".join(sorted(CAMERA))},
             "transitions": [2-3 of {"|".join(sorted(TRANSITIONS))}] (subtle ones for normal story; flash/zoom only
             where the story needs drama, set per scene with `params.transition`)}},
+ "captions": {{"style": {"|".join(sorted(CAPTION_STYLES))} (spoken word: colour box / highlighter / underline / colour pop;
+            no card behind captions), "font": body|heading}},
  "direction": {{"topic", "tone", "look" (one line), "elements" (which visual kinds fit THIS topic, e.g. geopolitics:
             footage/maps/data; science: diagrams/2D animation; history: archival photos/maps; mystery: atmosphere,
             dramatic light; tech: UI, diagrams, futuristic motion; never force every technique), "avoid" (what the

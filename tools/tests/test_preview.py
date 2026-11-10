@@ -54,4 +54,5 @@ def test_caption_words_keep_a_gap():
     # 01 final: the hot caption word grew 8% over Hind Guntur's narrow space ("cutచేయడం"); words now get a margin
     from pipeline.render import SHARED
     css, js = (SHARED / "studio.css").read_text("utf-8"), (SHARED / "studio.js").read_text("utf-8")
-    assert re.search(r"\.cap-word \{[^}]*margin: 0 \.12em", css) and "{ color: hot, scale: 1.05," in js
+    # 2026-11-10: margin .04em + padding .14em a side (room for the spoken-word box); pop grows 10%
+    assert re.search(r"\.cap-word \{[^}]*margin: 0 \.04em; padding: 0 \.14em", css) and "scale: 1.1, duration" in js

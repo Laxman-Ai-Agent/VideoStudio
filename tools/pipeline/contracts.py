@@ -241,6 +241,7 @@ class ThemeSpec(BaseModel):
     text: dict = Field(default_factory=dict)        # heading_weight body_weight shadow tracking scale
     motion: dict = Field(default_factory=dict)      # text_in transitions camera (theme.MOTION_DEFAULT); {} = old look
     direction: dict = Field(default_factory=dict)   # creative direction (Claude): topic tone look elements notes
+    captions: dict = Field(default_factory=dict)    # style (theme.CAPTION_STYLES, default box) font (body|heading)
     issues: list[str] = Field(default_factory=list)  # validation fallbacks that were applied
 
 
