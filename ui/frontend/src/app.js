@@ -166,10 +166,11 @@ async function drawProjects() {
       const el = document.createElement("span");
       el.className = `rbadge ${fm.length || (p.renders || []).some((r) => r.mode === mode) ? "done" : "wait"}`;
       el.innerHTML = (el.className.includes("done") ? TICK : WAIT) + `<span></span>`;
-      el.lastChild.textContent = el.className.includes("done") ? `${label} ${fm.join(" · ")}`.trim() : `${label} pending`;
+      el.lastChild.textContent = el.className.includes("done") ? fm.join(" · ") || "done" : "pending";
       return el;
     };
-    cell(badge("preview", "Preview"), badge("final", "Final"));
+    cell(badge("preview", ""));  // Preview column: the 480p / 720p check videos
+    cell(badge("final", ""));    // Render column: the final full-size video
     const open = async () => { showView("assets"); await select(p.id); };
     const btn = (svg, tip, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `ico ${cls}`, title: tip,
       innerHTML: `<svg viewBox="0 0 24 24">${svg}</svg>`, onclick: (e) => { e.stopPropagation(); fn(); } });
