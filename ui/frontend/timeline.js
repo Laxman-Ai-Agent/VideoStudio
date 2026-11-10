@@ -55,6 +55,9 @@ function drawList() {
     b.append(tx, el("span", "badge", k.label.replace(/^./, (c) => c.toUpperCase())),
              Object.assign(el("i", "ok" + (bad ? " e" : w.length ? " w" : ""), bad || w.length ? "!" : "✓"), { title: w.join("\n") || "OK" }));
     b.onclick = () => seek(s.start + 0.01);
+    const ed1 = Object.assign(el("span", "scedit", "Edit"), { role: "button", title: "Open this scene big with all edit options" });
+    ed1.onclick = (e) => { e.stopPropagation(); seek(s.start + 0.01); openEditor(); };
+    b.append(ed1);
     box.append(b);
   }
   const n = st.scenes.filter((s) => warnsOf(s).length).length;
@@ -257,8 +260,10 @@ async function startRender() {
 }
 
 // ---- load a project ----
+function openEditor() { setView("preview"); setEdit(true); ed.tab = "edit"; drawEdit(); }  // big preview + every edit panel
 function setFmt(f) {
   st.fmt = f;
+  document.body.dataset.fmt = f;
   document.querySelectorAll("#fmtSeg button").forEach((x) => x.classList.toggle("on", x.dataset.f === f));
   paintOpts();
 }
@@ -389,3 +394,5 @@ document.addEventListener("DOMContentLoaded", () => fetch("/api/projects", { cac
   if (ps.some((p) => p.id === want)) $("proj").value = want;
   if (ps.length) load($("proj").value);
 }));
+
+$("backScenes").onclick = () => { setEdit(false); setView("timeline"); };  // leave the big editor, back to the scene gallery

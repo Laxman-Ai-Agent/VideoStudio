@@ -179,8 +179,6 @@ body[data-view="preview"] #tlcard, body[data-view="timeline"] #center { display:
 /* Timeline view: the clicked scene's details (Scene Details / Visual Edit / Animation / Effects, Elements) sit under the tracks */
 body[data-view="timeline"] #main { grid-template-rows:auto minmax(0,1fr); align-content:start; }
 body[data-view="timeline"] #tlcard { grid-column:1; grid-row:1; }
-body[data-view="timeline"] #side { display:flex; grid-column:1; grid-row:2; flex-direction:row; gap:16px; align-items:stretch; min-width:0; }
-body[data-view="timeline"] #side > * { flex:1 1 0; min-width:0; max-height:420px; overflow:auto; }
 body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }
 
 /* "Default" button + its confirmation popup (same look as the dashboard's delete popup) */
@@ -205,9 +203,6 @@ body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }
 .scenebox .sbhint { position:absolute; left:0; right:0; bottom:0; padding:6px; text-align:center; font-size:12px; color:#fff; background:linear-gradient(transparent, rgba(5,6,15,.85)); opacity:0; transition:opacity .2s; pointer-events:none; }
 .scenebox:hover .sbhint { opacity:1; }
 /* editing layers: Video Preview shows the layer panel (Visual Edit) between the picture and the options box */
-body[data-view="preview"].editing #main { grid-template-columns:minmax(0,1fr) 360px 320px; }
-body[data-view="preview"].editing #side { display:flex; flex-direction:column; min-width:0; overflow:auto; }
-body[data-view="preview"].editing #assets { display:none; }
 
 .scenewrap { display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:6px; }
 .scenewrap .scenebox { margin:4px auto 0; }
@@ -233,3 +228,22 @@ body[data-view="timeline"] #center { display:block; position:absolute; left:-120
 .elbar { display:flex; align-items:center; gap:8px; padding:10px 4px 0; } .elbar .ic { padding:6px 16px; } .elbar .n { margin-left:6px; font-size:12px; }
 
 .scctl { flex-wrap:wrap; justify-content:center; } .scctl .ic { padding:6px 12px; }
+
+/* Timeline view: every scene as a tile under the tracks (click = select, Edit = open it big) */
+body[data-view="timeline"] #list { display:grid; grid-column:1; grid-row:2; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; align-content:start; max-height:none; min-height:0; overflow:auto; padding:14px; }
+body[data-fmt="9:16"][data-view="timeline"] #list { grid-template-columns:repeat(auto-fill, minmax(112px, 1fr)); }
+body[data-view="timeline"] #list .ttl { grid-column:1 / -1; padding:0 2px 2px; }
+body[data-view="timeline"] #list .sc { flex-direction:column; align-items:stretch; gap:6px; padding:8px; position:relative; }
+body[data-view="timeline"] #list .sc .thumb { width:100%; height:auto; aspect-ratio:16 / 9; }
+body[data-fmt="9:16"][data-view="timeline"] #list .sc .thumb { aspect-ratio:9 / 16; }
+body[data-view="timeline"] #list .sc .badge, body[data-view="timeline"] #list .sc .ok { display:none; }
+.scedit { display:none; text-align:center; padding:5px 0; border-radius:8px; background:var(--accent); color:#fff; font-size:12.5px; font-weight:600; cursor:pointer; }
+body[data-view="timeline"] #list .sc.sel .scedit, body[data-view="timeline"] #list .sc:hover .scedit { display:block; }
+body[data-view="timeline"] #list .sc .scedit:hover { background:var(--accent2); }
+/* editing: the clip big, every edit panel beside it, options box out of the way */
+#backScenes { display:none; }
+body[data-view="preview"].editing #main { grid-template-columns:minmax(0,1fr) 430px; }
+body[data-view="preview"].editing #opts { display:none; }
+body[data-view="preview"].editing #side { display:flex; flex-direction:column; gap:12px; min-width:0; overflow:auto; max-height:calc(100vh - 110px); }
+body[data-view="preview"].editing #backScenes { display:block; align-self:flex-start; padding:7px 16px; }
+body[data-view="preview"].editing #assets { display:block; }
