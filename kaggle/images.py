@@ -1,8 +1,9 @@
-r"""kaggle\images.cmd NN [A010 A023 ...] [--out DIR] [--force]
+r"""kaggle\images.cmd NN [A010 A023 ...] [--out DIR] [--force]  |  kaggle\images.cmd prompts.json [--out DIR]
 Generate AI image assets of a project with Z-Image-Turbo (Apache-2.0) on Kaggle GPU -> projects/NN/drop/<id>.png,
 so `studio.cmd assets NN` picks them up unchanged. Default ids: every asset with a prompt and method ai_generate
 that has no file yet (no `file` in visual-assets.json and nothing in drop/). --force regenerates anyway.
---out DIR writes DIR/<id>.png instead of drop/ (test runs). Weights are downloaded inside the GPU run.
+--out DIR writes DIR/<id>.png instead of drop/ (test runs). prompts.json = free test prompts
+([{"id", "prompt", "aspect_ratio"}]), images go to the folder next to it named like the file. Weights are downloaded inside the GPU run.
 A rerun with the same ids resumes the previous Kaggle run instead of starting a new GPU run.
 """
 import argparse
@@ -47,8 +48,14 @@ def main() -> int:
     ap.add_argument("--out")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
-    p = find_project(a.project)
-    jobs = pick(p, a.ids, a.force)
+    if a.project.endswith(".json"):  # free prompts: [{"id": "tiger", "prompt": "...", "aspect_ratio": "16:9"}]
+        p, items = Path(a.project), json.loads(Path(a.project).read_text("utf-8"))
+        jobs = [{"id": i["id"], "prompt": i["prompt"], "width": SIZES[i.get("aspect_ratio", "16:9")][0],
+                 "height": SIZES[i.get("aspect_ratio", "16:9")][1]} for i in items]
+        a.out = a.out or str(p.with_suffix(""))
+    else:
+        p = find_project(a.project)
+        jobs = pick(p, a.ids, a.force)
     if not jobs:
         print(f"{p.name}: nothing to generate")
         return 0

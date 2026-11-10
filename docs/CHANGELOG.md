@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 · kaggle/ Z-Image on both T4s + free test prompts
+- Second transformer copy on cuda:1 (meta skeleton + load_state_dict GPU to GPU, no CPU RAM), one thread per GPU, jobs split; a failed image no longer stops the others. Test 3 animal prompts: 2 images on GPU0 + 1 on GPU1 in 77 s (1 GPU: 122 s), ~40 s each, GPU1 output identical.
+- `kaggle\images.cmd prompts.json`: free prompts without a project (test runs).
+
 ## 2026-11-10 · kaggle/ Z-Image fp16 fix: 255 s -> 43 s per image
 - Plain fp16 overflowed inside the blocks (black images). `fp16_fix` divides the `to_v` / `w3` inputs by 256 and the following RMSNorm eps by 256^2 (math unchanged); fp16 on one T4, 1344x768: 41-44 s per image (bf16 split: 255 s). Same 3 test images look the same as bf16. bf16 split and debug hooks removed.
 

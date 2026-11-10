@@ -8,6 +8,7 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -82,22 +83,58 @@ def run(dtype) -> None:
     fp16_fix(pipe.transformer)
     pipe.transformer.to("cuda:0")  # 12.6 GB; peak 15.1 GB at 1344x768 (T4 limit 15.6): keep images ~1 MP
     pipe.vae.to("cuda:0", dtype=torch.float32)
-    step(f"GPU0 {torch.cuda.memory_allocated(0) / 1e9:.1f} GB")
-    pipe.vae.enable_tiling()
-    report.update(dtype=str(dtype), load_s=round(time.time() - t, 1))
-    step(f"ready {report['load_s']} s")
-    for j in JOBS:
-        t = time.time()
-        img = pipe(prompt_embeds=[x.to("cuda:0") for x in embeds[j["id"]]], num_inference_steps=9, guidance_scale=0.0,
-                   width=j["width"], height=j["height"], output_type="np",
-                   generator=torch.Generator("cuda:0").manual_seed(SEED)).images[0]
-        if not np.isfinite(img).all() or img.max() < 0.02:
-            raise FloatingPointError(f"NaN/black image {j['id']} in {dtype}")
-        Image.fromarray((img * 255).round().clip(0, 255).astype("uint8")).save(out / f"{j['id']}.png")
-        report["images"][j["id"]] = {"s": round(time.time() - t, 1), "w": j["width"], "h": j["height"],
-                                     "peak_gpu_gb": [round(torch.cuda.max_memory_allocated(i) / 1e9, 1) for i in range(GPUS)]}
-        step(f"{j['id']} {report['images'][j['id']]}")
+    pipes = [pipe]
+    if GPUS > 1:  # 2nd copy on the other T4 (idle once the text encoder is gone): ~2x images per minute
+        pipes.append(second_pipe(pipe, "cuda:1"))
+    for p in pipes:
+        p.vae.enable_tiling()
+    report.update(dtype=str(dtype), load_s=round(time.time() - t, 1), copies=len(pipes))
+    step(f"ready {report['load_s']} s, GPU memory {[round(torch.cuda.memory_allocated(i) / 1e9, 1) for i in range(GPUS)]} GB")
+    t = time.time()
+    threads = [threading.Thread(target=worker, args=(p, f"cuda:{i}", JOBS[i::len(pipes)], embeds))
+               for i, p in enumerate(pipes)]
+    for th in threads:
+        th.start()
+    for th in threads:
+        th.join()
+    report["generate_s"] = round(time.time() - t, 1)
 
+
+def second_pipe(pipe, dev: str):
+    """Copy the transformer GPU-to-GPU (an empty skeleton on the meta device, then load_state_dict), so the second
+    copy never needs another 12.6 GB of CPU RAM. VAE and scheduler are small: plain copies."""
+    import copy
+    from diffusers import ZImagePipeline, ZImageTransformer2DModel
+    tr = pipe.transformer
+    with torch.device("meta"):
+        tr2 = ZImageTransformer2DModel.from_config(tr.config).to(tr.dtype)
+    tr2.to_empty(device=dev)
+    tr2.load_state_dict(tr.state_dict())
+    for n, b in tr.named_buffers():  # non-persistent buffers are not in state_dict
+        tr2.get_buffer(n).copy_(b)
+    tr2.eval()
+    fp16_fix(tr2)
+    vae = copy.deepcopy(pipe.vae).to(dev)
+    return ZImagePipeline(scheduler=copy.deepcopy(pipe.scheduler), vae=vae, text_encoder=None,
+                          tokenizer=pipe.tokenizer, transformer=tr2)
+
+
+def worker(pipe, dev: str, jobs: list, embeds: dict) -> None:
+    torch.cuda.set_device(dev)
+    for j in jobs:
+        t = time.time()
+        try:
+            img = pipe(prompt_embeds=[x.to(dev) for x in embeds[j["id"]]], num_inference_steps=9, guidance_scale=0.0,
+                       width=j["width"], height=j["height"], output_type="np",
+                       generator=torch.Generator(dev).manual_seed(SEED)).images[0]
+            if not np.isfinite(img).all() or img.max() < 0.02:
+                raise FloatingPointError("NaN/black image")
+            Image.fromarray((img * 255).round().clip(0, 255).astype("uint8")).save(out / f"{j['id']}.png")
+            report["images"][j["id"]] = {"s": round(time.time() - t, 1), "gpu": dev, "w": j["width"], "h": j["height"],
+                                         "peak_gpu_gb": round(torch.cuda.max_memory_allocated(dev) / 1e9, 1)}
+        except Exception as e:  # one bad image must not stop the others
+            report["images"][j["id"]] = {"error": f"{type(e).__name__}: {e}"[:300], "gpu": dev}
+        step(f"{j['id']} {report['images'][j['id']]}")
 
 try:
     run(torch.float16)

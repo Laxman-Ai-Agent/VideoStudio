@@ -42,7 +42,9 @@ other kernels' outputs (reading ~20 GB from mounted outputs took 25+ min). T4 ha
 black/NaN images; `fp16_fix` in the runner divides the inputs of `to_v` and `w3` in every block by 256 (each branch ends
 in an RMSNorm, so the result is unchanged) -> fp16 works: ~43 s per 1344x768 image, peak 15.1 GB of the T4's 15.6 GB.
 (bf16 split over both T4s with accelerate also worked: ~255 s per image.) Text encoder needs `torch.no_grad()` (else OOM).
-Per run: ~160 s download + ~140 s load, then ~43 s per image. Resume key = runner code + jobs (`.work/images_last_push.json`).
+Both T4s generate in parallel (2nd transformer copied GPU-to-GPU, no extra CPU RAM): ~40 s per image per GPU,
+so ~20 s per image overall. Per run: ~160 s download + ~145 s load (setup ~5 min), then ~20 s per image. Free test
+prompts: `kaggle\images.cmd kaggle\.worknimals.json` ([{id, prompt, aspect_ratio}], images to `.work/animals/`). Resume key = runner code + jobs (`.work/images_last_push.json`).
 
 ## GPU quota rules
 - Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).
