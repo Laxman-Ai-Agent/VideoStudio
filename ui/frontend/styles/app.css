@@ -310,7 +310,7 @@ html { scroll-behavior: smooth; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pop-in { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
-.stats:not([hidden]), #projects:not([hidden]) { animation: fade-up .35s var(--ease) both; }
+#projects:not([hidden]) { animation: fade-up .35s var(--ease) both; }
 #ptbody tr { animation: fade-up .3s var(--ease) both; }
 #ptbody tr:nth-child(2) { animation-delay: .03s; } #ptbody tr:nth-child(3) { animation-delay: .06s; } #ptbody tr:nth-child(4) { animation-delay: .09s; }
 #ptbody tr:nth-child(5) { animation-delay: .12s; } #ptbody tr:nth-child(6) { animation-delay: .15s; } #ptbody tr:nth-child(n+7) { animation-delay: .18s; }
@@ -321,3 +321,14 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
 }
+
+/* Total / Found / Missing live in the top button row, same small size as the tabs */
+.tabs .stats { display: contents; }
+.tabs .stats[hidden] { display: none; }
+.tabs .stat { padding: 6px 14px 6px 8px; gap: 8px; border-width: 1px; border-radius: 999px; font-size: 13.5px; }
+.tabs .stat > div { gap: 6px; }
+.tabs .stat b { font-size: 14px; }
+.tabs .stat span { font-size: 13.5px; }
+.tabs .stat-icon { width: 22px; height: 22px; }
+.tabs .stat-icon svg { width: 12px; height: 12px; stroke-width: 2.6; }
+.tabs .stat.on { box-shadow: 0 0 0 2px rgba(139, 107, 255, .3); }

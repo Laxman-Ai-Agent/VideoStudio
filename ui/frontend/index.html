@@ -13,16 +13,15 @@
       <button type="button" class="tab active" id="nav-assets">Assets</button>
       <button type="button" class="tab" id="nav-timeline">Timeline</button>
       <button type="button" class="tab" id="prep" title="Process the uploads and build the storyboard (studio run --review, no render), then open the Timeline">Prepare &amp; open Timeline</button>
+      <section class="stats">
+        <button type="button" class="stat total on" data-filter="all" title="Show all assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17 9 5 9-5" opacity=".6"/></svg></span>
+          <div><b id="c-total">0</b><span>Total</span></div></button>
+        <button type="button" class="stat found" data-filter="found" title="Show only found assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9"/></svg></span>
+          <div><b id="c-found">0</b><span>Found</span></div></button>
+        <button type="button" class="stat missing" data-filter="missing" title="Show only missing assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></span>
+          <div><b id="c-missing">0</b><span>Missing</span></div></button>
+      </section>
     </nav>
-    <section class="stats">
-      <button type="button" class="stat total on" data-filter="all" title="Show all assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17 9 5 9-5" opacity=".6"/></svg></span>
-        <div><b id="c-total">0</b><span>Total</span></div></button>
-      <button type="button" class="stat found" data-filter="found" title="Show only found assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9"/></svg></span>
-        <div><b id="c-found">0</b><span>Found</span></div></button>
-      <button type="button" class="stat missing" data-filter="missing" title="Show only missing assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></span>
-        <div><b id="c-missing">0</b><span>Missing</span></div></button>
-    </section>
-
     <section id="projects" class="ptable-wrap" hidden>
       <table class="ptable"><thead><tr><th>S.No</th><th>Project</th><th>Duration</th><th>Assets</th><th>Render</th><th></th></tr></thead><tbody id="ptbody"></tbody></table>
     </section>

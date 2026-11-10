@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Total / Found / Missing in the button row
+
+- The three filter buttons moved into the top row next to the page buttons, same small pill size (7 buttons, one centred line); hidden on the Projects view. Checked in the browser: one row, 106 px margin each side, Missing filter -> 0 tiles, Total -> 26.
+
 ## 2026-11-10 - Assets page: no heading, no dropdown, one button row
 
 - Removed the `Visual Assets` heading and the project dropdown (HTML, CSS, JS). One centred row of small, same-colour buttons: Projects, Assets, Timeline, Prepare & open Timeline (the open page gets a ring). A project is chosen from the Projects table (Edit icon or row click). Checked in the browser (same fill, same row, centred, row click opens 03).
