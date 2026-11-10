@@ -22,7 +22,7 @@ from pipeline.config import BRAND, LIBRARY, ROOT, setup_env
 from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
 from pipeline.ingest import AmbiguousInput, ingest
 from pipeline.plan import RULES, validate, write_brief
-from pipeline.project import atomic_write, find_project, load_state, new_project, run_stage
+from pipeline.project import atomic_write, ensure_layout, find_project, load_state, new_project, run_stage
 
 from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
 
@@ -39,6 +39,7 @@ def _one(folder: Path, stem: str) -> Path | None:
 def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = False, only: str | None = None) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
+    ensure_layout(p)  # a folder the user made by hand has no drop/, work/ ...
     drop = [f for f in (p / "drop").iterdir() if f.is_file()]
     try:
         if drop:
