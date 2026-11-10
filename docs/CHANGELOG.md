@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Preview is 480p (was 720p)
+
+- `PREVIEW_SHORT_SIDE` 720 -> 480 (9:16 preview = 480x854). Final is unchanged (1080p). Measured on 10_AI_Doctor 9:16, 26 scenes, 4 workers: 5 min 26 s wall (sum of scene times 1190 s, photo scenes ~38 s each). Per-scene fixed cost (Chrome start + per-frame capture) dominates, so expect a modest gain over 720p, not 2x. 2 lottie scenes failed with Windows ERR_NETWORK_CHANGED (network change, not size); a re-run redoes only those.
+
 ## 2026-11-10 - Timeline Render defaults to Final 1080p
 
 - The render mode select now starts on `Final 1080p` (Preview 720p is the second choice), so Render after the check gives the full-resolution video.

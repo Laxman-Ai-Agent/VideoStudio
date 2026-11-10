@@ -5,7 +5,7 @@
     studio status 01              show which stages are done / failed
     studio run 01                 ingest -> transcribe -> align -> plan -> index -> resolve
                                   -> visual assets -> storyboard -> render -> assemble (resumes)
-    studio run 01 --final         full resolution instead of the 720p preview
+    studio run 01 --final         full resolution instead of the 480p preview
     studio run 01 --workers 1     parallel scene renders (default 4; ~0.5 GB RAM each)
     studio run 01 --format 9:16   aspect to render (default 16:9 only; all = every format in brand.json)
 """
@@ -406,7 +406,7 @@ def main() -> int:
     tc.add_argument("--auto", action="store_true", help="drop the pinned preset, pick from the content again")
     run = sub.add_parser("run")
     run.add_argument("project")
-    run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
+    run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
     run.add_argument("--workers", type=int, default=4, help="parallel scene renders (default 4: measured 2 -> 4 = 25%% faster, 6 = no gain)")
     run.add_argument("--review", action="store_true", help="stop after the storyboard (no render)")
     run.add_argument("--format", choices=["16:9", "9:16", "all"], default="16:9",

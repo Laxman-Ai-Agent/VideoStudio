@@ -246,7 +246,7 @@ async function renderStatus() {
 async function startRender() {
   const final = $("rmode").value === "final";
   const ask = final ? `Start the FINAL ${st.fmt} (full resolution) render now? It runs in the background and takes several minutes.`
-                    : "Start a 720p preview render now? It runs in the background.";
+                    : "Start a 480p preview render now? It runs in the background.";
   if (!confirm(ask)) return;
   const r = await fetch(`/api/projects/${enc(st.pid)}/render?fmt=${enc(st.fmt)}${final ? "&final=1" : ""}`, { method: "POST" });
   const d = await r.json().catch(() => ({}));

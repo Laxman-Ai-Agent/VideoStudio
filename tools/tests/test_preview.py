@@ -17,7 +17,7 @@ def test_preview_builds_once_and_falls_back(tmp_path):
     (proj / "work" / "resolved.json").write_text(res.model_dump_json(), "utf-8")
 
     r = build_preview(proj, "16:9", root=tmp_path, brand_dir=brand, check_layout=False)
-    assert (r["width"], r["height"]) == (1280, 720)
+    assert (r["width"], r["height"]) == (854, 480)
     by = {s["id"]: s for s in r["scenes"]}
     assert [by[i]["status"] for i in (1, 2, 3)] == ["built"] * 3
     assert by[3]["template"] == "photo" and "FileNotFoundError" in by[3]["error"]

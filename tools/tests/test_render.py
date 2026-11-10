@@ -42,7 +42,7 @@ def _fake(calls, fail):
 def test_frames_add_up_without_drift():
     plan = _plan()
     assert sum(rnd.frame_count(s, FPS) for s in plan.scenes) == round(plan.scenes[-1].end * FPS)
-    assert rnd.size_for(1920, 1080, False) == (1280, 720) and rnd.size_for(1080, 1920, False) == (720, 1280)
+    assert rnd.size_for(1920, 1080, False) == (854, 480) and rnd.size_for(1080, 1920, False) == (480, 854)
     assert [rnd.pick_template(s, r) for s, r in zip(plan.scenes, RESOLVED.scenes)] == ["headline", "chart", "missing"]
 
 
