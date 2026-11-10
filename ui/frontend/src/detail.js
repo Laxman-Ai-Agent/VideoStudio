@@ -95,10 +95,15 @@ async function templateMotion(a, fr) {
   const f = document.createElement("iframe");
   f.setAttribute("scrolling", "no");
   f.style.cssText = `position:absolute;left:0;top:0;border:0;width:${w}px;height:${h}px;transform-origin:0 0`;
-  const fit = () => { f.style.transform = `scale(${fr.clientWidth / w})`; };  // the frame resizes after the dialog opens
+  let bw = w;  // the preview build is drawn at its own size (720 short side), read from the scene root on load
+  const fit = () => { f.style.transform = `scale(${fr.clientWidth / bw})`; };  // the frame resizes after the dialog opens
   fit();
   new ResizeObserver(fit).observe(fr);
   f.onload = () => {
+    try {
+      const r = f.contentDocument.getElementById("root");
+      bw = +r.dataset.width; f.style.width = bw + "px"; f.style.height = r.dataset.height + "px"; fit();
+    } catch { /* keep the output size */ }
     try { f.contentWindow.__timelines.root.repeat(-1).repeatDelay(0.8).play(0); } catch { /* static frame */ }
   };
   f.src = src;
