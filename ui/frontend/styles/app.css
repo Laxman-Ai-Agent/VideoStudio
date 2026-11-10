@@ -9,23 +9,13 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 button, select, textarea { font: inherit; color: inherit; }
 
 /* page tabs (top, centred) */
-.tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 22px; }
-.tab { padding: 8px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: #dfe1f5; font-size: 14.5px; cursor: pointer; }
+.tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 18px; }
+.tab { padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: #dfe1f5; font-size: 13.5px; cursor: pointer; white-space: nowrap; }
 .tab:hover { background: #1a1d3d; }
-.tab.active { background: linear-gradient(90deg, var(--purple), #5a3be0); border-color: transparent; color: #fff; }
+.tab.active { border-color: var(--purple2); color: #fff; box-shadow: 0 0 0 2px rgba(139, 107, 255, .25); }  /* same fill for every button; the open page gets a ring */
 
 /* main */
 main { flex: 1; min-width: 0; padding: 30px 34px 50px; }
-.top { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.title { display: flex; align-items: center; gap: 18px; }
-.title-icon svg { width: 46px; height: 46px; color: var(--purple2); }
-h1 { margin: 0; font-size: 34px; letter-spacing: -.01em; }
-.title p { margin: 4px 0 0; color: var(--muted); font-size: 17px; }
-.picker { display: flex; align-items: center; gap: 8px; min-width: 300px; border: 1.5px solid #3b3f72; border-radius: 12px;
-          padding: 0 14px; background: #10132b; font-size: 17px; }
-.picker span { color: #dfe1f5; }
-.picker select { flex: 1; background: transparent; border: 0; padding: 14px 4px; outline: none; cursor: pointer; font-size: 17px; }
-.picker select option { background: #10132b; }
 
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; margin: 34px 0 32px; }
 .stat { display: flex; align-items: center; gap: 22px; padding: 22px 30px; border-radius: var(--radius); background: var(--card);
@@ -110,7 +100,6 @@ textarea:not([readonly]) { border-color: var(--purple2); }
   main { padding: 20px 16px 40px; }
   .stats { grid-template-columns: 1fr; }
   .sheet { grid-template-columns: 1fr; }
-  .picker { min-width: 0; width: 100%; }
 }
 
 /* ---- detail v2: framing preview, why-this-visual, replacement, history ---- */
@@ -280,11 +269,10 @@ details summary { font-size: 12.5px; }
 .mini:hover { background: #232756; }
 .mini.danger { color: #ff8a96; }
 .mini.danger:hover { background: #4a1a26; }
-.top[hidden] { display: none; }
 .rbadge { display: inline-block; margin: 1px 5px 1px 0; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #232756; color: #c9bfff; }
 .rbadge.final { background: #13803f; color: #fff; }
 .rbadge.pending { background: #7a5b0e; color: #ffe39a; }
-.stats[hidden], .grid[hidden], .ptable-wrap[hidden], .picker[hidden] { display: none; }
+.stats[hidden], .grid[hidden], .ptable-wrap[hidden] { display: none; }
 
 /* icon buttons + delete confirmation */
 .ico { width: 30px; height: 30px; padding: 0; margin-left: 6px; display: inline-grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); background: #1a1d3d; color: #dfe1f5; cursor: pointer; }
@@ -322,7 +310,7 @@ html { scroll-behavior: smooth; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pop-in { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
-.stats:not([hidden]), #projects:not([hidden]), header.top:not([hidden]) { animation: fade-up .35s var(--ease) both; }
+.stats:not([hidden]), #projects:not([hidden]) { animation: fade-up .35s var(--ease) both; }
 #ptbody tr { animation: fade-up .3s var(--ease) both; }
 #ptbody tr:nth-child(2) { animation-delay: .03s; } #ptbody tr:nth-child(3) { animation-delay: .06s; } #ptbody tr:nth-child(4) { animation-delay: .09s; }
 #ptbody tr:nth-child(5) { animation-delay: .12s; } #ptbody tr:nth-child(6) { animation-delay: .15s; } #ptbody tr:nth-child(n+7) { animation-delay: .18s; }

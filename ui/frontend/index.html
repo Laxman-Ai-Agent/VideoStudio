@@ -12,19 +12,8 @@
       <button type="button" class="tab" id="nav-projects">Projects</button>
       <button type="button" class="tab active" id="nav-assets">Assets</button>
       <button type="button" class="tab" id="nav-timeline">Timeline</button>
+      <button type="button" class="tab" id="prep" title="Process the uploads and build the storyboard (studio run --review, no render), then open the Timeline">Prepare &amp; open Timeline</button>
     </nav>
-    <header class="top">
-      <div class="title">
-        <span class="title-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg></span>
-        <div><h1>Visual Assets</h1><p>Project wise visual assets</p></div>
-      </div>
-      <button type="button" class="btn primary" id="prep" title="Process the uploads and build the storyboard (studio run --review, no render), then open the Timeline">&#9654; Prepare &amp; open Timeline</button>
-      <label class="picker">
-        <span>Project:</span>
-        <select id="project" aria-label="Project"></select>
-      </label>
-    </header>
-
     <section class="stats">
       <button type="button" class="stat total on" data-filter="all" title="Show all assets"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17 9 5 9-5" opacity=".6"/></svg></span>
         <div><b id="c-total">0</b><span>Total</span></div></button>

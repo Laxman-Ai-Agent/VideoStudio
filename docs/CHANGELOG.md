@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Assets page: no heading, no dropdown, one button row
+
+- Removed the `Visual Assets` heading and the project dropdown (HTML, CSS, JS). One centred row of small, same-colour buttons: Projects, Assets, Timeline, Prepare & open Timeline (the open page gets a ring). A project is chosen from the Projects table (Edit icon or row click). Checked in the browser (same fill, same row, centred, row click opens 03).
+
 ## 2026-11-10 - Smooth motion on the Timeline page too
 
 - `ui/frontend/motion.css` (linked from timeline.html): hover / press transitions on buttons, selects, scene cards and clips, one fade-up at load for the bars and cards, reduced-motion respected. Nothing animates the scene list, clips or panels (they are redrawn often). Checked: file loads (200), animations apply, no new console errors.

@@ -1,4 +1,4 @@
-// Visual Assets page: project picker, Total / Found / Missing, image grid. Clicking a tile opens
+// Visual Assets page: Total / Found / Missing, image grid. Clicking a tile opens
 // that asset's detail view (detail.js). The selected project survives a page refresh (#p=01).
 import { api } from "./api.js";
 import { hasUnsaved, liveSync, openDetail, preview } from "./detail.js";
@@ -106,8 +106,6 @@ function showView(name) {
   document.querySelectorAll(".stats, #grid").forEach((e) => { e.hidden = p; });
   $("projects").hidden = !p;
   $("prep").hidden = p;
-  document.querySelector(".picker").hidden = p;
-  document.querySelector("header.top").hidden = p;  // the table needs no heading
   $("nav-projects").classList.toggle("active", p);
   $("nav-assets").classList.toggle("active", !p);
 }
@@ -142,7 +140,6 @@ async function removeProject(p) {
   const done = await askDelete(p, () => api.deleteProject(p.id));
   if (!done) return;
   if (state.pid === p.id) { state.pid = ""; state.data = null; }
-  [...$("project").options].filter((o) => o.value === p.id).forEach((o) => o.remove());
   projectList = [];
   await drawProjects();
 }
@@ -168,7 +165,7 @@ async function drawProjects() {
       return b;
     });
     cell(...badges);
-    const open = async () => { showView("assets"); $("project").value = p.id; await select(p.id); };
+    const open = async () => { showView("assets"); await select(p.id); };
     const btn = (svg, tip, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `ico ${cls}`, title: tip,
       innerHTML: `<svg viewBox="0 0 24 24">${svg}</svg>`, onclick: (e) => { e.stopPropagation(); fn(); } });
     cell(btn('<path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14 7 3 3"/>', "Edit: open this project's assets", "", open),
@@ -186,20 +183,11 @@ async function init() {
     notice(`Cannot reach the dashboard server: ${e.message}`);
     return;
   }
-  const sel = $("project");
-  sel.replaceChildren(...projects.map((p) => {
-    const o = document.createElement("option");
-    o.value = p.id;
-    o.textContent = p.name.replace(/_/g, " ") + (p.has_assets ? "" : " (no assets yet)");
-    return o;
-  }));
   if (!projects.length) return notice('No projects yet. Create one with studio.cmd new "Name".');
   const fromHash = decodeURIComponent((location.hash.match(/p=([^&]+)/) || [])[1] || "");
   const saved = localStorage.getItem("va-project");
   const ids = projects.map((p) => p.id);
   const pid = [fromHash, saved].find((x) => ids.includes(x)) || (projects.find((p) => p.has_assets) || projects[0]).id;
-  sel.value = pid;
-  sel.addEventListener("change", () => select(sel.value));
   $("nav-projects").addEventListener("click", showProjects);
   $("nav-assets").addEventListener("click", () => { showView("assets"); window.scrollTo({ top: 0, behavior: "smooth" }); });
   $("nav-timeline").addEventListener("click", () => { location.href = `/timeline.html#p=${encodeURIComponent(state.pid)}`; });
