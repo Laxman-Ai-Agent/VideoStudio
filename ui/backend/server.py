@@ -7,6 +7,7 @@
     PUT  /api/projects/<pid>/assets/<aid>/media         {aspect, fit, crop_x, crop_y, zoom, trim_start, trim_end}
     POST /api/projects/<pid>/assets/<aid>/upload[?replace=1]   raw file body, header X-Filename
     POST /api/projects/<pid>/assets/<aid>/replace/confirm | /replace/cancel
+    DELETE /api/projects/<pid>                          move the project folder to projects/_deleted/ (restorable)
     POST /api/projects/<pid>/render[?final=1&fmt=9:16] | GET .../render   start `studio run` in the background / its state + log tail
     POST /api/projects/<pid>/preview?fmt=16:9             live preview: build scenes into work/preview/ (pipeline/preview.py)
     GET  /files/<pid>/<path inside the project>         previews (Range supported for video)
@@ -117,6 +118,14 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
         except Exception as e:  # noqa: BLE001 - every error becomes a JSON answer
+            self._error(e)
+
+    def do_DELETE(self):
+        try:
+            if m := re.match(r"^/api/projects/([^/]+)$", urllib.parse.urlparse(self.path).path):
+                return self._json(service.delete_project(m[1]))
+            raise service.NotFound(self.path)
+        except Exception as e:  # noqa: BLE001
             self._error(e)
 
     def do_PUT(self):

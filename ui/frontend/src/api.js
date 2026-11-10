@@ -12,6 +12,7 @@ export const api = {
   version: (pid) => fetch(`/api/version?p=${enc(pid)}`, { cache: "no-store" }).then(json),
   prepare: (pid) => fetch(`/api/projects/${enc(pid)}/render?review=1`, { method: "POST" }).then(json),
   runStatus: (pid) => fetch(`/api/projects/${enc(pid)}/render`, { cache: "no-store" }).then(json),
+  deleteProject: (pid) => fetch(`/api/projects/${enc(pid)}`, { method: "DELETE" }).then(json),
   projects: () => fetch("/api/projects", { cache: "no-store" }).then(json),
   assets: (pid) => fetch(`/api/projects/${enc(pid)}/assets`, { cache: "no-store" }).then(json),
   savePrompt: (pid, id, text, negative) =>

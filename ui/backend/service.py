@@ -137,10 +137,21 @@ def _overview(d: Path) -> dict:
     return {"duration": round(dur, 1), "renders": renders}
 
 
+def delete_project(pid: str) -> dict:
+    """Moves the project folder to projects/_deleted/<name>-<time> (nothing is erased: move it back to restore)."""
+    p = project_dir(pid)
+    if (cur := _renders.get(p.name)) and cur["proc"].poll() is None:
+        raise Conflict(f"{p.name} is rendering right now; wait for it to finish")
+    dest = PROJECTS / "_deleted" / f"{p.name}-{datetime.now():%Y%m%d-%H%M%S}"
+    dest.parent.mkdir(exist_ok=True)
+    shutil.move(str(p), str(dest))
+    return {"moved_to": dest.relative_to(PROJECTS.parent).as_posix()}
+
+
 def list_projects() -> list[dict]:
     out = []
     for d in sorted(PROJECTS.iterdir()) if PROJECTS.is_dir() else []:
-        if not d.is_dir():
+        if not d.is_dir() or d.name.startswith("_"):
             continue
         va = visual.load(d) if visual.path(d).exists() else None
         out.append({"id": d.name.split("_")[0], "name": d.name, "title": (va.project.get("title") if va else "") or d.name,

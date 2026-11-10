@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Projects table: S.No, View, Delete
+
+- Compact table with S.No and per-row View / Delete; no page heading on the Projects view. Delete asks first, then `DELETE /api/projects/<pid>` moves the folder to `projects/_deleted/<name>-<time>` (nothing erased; refused while it renders). The list skips `_`-prefixed folders. Test added; checked in the browser with a throwaway project.
+
 ## 2026-11-10 - Left sidebar removed
 
 - The dashboard's left sidebar (brand, Dashboard, Settings, nav links) is gone, HTML and CSS. A small centred tab bar at the top has three buttons: Projects (table), Assets, Timeline (opens the current project's timeline). The Timeline page already had no sidebar. Checked in the browser (tabs centred, no `.sidebar`, Projects row opens 10).

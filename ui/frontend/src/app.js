@@ -107,8 +107,7 @@ function showView(name) {
   $("projects").hidden = !p;
   $("prep").hidden = p;
   document.querySelector(".picker").hidden = p;
-  document.querySelector(".top h1").textContent = p ? "Projects" : "Visual Assets";
-  document.querySelector(".top p").textContent = p ? "Click a project to open its visual assets" : "Project wise visual assets";
+  document.querySelector("header.top").hidden = p;  // the table needs no heading
   $("nav-projects").classList.toggle("active", p);
   $("nav-assets").classList.toggle("active", !p);
 }
@@ -118,14 +117,28 @@ async function showProjects() {
   await drawProjects();
 }
 
+async function removeProject(p) {
+  if (!confirm(`Delete project "${p.title}" (${p.name})?
+
+Its folder is moved to projects/_deleted/, nothing is erased.`)) return;
+  try {
+    await api.deleteProject(p.id);
+  } catch (e) { return notice("Delete failed: " + e.message); }
+  if (state.pid === p.id) { state.pid = ""; state.data = null; }
+  [...$("project").options].filter((o) => o.value === p.id).forEach((o) => o.remove());
+  projectList = [];
+  await drawProjects();
+}
+
 async function drawProjects() {
   let fresh;
   try { fresh = await api.projects(); } catch (e) { return notice(`Cannot reach the dashboard server: ${e.message}`); }
   if (JSON.stringify(fresh) === JSON.stringify(projectList) && $("ptbody").children.length) return;  // unchanged: keep the rows
   projectList = fresh;
-  $("ptbody").replaceChildren(...projectList.map((p) => {
+  $("ptbody").replaceChildren(...projectList.map((p, n) => {
     const tr = document.createElement("tr");
     const cell = (...nodes) => { const td = document.createElement("td"); td.append(...nodes); tr.append(td); return td; };
+    cell(String(n + 1));
     const t = document.createElement("div"); t.className = "pt"; t.textContent = p.title;
     const i = document.createElement("div"); i.className = "pid"; i.textContent = p.name;
     cell(t, i);
@@ -138,7 +151,11 @@ async function drawProjects() {
       return b;
     });
     cell(...badges);
-    tr.onclick = async () => { showView("assets"); $("project").value = p.id; await select(p.id); };
+    const open = async () => { showView("assets"); $("project").value = p.id; await select(p.id); };
+    const btn = (text, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `mini ${cls}`, textContent: text,
+      onclick: (e) => { e.stopPropagation(); fn(); } });
+    cell(btn("View", "", open), btn("Delete", "danger", () => removeProject(p)));
+    tr.onclick = open;
     return tr;
   }));
 }

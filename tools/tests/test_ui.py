@@ -250,3 +250,21 @@ def test_project_list_has_duration_and_render_state(tmp_path, monkeypatch):
     (row,) = service.list_projects()
     assert row["duration"] == 61.0
     assert {(r["mode"], r["fmt"]) for r in row["renders"]} == {("preview", "9:16"), ("final", "16:9")}
+
+
+def test_delete_project_moves_the_folder_and_hides_it(tmp_path, monkeypatch):
+    """Delete = move to projects/_deleted/ (restorable); the list skips _deleted; a rendering project is refused."""
+    import subprocess
+    from types import SimpleNamespace as NS
+    import pytest
+    (tmp_path / "05_X").mkdir()
+    (tmp_path / "05_X" / "keep.txt").write_text("a", "utf-8")
+    (tmp_path / "06_Y").mkdir()
+    monkeypatch.setattr(service, "PROJECTS", tmp_path)
+    monkeypatch.setattr(service, "_renders", {"06_Y": {"proc": NS(poll=lambda: None)}})
+    with pytest.raises(service.Conflict):
+        service.delete_project("06")
+    r = service.delete_project("05")
+    moved = tmp_path.parent / r["moved_to"]
+    assert not (tmp_path / "05_X").exists() and (moved / "keep.txt").read_text("utf-8") == "a"
+    assert [p["name"] for p in service.list_projects()] == ["06_Y"]
