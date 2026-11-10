@@ -306,3 +306,30 @@ details summary { font-size: 12.5px; }
 .cbtn.red { background: #dc2640; border-color: #dc2640; color: #fff; font-weight: 600; }
 .cbtn.red:hover { background: #ef4258; }
 .cbtn:disabled { opacity: .6; cursor: default; }
+
+/* smooth motion: one shared easing; everything is skipped for people who ask for reduced motion */
+:root { --ease: cubic-bezier(.22, .61, .36, 1); }
+html { scroll-behavior: smooth; }
+.tab, .ico, .cbtn, .stat, .ptable tbody tr, .rbadge, select { transition: background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease); }
+.tab:hover, .ico:hover, .cbtn:hover { transform: translateY(-1px); }
+.tab:active, .ico:active, .cbtn:active { transform: translateY(0) scale(.97); }
+.stat:hover { transform: translateY(-2px); }
+.tile { transition: transform .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease); }
+.tile:hover, .tile:focus-visible { box-shadow: 0 10px 26px rgba(0, 0, 0, .4); }
+.tile img, .tile video { transition: transform .35s var(--ease); }
+.tile:hover img, .tile:hover video { transform: scale(1.04); }
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
+.stats:not([hidden]), #projects:not([hidden]), header.top:not([hidden]) { animation: fade-up .35s var(--ease) both; }
+#ptbody tr { animation: fade-up .3s var(--ease) both; }
+#ptbody tr:nth-child(2) { animation-delay: .03s; } #ptbody tr:nth-child(3) { animation-delay: .06s; } #ptbody tr:nth-child(4) { animation-delay: .09s; }
+#ptbody tr:nth-child(5) { animation-delay: .12s; } #ptbody tr:nth-child(6) { animation-delay: .15s; } #ptbody tr:nth-child(n+7) { animation-delay: .18s; }
+.cmodal:not([hidden]), .modal:not([hidden]) { animation: fade-in .2s var(--ease) both; }
+.cmodal:not([hidden]) .cbox, .modal:not([hidden]) .sheet { animation: pop-in .28s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}

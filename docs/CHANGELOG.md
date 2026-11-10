@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Smooth UI motion
+
+- Dashboard CSS only: one easing, hover/press transitions on tabs, icons, buttons, stat cards, tiles (image zoom), rows; fade-up when Projects / Assets / header show; pop-in for both popups; smooth scroll. Tiles are NOT animated on render (the grid re-renders on every change and would flicker). `prefers-reduced-motion` turns it all off. The browser pane's animation clock was paused (hidden pane), so the animation was only checked structurally (name, duration, finish -> opacity 1), not watched.
+
 ## 2026-11-10 - Projects table: S.No, View, Delete
 
 - Compact table with S.No and per-row View / Delete; no page heading on the Projects view. Delete asks first, then `DELETE /api/projects/<pid>` moves the folder to `projects/_deleted/<name>-<time>` (nothing erased; refused while it renders). The list skips `_`-prefixed folders. Test added; checked in the browser with a throwaway project.
