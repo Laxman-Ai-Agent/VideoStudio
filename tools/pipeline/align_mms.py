@@ -1,4 +1,4 @@
-"""Timing correction for a word-timed JSON (e.g. Gemini) with Meta's MMS forced aligner.
+r"""Timing correction for a word-timed JSON (e.g. Gemini) with Meta's MMS forced aligner.
 
 The text of the JSON is kept as it is; only `start` / `end` of every word (and of every scene) are
 replaced with times measured on the audio. Words are romanised with uroman, so Telugu and English
@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 SR = 16000
+CHUNK_S = 30  # seconds of audio per model pass
 
 
 def words_of(doc: dict) -> list[dict]:
@@ -50,6 +51,12 @@ def load_audio(path: Path):
     return np.frombuffer(raw, dtype=np.float32).copy()
 
 
+def chunked_emission(model, wav, step: int):
+    """Model emission of wav (1, samples) computed in windows of `step` samples, joined on the time axis."""
+    import torch
+    return torch.cat([model(wav[:, i:i + step])[0] for i in range(0, wav.shape[1], step)], dim=1)
+
+
 def align(audio: Path, texts: list[str]) -> list[tuple[float, float]]:
     """(start, end) seconds per word, measured on the audio."""
     import torch
@@ -62,9 +69,10 @@ def align(audio: Path, texts: list[str]) -> list[tuple[float, float]]:
     ur = uroman.Uroman()
     toks = [tokens(t, ur.romanize_string, vocab) for t in texts]
     wav = torch.from_numpy(load_audio(audio)).unsqueeze(0)
-    # ponytail: whole file in one pass (fine for a few minutes of audio); chunk it if RAM runs out on long files
+    # attention memory grows with length squared: 266 s in one pass needed ~11 GB and crashed, so the
+    # emission is computed per CHUNK_S window and joined (one forced alignment over the whole file)
     with torch.inference_mode():
-        emission, _ = model(wav)
+        emission = chunked_emission(model, wav, CHUNK_S * SR)
     spans = aligner(emission[0], tokenizer(toks))
     sec = wav.shape[1] / emission.shape[1] / SR
     return [(sp[0].start * sec, sp[-1].end * sec) for sp in spans]

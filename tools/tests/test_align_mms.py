@@ -18,3 +18,16 @@ def test_apply_replaces_word_and_scene_times_keeps_text():
     assert [w["word"] for w in words_of(doc)] == ["a", "b", "c"]
     assert (doc["scenes"][0]["start"], doc["scenes"][0]["end"]) == (0.16, 4.68)
     assert (doc["scenes"][1]["start"], doc["total_duration"]) == (5.22, 8.98)
+
+
+def test_chunked_emission_runs_model_per_window():
+    torch = __import__("pytest").importorskip("torch")
+    from pipeline.align_mms import chunked_emission
+    calls = []
+
+    def model(x):  # fake MMS: 1 frame per 10 samples, 3 tokens
+        calls.append(x.shape[1])
+        return torch.zeros(1, x.shape[1] // 10, 3), None
+
+    em = chunked_emission(model, torch.zeros(1, 250), 100)
+    assert calls == [100, 100, 50] and em.shape == (1, 25, 3)
