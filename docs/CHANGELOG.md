@@ -2,6 +2,7 @@
 
 ## 2026-11-10 · Specimen-style English titles
 - 19 more English display fonts in `_brand/fonts` (google/fonts repo, OFL, ~7 MB; listed in its README): Bricolage Grotesque, Space Grotesk, Outfit, Sora, Jost, Fjalla One, Barlow Condensed, Alfa Slab One, Titan One, Lora, Cinzel, EB Garamond, Libre Baskerville, Audiowide, Exo 2, Share Tech, Dancing Script, Lobster, Black Ops One. All load through render.font_css (checked on a specimen sheet).
+- Batch 2 (31 more, ~25 MB): Syne, Unbounded, Righteous, Bungee, Rubik, Raleway, Manrope, Lexend, Plus Jakarta Sans, DM Sans, Archivo Narrow, Teko, Rajdhani, Orbitron, Chakra Petch, Merriweather, Cormorant Garamond, Abril Fatface, Bodoni Moda, Fraunces, Big Shoulders Display, Staatliches, Russo One, Permanent Marker, Shrikhand, Special Elite, Creepster, Rye, Space Mono, Zilla Slab, Kanit (all checked).
 - Theme `text.title_style` plain|split|italic|shadow|outline|caps (like type-specimen cards; the last word carries the contrast) on photo zone titles, lottie / headline / cards titles and kinetic hero lines; `params.kicker` small tracked label above a big title. Lottie title 9u -> 12u.
 - Rule: highlight words (on_screen_text, lines, kicker) in English only; Telugu stays in the captions.
 - 09: Playfair Display 800, italic coral last word, English texts + kickers, titles mostly one size. Caption box now grows 0.06 s before the word (a short word showed one white frame on the light page).
