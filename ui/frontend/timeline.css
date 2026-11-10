@@ -154,3 +154,4 @@ body[data-view="timeline"] #tlcard { flex:1; }
 /* format switch, render mode, Render and close belong to Video Preview only */
 body:not([data-view="preview"]) #fmtSeg, body:not([data-view="preview"]) #rmode, body:not([data-view="preview"]) #render,
 body:not([data-view="preview"]) #close, body:not([data-view="preview"]) #rstate { display:none; }
+body:not([data-view="preview"]) .sub { display:none; }  /* project picker, scene count and warnings: Video Preview only */
