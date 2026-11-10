@@ -67,6 +67,7 @@ async function save() {
     for (const x of d.scenes) if (live.data.map[x.id]) live.data.map[x.id] = { ...live.data.map[x.id], ...x };
     if (st.cur && st.cur.id === sid && live.active) { live.active.dataset.sid = ""; loadInto(live.active, st.cur); }
     setMsg("");
+    reloadSceneBox();
     fetchOneThumb(st.cur).then(() => { drawList(); draw(); });  // the edited scene gets a new still
   } catch (e) { setMsg("Edit not saved: " + e.message); }
 }

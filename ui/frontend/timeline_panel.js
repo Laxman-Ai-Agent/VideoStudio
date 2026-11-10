@@ -171,8 +171,17 @@ function sceneControls() {  // Play / Stop of the selected scene; they sit in th
     Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
       const cur = st.cur; st.stopAt = cur.end; seek(cur.start); aud.play(); const x = tl(); if (x) x.repeat(-1).repeatDelay(0.8).play(0); } }),
     Object.assign(el("button", "ic", "■ Stop"), { title: "Stop and go back to the start of this scene", onclick: () => {
-      const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
+      const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }),
+    Object.assign(el("button", "ic", "Edit"), { title: "Edit this scene's layers (move, resize, rotate)", onclick: () => { setView("preview"); setEdit(true); ed.tab = "edit"; } }),
+    Object.assign(el("button", "ic", "Save"), { title: "Save this scene's edits now", onclick: async (ev) => {
+      const b = ev.currentTarget, t = b.textContent; b.textContent = "Saving..."; clearTimeout(ed.timer); await save(); b.textContent = "Saved ✓"; setTimeout(() => (b.textContent = t), 1500); } }),
+    Object.assign(el("button", "ic", "Timeline"), { title: "Show this scene on the timeline tracks", onclick: () => {
+      const cur = st.cur; aud.pause(); seek(cur.start); $("scroll").scrollLeft = Math.max(0, cur.start * st.pps - 60); } }));
   return ctl;
+}
+function reloadSceneBox() {  // after a save: the rebuilt scene (edits baked in) is what the Scene tab plays
+  const f = document.querySelector("#info .scenebox iframe");
+  try { if (f) f.contentWindow.location.reload(); } catch { /* not there */ }
 }
 function drawSceneSel() {  // outline the picked element on the scene preview of the Scene tab
   const box = document.querySelector("#info .scenebox");
@@ -186,15 +195,21 @@ function drawSceneSel() {  // outline the picked element on the scene preview of
   g.title = "Drag to move this layer";
   const rh = el("i", "rot");
   rh.title = "Drag to rotate (Shift = 15 degree steps)";
-  rh.onpointerdown = (e) => startSceneDrag(e, box, g, true);
+  rh.onpointerdown = (e) => startSceneDrag(e, box, g, "rot");
   g.append(rh);
+  for (const hd of ["nw", "ne", "sw", "se"]) {  // corner handles = resize
+    const c = el("i", "rz " + hd);
+    c.title = "Drag to resize (Shift = free aspect)";
+    c.onpointerdown = (e) => startSceneDrag(e, box, g, hd);
+    g.append(c);
+  }
   g.onclick = (e) => e.stopPropagation();  // a click on the outline is not "open the editor"
-  g.onpointerdown = (e) => startSceneDrag(e, box, g);
+  g.onpointerdown = (e) => { if (e.target === g) startSceneDrag(e, box, g, "move"); };
   box.append(g);
 }
 // Drag (or rotate with the round handle) the outlined element right on the Scene-tab preview:
 // same put / commit as the canvas (undo, save, rebuild).
-function startSceneDrag(e, box, g, rotate = false) {
+function startSceneDrag(e, box, g, mode = "move") {
   const s0 = sel();
   if (e.button || !s0) return;
   e.preventDefault(); e.stopPropagation();
@@ -206,14 +221,14 @@ function startSceneDrag(e, box, g, rotate = false) {
     if (!moved && Math.abs(dx) + Math.abs(dy) < 2) return;
     moved = true;
     let n;
-    if (rotate) {
-      const r = box.getBoundingClientRect();
-      n = { ...s0, rot: EditMath.rotate(s0, { x: (ev.clientX - r.left) / k, y: (ev.clientY - r.top) / k }, ev.shiftKey ? 15 : 0).rot };
-    } else n = { ...s0, x: s0.x + dx, y: s0.y + dy };
+    const r = box.getBoundingClientRect(), pt = { x: (ev.clientX - r.left) / k, y: (ev.clientY - r.top) / k };
+    if (mode === "rot") n = { ...s0, rot: EditMath.rotate(s0, pt, ev.shiftKey ? 15 : 0).rot };
+    else if (mode === "move") n = { ...s0, x: s0.x + dx, y: s0.y + dy };
+    else n = { ...s0, ...EditMath.resize(s0, mode, pt, s0.lock !== ev.shiftKey) };  // Shift flips the aspect lock
     put(id, n);  // live in the hidden preview + memory
     try { inner.contentWindow.__manual(id, getItems()[id]); } catch { /* frame not ready */ }  // and in this preview
     const b = sel();
-    if (b) Object.assign(g.style, { left: b.x * k + "px", top: b.y * k + "px", transform: `rotate(${b.rot || 0}deg)` });
+    if (b) Object.assign(g.style, { left: b.x * k + "px", top: b.y * k + "px", width: b.w * k + "px", height: b.h * k + "px", transform: `rotate(${b.rot || 0}deg)` });
   };
   const up = () => {
     window.removeEventListener("pointermove", move);
@@ -232,7 +247,7 @@ function scenePane() {  // the "Scene" tab: this scene's own preview (click = ed
 function sceneBox() {  // the selected scene's own build, looping, scaled to fit the card (the "Scene" tab)
   const m = live.data.map[st.cur.id];
   if (!m) return el("div", "n", "This scene is not built yet");
-  const W = live.data.w, H = live.data.h, k = Math.min(260 / H, Math.max(180, $("info").clientWidth - 36) / W), box = el("div", "scenebox"), wrap = el("div", "scenewrap");
+  const W = live.data.w, H = live.data.h, k = Math.min(215 / H, Math.max(180, $("info").clientWidth - 36) / W), box = el("div", "scenebox"), wrap = el("div", "scenewrap");
   wrap.dataset.sid = String(st.cur.id);
   box.style.cssText = `width:${Math.round(W * k)}px;height:${Math.round(H * k)}px`;
   const f = el("iframe");
@@ -270,8 +285,18 @@ function drawStrip() {  // every element of the selected scene, below the previe
     c.onclick = () => { ed.sel = b.id; drawSel(); if (ed.on) drawEdit(); else { drawStrip(); drawSceneSel(); } };  // picks it on the scene preview
     cards.append(c);
   }
+  let bar = null;
+  if (ed.sel && box(ed.sel)) {
+    bar = el("div", "elbar");
+    const note = el("span", "n", "Changes are kept as you go.");
+    bar.append(
+      Object.assign(el("button", "ic", "Save"), { title: "Save this scene's edits now", onclick: async () => { note.textContent = "Saving..."; clearTimeout(ed.timer); await save(); note.textContent = "Saved ✓"; } }),
+      Object.assign(el("button", "ic", "Reset"), { title: "Put this element back to its original place and size", onclick: () => { resetEl(); drawStrip(); drawSceneSel(); note.textContent = "Reset"; } }),
+      note);
+  }
   const f = live.active, ready = f && f.dataset.ready && f.dataset.sid === String(st.cur.id);
   root.append(head, all.length ? cards : el("div", "n", ready ? "No separate elements in this scene (it is one drawn template)." : "Loading elements..."));
+  if (bar) root.append(bar);  // Save / Reset under the element cards
 }
 
 $("tUndo").onclick = undo;

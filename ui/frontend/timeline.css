@@ -226,3 +226,10 @@ body[data-view="timeline"] #center { display:block; position:absolute; left:-120
 .scenebox .selmark .rot { position:absolute; left:50%; top:-22px; width:14px; height:14px; margin-left:-7px; border-radius:50%; background:#9d7bff; border:2px solid #fff; cursor:grab; }
 .scenebox .selmark .rot::after { content:""; position:absolute; left:50%; top:12px; width:1px; height:8px; background:#9d7bff; }
 .scenebox { overflow:visible; }
+
+.scenebox .selmark .rz { position:absolute; width:11px; height:11px; background:#fff; border:2px solid #9d7bff; border-radius:3px; }
+.scenebox .selmark .rz.nw { left:-6px; top:-6px; cursor:nwse-resize; } .scenebox .selmark .rz.ne { right:-6px; top:-6px; cursor:nesw-resize; }
+.scenebox .selmark .rz.sw { left:-6px; bottom:-6px; cursor:nesw-resize; } .scenebox .selmark .rz.se { right:-6px; bottom:-6px; cursor:nwse-resize; }
+.elbar { display:flex; align-items:center; gap:8px; padding:10px 4px 0; } .elbar .ic { padding:6px 16px; } .elbar .n { margin-left:6px; font-size:12px; }
+
+.scctl { flex-wrap:wrap; justify-content:center; } .scctl .ic { padding:6px 12px; }
