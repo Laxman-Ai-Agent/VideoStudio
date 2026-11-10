@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-10 · Measured: hybrid text-layer render not worth building
+- Text-only Chrome layer (photo hidden) vs full scene render, 07 scene 8: 720p 22.3 s -> 17-19 s, 1080p 29.5 s -> 21.5-23 s, before the FFmpeg photo motion + composite. Per-frame screenshot + ~5 s init dominate; dedup barely pays. Not built (details in STATUS GPU plan).
+
 ## 2026-11-10 · Render defaults: 16:9 only, 4 workers; first Z-Image video (09)
 - `studio run`: `--format` default 16:9 (`9:16` / `all` on request), `--workers` default 4. Benchmark on a copy of 07 (720p preview): 2 workers 395 s, 4 -> 296 s, 6 -> 295 s.
 - Project 09 (33 s): Z-Image images (6) end to end through `studio assets` and render; preview in 148 s.
