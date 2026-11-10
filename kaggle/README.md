@@ -24,7 +24,7 @@ Without Kaggle: the user gives audio + Gemini JSON and only step 3 runs.
   Re-run: `kg.cmd kernels push -p kaggle\kernels\whisper-model` (CPU, no GPU quota).
 
 ## Transcribe on Kaggle GPU
-`kaggleun.cmd 07 [08 ...]` (tools venv python): audio -> 16 kHz mono FLAC -> private dataset `videostudio-audio`
+`kaggle\run.cmd 07 [08 ...]` (tools venv python): audio -> 16 kHz mono FLAC -> private dataset `videostudio-audio`
 -> GPU kernel `videostudio-transcribe` (runs the local `tools/pipeline/transcribe.py` code, CUDA float16)
 -> `projects/NN/work/whisper.json`, checkpointed as stage `transcribe` (same key as `studio run`, so studio
 does not re-transcribe locally; finished projects are skipped here without using the GPU). Several projects = one run.
