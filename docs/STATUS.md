@@ -3,6 +3,14 @@
 Updated 2026-11-10. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
+## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
+- Dashboard (`/`, `ui/frontend/index.html`, `styles/app.css`, `src/app.js`): no sidebar; centred page buttons Projects / Assets / Timeline, a smaller row with Prepare + Total / Found / Missing; Projects table (S.No, title, duration, assets n/n, Missing, Preview, Render ticks, View / Delete icons; Delete = move to `projects/_deleted/`, red popup); tiles: status icon only + `Scene-NN`, 9:16 projects get portrait tiles.
+- Timeline (`/timeline.html`, `timeline*.js`, `timeline.css`, `motion.css`): page tabs on top; under them `Video Preview | Timeline` live in the right options box (ratio, quality 1080p / 480p, output size, `Default` = reset all manual edits (backup `edits.reset-<time>.json`), Render). Timeline view = tracks with Play / Stop + a gallery of scene tiles (`Edit` opens one). Editor = big live preview + one right card: `All scenes | Save | Reset`, every element as a grid, edit controls of the picked element under it. Scene Details / Animation / Effects panes were read-only and are gone.
+- Preview size is 480p now (`PREVIEW_SHORT_SIDE`), final 1080p. Backend changes need a `studio.cmd ui` restart; frontend files reload with Ctrl+F5.
+- Rules the user gave: work only in the format they name (16:9 or 9:16); keep UI replies short.
+- Not verified by eye: animations / spinner / Play (the browser pane clock is paused when hidden); layer drag, resize, rotate were checked with the save request stubbed, so the full save -> rebuild -> reload round trip is untested by me.
+- `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
+
 ## Where we are
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
 - `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 96. Doctor: all green.
