@@ -256,10 +256,24 @@ async function startRender() {
 }
 
 // ---- load a project ----
+function setFmt(f) {
+  st.fmt = f;
+  document.querySelectorAll("#fmtSeg button").forEach((x) => x.classList.toggle("on", x.dataset.f === f));
+}
+async function pickFormat(pid) {  // open in the project's own format: last one chosen here, else the one it was run in
+  let f = "";
+  try { f = localStorage.getItem("fmt:" + pid) || ""; } catch { /* private window */ }
+  if (!f) {
+    const keys = Object.keys(((await getJson("work/state.json")) || {}).stages || {}).filter((k) => /^render_\d+x\d+$/.test(k));
+    f = keys.length ? keys[keys.length - 1].slice(7).replace("x", ":") : "";
+  }
+  if (f === "9:16" || f === "16:9") setFmt(f);
+}
 async function load(pid) {
   st.pid = pid;
   location.hash = "p=" + enc(pid);
   st.cur = null;
+  await pickFormat(pid);
   await loadEdits();
   const [sj, rj, va] = await Promise.all([getJson("work/scenes.json"), getJson("work/resolved.json"), getJson("visual-assets.json")]);
   st.scenes = (sj && sj.scenes) || [];
@@ -310,8 +324,8 @@ $("warnBtn").onclick = () => { st.onlyWarn = !st.onlyWarn; drawList(); };
 $("render").onclick = startRender;
 $("proj").onchange = () => load($("proj").value);
 document.querySelectorAll("#fmtSeg button").forEach((b) => (b.onclick = () => {
-  st.fmt = b.dataset.f;
-  document.querySelectorAll("#fmtSeg button").forEach((x) => x.classList.toggle("on", x === b));
+  setFmt(b.dataset.f);
+  try { localStorage.setItem("fmt:" + st.pid, st.fmt); } catch { /* not remembered */ }
   buildLive();
 }));
 document.onkeydown = (e) => {

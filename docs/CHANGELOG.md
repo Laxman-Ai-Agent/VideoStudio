@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Timeline opens in the project's own format
+
+- No more 16:9 default: the timeline opens in the format last chosen for that project (localStorage), else the format it was rendered in (`work/state.json` render_* stage), else 16:9. Frontend only, checked in the browser.
+
 ## 2026-11-10 - Timeline plays any narration format
 
 - Fix: timeline loaded only `input/audio.wav`, so projects with `audio.mp3` (e.g. 10_AI_Doctor, 03) did not play. It now tries wav, mp3, m4a, aac, ogg, flac. Frontend only, checked in the browser (no JS test harness).
