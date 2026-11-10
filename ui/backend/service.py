@@ -428,6 +428,17 @@ def get_edits(pid: str) -> dict:
     return edits.load(project_dir(pid))
 
 
+def reset_edits(pid: str) -> dict:
+    """"Default": every manual edit of the project is dropped. edits.json is kept as edits.reset-<time>.json (nothing is lost)."""
+    p = project_dir(pid)
+    f = p / "edits.json"
+    if not f.exists():
+        return {"reset": False}
+    dest = p / f"edits.reset-{datetime.now():%Y%m%d-%H%M%S}.json"
+    f.replace(dest)
+    return {"reset": True, "backup": dest.name}
+
+
 def save_edits(pid: str, fmt: str, scene, items: dict) -> dict:
     """Replace one scene's manual edits for one format; the next /preview rebuilds only that scene."""
     from pipeline import edits

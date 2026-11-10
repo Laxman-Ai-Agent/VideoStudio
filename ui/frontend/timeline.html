@@ -61,8 +61,17 @@
       <button type="button" data-v="preview"><b>480p</b><span>Preview &middot; quick check</span></button>
     </div>
     <div id="outSize">Output <b></b></div>
+    <button id="resetEdits" type="button" title="Drop every manual change of this project">Default</button>
     <button id="render">Render</button>
   </aside>
+</div>
+<div id="rconfirm" class="cmodal" hidden>
+  <div class="cbox" role="alertdialog" aria-modal="true">
+    <div class="cicon"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/></svg></div>
+    <h3>Reset to default?</h3>
+    <p>Every manual change you made on the timeline (moved, resized, edited elements) is dropped. A copy is kept in the project folder.</p>
+    <div class="cbtns"><button type="button" class="cbtn" id="rc-cancel">Cancel</button><button type="button" class="cbtn red" id="rc-ok">Reset</button></div>
+  </div>
 </div>
 <audio id="aud" preload="auto"></audio>
 <script src="timeline.js"></script><script src="timeline_live.js"></script><script src="edit_math.js"></script><script src="timeline_edit.js"></script><script src="timeline_panel.js"></script>

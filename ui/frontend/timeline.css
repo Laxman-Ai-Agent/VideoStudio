@@ -182,3 +182,15 @@ body[data-view="timeline"] #tlcard { grid-column:1; grid-row:1; }
 body[data-view="timeline"] #side { display:flex; grid-column:1; grid-row:2; flex-direction:row; gap:16px; align-items:stretch; min-width:0; }
 body[data-view="timeline"] #side > * { flex:1 1 0; min-width:0; max-height:420px; overflow:auto; }
 body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }
+
+/* "Default" button + its confirmation popup (same look as the dashboard's delete popup) */
+#opts #resetEdits { margin-top:auto; padding:10px; } #opts #resetEdits + #render { margin-top:0; }
+.cmodal { position:fixed; inset:0; z-index:50; background:rgba(5,6,15,.72); display:grid; place-items:center; padding:20px; }
+.cmodal[hidden] { display:none; }
+.cbox { width:min(420px,100%); background:var(--card); border:1px solid #5a2330; border-radius:16px; padding:26px 26px 22px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.55), 0 0 0 4px rgba(239,68,68,.08); }
+.cicon { width:54px; height:54px; margin:0 auto 14px; border-radius:50%; display:grid; place-items:center; background:rgba(239,68,68,.15); color:#ff6b7a; }
+.cicon svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.cbox h3 { margin:0 0 8px; font-size:19px; } .cbox p { margin:0 0 6px; color:var(--muted); font-size:14.5px; line-height:1.5; }
+.cbtns { display:flex; gap:10px; justify-content:center; margin-top:18px; }
+.cbtn { min-width:110px; padding:9px 18px; border-radius:10px; font-size:14.5px; }
+.cbtn.red { background:#dc2640; border-color:#dc2640; color:#fff; font-weight:600; } .cbtn.red:hover { background:#ef4258; }

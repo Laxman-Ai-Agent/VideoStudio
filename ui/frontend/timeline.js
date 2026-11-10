@@ -337,6 +337,24 @@ document.querySelectorAll("#fmtSeg button").forEach((b) => (b.onclick = () => {
   try { localStorage.setItem("fmt:" + st.pid, st.fmt); } catch { /* not remembered */ }
   buildLive();
 }));
+// "Default": drop every manual edit (the server keeps edits.reset-<time>.json), then rebuild the preview
+$("resetEdits").onclick = () => {
+  const has = Object.entries(ed.all || {}).some(([k, v]) => k !== "version" && v && Object.keys(v).length);
+  if (!has) { const b = $("resetEdits"), t = b.textContent; b.textContent = "Nothing changed"; setTimeout(() => (b.textContent = t), 1500); return; }
+  const box = $("rconfirm"), close = () => { box.hidden = true; };
+  box.hidden = false;
+  $("rc-cancel").onclick = close;
+  box.onclick = (e) => { if (e.target === box) close(); };
+  $("rc-ok").onclick = async () => {
+    try {
+      await fetch(`/api/projects/${enc(st.pid)}/edits`, { method: "DELETE" }).then((r) => { if (!r.ok) throw new Error(r.status); });
+      await loadEdits();
+      close();
+      buildLive();
+    } catch (e) { $("resetEdits").textContent = "Reset failed"; close(); }
+  };
+};
+
 // Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
 function setView(v) {
   document.body.dataset.view = v;

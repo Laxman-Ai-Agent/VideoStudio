@@ -268,3 +268,14 @@ def test_delete_project_moves_the_folder_and_hides_it(tmp_path, monkeypatch):
     moved = tmp_path.parent / r["moved_to"]
     assert not (tmp_path / "05_X").exists() and (moved / "keep.txt").read_text("utf-8") == "a"
     assert [p["name"] for p in service.list_projects()] == ["06_Y"]
+
+
+def test_reset_edits_keeps_a_backup(tmp_path, monkeypatch):
+    """Timeline "Default": edits.json is moved to edits.reset-<time>.json; with no edits nothing happens."""
+    (tmp_path / "05_X").mkdir()
+    monkeypatch.setattr(service, "PROJECTS", tmp_path)
+    assert service.reset_edits("05") == {"reset": False}
+    (tmp_path / "05_X" / "edits.json").write_text('{"version": 1, "9:16": {"3": {"L:bg": {"x": 0.1}}}}', "utf-8")
+    r = service.reset_edits("05")
+    assert r["reset"] and not (tmp_path / "05_X" / "edits.json").exists()
+    assert "9:16" in (tmp_path / "05_X" / r["backup"]).read_text("utf-8")
