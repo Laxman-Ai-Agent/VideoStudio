@@ -22,17 +22,16 @@ function tile(a) {
   b.append(preview(state.pid, a, true));
   const st = document.createElement("span");
   st.className = `status ${a.found ? "found" : "missing"}`;
-  st.textContent = a.found ? "Found" : "Missing";
-  // the card is only the image / video plus its category; scene, id and name show on hover
-  const cat = document.createElement("span");
-  cat.className = "cat";
-  cat.dataset.cat = a.category;
-  cat.textContent = a.category.replace(/_/g, " ");
+  st.title = a.found ? "Found" : "Missing";  // icon only
+  // the card is the image / video, a status icon and the scene number; id and name show on hover
+  const scn = document.createElement("span");
+  scn.className = "scn";
+  scn.textContent = a.role === "reference" ? "Reference" : a.scenes.length ? `Scene-${pad(a.scenes[0])}` : "No scene";
   const cap = document.createElement("span");
   cap.className = "cap";
   cap.textContent = `${sceneLabel(a)} · ${a.id} · ${a.name}`;
   b.title = cap.textContent;
-  b.append(st, cat, cap);
+  b.append(st, scn, cap);
   b.classList.toggle("active", a.id === state.active);   // last opened card stays highlighted
   b.addEventListener("click", () => {
     state.active = a.id;
