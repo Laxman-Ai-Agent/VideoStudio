@@ -397,3 +397,6 @@ document.addEventListener("DOMContentLoaded", () => fetch("/api/projects", { cac
 }));
 
 $("backScenes").onclick = () => { setEdit(false); setView("timeline"); };  // leave the big editor, back to the scene gallery
+
+$("edSave").onclick = async () => { const n = $("edNote"); n.textContent = "Saving..."; clearTimeout(ed.timer); await save(); n.textContent = "Saved ✓"; setTimeout(() => { n.textContent = ""; }, 1800); };
+$("edReset").onclick = () => { const n = $("edNote"); if (ed.sel) resetEl(); else resetScene(); n.textContent = "Reset"; setTimeout(() => { n.textContent = ""; }, 1800); };

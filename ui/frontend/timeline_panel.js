@@ -161,14 +161,11 @@ function drawStrip() {  // every element of the selected scene, below the previe
   const root = $("assets");
   if (!st.cur || !live.data) { root.innerHTML = ""; return; }
   root.innerHTML = "";
-  const all = ed.boxes, grp = (b) => (b.kind === "text" ? "text" : GROUP(b)), n = (g) => all.filter((b) => grp(b) === g).length;
+  const all = ed.boxes;
   const head = el("div", "ah");
-  
-  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")], ["text", "Text", n("text")]]) {
-    head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
-  }
+  head.append(el("b", "", `Scene ${st.cur.id} – Elements (${all.length})`));  // every element is listed: no filters, no tabs
   const cards = el("div", "cards");
-  for (const b of all.filter((x) => ed.filter === "all" || grp(x) === ed.filter)) {
+  for (const b of all) {
     const m = getItems()[b.id] || {}, off = m.opacity === 0 || m.hidden;
     const c = el("button", "acard" + (b.id === ed.sel ? " on" : "") + (off ? " off" : "")), sz = el("span", "as", LGROUP(b));
     if (b.src && !isVid(b)) {
@@ -180,18 +177,8 @@ function drawStrip() {  // every element of the selected scene, below the previe
     c.onclick = () => { ed.sel = b.id; drawSel(); if (ed.on) drawEdit(); else drawStrip(); };  // picks it on the scene preview
     cards.append(c);
   }
-  let bar = null;
-  if (ed.sel && box(ed.sel)) {
-    bar = el("div", "elbar");
-    const note = el("span", "n", "Changes are kept as you go.");
-    bar.append(
-      Object.assign(el("button", "ic", "Save"), { title: "Save this scene's edits now", onclick: async () => { note.textContent = "Saving..."; clearTimeout(ed.timer); await save(); note.textContent = "Saved ✓"; } }),
-      Object.assign(el("button", "ic", "Reset"), { title: "Put this element back to its original place and size", onclick: () => { resetEl(); drawStrip(); note.textContent = "Reset"; } }),
-      note);
-  }
   const f = live.active, ready = f && f.dataset.ready && f.dataset.sid === String(st.cur.id);
   root.append(head, all.length ? cards : el("div", "n", ready ? "No separate elements in this scene (it is one drawn template)." : "Loading elements..."));
-  if (bar) root.append(bar);  // Save / Reset under the element cards
 }
 
 $("tUndo").onclick = undo;
