@@ -21,3 +21,6 @@ tools/tests/fixtures/**/work/
 
 # secrets
 tools/.env
+kaggle/kaggle.json
+kaggle/access_token
+kaggle/.venv/

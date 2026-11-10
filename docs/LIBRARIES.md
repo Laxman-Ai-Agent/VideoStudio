@@ -48,6 +48,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | Wikidata + Wikimedia Commons (`providers.entity`) | exact person photo (P18) / brand logo (P154) from `params.entity` | per file (CC BY / CC BY-SA / public domain), kept in credits |
 | Simple Icons CDN (`providers.simple_icon`) | brand icon fallback for logo scenes, rendered to a transparent PNG | CC0 data; trademarks stay with their owners |
 | Google animated Noto emoji (`providers.noto_lottie`) | Lottie icons from `params.lottie` emoji | CC BY 4.0, credited |
+| kaggle (+ six) | 2.2.5 (1.17.0) | Apache-2.0 (MIT) | kaggle/ (own venv, optional) | Kaggle API: datasets, GPU notebooks, outputs | official CLI; lets Claude run GPU jobs without a browser; `six` is an undeclared dependency |
 
 ## Planned (add when the phase starts, not before)
 | Library | Phase | Responsibility |
