@@ -26,7 +26,7 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - New video: after scenes.json the run stops once more; read `work/assets_brief.md` and write `visual-assets.json` (every asset, exact prompts)
 - `studio.cmd run 01`: all stages, resumes; exit 2 = waiting (plan, asset descriptions)
 - `studio.cmd run 01 --review`: stop after the storyboard (timeline check, no render)
-- `studio.cmd run 01 --final`: full-resolution render (default is a 720p preview); `--workers N` (default 2); `--format 16:9|9:16` renders one aspect only
+- `studio.cmd run 01 --final`: full-resolution render (default is a 720p preview); `--workers N` (default 4); `--format 16:9|9:16|all` (default 16:9 only; render 9:16 only when the user asks)
 - `tools\.venv\Scripts\python.exe -m pytest tools -q`: tests
 
 ## Token budget (the Pro plan limit is the real cost)

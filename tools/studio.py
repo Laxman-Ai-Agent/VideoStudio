@@ -6,7 +6,8 @@
     studio run 01                 ingest -> transcribe -> align -> plan -> index -> resolve
                                   -> visual assets -> storyboard -> render -> assemble (resumes)
     studio run 01 --final         full resolution instead of the 720p preview
-    studio run 01 --workers 1     parallel scene renders (default 2; ~0.5 GB RAM each)
+    studio run 01 --workers 1     parallel scene renders (default 4; ~0.5 GB RAM each)
+    studio run 01 --format 9:16   aspect to render (default 16:9 only; all = every format in brand.json)
 """
 import argparse
 import json
@@ -35,7 +36,7 @@ def _one(folder: Path, stem: str) -> Path | None:
     return found[0] if found else None
 
 
-def run_project(p: Path, final: bool = False, workers: int = 2, review: bool = False, only: str | None = None) -> int:
+def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = False, only: str | None = None) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
     drop = [f for f in (p / "drop").iterdir() if f.is_file()]
@@ -392,9 +393,10 @@ def main() -> int:
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 720p preview)")
-    run.add_argument("--workers", type=int, default=2, help="parallel scene renders (default 2)")
+    run.add_argument("--workers", type=int, default=4, help="parallel scene renders (default 4: measured 2 -> 4 = 25%% faster, 6 = no gain)")
     run.add_argument("--review", action="store_true", help="stop after the storyboard (no render)")
-    run.add_argument("--format", choices=["16:9", "9:16"], help="render only this aspect (default: every format in brand.json)")
+    run.add_argument("--format", choices=["16:9", "9:16", "all"], default="16:9",
+                     help="aspect to render (default 16:9; all = every format in brand.json)")
     a = ap.parse_args()
 
     if a.cmd == "doctor":
@@ -404,7 +406,7 @@ def main() -> int:
         return 0
     if a.cmd == "run":
         try:
-            return run_project(find_project(a.project), a.final, a.workers, a.review, a.format)
+            return run_project(find_project(a.project), a.final, a.workers, a.review, None if a.format == "all" else a.format)
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1

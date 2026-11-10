@@ -414,7 +414,7 @@ def render_one(job: Job, final: bool, render=None) -> SceneRender:
                        key=job.key, seconds=round(time.monotonic() - t0, 1), error=error)
 
 
-def render_format(jobs: list[Job], fmt: str, final: bool, workers: int = 2,
+def render_format(jobs: list[Job], fmt: str, final: bool, workers: int = 4,
                   render=None, log=print) -> RenderReport:
     """Render every uncached job with `workers` parallel HyperFrames processes; write report.json."""
     out_dir = jobs[0].out.parent

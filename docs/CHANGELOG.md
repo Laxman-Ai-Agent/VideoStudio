@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 · Render defaults: 16:9 only, 4 workers; first Z-Image video (09)
+- `studio run`: `--format` default 16:9 (`9:16` / `all` on request), `--workers` default 4. Benchmark on a copy of 07 (720p preview): 2 workers 395 s, 4 -> 296 s, 6 -> 295 s.
+- Project 09 (33 s): Z-Image images (6) end to end through `studio assets` and render; preview in 148 s.
+
 ## 2026-11-10 · kaggle/ Z-Image on both T4s + free test prompts
 - Second transformer copy on cuda:1 (meta skeleton + load_state_dict GPU to GPU, no CPU RAM), one thread per GPU, jobs split; a failed image no longer stops the others. Test 3 animal prompts: 2 images on GPU0 + 1 on GPU1 in 77 s (1 GPU: 122 s), ~40 s each, GPU1 output identical.
 - `kaggle\images.cmd prompts.json`: free prompts without a project (test runs).
