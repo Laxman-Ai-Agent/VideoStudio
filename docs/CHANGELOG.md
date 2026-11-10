@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Timeline Render defaults to Final 1080p
+
+- The render mode select now starts on `Final 1080p` (Preview 720p is the second choice), so Render after the check gives the full-resolution video.
+
 ## 2026-11-10 - Template motion in the asset dialog
 
 - Visual Assets detail dialog: a template scene (no file) now plays its live scene build (`work/preview/<fmt>/scene_NNN`) in a loop instead of the static "Aa" placeholder. Falls back to the placeholder when the timeline never built that format. Frontend only, checked in the browser (GSAP time advancing).
