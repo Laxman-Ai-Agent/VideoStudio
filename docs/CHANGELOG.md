@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-10 · kaggle/run.py resumes an interrupted run
+- Network drop / PC sleep / closed window during `kaggleun.cmd`: the Kaggle run keeps going on Kaggle; a rerun with the same files now waits for it or downloads its output instead of pushing a second GPU run (`resume()`, marker `.work/last_push.json`, cleared once results are used). Test: `kaggle/test_run.py`.
+
 ## 2026-11-10 · kaggle/ hybrid GPU render test (one scene)
 - `kaggle/hybrid_local.py 07 8` builds one scene like `run --final` into `kaggle/.work/hybrid` (07 outputs untouched): full Chrome render (36.2 s) and a text-only render (photo hidden, transparent page, `--format png-sequence`, 18.5 s, 84 RGBA frames, 6 MB).
 - `kaggle/hybrid_run.py` uploads photo + frames + job.json (dataset `videostudio-hybrid-in`), GPU kernel `kernels/hybrid` redraws the photo template motion with torch (cover fit, scale 1->1.12, pan 3u, fade, blur-in), composites the text, RGB->NV12 on GPU, `h264_nvenc` (Kaggle ffmpeg had NVENC). T4: 2.9 s per scene, 84 s video in 25 s. Overhead: upload 237 s, kernel wall 97 s, PNG decode 17 s (4 vCPU).
