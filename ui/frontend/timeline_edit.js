@@ -209,7 +209,7 @@ window.addEventListener("keydown", (e) => {
   const ctrl = e.ctrlKey || e.metaKey, step = e.shiftKey ? 10 : 1, nd = (dx, dy) => () => act((s) => ({ ...s, x: s.x + dx, y: s.y + dy }));
   let f;
   if (e.code === "KeyE" && !ctrl) f = () => setEdit(!ed.on);
-  else if (ed.on && ctrl) f = { KeyZ: () => (e.shiftKey ? redo() : undo()), KeyY: redo, KeyD: dup }[e.code];
+  else if (ctrl && st.cur && (ed.on || document.body.dataset.view === "timeline")) f = { KeyZ: () => (e.shiftKey ? redo() : undo()), KeyY: redo, KeyD: () => ed.on && dup() }[e.code];  // undo / redo also work on the Scene-tab preview
   else if (ed.on && (ed.sel || e.code === "Escape")) f = { Delete: del, Backspace: del, Escape: () => { ed.sel = null; drawSel(); drawEdit(); },
     ArrowLeft: nd(-step, 0), ArrowRight: nd(step, 0), ArrowUp: nd(0, -step), ArrowDown: nd(0, step) }[e.code];
   if (!f) return;

@@ -184,27 +184,36 @@ function drawSceneSel() {  // outline the picked element on the scene preview of
   const g = el("div", "selmark");
   g.style.cssText = `left:${b.x * k}px;top:${b.y * k}px;width:${b.w * k}px;height:${b.h * k}px;transform:rotate(${b.rot || 0}deg)`;
   g.title = "Drag to move this layer";
+  const rh = el("i", "rot");
+  rh.title = "Drag to rotate (Shift = 15 degree steps)";
+  rh.onpointerdown = (e) => startSceneDrag(e, box, g, true);
+  g.append(rh);
   g.onclick = (e) => e.stopPropagation();  // a click on the outline is not "open the editor"
   g.onpointerdown = (e) => startSceneDrag(e, box, g);
   box.append(g);
 }
-// Drag the outlined element right on the Scene-tab preview: same put / commit as the canvas drag (undo, save, rebuild).
-function startSceneDrag(e, box, g) {
+// Drag (or rotate with the round handle) the outlined element right on the Scene-tab preview:
+// same put / commit as the canvas (undo, save, rebuild).
+function startSceneDrag(e, box, g, rotate = false) {
   const s0 = sel();
   if (e.button || !s0) return;
   e.preventDefault(); e.stopPropagation();
   snap();
-  const k = box.clientWidth / live.data.w, p0 = { x: e.clientX, y: e.clientY }, id = ed.sel;
+  const k = box.clientWidth / live.data.w, p0 = { x: e.clientX, y: e.clientY }, id = ed.sel, inner = box.querySelector("iframe");
   let moved = false;
-  const inner = box.querySelector("iframe");
   const move = (ev) => {
     const dx = (ev.clientX - p0.x) / k, dy = (ev.clientY - p0.y) / k;
     if (!moved && Math.abs(dx) + Math.abs(dy) < 2) return;
     moved = true;
-    put(id, { ...s0, x: s0.x + dx, y: s0.y + dy });  // live in the hidden preview + memory
+    let n;
+    if (rotate) {
+      const r = box.getBoundingClientRect();
+      n = { ...s0, rot: EditMath.rotate(s0, { x: (ev.clientX - r.left) / k, y: (ev.clientY - r.top) / k }, ev.shiftKey ? 15 : 0).rot };
+    } else n = { ...s0, x: s0.x + dx, y: s0.y + dy };
+    put(id, n);  // live in the hidden preview + memory
     try { inner.contentWindow.__manual(id, getItems()[id]); } catch { /* frame not ready */ }  // and in this preview
     const b = sel();
-    if (b) Object.assign(g.style, { left: b.x * k + "px", top: b.y * k + "px" });
+    if (b) Object.assign(g.style, { left: b.x * k + "px", top: b.y * k + "px", transform: `rotate(${b.rot || 0}deg)` });
   };
   const up = () => {
     window.removeEventListener("pointermove", move);
