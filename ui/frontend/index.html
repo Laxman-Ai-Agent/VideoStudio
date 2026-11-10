@@ -42,6 +42,16 @@
     <section id="grid" class="grid" aria-live="polite"></section>
   </main>
 
+  <div id="confirm" class="cmodal" hidden>
+    <div class="cbox" role="alertdialog" aria-modal="true" aria-labelledby="c-title">
+      <div class="cicon"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/></svg></div>
+      <h3 id="c-title">Delete project?</h3>
+      <p id="c-text"></p>
+      <p id="c-err" class="cerr" hidden></p>
+      <div class="cbtns"><button type="button" class="cbtn" id="c-cancel">Cancel</button><button type="button" class="cbtn red" id="c-ok">Delete</button></div>
+    </div>
+  </div>
+
   <div id="modal" class="modal" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="d-name">
       <button class="close" id="d-close" aria-label="Close">&times;</button>

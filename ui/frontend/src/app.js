@@ -117,13 +117,30 @@ async function showProjects() {
   await drawProjects();
 }
 
-async function removeProject(p) {
-  if (!confirm(`Delete project "${p.title}" (${p.name})?
+// red confirmation popup (instead of the browser's plain confirm box); resolves true on Delete, false on Cancel / Esc / backdrop
+function askDelete(p, run) {
+  const box = $("confirm"), ok = $("c-ok"), cancel = $("c-cancel"), err = $("c-err");
+  $("c-text").textContent = `"${p.title}" (${p.name}) will be removed from the project list. Its folder is moved to projects/_deleted/, nothing is erased.`;
+  err.hidden = true;
+  ok.disabled = false;
+  box.hidden = false;
+  ok.focus();
+  return new Promise((resolve) => {
+    const close = (v) => { box.hidden = true; ok.onclick = cancel.onclick = box.onclick = null; document.removeEventListener("keydown", key); resolve(v); };
+    const key = (e) => { if (e.key === "Escape") close(false); };
+    document.addEventListener("keydown", key);
+    cancel.onclick = () => close(false);
+    box.onclick = (e) => { if (e.target === box) close(false); };
+    ok.onclick = async () => {
+      ok.disabled = true;
+      try { await run(); close(true); } catch (e) { err.textContent = "Delete failed: " + e.message + " (restart the dashboard if it is an old server)"; err.hidden = false; ok.disabled = false; }
+    };
+  });
+}
 
-Its folder is moved to projects/_deleted/, nothing is erased.`)) return;
-  try {
-    await api.deleteProject(p.id);
-  } catch (e) { return notice("Delete failed: " + e.message); }
+async function removeProject(p) {
+  const done = await askDelete(p, () => api.deleteProject(p.id));
+  if (!done) return;
   if (state.pid === p.id) { state.pid = ""; state.data = null; }
   [...$("project").options].filter((o) => o.value === p.id).forEach((o) => o.remove());
   projectList = [];
@@ -152,9 +169,10 @@ async function drawProjects() {
     });
     cell(...badges);
     const open = async () => { showView("assets"); $("project").value = p.id; await select(p.id); };
-    const btn = (text, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `mini ${cls}`, textContent: text,
-      onclick: (e) => { e.stopPropagation(); fn(); } });
-    cell(btn("View", "", open), btn("Delete", "danger", () => removeProject(p)));
+    const btn = (svg, tip, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `ico ${cls}`, title: tip,
+      innerHTML: `<svg viewBox="0 0 24 24">${svg}</svg>`, onclick: (e) => { e.stopPropagation(); fn(); } });
+    cell(btn('<path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14 7 3 3"/>', "Edit: open this project's assets", "", open),
+         btn('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>', "Delete this project", "danger", () => removeProject(p)));
     tr.onclick = open;
     return tr;
   }));

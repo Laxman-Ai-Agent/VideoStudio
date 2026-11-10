@@ -285,3 +285,24 @@ details summary { font-size: 12.5px; }
 .rbadge.final { background: #13803f; color: #fff; }
 .rbadge.pending { background: #7a5b0e; color: #ffe39a; }
 .stats[hidden], .grid[hidden], .ptable-wrap[hidden], .picker[hidden] { display: none; }
+
+/* icon buttons + delete confirmation */
+.ico { width: 30px; height: 30px; padding: 0; margin-left: 6px; display: inline-grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); background: #1a1d3d; color: #dfe1f5; cursor: pointer; }
+.ico svg { width: 16px; height: 16px; }
+.ico:hover { background: #232756; }
+.ico.danger { color: #ff8a96; } .ico.danger:hover { background: #4a1a26; border-color: #7a2535; }
+.cmodal { position: fixed; inset: 0; z-index: 50; background: rgba(5, 6, 15, .72); display: grid; place-items: center; padding: 20px; }
+.cmodal[hidden] { display: none; }
+.cbox { width: min(420px, 100%); background: var(--card); border: 1px solid #5a2330; border-radius: 16px; padding: 26px 26px 22px; text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, .55), 0 0 0 4px rgba(239, 68, 68, .08); }
+.cicon { width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center; background: rgba(239, 68, 68, .15); color: #ff6b7a; }
+.cicon svg { width: 26px; height: 26px; }
+.cbox h3 { margin: 0 0 8px; font-size: 19px; }
+.cbox p { margin: 0 0 6px; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.cbox .cerr { color: #ff8a96; background: rgba(239, 68, 68, .12); border-radius: 8px; padding: 8px 10px; }
+.cbtns { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+.cbtn { min-width: 110px; padding: 9px 18px; border-radius: 10px; border: 1px solid var(--line); background: #1a1d3d; color: #dfe1f5; font-size: 14.5px; cursor: pointer; }
+.cbtn:hover { background: #232756; }
+.cbtn.red { background: #dc2640; border-color: #dc2640; color: #fff; font-weight: 600; }
+.cbtn.red:hover { background: #ef4258; }
+.cbtn:disabled { opacity: .6; cursor: default; }
