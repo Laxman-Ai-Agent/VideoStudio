@@ -20,7 +20,7 @@ const IC = {
   bottom: '<path d="M2 14h12"/><rect x="4" y="3" width="3" height="9"/><rect x="9" y="6" width="3" height="6"/>',
   fit: '<rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 6.5L3.5 8 5 9.5M11 6.5L12.5 8 11 9.5"/>',
 };
-const TABS = [["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
+const TABS = [["scene", "Scene"], ["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
 const assetOf = (id) => (st.va || []).find((a) => a.id === id.split("#")[0]) || {};
 const fileName = (id) => { const b = box(id); return b && b.name ? b.name : (assetOf(id).file || id).split("/").pop(); };
 const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : "Image Layer");
@@ -49,16 +49,17 @@ function drawEdit() {
     det.append(...info.childNodes);
     info.append(det);
   }
-  info.querySelectorAll(".tabs, .scctl, .pane:not(.details)").forEach((n) => n.remove());
+  const keepScene = ed.tab === "scene" ? info.querySelector(`.pane.scenepane[data-sid="${st.cur.id}"]`) : null;  // same scene: the playing frame stays
+  info.querySelectorAll(".tabs, .pane:not(.details)").forEach((n) => { if (n !== keepScene) n.remove(); });
   const tabs = el("div", "tabs");
   for (const [k, label] of TABS) {
     tabs.append(Object.assign(el("button", ed.tab === k ? "on" : "", label), { onclick: () => { ed.tab = k; drawEdit(); } }));
   }
   info.prepend(tabs);
-  det.prepend(sceneControls());  // beside the "Scene N" heading of the Scene Details tab
   det.classList.toggle("on", ed.tab === "details");
   fields = {};
-  if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
+  if (ed.tab === "scene") { if (!keepScene) info.append(scenePane()); }
+  else if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
   drawStrip();
   syncPanel();
 }
@@ -163,7 +164,7 @@ function setEdit(on) {
 // ---- "Scene N - Assets" strip under the preview ----
 const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "images");
 function sceneControls() {  // Play / Stop of the selected scene; they sit in the header of the card next to the Scene tab
-  const tl = () => { try { return document.querySelector("#assets .scenebox iframe").contentWindow.__timelines.root; } catch { return null; } };
+  const tl = () => { try { return document.querySelector("#info .scenebox iframe").contentWindow.__timelines.root; } catch { return null; } };
   const ctl = el("div", "scctl");
   ctl.append(
     Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
@@ -172,10 +173,16 @@ function sceneControls() {  // Play / Stop of the selected scene; they sit in th
       const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
   return ctl;
 }
+function scenePane() {  // the "Scene" tab: this scene's own preview (click = edit layers) with Play / Stop
+  const d = el("div", "pane on scenepane");
+  d.dataset.sid = String(st.cur.id);
+  d.append(live.data ? sceneBox() : el("div", "n", "Preview is loading..."), sceneControls());
+  return d;
+}
 function sceneBox() {  // the selected scene's own build, looping, scaled to fit the card (the "Scene" tab)
   const m = live.data.map[st.cur.id];
   if (!m) return el("div", "n", "This scene is not built yet");
-  const W = live.data.w, H = live.data.h, k = Math.min(300 / H, 560 / W), box = el("div", "scenebox"), wrap = el("div", "scenewrap");
+  const W = live.data.w, H = live.data.h, k = Math.min(260 / H, Math.max(180, $("info").clientWidth - 36) / W), box = el("div", "scenebox"), wrap = el("div", "scenewrap");
   wrap.dataset.sid = String(st.cur.id);
   box.style.cssText = `width:${Math.round(W * k)}px;height:${Math.round(H * k)}px`;
   const f = el("iframe");
@@ -193,19 +200,12 @@ function sceneBox() {  // the selected scene's own build, looping, scaled to fit
 function drawStrip() {  // every element of the selected scene, below the preview; shares the selection with canvas + panel
   const root = $("assets");
   if (!st.cur || !live.data) { root.innerHTML = ""; return; }
-  const keep = root.querySelector(".scenewrap");
-  if (ed.filter !== "scene" || !keep || keep.dataset.sid !== String(st.cur.id)) root.innerHTML = "";  // same scene: keep the playing frame, only the tabs redraw
+  root.innerHTML = "";
   const all = ed.boxes, grp = (b) => (b.kind === "text" ? "text" : GROUP(b)), n = (g) => all.filter((b) => grp(b) === g).length;
   const head = el("div", "ah");
-  head.append(el("b", "", `Scene ${st.cur.id}`), el("span", "grow"));
-  for (const [k, label, c] of [["scene", "Scene", null], ["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")], ["text", "Text", n("text")]]) {
-    head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), c == null ? label : `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
-  }
-  if (ed.filter === "scene") {
-    const old = root.querySelector(".ah");
-    if (old && keep && root.contains(keep)) old.replaceWith(head);
-    else root.append(head, sceneBox());
-    return;
+  head.append(el("b", "", `Scene ${st.cur.id} – Elements`), el("span", "grow"));
+  for (const [k, label, c] of [["all", "All", all.length], ["images", "Images", n("images")], ["video", "Video", n("video")], ["graphics", "Graphics", n("graphics")], ["text", "Text", n("text")]]) {
+    head.append(Object.assign(el("button", "chp" + (ed.filter === k ? " on" : ""), `${label} (${c})`), { onclick: () => { ed.filter = k; drawStrip(); } }));
   }
   const cards = el("div", "cards");
   for (const b of all.filter((x) => ed.filter === "all" || grp(x) === ed.filter)) {
