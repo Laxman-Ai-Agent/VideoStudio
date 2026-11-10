@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Left sidebar removed
+
+- The dashboard's left sidebar (brand, Dashboard, Settings, nav links) is gone, HTML and CSS. A small centred tab bar at the top has three buttons: Projects (table), Assets, Timeline (opens the current project's timeline). The Timeline page already had no sidebar. Checked in the browser (tabs centred, no `.sidebar`, Projects row opens 10).
+
 ## 2026-11-10 - Projects table
 
 - Sidebar `Projects` now opens a table of every project: title, duration (last scene end), assets found/total, render state (Final / Preview per format, or `Render pending`). A row opens that project's Visual Assets. `GET /api/projects` gained `duration` and `renders`. Test added; checked in the browser (10 rows, row click opens 03).

@@ -8,19 +8,11 @@ body { margin: 0; display: flex; min-height: 100vh; background: var(--bg); color
 svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 button, select, textarea { font: inherit; color: inherit; }
 
-/* sidebar */
-.sidebar { width: 250px; flex: none; background: var(--side); border-right: 1px solid var(--line); padding: 26px 14px; }
-.brand { display: flex; align-items: center; gap: 12px; font-size: 21px; font-weight: 700; padding: 0 10px 34px; }
-.brand-icon { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--purple2), #4b2bd6);
-              display: grid; place-items: center; }
-.brand-icon svg { fill: #fff; stroke: none; width: 18px; height: 18px; }
-nav { display: flex; flex-direction: column; gap: 10px; }
-.nav { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-radius: 10px; color: #dfe1f5;
-       cursor: pointer; font-size: 16px; user-select: none; }
-.nav:hover { background: #1a1d3d; }
-.nav.active { background: linear-gradient(90deg, var(--purple), #5a3be0); color: #fff; }
-.nav.disabled { opacity: .45; cursor: default; }
-.nav.disabled:hover { background: none; }
+/* page tabs (top, centred) */
+.tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 22px; }
+.tab { padding: 8px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: #dfe1f5; font-size: 14.5px; cursor: pointer; }
+.tab:hover { background: #1a1d3d; }
+.tab.active { background: linear-gradient(90deg, var(--purple), #5a3be0); border-color: transparent; color: #fff; }
 
 /* main */
 main { flex: 1; min-width: 0; padding: 30px 34px 50px; }
@@ -115,9 +107,6 @@ textarea:not([readonly]) { border-color: var(--purple2); }
 
 @media (max-width: 1100px) { .stats { gap: 14px; } .stat { padding: 18px; gap: 14px; } .stat b { font-size: 30px; } }
 @media (max-width: 900px) {
-  body { flex-direction: column; }
-  .sidebar { width: auto; padding: 14px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .brand { padding: 0 6px 12px; } nav { flex-direction: row; overflow-x: auto; } .nav { padding: 10px 14px; white-space: nowrap; }
   main { padding: 20px 16px 40px; }
   .stats { grid-template-columns: 1fr; }
   .sheet { grid-template-columns: 1fr; }

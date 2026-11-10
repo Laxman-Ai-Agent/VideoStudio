@@ -100,7 +100,7 @@ document.querySelectorAll(".stat").forEach((b) => b.addEventListener("click", ()
 let projectList = [];
 const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.round(t % 60)).padStart(2, "0")}`;
 
-// "Projects" in the sidebar: every project as a table row (title, duration, assets, render state); a row opens its assets
+// "Projects" tab: every project as a table row (title, duration, assets, render state); a row opens its assets
 function showView(name) {
   const p = name === "projects";
   document.querySelectorAll(".stats, #grid").forEach((e) => { e.hidden = p; });
@@ -166,8 +166,8 @@ async function init() {
   sel.value = pid;
   sel.addEventListener("change", () => select(sel.value));
   $("nav-projects").addEventListener("click", showProjects);
-  document.querySelectorAll("[data-nav='assets']").forEach((n) =>
-    n.addEventListener("click", () => { showView("assets"); window.scrollTo({ top: 0, behavior: "smooth" }); }));
+  $("nav-assets").addEventListener("click", () => { showView("assets"); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  $("nav-timeline").addEventListener("click", () => { location.href = `/timeline.html#p=${encodeURIComponent(state.pid)}`; });
   await select(pid);
 }
 
