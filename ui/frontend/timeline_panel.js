@@ -61,6 +61,7 @@ function drawEdit() {
   if (ed.tab === "scene") { if (!keepScene) info.append(scenePane()); }
   else if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
   drawStrip();
+  drawSceneSel();
   syncPanel();
 }
 
@@ -173,6 +174,17 @@ function sceneControls() {  // Play / Stop of the selected scene; they sit in th
       const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
   return ctl;
 }
+function drawSceneSel() {  // outline the picked element on the scene preview of the Scene tab
+  const box = document.querySelector("#info .scenebox");
+  if (!box || !live.data) return;
+  box.querySelectorAll(".selmark").forEach((n) => n.remove());
+  const b = sel();  // position incl. manual edits, same source as the canvas selection
+  if (!b) return;
+  const k = box.clientWidth / live.data.w;
+  const g = el("div", "selmark");
+  g.style.cssText = `left:${b.x * k}px;top:${b.y * k}px;width:${b.w * k}px;height:${b.h * k}px;transform:rotate(${b.rot || 0}deg)`;
+  box.append(g);
+}
 function scenePane() {  // the "Scene" tab: this scene's own preview (click = edit layers) with Play / Stop
   const d = el("div", "pane on scenepane");
   d.dataset.sid = String(st.cur.id);
@@ -217,7 +229,7 @@ function drawStrip() {  // every element of the selected scene, below the previe
       c.append(im);
     } else c.append(el("span", "tt", b.kind === "text" || b.kind === "stamp" ? (b.name || "T") : "▣"));
     c.append(el("i", "ck", "✓"), el("span", "an", fileName(b.id)), sz);
-    c.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
+    c.onclick = () => { ed.sel = b.id; drawSel(); if (ed.on) drawEdit(); else { drawStrip(); drawSceneSel(); } };  // picks it on the scene preview
     cards.append(c);
   }
   const f = live.active, ready = f && f.dataset.ready && f.dataset.sid === String(st.cur.id);

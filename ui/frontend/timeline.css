@@ -220,3 +220,5 @@ body[data-view="preview"].editing #assets { display:none; }
 
 /* Timeline view: the live preview stays laid out (off-screen, not display:none) so the Elements list can read the scene's layers */
 body[data-view="timeline"] #center { display:block; position:absolute; left:-12000px; top:0; width:640px; height:480px; visibility:hidden; pointer-events:none; }
+
+.scenebox .selmark { position:absolute; border:2px solid #9d7bff; box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 0 14px rgba(157,123,255,.7); border-radius:2px; pointer-events:none; z-index:3; transform-origin:center; }
