@@ -94,7 +94,10 @@ async function templateMotion(a, fr) {
   if (cur !== a) return;
   const f = document.createElement("iframe");
   f.setAttribute("scrolling", "no");
-  f.style.cssText = `position:absolute;left:0;top:0;border:0;width:${w}px;height:${h}px;transform-origin:0 0;transform:scale(${fr.clientWidth / w})`;
+  f.style.cssText = `position:absolute;left:0;top:0;border:0;width:${w}px;height:${h}px;transform-origin:0 0`;
+  const fit = () => { f.style.transform = `scale(${fr.clientWidth / w})`; };  // the frame resizes after the dialog opens
+  fit();
+  new ResizeObserver(fit).observe(fr);
   f.onload = () => {
     try { f.contentWindow.__timelines.root.repeat(-1).repeatDelay(0.8).play(0); } catch { /* static frame */ }
   };
