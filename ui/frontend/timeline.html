@@ -5,10 +5,6 @@
   <a class="tab" id="tab-assets" href="/">Assets</a>
   <a class="tab active" href="#" aria-current="page">Timeline</a>
 </nav>
-<nav class="views" aria-label="Sections">
-  <button type="button" class="tab" data-view="preview">Video Preview</button>
-  <button type="button" class="tab" data-view="timeline">Timeline</button>
-</nav>
 <div id="hid" hidden>
   <select id="proj" aria-label="Project"></select><b id="ptitle"></b><span id="sum"></span><button id="warnBtn"></button><span id="rstate"></span>
   <select id="rmode" aria-label="Render mode"><option value="final">Final 1080p</option><option value="preview">Preview 480p</option></select>
@@ -32,8 +28,31 @@
       </div>
     </div>
   </section>
+  <div class="card" id="tlcard">
+    <div id="bar">
+      <button id="tUndo" class="ic" title="Undo (Ctrl+Z)">&#8630;</button><button id="tRedo" class="ic" title="Redo (Ctrl+Y)">&#8631;</button>
+      <button id="tDel" class="ic" title="Delete selected element (Del)">&#128465;</button>
+      <span id="keys">E edit · Space play · &larr;&rarr; frame · &uarr;&darr; scene · L loop · F expand</span>
+      <span class="grow"></span>
+      <button id="zout" class="ic" title="Zoom out">&minus;</button>
+      <input id="zoom" type="range" min="10" max="300" value="60" aria-label="Zoom">
+      <button id="zin" class="ic" title="Zoom in">+</button>
+      <button id="fit">Fit</button>
+    </div>
+    <div id="tl"><div id="heads"><div class="rh"></div><div><i>&#128172;</i>Captions</div><div><i>T</i>Text</div><div><i>&#9776;</i>Overlays</div><div class="vh"><i>&#9635;</i>Visual</div><div><i>&#9835;</i>Narration</div></div>
+      <div id="scroll"><div id="inner">
+        <div class="ruler" id="ruler"></div>
+        <div class="lane" id="L-cap"></div><div class="lane" id="L-text"></div><div class="lane" id="L-ovl"></div>
+        <div class="lane" id="L-vis"></div><div class="lane" id="L-aud"></div>
+        <div id="ph"></div>
+      </div></div></div>
+  </div>
   <div id="side"><div id="assets" class="card"></div><aside id="info" class="card"></aside></div>
   <aside id="opts" class="card">
+    <div class="views" aria-label="Sections">
+      <button type="button" class="tab" data-view="preview">Video Preview</button>
+      <button type="button" class="tab" data-view="timeline">Timeline</button>
+    </div>
     <h4>Ratio</h4>
     <div class="seg" id="fmtSeg"><button data-f="16:9" class="on">16:9</button><button data-f="9:16">9:16</button></div>
     <h4>Quality</h4>
@@ -44,25 +63,6 @@
     <div id="outSize">Output <b></b></div>
     <button id="render">Render</button>
   </aside>
-</div>
-<div class="card" id="tlcard">
-  <div id="bar">
-    <button id="tUndo" class="ic" title="Undo (Ctrl+Z)">&#8630;</button><button id="tRedo" class="ic" title="Redo (Ctrl+Y)">&#8631;</button>
-    <button id="tDel" class="ic" title="Delete selected element (Del)">&#128465;</button>
-    <span id="keys">E edit · Space play · &larr;&rarr; frame · &uarr;&darr; scene · L loop · F expand</span>
-    <span class="grow"></span>
-    <button id="zout" class="ic" title="Zoom out">&minus;</button>
-    <input id="zoom" type="range" min="10" max="300" value="60" aria-label="Zoom">
-    <button id="zin" class="ic" title="Zoom in">+</button>
-    <button id="fit">Fit</button>
-  </div>
-  <div id="tl"><div id="heads"><div class="rh"></div><div><i>&#128172;</i>Captions</div><div><i>T</i>Text</div><div><i>&#9776;</i>Overlays</div><div class="vh"><i>&#9635;</i>Visual</div><div><i>&#9835;</i>Narration</div></div>
-    <div id="scroll"><div id="inner">
-      <div class="ruler" id="ruler"></div>
-      <div class="lane" id="L-cap"></div><div class="lane" id="L-text"></div><div class="lane" id="L-ovl"></div>
-      <div class="lane" id="L-vis"></div><div class="lane" id="L-aud"></div>
-      <div id="ph"></div>
-    </div></div></div>
 </div>
 <audio id="aud" preload="auto"></audio>
 <script src="timeline.js"></script><script src="timeline_live.js"></script><script src="edit_math.js"></script><script src="timeline_edit.js"></script><script src="timeline_panel.js"></script>
