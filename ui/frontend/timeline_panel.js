@@ -49,12 +49,13 @@ function drawEdit() {
     det.append(...info.childNodes);
     info.append(det);
   }
-  info.querySelectorAll(".tabs, .pane:not(.details)").forEach((n) => n.remove());
+  info.querySelectorAll(".tabs, .scctl, .pane:not(.details)").forEach((n) => n.remove());
   const tabs = el("div", "tabs");
   for (const [k, label] of TABS) {
     tabs.append(Object.assign(el("button", ed.tab === k ? "on" : "", label), { onclick: () => { ed.tab = k; drawEdit(); } }));
   }
   info.prepend(tabs);
+  tabs.after(sceneControls());  // own row under the tabs
   det.classList.toggle("on", ed.tab === "details");
   fields = {};
   if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
@@ -161,6 +162,16 @@ function setEdit(on) {
 
 // ---- "Scene N - Assets" strip under the preview ----
 const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "images");
+function sceneControls() {  // Play / Stop of the selected scene; they sit in the header of the card next to the Scene tab
+  const tl = () => { try { return document.querySelector("#assets .scenebox iframe").contentWindow.__timelines.root; } catch { return null; } };
+  const ctl = el("div", "scctl");
+  ctl.append(
+    Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
+      const cur = st.cur; st.stopAt = cur.end; seek(cur.start); aud.play(); const x = tl(); if (x) x.repeat(-1).repeatDelay(0.8).play(0); } }),
+    Object.assign(el("button", "ic", "■ Stop"), { title: "Stop and go back to the start of this scene", onclick: () => {
+      const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
+  return ctl;
+}
 function sceneBox() {  // the selected scene's own build, looping, scaled to fit the card (the "Scene" tab)
   const m = live.data.map[st.cur.id];
   if (!m) return el("div", "n", "This scene is not built yet");
@@ -176,14 +187,7 @@ function sceneBox() {  // the selected scene's own build, looping, scaled to fit
   box.append(f, hint);
   box.title = "Click to edit this scene's layers";
   box.onclick = () => { setView("preview"); setEdit(true); ed.tab = "edit"; };  // the live preview + layer panel take over
-  const cur = st.cur, tl = () => { try { return f.contentWindow.__timelines.root; } catch { return null; } };
-  const ctl = el("div", "scctl");
-  ctl.append(
-    Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
-      st.stopAt = cur.end; seek(cur.start); aud.play(); const x = tl(); if (x) x.repeat(-1).repeatDelay(0.8).play(0); } }),
-    Object.assign(el("button", "ic", "■ Stop"), { title: "Stop and go back to the start of this scene", onclick: () => {
-      st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
-  wrap.append(box, ctl);
+  wrap.append(box);
   return wrap;
 }
 function drawStrip() {  // every element of the selected scene, below the preview; shares the selection with canvas + panel
