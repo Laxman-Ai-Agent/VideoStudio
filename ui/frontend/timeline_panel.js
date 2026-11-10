@@ -42,6 +42,7 @@ function drawEdit() {
   const info = $("info");
   if (!st.cur) return;
   if (ed.scene !== sceneKey()) { ed.scene = sceneKey(); ed.boxes = []; ed.sel = null; ed.meta = {}; }
+  else if (ed.on) refresh();  // keep the box numbers in step with the picture
   let det = info.querySelector(".pane.details");
   if (!det) {  // first call after drawInfo: its content becomes the Scene Details tab
     det = el("div", "pane details");

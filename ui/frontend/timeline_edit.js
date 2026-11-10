@@ -19,6 +19,10 @@ const zOf = (b) => (getItems()[b.id] ? getItems()[b.id].z : b.z);
 
 function refresh() {  // read the element boxes of the active scene
   const w = win(), f = live.active;
+  try {  // measure at the settled frame, never mid-animation (a stale box sat 43 px off the picture and clicks missed)
+    const hold = f && f.dataset.ready ? edLocal(f) : null, tl = hold != null && w.__timelines.root;
+    if (tl) tl.seek(Math.min(hold, tl.duration()), false);
+  } catch { /* frame not ready */ }
   try { ed.boxes = (w && w.__boxes && f.dataset.ready && f.dataset.sid === String(st.cur && st.cur.id)) ? w.__boxes() : []; }
   catch { ed.boxes = []; }
   if (ed.sel && !box(ed.sel)) ed.sel = null;
@@ -149,6 +153,7 @@ function pt(e) { const r = $("screen").getBoundingClientRect(), k = kScr(); retu
 const vis = (b) => ({ x: b.x, y: b.y, w: b.w, h: b.h, rot: b.rot + b.base });
 function down(e) {
   if (!ed.on || e.button) return;
+  refresh();  // boxes are re-read at the settled frame right before the hit test: never click against stale numbers
   const p = pt(e), h = e.target.dataset && e.target.dataset.h;
   e.preventDefault();
   if (h && sel()) {
