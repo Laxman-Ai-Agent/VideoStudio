@@ -153,6 +153,7 @@ function setEdit(on) {
   ed.on = on;
   if (!on) { ed.sel = null; ed.drag = null; }
   ensureLayer().classList.toggle("on", on);
+  document.body.classList.toggle("editing", on);  // Video Preview then shows the layer panel beside the picture
   if (on && !aud.paused) aud.pause();
   if (st.cur) liveSync(aud.currentTime || 0);
   setTimeout(() => { refresh(); drawEdit(); }, 80);
@@ -171,7 +172,10 @@ function sceneBox() {  // the selected scene's own build, looping, scaled to fit
   f.style.cssText = `width:${W}px;height:${H}px;transform:scale(${k})`;
   f.onload = () => { try { f.contentWindow.__timelines.root.repeat(-1).repeatDelay(0.8).play(0); } catch { /* static frame */ } };
   f.src = url(m.dir + "/index.html");
-  box.append(f);
+  const hint = el("div", "sbhint", "Click to edit layers");
+  box.append(f, hint);
+  box.title = "Click to edit this scene's layers";
+  box.onclick = () => { setView("preview"); setEdit(true); ed.tab = "edit"; };  // the live preview + layer panel take over
   return box;
 }
 function drawStrip() {  // every element of the selected scene, below the preview; shares the selection with canvas + panel

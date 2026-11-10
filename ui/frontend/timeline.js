@@ -358,6 +358,7 @@ $("resetEdits").onclick = () => {
 // Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
 function setView(v) {
   document.body.dataset.view = v;
+  if (v === "timeline" && typeof ed !== "undefined" && ed.on) setEdit(false);
   document.querySelectorAll(".views .tab").forEach((b) => b.classList.toggle("active", b.dataset.view === v));
   try { localStorage.setItem("tl-view", v); } catch { /* not remembered */ }
   if (v === "timeline" && st.dur > 1) $("fit").click();  // the tracks had no width while hidden

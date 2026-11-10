@@ -200,3 +200,11 @@ body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }
 /* Scene tab of the details card: the selected scene's preview, centred */
 .scenebox { position:relative; overflow:hidden; border-radius:10px; margin:10px auto 6px; background:#000; }
 .scenebox iframe { position:absolute; left:0; top:0; border:0; transform-origin:0 0; }
+
+.scenebox { cursor:pointer; }
+.scenebox .sbhint { position:absolute; left:0; right:0; bottom:0; padding:6px; text-align:center; font-size:12px; color:#fff; background:linear-gradient(transparent, rgba(5,6,15,.85)); opacity:0; transition:opacity .2s; pointer-events:none; }
+.scenebox:hover .sbhint { opacity:1; }
+/* editing layers: Video Preview shows the layer panel (Visual Edit) between the picture and the options box */
+body[data-view="preview"].editing #main { grid-template-columns:minmax(0,1fr) 360px 320px; }
+body[data-view="preview"].editing #side { display:flex; flex-direction:column; min-width:0; overflow:auto; }
+body[data-view="preview"].editing #assets { display:none; }
