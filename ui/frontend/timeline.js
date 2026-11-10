@@ -245,6 +245,7 @@ function showError(text, title = "Something went wrong") {
 window.showError = showError;
 let lastFailShown = "";
 function showRender(d) {
+  if ((d.state === "failed" || d.state === "waiting") && d.ago > 120) d = { state: "idle", tail: d.tail };  // a failure from long ago (an earlier visit) is not news
   const last = (d.tail || []).filter((x) => x.trim()).slice(-1)[0] || "";
   const names = { running: "Rendering", done: "Render finished", failed: "Render failed", waiting: "Waiting for you" };
   const box = $("rbar");

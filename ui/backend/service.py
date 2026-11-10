@@ -499,4 +499,5 @@ def render_status(pid: str) -> dict:
     state = "running" if code is None else "done" if code == 0 else "waiting" if code == 2 else "failed"
     elapsed = round((cur["t1"] or time.time()) - cur["t0"])
     return {"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
-            "last": history.get("final" if cur["final"] else "preview")}
+            "last": history.get("final" if cur["final"] else "preview"),
+            "ago": round(time.time() - cur["t1"]) if cur["t1"] else 0}  # seconds since it ended: the page ignores an old failure

@@ -279,3 +279,15 @@ def test_reset_edits_keeps_a_backup(tmp_path, monkeypatch):
     r = service.reset_edits("05")
     assert r["reset"] and not (tmp_path / "05_X" / "edits.json").exists()
     assert "9:16" in (tmp_path / "05_X" / r["backup"]).read_text("utf-8")
+
+
+def test_render_status_tells_how_long_ago_it_ended(tmp_path, monkeypatch):
+    """The timeline hides an old failed render (bug 2026-11-10: a failure from an earlier run showed on every visit)."""
+    import time
+    from types import SimpleNamespace as NS
+    proj = tmp_path / "03_T"
+    (proj / "work" / "logs").mkdir(parents=True)
+    monkeypatch.setattr(service, "project_dir", lambda pid: proj)
+    monkeypatch.setattr(service, "_renders", {"03_T": {"proc": NS(poll=lambda: 1), "final": False, "review": False, "t0": time.time() - 500, "t1": time.time() - 400}})
+    r = service.render_status("03")
+    assert r["state"] == "failed" and 395 <= r["ago"] <= 410
