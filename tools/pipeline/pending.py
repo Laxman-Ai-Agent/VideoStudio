@@ -1,6 +1,6 @@
 """pending: output/images_pending.txt = what is still missing after a preview render (user rule 2026-11-10).
 
-Written (or deleted when nothing is missing) on every `studio run` / `studio assets`. It lists each asset that
+Written (kept as an all-done prompt list when nothing is missing) on every `studio run` / `studio assets`. It lists each asset that
 still needs a file: id, scene, time, prompt, and the exact path the file must end up in (`drop/<id>.png`),
 plus the steps that bring them into the timeline. The user keeps it with the project and hands it back later.
 """
@@ -10,10 +10,15 @@ from pathlib import Path
 def write(va, project: Path) -> Path | None:
     out = project / "output" / "images_pending.txt"
     todo = [a for a in va.assets if a.status in ("prompt_ready", "needed", "failed")]
-    if not todo:
-        out.unlink(missing_ok=True)
-        return None
     num = project.name.split("_")[0]
+    if not todo:  # keep the file (user wants the prompts to stay): list every prompt as a reference
+        done = [a for a in va.assets if a.prompt.text]
+        lines = [f"ALL IMAGES ARE IN: {project.name}  (nothing pending; {len(done)} prompts kept for reference/re-generation)", ""]
+        for a in done:
+            lines += [f"{a.id}  scene {', '.join(map(str, a.scenes))}  {a.name}", f"  prompt : {a.prompt.text}", ""]
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text("\n".join(lines), "utf-8")
+        return out
     lines = [f"PENDING IMAGES: {project.name}  ({len(todo)} of {len(va.assets)} assets have no file yet)", "",
              f"Project folder : {project}",
              f"Put each file  : {project / 'drop'}   (name = asset id, e.g. {todo[0].id}.png)", "",

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - images_pending.txt is no longer deleted
+
+- Fix: `studio assets` used to delete `output/images_pending.txt` the moment every image arrived, so the user never saw the prompts. Now it stays: header `ALL IMAGES ARE IN` + every prompt for reference. Test updated.
+
 ## 2026-11-10 - Preview first, images later: output/images_pending.txt
 - New user rule: never wait for AI images. Render the preview with placeholders, then add the images.
 - `pipeline/pending.py` writes `output/images_pending.txt` on every run / `studio assets`: every asset with no file yet (id, scene, time, prompt, the exact `drop/<id>.png` path, final size) plus the steps (kaggle images.cmd -> studio assets -> check timeline -> preview -> final). Deleted automatically once nothing is missing.
