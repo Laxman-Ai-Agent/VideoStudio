@@ -36,3 +36,7 @@ Kernel pins faster-whisper 1.2.1 + av 15.1.0 (Kaggle's newer av breaks it) and p
 - Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).
 - Models come from the CPU model kernel (no download on GPU time); pip installs take ~15 s.
 - One batch run for many audio files; skip files already done (content hash); save per file.
+
+## Hybrid render test (2026-11-10, not part of the pipeline)
+`tools\.venv\Scripts\python.exe kaggle\hybrid_local.py 07 8` then `... kaggle\hybrid_run.py`: one photo scene, text from Chrome as RGBA PNGs,
+photo motion + composite + NVENC on a T4 (`kernels/hybrid`). Results in `docs/STATUS.md` (GPU plan line); output in `kaggle/.work/hybrid/`.

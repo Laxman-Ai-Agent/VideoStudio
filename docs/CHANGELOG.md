@@ -1,7 +1,13 @@
 # Changelog
 
+## 2026-11-10 · kaggle/ hybrid GPU render test (one scene)
+- `kaggle/hybrid_local.py 07 8` builds one scene like `run --final` into `kaggle/.work/hybrid` (07 outputs untouched): full Chrome render (36.2 s) and a text-only render (photo hidden, transparent page, `--format png-sequence`, 18.5 s, 84 RGBA frames, 6 MB).
+- `kaggle/hybrid_run.py` uploads photo + frames + job.json (dataset `videostudio-hybrid-in`), GPU kernel `kernels/hybrid` redraws the photo template motion with torch (cover fit, scale 1->1.12, pan 3u, fade, blur-in), composites the text, RGB->NV12 on GPU, `h264_nvenc` (Kaggle ffmpeg had NVENC). T4: 2.9 s per scene, 84 s video in 25 s. Overhead: upload 237 s, kernel wall 97 s, PNG decode 17 s (4 vCPU).
+- Result: SSIM 0.98 vs local; not clearly faster end to end (Chrome text = half the local cost). Hybrid engine not continued.
+
 ## 2026-11-10 · kaggle/ add-on: CLI + token
-- `kaggleun.cmd NN`: Whisper large-v3 on Kaggle GPU writes `work/whisper.json` with the studio `transcribe` checkpoint. Fixes found on the way: pin av 15.1.0 (Kaggle's newer av: `open() got an unexpected keyword argument 'metadata_errors'`), preload pip CUDA 12 cuBLAS/cuDNN (`libcublas.so.12` missing in the Kaggle image). 07 audio: 161 words, 121 s on T4.
+- `kaggle
+un.cmd NN`: Whisper large-v3 on Kaggle GPU writes `work/whisper.json` with the studio `transcribe` checkpoint. Fixes found on the way: pin av 15.1.0 (Kaggle's newer av: `open() got an unexpected keyword argument 'metadata_errors'`), preload pip CUDA 12 cuBLAS/cuDNN (`libcublas.so.12` missing in the Kaggle image). 07 audio: 161 words, 121 s on T4.
 - New self-contained `kaggle/` folder (own venv, `requirements.lock.txt`, `kg.cmd` wrapper reading the git-ignored `kaggle/access_token`, README). Token verified (`kg.cmd kernels list --mine`). Plan: audio-only videos -> Whisper large-v3 on Kaggle GPU -> Claude fixes words into a Gemini-style JSON -> local `align_mms`. Nothing in `tools/` changed.
 - Model: CPU kernel `kaggle/kernels/whisper-model` downloads the pinned faster-whisper large-v3 snapshot on Kaggle (8 s) into its output; GPU kernels attach it via `kernel_sources`. A private dataset upload from this PC was stopped (~2 MB/s upload, ~30 min).
 
