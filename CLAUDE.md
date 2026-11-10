@@ -27,7 +27,7 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - `studio.cmd run 01`: all stages, resumes; exit 2 = waiting (plan, asset descriptions)
 - `studio.cmd run 01 --review`: stop after the storyboard (timeline check, no render)
 - `studio.cmd run 01 --final`: full-resolution render (default is a 720p preview); `--workers N` (default 4); `--format 16:9|9:16|all` (default 16:9 only; render 9:16 only when the user asks)
-- `voice.cmd "C:\...udio.mp3" [--speeds 1.15]`: the user's approved narration chain (atempo, strong bass, clean-up, -14 LUFS) -> `audio_1.10x/1.15x/1.20x.mp3` next to the original
+- `voice.cmd "C:/Users/me/Downloads/audio.mp3" [--speeds 1.15]`: the user's approved narration chain (atempo, strong bass, clean-up, -14 LUFS) -> `audio_1.10x/1.15x/1.20x.mp3` next to the original
 - `tools\.venv\Scripts\python.exe -m pytest tools -q`: tests
 
 ## Token budget (the Pro plan limit is the real cost)
