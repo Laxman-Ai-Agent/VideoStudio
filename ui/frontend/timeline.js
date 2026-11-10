@@ -329,7 +329,7 @@ document.querySelectorAll("#fmtSeg button").forEach((b) => (b.onclick = () => {
   try { localStorage.setItem("fmt:" + st.pid, st.fmt); } catch { /* not remembered */ }
   buildLive();
 }));
-// Scene / Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
+// Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
 function setView(v) {
   document.body.dataset.view = v;
   document.querySelectorAll(".views .tab").forEach((b) => b.classList.toggle("active", b.dataset.view === v));
@@ -340,7 +340,7 @@ function setView(v) {
 document.querySelectorAll(".views .tab").forEach((b) => (b.onclick = () => setView(b.dataset.view)));
 let startView = "preview";
 try { startView = localStorage.getItem("tl-view") || "preview"; } catch { /* default */ }
-setView(["scene", "preview", "timeline"].includes(startView) ? startView : "preview");
+setView(["preview", "timeline"].includes(startView) ? startView : "preview");
 
 document.onkeydown = (e) => {
   if (["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName) && e.code !== "Space") return;

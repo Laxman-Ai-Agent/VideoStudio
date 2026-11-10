@@ -140,13 +140,11 @@ html, body { height:100%; } body { display:flex; flex-direction:column; overflow
 .acard img, .acard .tt { height:84px; } .acard { padding:6px; } .acard .an { font-size:13px; }
 @media (max-height:760px) { .acard img, .acard .tt { height:56px; } }
 
-/* section switch under the page tabs: one of Scene / Video Preview / Timeline is shown at a time */
+/* section switch under the page tabs: one of Video Preview / Timeline is shown at a time */
 .views { display:flex; justify-content:center; gap:8px; padding:6px 20px 8px; }
 .views .tab { height:28px; padding:0 16px; font-size:12.5px; cursor:pointer; font-family:inherit; }
-body[data-view="scene"] #center, body[data-view="scene"] #tlcard { display:none; }
-body[data-view="scene"] #main { grid-template-columns:340px minmax(0,1fr); }
-body[data-view="scene"] #side { grid-column:2; }
-body[data-view="preview"] #list, body[data-view="preview"] #side, body[data-view="preview"] #tlcard { display:none; }
+body #list, body #side { display:none; }  /* the scene list and side panels are not shown in either view */
+body[data-view="preview"] #tlcard { display:none; }
 body[data-view="preview"] #main { grid-template-columns:minmax(0,1fr); }
 body[data-view="timeline"] #main { display:none; }
 body[data-view="timeline"] #tlcard { flex:1; }
