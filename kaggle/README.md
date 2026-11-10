@@ -34,6 +34,15 @@ Kernel pins faster-whisper 1.2.1 + av 15.1.0 (Kaggle's newer av breaks it) and p
 Resume: a rerun with the same files reuses the last Kaggle run (`.work/last_push.json`): still running -> wait,
 finished -> download only; no second upload or GPU run. Failed or cancelled runs are pushed again. Test: `kaggle/test_run.py`.
 
+## Images on Kaggle GPU (Z-Image-Turbo, test 2026-11-10)
+`kaggle\images.cmd 01 A010 A023 A024 --out kaggle\.work\zimage-test` (no `--out`: writes `projects/NN/drop/<id>.png`
+for `studio.cmd assets NN`). Model: Tongyi-MAI/Z-Image-Turbo, Apache-2.0 (commercial use OK), 9 steps, guidance 0.
+Kernel `kernels/images` downloads the weights from Hugging Face inside the GPU run (~155 s); never mount weights from
+other kernels' outputs (reading ~20 GB from mounted outputs took 25+ min). T4 findings: fp16 = 33 s/image but black/NaN
+images; bf16 has no memory-efficient attention on T4, so the 12.5 GB transformer is split over both T4s
+(accelerate `dispatch_model`, peak 12.7 / 11.1 GB); text encoder needs `torch.no_grad()` (else OOM).
+Result: ~255 s per 1344x768 image + ~290 s download/load per run. Resume key = runner code + jobs (`.work/images_last_push.json`).
+
 ## GPU quota rules
 - Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).
 - Models come from the CPU model kernel (no download on GPU time); pip installs take ~15 s.

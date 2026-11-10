@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 · kaggle/ Z-Image-Turbo image test
+- `kaggle\images.cmd NN [ids] [--out DIR]`: Z-Image-Turbo (Apache-2.0) on Kaggle T4 x2, weights downloaded inside the GPU run, PNGs to drop/ or DIR. Test 01 A010/A023/A024 at 1344x768: 3/3 OK, ~255 s per image, download 155 s + load 136 s.
+- Fixes on the way: text encoder needs `torch.no_grad()` (OOM), fp16 gives black/NaN images -> bf16, bf16 attention on T4 needs ~2 GB extra -> transformer split over both GPUs (accelerate). Resume key includes the runner code (a stale failed run was reused once). Old weight-mount kernels (zimage/qwenimage model/te) deleted.
+
 ## 2026-11-10 · kaggle/run.py resumes an interrupted run
 - Network drop / PC sleep / closed window during `kaggleun.cmd`: the Kaggle run keeps going on Kaggle; a rerun with the same files now waits for it or downloads its output instead of pushing a second GPU run (`resume()`, marker `.work/last_push.json`, cleared once results are used). Test: `kaggle/test_run.py`.
 
