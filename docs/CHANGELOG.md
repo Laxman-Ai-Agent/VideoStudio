@@ -3,7 +3,7 @@
 ## 2026-11-10 - Preview first, images later: output/images_pending.txt
 - New user rule: never wait for AI images. Render the preview with placeholders, then add the images.
 - `pipeline/pending.py` writes `output/images_pending.txt` on every run / `studio assets`: every asset with no file yet (id, scene, time, prompt, the exact `drop/<id>.png` path, final size) plus the steps (kaggle images.cmd -> studio assets -> check timeline -> preview -> final). Deleted automatically once nothing is missing.
-- 9:16 stat card: value 13u -> 20u, label 4u -> 5.5u (the 1:811 card was small in portrait).
+- 9:16 stat card: value 13u -> 20u, label 4u -> 5.5u (the 1:811 card was small in portrait); 9:16 captions 3.6u -> 4.3u (+20%, too small on a phone).
 
 ## 2026-11-10 · voice.cmd: approved narration chain
 - `voice.cmd audio.mp3` -> 1.10x / 1.15x / 1.20x MP3s next to the original: atempo (Rubberband sounded bad), low cut, light denoise, strong bass, warmth, clarity, de-esser, compressor, two-pass loudnorm -14 LUFS. User picked it on "ai doctor" (A/B: atempo > rubberband, bass +7 > +4).
