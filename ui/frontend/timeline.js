@@ -69,6 +69,7 @@ function drawList() {
 // ---- details (right) ----
 function drawInfo(s) {
   const info = $("info"), r = st.res[s.id] || {}, k = kindOf(s);
+  $("side").prepend($("assets"));  // the Elements pane may sit inside the info card: take it out before the card is wiped
   info.innerHTML = "";
   info.append(el("h3", "", `Scene ${s.id}`),
               el("div", "n", `${s.start.toFixed(1)} - ${s.end.toFixed(1)} s · ${(s.end - s.start).toFixed(1)} s · ${k.label}`));
@@ -260,7 +261,7 @@ async function startRender() {
 }
 
 // ---- load a project ----
-function openEditor() { setView("preview"); setEdit(true); ed.tab = "edit"; drawEdit(); }  // big preview + every edit panel
+function openEditor() { setView("preview"); setEdit(true); ed.tab = "elements"; drawEdit(); }  // big preview + every edit panel
 function setFmt(f) {
   st.fmt = f;
   document.body.dataset.fmt = f;

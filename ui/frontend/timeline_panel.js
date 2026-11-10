@@ -20,7 +20,7 @@ const IC = {
   bottom: '<path d="M2 14h12"/><rect x="4" y="3" width="3" height="9"/><rect x="9" y="6" width="3" height="6"/>',
   fit: '<rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 6.5L3.5 8 5 9.5M11 6.5L12.5 8 11 9.5"/>',
 };
-const TABS = [["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
+const TABS = [["elements", "Elements"], ["details", "Scene Details"], ["edit", "Visual Edit"], ["anim", "Animation"], ["fx", "Effects"]];
 const assetOf = (id) => (st.va || []).find((a) => a.id === id.split("#")[0]) || {};
 const fileName = (id) => { const b = box(id); return b && b.name ? b.name : (assetOf(id).file || id).split("/").pop(); };
 const KIND_LABEL = (b) => (b.kind === "background" ? "Background" : b.kind === "text" ? "Text Layer" : b.kind === "stamp" ? "Text Sticker" : "Image Layer");
@@ -57,7 +57,10 @@ function drawEdit() {
   info.prepend(tabs);
   det.classList.toggle("on", ed.tab === "details");
   fields = {};
-  if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
+  if (ed.tab !== "details" && ed.tab !== "elements") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
+  const assets = $("assets");  // one card, one tab bar: the Elements list lives inside it while its tab is open
+  if (ed.tab === "elements") { assets.style.display = ""; info.append(assets); }
+  else { assets.style.display = "none"; $("side").prepend(assets); }
   drawStrip();
   syncPanel();
 }
