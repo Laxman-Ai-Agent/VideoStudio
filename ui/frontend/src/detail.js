@@ -83,12 +83,32 @@ function info(a) {
 // ---------- framing preview ----------
 function frameSource(a) { return a.pending_file || a.original || a.preview; }
 
+// Template scenes have no file: play the scene's own build (work/preview/<fmt>/scene_NNN, made by the timeline) in a loop.
+// Not there yet (timeline never opened for this format) -> the placeholder stays.
+async function templateMotion(a, fr) {
+  const id = a.scene_info[0] && a.scene_info[0].id;
+  if (a.method !== "template" || !id) return;
+  const [w, h] = a.out_size, rel = `work/preview/${w < h ? "9x16" : "16x9"}/scene_${String(id).padStart(3, "0")}/index.html`;
+  const src = api.fileUrl(ctx.pid, rel, rel);
+  if (!(await fetch(src).then((r) => r.ok).catch(() => false))) return;
+  if (cur !== a) return;
+  const f = document.createElement("iframe");
+  f.setAttribute("scrolling", "no");
+  f.style.cssText = `position:absolute;left:0;top:0;border:0;width:${w}px;height:${h}px;transform-origin:0 0;transform:scale(${fr.clientWidth / w})`;
+  f.onload = () => {
+    try { f.contentWindow.__timelines.root.repeat(-1).repeatDelay(0.8).play(0); } catch { /* static frame */ }
+  };
+  f.src = src;
+  fr.replaceChildren(f);
+  $("d-frame-note").textContent = "Live motion of this scene (looping)";
+}
+
 function drawFrame() {
   const a = cur, fr = $("d-frame"), src = frameSource(a);
   const ratio = RATIO[media.aspect] || (a.out_size[0] / a.out_size[1]);
   fr.style.aspectRatio = String(ratio);
   fr.classList.toggle("portrait-frame", ratio < 1);
-  if (!src) { fr.replaceChildren(preview(ctx.pid, a, false)); $("d-frame-note").textContent = ""; return; }
+  if (!src) { fr.replaceChildren(preview(ctx.pid, a, false)); $("d-frame-note").textContent = ""; templateMotion(a, fr); return; }
   let el = fr.firstElementChild;
   const isVid = VIDEO.test(src);
   const want = url(src, a);

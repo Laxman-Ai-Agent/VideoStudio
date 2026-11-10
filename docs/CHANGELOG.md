@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Template motion in the asset dialog
+
+- Visual Assets detail dialog: a template scene (no file) now plays its live scene build (`work/preview/<fmt>/scene_NNN`) in a loop instead of the static "Aa" placeholder. Falls back to the placeholder when the timeline never built that format. Frontend only, checked in the browser (GSAP time advancing).
+
 ## 2026-11-10 - Timeline opens in the project's own format
 
 - No more 16:9 default: the timeline opens in the format last chosen for that project (localStorage), else the format it was rendered in (`work/state.json` render_* stage), else 16:9. Frontend only, checked in the browser.
