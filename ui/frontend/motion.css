@@ -1,0 +1,16 @@
+/* Timeline page motion (same feel as the dashboard, styles/app.css): hover / press transitions and one fade-up at load.
+   Nothing here animates elements that are redrawn often (scene list, clips, panels), so it never flickers. */
+:root { --ease: cubic-bezier(.22, .61, .36, 1); }
+html { scroll-behavior: smooth; }
+button, select, input, .sc, .clip, #close { transition: background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease), filter .2s var(--ease), opacity .2s var(--ease); }
+button:hover:not(:disabled), select:hover { transform: translateY(-1px); }
+button:active:not(:disabled) { transform: translateY(0) scale(.97); }
+.sc:hover { transform: translateX(2px); }
+#render:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(124, 92, 255, .4); }
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.sub, #main > *, #tlcard { animation: fade-up .4s var(--ease) both; }
+#main > :nth-child(2) { animation-delay: .05s; } #main > :nth-child(3) { animation-delay: .1s; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}

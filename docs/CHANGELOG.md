@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Smooth motion on the Timeline page too
+
+- `ui/frontend/motion.css` (linked from timeline.html): hover / press transitions on buttons, selects, scene cards and clips, one fade-up at load for the bars and cards, reduced-motion respected. Nothing animates the scene list, clips or panels (they are redrawn often). Checked: file loads (200), animations apply, no new console errors.
+
 ## 2026-11-10 - Smooth UI motion
 
 - Dashboard CSS only: one easing, hover/press transitions on tabs, icons, buttons, stat cards, tiles (image zoom), rows; fade-up when Projects / Assets / header show; pop-in for both popups; smooth scroll. Tiles are NOT animated on render (the grid re-renders on every change and would flicker). `prefers-reduced-motion` turns it all off. The browser pane's animation clock was paused (hidden pane), so the animation was only checked structurally (name, duration, finish -> opacity 1), not watched.
