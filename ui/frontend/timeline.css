@@ -282,3 +282,12 @@ body.editing #assets .ah b { font-size:13px; }
 body[data-view="preview"].editing #side #info { flex:none; overflow:visible; max-height:none; }
 
 body.editing #prev, body.editing #next { display:none; }  /* the editor plays this one scene only */
+
+/* scene gallery: small tiles, so every scene is in view at once */
+body[data-view="timeline"] #list { grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:8px; padding:10px 12px; }
+body[data-fmt="9:16"][data-view="timeline"] #list { grid-template-columns:repeat(auto-fill, minmax(74px, 1fr)); }
+body[data-view="timeline"] #list .ttl { font-size:14px; }
+body[data-view="timeline"] #list .sc { padding:5px; gap:4px; }
+body[data-view="timeline"] #list .sc .tx b { font-size:11px; }
+body[data-view="timeline"] #list .sc .tx span { font-size:9.5px; }
+.scedit { padding:3px 0; font-size:11px; }
