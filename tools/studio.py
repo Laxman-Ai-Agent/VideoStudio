@@ -16,7 +16,7 @@ import sys
 
 from pathlib import Path
 
-from pipeline import doctor
+from pipeline import doctor, pending
 from pipeline import assets
 from pipeline.config import BRAND, LIBRARY, ROOT, setup_env
 from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
@@ -316,6 +316,7 @@ def print_assets(va, p: Path) -> None:
     sm = va.summary
     print(f"  visual assets: {sm['total']} listed, {sm['found']} ready, {len(sm['to_generate'])} to generate"
           + (f", {len(sm['failed'])} failed {sm['failed']}" if sm["failed"] else "") + f" -> {visual.path(p)}")
+    pending.write(va, p)
 
 
 def assets_command(project: Path) -> int:

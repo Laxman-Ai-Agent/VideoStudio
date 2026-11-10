@@ -42,6 +42,7 @@ un.cmd NN` works: Whisper large-v3 on a Kaggle T4 -> `work/whisper.json` (07 aud
 - The 4 local stock videos of 01 are only 832x464 (validation warns); larger ones look better in a final.
 
 ## Pending, our side
+- [ ] After 10_AI_Doctor is finished: Kaggle transcribe kernel on ONE T4 instead of T4 x2 (Whisper uses one GPU; a single-GPU slot queues less; 10's GPU work was ~2 min but ~47 min in the queue). Only `kaggle/` changes. (user 2026-11-10)
 - [x] Style plan from `docs/STYLE.md` (steps 1-4) built 2026-11-08. Not used in a real video yet: plan the next video with `meme`, `hero` / `pill` lines, `rows`, outline / backdrop / depth placements, and re-render 01 when asked.
 - [ ] Pro-level plan (agreed 2026-11-08, one phase per session, in this order):
   A. Alignment: DONE 2026-11-08 (layout zones, overlay avoidance, ink-centred boxes, caption spacing, logo grid, layout check in Timeline warnings). subject panel + stamp text done; 01 preview fixed; 01 final 16:9 not re-rendered yet (ask first).

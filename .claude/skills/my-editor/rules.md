@@ -16,3 +16,4 @@ Creative rules from the user's corrections. Newest last. Format: date · rule ·
 - 2026-11-10 · On-screen words on photos big and bold, in the empty part of the image; captions without a card, the spoken word in a colour box / highlight; caption style differs per video · ("words big bold in the empty place", "subtitle card remove")
 - 2026-11-10 · Highlight words / headings in English only, designed like type-specimen cards (title_style + kicker), style per video · (user's Google Fonts samples)
 - 2026-11-10 · Titles mostly one size for the whole phrase; small line + huge word only sometimes · ("konni sarlu text motham oke size lo vundali")
+- 2026-11-10 · Never wait for AI images: render the preview at once with MISSING placeholders, leave `output/images_pending.txt` (prompts + the drop path), add the images later, then re-render only those scenes · ("images system off lo vunnapudu ... aa prompt output folder oka text file pettu")
