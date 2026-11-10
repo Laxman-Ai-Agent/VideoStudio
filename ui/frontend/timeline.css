@@ -150,3 +150,7 @@ body[data-view="preview"] #list, body[data-view="preview"] #side, body[data-view
 body[data-view="preview"] #main { grid-template-columns:minmax(0,1fr); }
 body[data-view="timeline"] #main { display:none; }
 body[data-view="timeline"] #tlcard { flex:1; }
+
+/* format switch, render mode, Render and close belong to Video Preview only */
+body:not([data-view="preview"]) #fmtSeg, body:not([data-view="preview"]) #rmode, body:not([data-view="preview"]) #render,
+body:not([data-view="preview"]) #close, body:not([data-view="preview"]) #rstate { display:none; }
