@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-10 · kaggle/ Z-Image fp16 fix: 255 s -> 43 s per image
+- Plain fp16 overflowed inside the blocks (black images). `fp16_fix` divides the `to_v` / `w3` inputs by 256 and the following RMSNorm eps by 256^2 (math unchanged); fp16 on one T4, 1344x768: 41-44 s per image (bf16 split: 255 s). Same 3 test images look the same as bf16. bf16 split and debug hooks removed.
+
 ## 2026-11-10 · kaggle/ Z-Image-Turbo image test
 - `kaggle\images.cmd NN [ids] [--out DIR]`: Z-Image-Turbo (Apache-2.0) on Kaggle T4 x2, weights downloaded inside the GPU run, PNGs to drop/ or DIR. Test 01 A010/A023/A024 at 1344x768: 3/3 OK, ~255 s per image, download 155 s + load 136 s.
 - Fixes on the way: text encoder needs `torch.no_grad()` (OOM), fp16 gives black/NaN images -> bf16, bf16 attention on T4 needs ~2 GB extra -> transformer split over both GPUs (accelerate). Resume key includes the runner code (a stale failed run was reused once). Old weight-mount kernels (zimage/qwenimage model/te) deleted.

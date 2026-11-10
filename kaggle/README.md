@@ -38,10 +38,11 @@ finished -> download only; no second upload or GPU run. Failed or cancelled runs
 `kaggle\images.cmd 01 A010 A023 A024 --out kaggle\.work\zimage-test` (no `--out`: writes `projects/NN/drop/<id>.png`
 for `studio.cmd assets NN`). Model: Tongyi-MAI/Z-Image-Turbo, Apache-2.0 (commercial use OK), 9 steps, guidance 0.
 Kernel `kernels/images` downloads the weights from Hugging Face inside the GPU run (~155 s); never mount weights from
-other kernels' outputs (reading ~20 GB from mounted outputs took 25+ min). T4 findings: fp16 = 33 s/image but black/NaN
-images; bf16 has no memory-efficient attention on T4, so the 12.5 GB transformer is split over both T4s
-(accelerate `dispatch_model`, peak 12.7 / 11.1 GB); text encoder needs `torch.no_grad()` (else OOM).
-Result: ~255 s per 1344x768 image + ~290 s download/load per run. Resume key = runner code + jobs (`.work/images_last_push.json`).
+other kernels' outputs (reading ~20 GB from mounted outputs took 25+ min). T4 has no fast bf16, and plain fp16 gives
+black/NaN images; `fp16_fix` in the runner divides the inputs of `to_v` and `w3` in every block by 256 (each branch ends
+in an RMSNorm, so the result is unchanged) -> fp16 works: ~43 s per 1344x768 image, peak 15.1 GB of the T4's 15.6 GB.
+(bf16 split over both T4s with accelerate also worked: ~255 s per image.) Text encoder needs `torch.no_grad()` (else OOM).
+Per run: ~160 s download + ~140 s load, then ~43 s per image. Resume key = runner code + jobs (`.work/images_last_push.json`).
 
 ## GPU quota rules
 - Fail fast: the kernel checks inputs before installing or loading anything (a failed test cost ~27 s of GPU).

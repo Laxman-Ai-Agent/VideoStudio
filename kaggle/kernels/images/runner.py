@@ -1,6 +1,7 @@
 """Runs on Kaggle GPU (T4 x2). kaggle/images.py fills JOBS. Z-Image-Turbo (Apache-2.0) is downloaded straight
 from Hugging Face inside this run (Kaggle internet is fast; mounted kernel outputs are far too slow to read).
-T4 has no fast bf16: bf16 (fp16 gives NaN/black images with Z-Image; T4 emulates bf16, slower but works).
+T4 has no fast bf16: fp16 + fp16_fix (plain fp16 gives NaN/black images): ~43 s per
+1344x768 image. (bf16 split over both T4s with accelerate also works but takes ~255 s per image.)
 Writes out/<id>.png + report.json (seconds per image, GPU memory)."""
 import gc
 import json
@@ -44,6 +45,22 @@ report["download_s"] = round(time.time() - t0, 1)
 step(f"downloaded {report['download_s']} s")
 
 
+S = 256.0  # fp16 fix: activation scale-down inside each block (see fp16_fix)
+
+
+def fp16_fix(tr) -> None:
+    """Z-Image in fp16 overflows (>65504) inside its blocks -> NaN/black images. Every block ends its attention and
+    FFN branch with an RMSNorm (attention_norm2 / ffn_norm2), which ignores the scale of its input. So the inputs
+    of to_v and w3 are divided by S (attention and FFN are linear in them): the branch output shrinks S times, the
+    RMSNorm eps shrinks S^2 times, and the block result is mathematically unchanged but stays inside fp16."""
+    for m in tr.modules():
+        if hasattr(m, "feed_forward") and hasattr(m, "ffn_norm2"):
+            for lin in (m.feed_forward.w3, m.attention.to_v):
+                lin.register_forward_pre_hook(lambda mod, inp: (inp[0] / S,) + tuple(inp[1:]))
+            m.ffn_norm2.eps /= S * S
+            m.attention_norm2.eps /= S * S
+
+
 @torch.no_grad()  # encode_prompt is not wrapped by diffusers: without this the text encoder keeps autograd activations (OOM)
 def run(dtype) -> None:
     from diffusers import ZImagePipeline
@@ -62,21 +79,10 @@ def run(dtype) -> None:
     pipe.text_encoder = None
     gc.collect()
     torch.cuda.empty_cache()
-    # bf16 on T4 has no memory-efficient attention: the math fallback needs ~2 GB per attention call, which does
-    # not fit next to the 12.5 GB transformer. Split its blocks over both T4s (accelerate hooks move activations).
-    from accelerate import dispatch_model
-    tr = pipe.transformer
-    dmap = {n: "cuda:0" for n, _ in tr.named_parameters(recurse=False)}
-    dmap.update({n: "cuda:0" for n, _ in tr.named_buffers(recurse=False)})
-    for n, m in tr.named_children():
-        if n == "layers" and GPUS > 1:
-            half = len(m) // 2
-            dmap.update({f"layers.{i}": "cuda:0" if i < half else "cuda:1" for i in range(len(m))})
-        else:
-            dmap[n] = "cuda:0"
-    dispatch_model(tr, device_map=dmap, main_device="cuda:0")
-    pipe.vae.to("cuda:0", dtype=torch.float32 if dtype == torch.float16 else dtype)
-    step(f"{dtype}: GPU0 {torch.cuda.memory_allocated(0) / 1e9:.1f} GB, GPU{GPUS - 1} {torch.cuda.memory_allocated(GPUS - 1) / 1e9:.1f} GB")
+    fp16_fix(pipe.transformer)
+    pipe.transformer.to("cuda:0")  # 12.6 GB; peak 15.1 GB at 1344x768 (T4 limit 15.6): keep images ~1 MP
+    pipe.vae.to("cuda:0", dtype=torch.float32)
+    step(f"GPU0 {torch.cuda.memory_allocated(0) / 1e9:.1f} GB")
     pipe.vae.enable_tiling()
     report.update(dtype=str(dtype), load_s=round(time.time() - t, 1))
     step(f"ready {report['load_s']} s")
@@ -94,7 +100,7 @@ def run(dtype) -> None:
 
 
 try:
-    run(torch.bfloat16)  # fp16 is ~2x faster but Z-Image gives NaN/black images in fp16 (tested on T4)
+    run(torch.float16)
 except Exception as e:  # report.json must exist even on failure, so the local side can show the reason
     import traceback
     traceback.print_exc()
