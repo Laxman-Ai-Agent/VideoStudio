@@ -24,3 +24,10 @@ button:active:not(:disabled) { transform: translateY(0) scale(.97); }
 
 .views { animation: fade-up .4s var(--ease) both; }
 .pagetabs { padding: 24px 28px 0; }
+
+/* loading spinner over the preview while it builds */
+@keyframes spin { to { transform: rotate(360deg); } }
+#screen .spin { display: none; position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%;
+                border: 4px solid rgba(255, 255, 255, .16); border-top-color: var(--accent2); z-index: 5; pointer-events: none; animation: spin .9s linear infinite; }
+#screen.busy .spin { display: block; }
+@media (prefers-reduced-motion: reduce) { #screen .spin { animation-duration: 2.5s !important; } }

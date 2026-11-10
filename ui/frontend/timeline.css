@@ -175,3 +175,10 @@ body[data-view="preview"] #tlcard, body[data-view="timeline"] #center { display:
 #main #tlcard { width:auto; max-width:none; margin:0; flex:none; }
 .pagetabs { padding:24px 28px 0; }
 #main { padding:24px 28px 24px; }
+
+/* Timeline view: the clicked scene's details (Scene Details / Visual Edit / Animation / Effects, Elements) sit under the tracks */
+body[data-view="timeline"] #main { grid-template-rows:auto minmax(0,1fr); align-content:start; }
+body[data-view="timeline"] #tlcard { grid-column:1; grid-row:1; }
+body[data-view="timeline"] #side { display:flex; grid-column:1; grid-row:2; flex-direction:row; gap:16px; align-items:stretch; min-width:0; }
+body[data-view="timeline"] #side > * { flex:1 1 0; min-width:0; max-height:420px; overflow:auto; }
+body[data-view="timeline"] #opts { grid-column:2; grid-row:1 / span 2; }

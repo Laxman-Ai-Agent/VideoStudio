@@ -400,8 +400,10 @@ def preview(pid: str, fmt: str, layout: bool = True) -> dict:
     """Timeline live preview: scene builds in work/preview/<fmt>/ (changed scenes only).
     layout=False skips the slow layout check (used after every manual edit)."""
     from pipeline.preview import build_preview
-    with _preview_lock:
-        return build_preview(project_dir(pid), fmt, check_layout=layout)
+    with _preview_lock:  # the build is quick and exclusive ...
+        res = build_preview(project_dir(pid), fmt, check_layout=False)
+    # ... the layout check (~8 s a scene, cached) runs outside the lock, so a format switch is never stuck behind it
+    return build_preview(project_dir(pid), fmt, check_layout=True) if layout else res
 
 
 _thumb_lock = threading.Semaphore(3)  # 3 headless Chromes at a time (RAM; the render uses 4 workers)

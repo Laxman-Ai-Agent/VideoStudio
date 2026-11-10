@@ -14,9 +14,14 @@ function chrome() {  // overlays on the preview box: scene badge, expand button,
     scr.append(b);
   }
   if (!scr.querySelector(".msg")) scr.append(el("div", "msg"));
+  if (!scr.querySelector(".spin")) scr.append(el("div", "spin"));
 }
 
-function setMsg(text) { chrome(); $("screen").querySelector(".msg").textContent = text; }
+function setMsg(text, busy = false) {  // busy = the spinner turns over the picture while the preview builds
+  chrome();
+  $("screen").querySelector(".msg").textContent = text;
+  $("screen").classList.toggle("busy", busy);
+}
 
 function toggleBig() {
   document.body.classList.toggle("big");
@@ -49,7 +54,7 @@ async function buildLive() {
   $("screen").innerHTML = "";
   chrome();
   fitScreen();
-  setMsg("Building live preview...");
+  setMsg("Building live preview...", true);
   try {
     const r = await fetch(`/api/projects/${enc(st.pid)}/preview?fmt=${enc(st.fmt)}&layout=0`, { method: "POST" });  // fast: builds only, no ~8 s/scene layout check
     const d = await r.json().catch(() => ({}));
