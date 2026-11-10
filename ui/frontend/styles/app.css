@@ -332,3 +332,11 @@ html { scroll-behavior: smooth; }
 .tabs .stat-icon { width: 22px; height: 22px; }
 .tabs .stat-icon svg { width: 12px; height: 12px; stroke-width: 2.6; }
 .tabs .stat.on { box-shadow: 0 0 0 2px rgba(139, 107, 255, .3); }
+
+/* all seven top buttons share one compact size (the last four were bigger than Projects / Assets / Timeline) */
+.tabs .tab, .tabs .stat { box-sizing: border-box; height: 30px; padding: 0 14px; font-size: 13px; line-height: 1; display: inline-flex; align-items: center; gap: 7px; }
+.tabs .stat { padding-left: 7px; }
+.tabs .stat > div { display: flex; align-items: center; gap: 5px; }
+.tabs .stat b, .tabs .stat span { font-size: 13px; line-height: 1; }
+.tabs .stat-icon { width: 18px; height: 18px; }
+.tabs .stat-icon svg { width: 10px; height: 10px; }
