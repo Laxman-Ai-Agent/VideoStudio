@@ -144,6 +144,7 @@ function sceneAt(t) { return st.scenes.find((s) => t >= s.start && t < s.end) ||
 
 function showScene(s) {
   if (!s || st.cur === s) return;
+  if (typeof ed !== "undefined" && ed.dirty) discardEdits(false);  // edits of the scene we leave were never saved
   st.cur = s;
   st.scenes.forEach((x) => x.el && x.el.classList.toggle("sel", x === s));
   document.querySelectorAll("#list .sc").forEach((b) => {
@@ -367,7 +368,7 @@ $("resetEdits").onclick = () => {
 // Video Preview / Timeline: one section at a time (CSS shows it from body[data-view])
 function setView(v) {
   document.body.dataset.view = v;
-  if (v === "timeline" && typeof ed !== "undefined" && ed.on) setEdit(false);
+  if (v === "timeline" && typeof ed !== "undefined") { if (ed.dirty) discardEdits(); if (ed.on) setEdit(false); }  // unsaved edits are dropped
   document.querySelectorAll(".views .tab").forEach((b) => b.classList.toggle("active", b.dataset.view === v));
   try { localStorage.setItem("tl-view", v); } catch { /* not remembered */ }
   if (v === "timeline" && st.dur > 1) $("fit").click();  // the tracks had no width while hidden
@@ -396,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => fetch("/api/projects", { cac
   if (ps.length) load($("proj").value);
 }));
 
-$("backScenes").onclick = () => { setEdit(false); setView("timeline"); };  // leave the big editor, back to the scene gallery
+$("backScenes").onclick = async () => { await discardEdits(); setEdit(false); setView("timeline"); };  // Back without Save = default again  // leave the big editor, back to the scene gallery
 
 $("edSave").onclick = async () => { const n = $("edNote"); n.textContent = "Saving..."; clearTimeout(ed.timer); await save(); n.textContent = "Saved ✓"; setTimeout(() => { n.textContent = ""; }, 1800); };
 $("edReset").onclick = () => { const n = $("edNote"); if (ed.sel) resetEl(); else resetScene(); n.textContent = "Reset"; setTimeout(() => { n.textContent = ""; }, 1800); };

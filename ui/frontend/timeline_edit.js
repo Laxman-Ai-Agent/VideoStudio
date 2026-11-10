@@ -56,15 +56,26 @@ function put(id, s) {  // apply live in the iframe, keep in memory
   refresh();
 }
 function snap() { const h = hist(); h.u.push(JSON.stringify(getItems())); h.r = []; if (h.u.length > 100) h.u.shift(); }
-function commit() {  // save + rebuild this scene only
+function commit() {  // the edit is live in the picture and in memory; it reaches the disk only when Save is pressed
+  ed.dirty = true;
+  const n = $("edNote");
+  if (n) n.textContent = "Unsaved changes: press Save to keep them";
+}
+async function discardEdits(reloadFrame = true) {  // leaving without Save: everything goes back to what is on disk
+  if (!ed.dirty) return;
+  ed.dirty = false;
   clearTimeout(ed.timer);
-  ed.timer = setTimeout(save, 250);
+  await loadEdits();
+  const n = $("edNote");
+  if (n) n.textContent = "";
+  if (reloadFrame && st.cur && live.active) { live.active.dataset.sid = ""; loadInto(live.active, st.cur); }
 }
 async function save() {
   const sid = st.cur.id, f = st.fmt, body = JSON.stringify({ fmt: f, scene: sid, items: (ed.all[f] || {})[sid] || {} });
   try {
     let r = await fetch(`/api/projects/${enc(st.pid)}/edits`, { method: "PUT", body });
     if (!r.ok) throw new Error((await r.json()).error);
+    ed.dirty = false;
     r = await fetch(`/api/projects/${enc(st.pid)}/preview?fmt=${enc(f)}&layout=0`, { method: "POST" });
     const d = await r.json();
     if (!r.ok || f !== st.fmt) return;
