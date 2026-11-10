@@ -91,6 +91,7 @@ function editPane(p, s) {
     for (const [id] of hidden) r.append(Object.assign(el("button", "", "↺ restore " + id), { onclick: () => { snap(); const it = { ...getItems() }; delete it[id]; setItems(it); commit(); } }));
     p.append(r);
   }
+  if (group().length > 1) p.append(el("div", "hint", `${group().length} elements picked: drag, arrow keys and Delete act on all of them. Shift / Ctrl + click adds or removes one.`));
   if (!s) return p;
   const btn = (ic, tip, f, label, on) => Object.assign(el("button", "ib" + (on ? " on" : "") + (label ? " wide" : "")), { innerHTML: svg(IC[ic] || "") + (label ? " " + label : ""), title: tip, onclick: f });
   const num = (key, label, f) => {
@@ -169,14 +170,18 @@ function drawStrip() {  // every element of the selected scene, below the previe
   const cards = el("div", "cards");
   for (const b of all) {
     const m = getItems()[b.id] || {}, off = m.opacity === 0 || m.hidden;
-    const c = el("button", "acard" + (b.id === ed.sel ? " on" : "") + (off ? " off" : "")), sz = el("span", "as", LGROUP(b));
+    const c = el("button", "acard" + (group().includes(b.id) ? " on" : "") + (off ? " off" : "")), sz = el("span", "as", LGROUP(b));
     if (b.src && !isVid(b)) {
       const im = Object.assign(el("img"), { src: srcUrl(b) });
       im.onload = () => { sz.textContent = `${LGROUP(b)} · ${im.naturalWidth} × ${im.naturalHeight}`; };
       c.append(im);
     } else c.append(el("span", "tt", b.kind === "text" || b.kind === "stamp" ? (b.name || "T") : "▣"));
     c.append(el("i", "ck", "✓"), el("span", "an", fileName(b.id)), sz);
-    c.onclick = () => { ed.sel = b.id; drawSel(); if (ed.on) drawEdit(); else drawStrip(); };  // picks it on the scene preview
+    c.onclick = (ev) => {  // Shift / Ctrl + click adds or removes a card from the picked group
+      const add = ev.shiftKey || ev.ctrlKey || ev.metaKey, g = group(), on = g.includes(b.id);
+      if (add) setGroup(on ? g.filter((i) => i !== b.id) : [...g, b.id], on ? null : b.id); else setGroup([b.id], b.id);
+      drawSel(); if (ed.on) drawEdit(); else drawStrip();
+    };  // picks it on the scene preview
     cards.append(c);
   }
   const f = live.active, ready = f && f.dataset.ready && f.dataset.sid === String(st.cur.id);

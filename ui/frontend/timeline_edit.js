@@ -15,6 +15,24 @@ function setItems(o) {
 const win = () => { try { return live.active && live.active.contentWindow; } catch { return null; } };
 const box = (id) => ed.boxes.find((b) => b.id === id);
 const hist = () => (ed.hist[sceneKey()] = ed.hist[sceneKey()] || { u: [], r: [] });
+// multi-selection (Photoshop style): ed.sel is the primary element, ed.group all picked ones (Shift / Ctrl + click, drag a frame, Ctrl+A)
+function group() {
+  if (!ed.sel) { ed.group = []; return ed.group; }
+  ed.group = (ed.group || []).filter(box);
+  if (!ed.group.includes(ed.sel)) ed.group.push(ed.sel);
+  return ed.group;
+}
+function setGroup(ids, primary) {
+  ed.group = ids.filter(box);
+  ed.sel = primary && ed.group.includes(primary) ? primary : ed.group[ed.group.length - 1] || null;
+}
+function actGroup(fn) {  // one undoable change applied to every picked element
+  const g = group();
+  if (!g.length) return;
+  snap();
+  for (const id of g) put(id, fn(stateOf(id)) || stateOf(id));
+  commit();
+}
 const zOf = (b) => (getItems()[b.id] ? getItems()[b.id].z : b.z);
 
 function refresh() {  // read the element boxes of the active scene
@@ -26,6 +44,7 @@ function refresh() {  // read the element boxes of the active scene
   try { ed.boxes = (w && w.__boxes && f.dataset.ready && f.dataset.sid === String(st.cur && st.cur.id)) ? w.__boxes() : []; }
   catch { ed.boxes = []; }
   if (ed.sel && !box(ed.sel)) ed.sel = null;
+  group();
   drawSel();
   syncPanel();
 }
@@ -111,11 +130,14 @@ const arrange = {
 function del() {
   if (!ed.sel) return;
   snap();
-  const it = { ...getItems() }, m = it[ed.sel];
-  if (m && m.dup) delete it[ed.sel];  // a duplicate just goes away
-  else it[ed.sel] = { ...(m || { x: 0, y: 0, w: 0.2, h: 0.2 }), hidden: true };
+  const it = { ...getItems() };
+  for (const id of group()) {
+    const m = it[id];
+    if (m && m.dup) delete it[id];  // a duplicate just goes away
+    else it[id] = { ...(m || { x: 0, y: 0, w: 0.2, h: 0.2 }), hidden: true };
+  }
   setItems(it);
-  ed.sel = null;
+  ed.sel = null; ed.group = [];
   commit();
   drawSel(); drawEdit();
 }
@@ -173,12 +195,25 @@ function down(e) {
   } else {
     const rank = (b) => (b.kind === "text" ? 1 : 2) * 1000 + zOf(b);  // pictures over text; the background is picked from the list only
     const hit = ed.boxes.filter((b) => b.kind !== "background" && M.hit(vis(b), p)).sort((a, b) => rank(a) - rank(b)).pop();
-    ed.sel = hit ? hit.id : null;
-    if (hit) ed.tab = "edit";
-    drawSel(); drawEdit();
-    if (!hit) return;
-    snap();
-    ed.drag = { h: "move", s0: stateOf(ed.sel), p0: p, moved: false };
+    const add = e.shiftKey || e.ctrlKey || e.metaKey, g = group();
+    if (hit) {
+      if (add) {  // Shift / Ctrl + click adds or removes one element
+        const on = g.includes(hit.id);
+        setGroup(on ? g.filter((i) => i !== hit.id) : [...g, hit.id], on ? null : hit.id);
+        drawSel(); drawEdit();
+        return;
+      }
+      if (!g.includes(hit.id)) setGroup([hit.id], hit.id); else ed.sel = hit.id;  // inside the group: the whole group is dragged
+      ed.tab = "edit";
+      drawSel(); drawEdit();
+      snap();
+      ed.drag = { h: "move", p0: p, moved: false, s0s: Object.fromEntries(group().map((id) => [id, stateOf(id)])) };
+    } else {  // empty space: draw a frame to pick everything it touches (Shift / Ctrl keeps the current picks)
+      const base = add ? g.slice() : [];
+      if (!add) setGroup([], null);
+      drawSel(); drawEdit();
+      ed.drag = { h: "band", p0: p, base, moved: false };
+    }
   }
   try { $("editlayer").setPointerCapture(e.pointerId); } catch { /* synthetic events */ }
 }
@@ -187,12 +222,27 @@ function applyDrag(d) {
   if (!d.pending) return;
   const p = d.pending, s = d.s0;
   d.pending = null;
+  if (d.h === "band") return bandTo(d, p);
+  if (d.h === "move") {  // every picked element moves by the same distance
+    for (const [id, s0] of Object.entries(d.s0s)) put(id, { ...s0, x: s0.x + p.x - d.p0.x, y: s0.y + p.y - d.p0.y });
+    d.moved = true;
+    return;
+  }
   let n;
-  if (d.h === "move") n = { ...s, x: s.x + p.x - d.p0.x, y: s.y + p.y - d.p0.y };
-  else if (d.h === "rot") n = { ...s, rot: M.rotate(s, p, d.shift ? 15 : 0).rot };
+  if (d.h === "rot") n = { ...s, rot: M.rotate(s, p, d.shift ? 15 : 0).rot };
   else n = { ...s, ...M.resize(s, d.h, p, s.lock !== d.shift) };  // Shift flips the aspect lock while dragging
   d.moved = true;
   put(ed.sel, n);
+}
+function bandTo(d, p) {  // the picking frame
+  const x1 = Math.min(d.p0.x, p.x), x2 = Math.max(d.p0.x, p.x), y1 = Math.min(d.p0.y, p.y), y2 = Math.max(d.p0.y, p.y), k = kScr();
+  let bd = $("band");
+  if (!bd) { bd = Object.assign(el("div"), { id: "band" }); $("editlayer").append(bd); }
+  Object.assign(bd.style, { display: "block", left: x1 * k + "px", top: y1 * k + "px", width: (x2 - x1) * k + "px", height: (y2 - y1) * k + "px" });
+  if (x2 - x1 + y2 - y1 > 4) d.moved = true;
+  const ids = ed.boxes.filter((b) => b.kind !== "background").filter((b) => { const a = M.bounds(vis(b)); return a.l < x2 && a.r > x1 && a.t < y2 && a.b > y1; }).map((b) => b.id);
+  setGroup([...new Set([...d.base, ...ids])]);
+  drawSel();
 }
 function moveDrag(e) {
   const d = ed.drag;
@@ -206,27 +256,38 @@ function up() {
   if (!d) return;
   if (d.raf) cancelAnimationFrame(d.raf);
   applyDrag(d);
+  if (d.h === "band") { const bd = $("band"); if (bd) bd.style.display = "none"; drawEdit(); return; }  // picking changes nothing in the scene
   if (d.moved) commit(); else hist().u.pop();  // a plain click is no edit
 }
 function drawSel() {
-  const sb = $("selbox"), s = sel();
+  const sb = $("selbox"), s = sel(), g = ed.on ? group() : [], layer = $("editlayer"), multi = g.length > 1;
+  if (layer) layer.querySelectorAll(".msel").forEach((n) => n.remove());
   if (!sb) return;
-  sb.style.display = ed.on && s ? "block" : "none";
-  if (!s) return;
+  sb.style.display = ed.on && s && !multi ? "block" : "none";
   const k = kScr();
+  if (multi) {  // several picked: an outline each, no handles
+    for (const id of g) {
+      const b = stateOf(id);
+      layer.append(Object.assign(el("div", "msel" + (id === ed.sel ? " main" : "")), { style: `left:${b.x * k}px;top:${b.y * k}px;width:${b.w * k}px;height:${b.h * k}px;transform:rotate(${b.rot}deg)` }));
+    }
+    return;
+  }
+  if (!s) return;
   Object.assign(sb.style, { left: s.x * k + "px", top: s.y * k + "px", width: s.w * k + "px", height: s.h * k + "px", transform: `rotate(${s.rot}deg)` });
   sb.querySelector(".ro").textContent = `${Math.round(s.x)}, ${Math.round(s.y)}  ${Math.round(s.w)} × ${Math.round(s.h)}`;
 }
+
+function selectAll() { setGroup(ed.boxes.filter((b) => b.kind !== "background").map((b) => b.id)); drawSel(); drawEdit(); }
 
 // ---- keys (captured before the timeline's own shortcuts) ----
 window.addEventListener("keydown", (e) => {
   const typing = ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName) && !["range", "checkbox"].includes(e.target.type);
   if (typing || e.altKey) return;
-  const ctrl = e.ctrlKey || e.metaKey, step = e.shiftKey ? 10 : 1, nd = (dx, dy) => () => act((s) => ({ ...s, x: s.x + dx, y: s.y + dy }));
+  const ctrl = e.ctrlKey || e.metaKey, step = e.shiftKey ? 10 : 1, nd = (dx, dy) => () => actGroup((s) => ({ ...s, x: s.x + dx, y: s.y + dy }));
   let f;
   if (e.code === "KeyE" && !ctrl) f = () => setEdit(!ed.on);
-  else if (ctrl && st.cur && (ed.on || document.body.dataset.view === "timeline")) f = { KeyZ: () => (e.shiftKey ? redo() : undo()), KeyY: redo, KeyD: () => ed.on && dup() }[e.code];  // undo / redo also work on the Scene-tab preview
-  else if (ed.on && (ed.sel || e.code === "Escape")) f = { Delete: del, Backspace: del, Escape: () => { ed.sel = null; drawSel(); drawEdit(); },
+  else if (ctrl && st.cur && (ed.on || document.body.dataset.view === "timeline")) f = { KeyZ: () => (e.shiftKey ? redo() : undo()), KeyY: redo, KeyD: () => ed.on && dup(), KeyA: () => ed.on && selectAll() }[e.code];  // undo / redo also work on the Scene-tab preview
+  else if (ed.on && (ed.sel || e.code === "Escape")) f = { Delete: del, Backspace: del, Escape: () => { ed.sel = null; ed.group = []; drawSel(); drawEdit(); },
     ArrowLeft: nd(-step, 0), ArrowRight: nd(step, 0), ArrowUp: nd(0, -step), ArrowDown: nd(0, step) }[e.code];
   if (!f) return;
   e.preventDefault(); e.stopImmediatePropagation();
