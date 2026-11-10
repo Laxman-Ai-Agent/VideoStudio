@@ -145,11 +145,20 @@ html, body { height:100%; } body { display:flex; flex-direction:column; overflow
 .views .tab { height:28px; padding:0 16px; font-size:12.5px; cursor:pointer; font-family:inherit; }
 body #list, body #side { display:none; }  /* the scene list and side panels are not shown in either view */
 body[data-view="preview"] #tlcard { display:none; }
-body[data-view="preview"] #main { grid-template-columns:minmax(0,1fr); }
+body[data-view="preview"] #main { grid-template-columns:minmax(0,1fr) 300px; }
+body:not([data-view="preview"]) #opts { display:none; }
 body[data-view="timeline"] #main { display:none; }
 body[data-view="timeline"] #tlcard { flex:1; }
 
-/* format switch, render mode, Render and close belong to Video Preview only */
-body:not([data-view="preview"]) #fmtSeg, body:not([data-view="preview"]) #rmode, body:not([data-view="preview"]) #render,
-body:not([data-view="preview"]) #close, body:not([data-view="preview"]) #rstate { display:none; }
-body:not([data-view="preview"]) .sub { display:none; }  /* project picker, scene count and warnings: Video Preview only */
+
+/* right-hand options box of Video Preview: ratio, quality, output size, Render */
+#opts { padding:18px; display:flex; flex-direction:column; gap:10px; align-self:start; }
+#opts h4 { margin:6px 0 0; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+#opts .seg { display:grid; grid-template-columns:1fr 1fr; } #opts .seg button { padding:9px 0; }
+#resSeg { display:grid; gap:8px; }
+#resSeg button { display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:10px 14px; border-radius:10px; text-align:left; }
+#resSeg button b { font-size:17px; } #resSeg button span { font-size:12px; color:var(--muted); }
+#resSeg button.on { background:#241f57; border-color:var(--accent2); box-shadow:0 0 0 2px rgba(139,107,255,.25); }
+#resSeg button.on span { color:#cfc6ff; }
+#outSize { margin-top:4px; padding:10px 12px; border-radius:10px; background:#0d1024; color:var(--muted); font-size:13px; } #outSize b { color:var(--text); font-weight:600; margin-left:4px; }
+#opts #render { margin-top:8px; padding:12px; font-size:15px; }

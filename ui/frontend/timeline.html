@@ -9,16 +9,9 @@
   <button type="button" class="tab" data-view="preview">Video Preview</button>
   <button type="button" class="tab" data-view="timeline">Timeline</button>
 </nav>
-<div class="sub">
-  <select id="proj" aria-label="Project"></select>
-  <b id="ptitle" hidden></b><span class="sep"></span><span id="sum" class="n"></span>
-  <span class="grow"></span>
-  <button id="warnBtn" hidden title="Show only scenes with warnings"></button>
-  <span id="rstate"></span>
-  <div class="seg" id="fmtSeg"><button data-f="16:9" class="on">16:9</button><button data-f="9:16">9:16</button></div>
+<div id="hid" hidden>
+  <select id="proj" aria-label="Project"></select><b id="ptitle"></b><span id="sum"></span><button id="warnBtn"></button><span id="rstate"></span>
   <select id="rmode" aria-label="Render mode"><option value="final">Final 1080p</option><option value="preview">Preview 480p</option></select>
-  <button id="render">Render Video</button>
-  <a id="close" href="/" title="Close the timeline (back to the dashboard)">&#10005;</a>
 </div>
 <div id="rbar"><div><div class="lab" id="rlab">Render time</div><div class="big" id="rtime">0:00</div></div>
   <div><div class="lab">Usually takes</div><div class="val" id="rlast">-</div><div class="pbar"><i id="rprog"></i></div></div>
@@ -40,6 +33,17 @@
     </div>
   </section>
   <div id="side"><div id="assets" class="card"></div><aside id="info" class="card"></aside></div>
+  <aside id="opts" class="card">
+    <h4>Ratio</h4>
+    <div class="seg" id="fmtSeg"><button data-f="16:9" class="on">16:9</button><button data-f="9:16">9:16</button></div>
+    <h4>Quality</h4>
+    <div id="resSeg">
+      <button type="button" data-v="final" class="on"><b>1080p</b><span>Final &middot; full size</span></button>
+      <button type="button" data-v="preview"><b>480p</b><span>Preview &middot; quick check</span></button>
+    </div>
+    <div id="outSize">Output <b></b></div>
+    <button id="render">Render</button>
+  </aside>
 </div>
 <div class="card" id="tlcard">
   <div id="bar">

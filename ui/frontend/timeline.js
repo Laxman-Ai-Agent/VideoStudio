@@ -259,7 +259,15 @@ async function startRender() {
 function setFmt(f) {
   st.fmt = f;
   document.querySelectorAll("#fmtSeg button").forEach((x) => x.classList.toggle("on", x.dataset.f === f));
+  paintOpts();
 }
+function paintOpts() {  // output size line + which quality card is on
+  const fin = $("rmode").value === "final", short = fin ? 1080 : 480, long = fin ? 1920 : 854;
+  document.querySelectorAll("#resSeg button").forEach((x) => x.classList.toggle("on", x.dataset.v === $("rmode").value));
+  $("outSize").querySelector("b").textContent = st.fmt === "9:16" ? `${short} × ${long} px` : `${long} × ${short} px`;
+}
+document.querySelectorAll("#resSeg button").forEach((b) => (b.onclick = () => { $("rmode").value = b.dataset.v; paintOpts(); }));
+paintOpts();
 async function pickFormat(pid) {  // open in the project's own format: last one chosen here, else the one it was run in
   let f = "";
   try { f = localStorage.getItem("fmt:" + pid) || ""; } catch { /* private window */ }
