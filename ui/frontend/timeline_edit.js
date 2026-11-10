@@ -62,13 +62,14 @@ function edLocal(f) {  // while editing a paused scene show the settled frame (a
 // ---- state of one element: its box + saved extras ----
 function stateOf(id) {
   const b = box(id), m = getItems()[id] || {};
-  return { x: b.x, y: b.y, w: b.w, h: b.h, rot: b.rot + b.base, base: b.base, opacity: m.opacity ?? b.opacity, z: m.z ?? b.z, lock: m.lock ?? true, dup: m.dup };
+  return { x: b.x, y: b.y, w: b.w, h: b.h, rot: b.rot + b.base, base: b.base, opacity: m.opacity ?? b.opacity, z: m.z ?? b.z, lock: m.lock ?? true, dup: m.dup, text: m.text };
 }
 function put(id, s) {  // apply live in the iframe, keep in memory
   if (!id || !box(id)) return;
   const { W, H } = dims(), m = { ...M.toFrac(s, W, H), opacity: s.opacity, z: s.z, lock: s.lock, hidden: false };
   m.rot = s.rot - s.base;
   if (s.dup) m.dup = s.dup;
+  if (s.text) m.text = s.text;
   setItems({ ...getItems(), [id]: m });
   const w = win();
   if (w && w.__manual) w.__manual(id, m);

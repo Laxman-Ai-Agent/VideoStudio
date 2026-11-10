@@ -102,7 +102,25 @@ function editPane(p, s) {
     return l;
   };
   const row = (name, ...c) => { const r = el("div", "fr"); r.append(el("span", "", name), ...c); return r; };
-  p.append(layerHead(s, true), el("div", "sec", "Transform"));
+  const bx = box(ed.sel);
+  if (bx && bx.kind === "text") {  // replace the words of this text block (same place, same style)
+    const ti = Object.assign(el("input"), { type: "text", value: s.text || bx.text || "", maxLength: 200 }), tr = el("div", "fr");
+    ti.className = "textin";
+    ti.onchange = () => {
+      const v = ti.value.trim();
+      if (!v || v === (bx.text || "")) return;
+      snap();
+      const old = box(ed.sel).auto, c = sel(), cx = c.x + c.w / 2, cy = c.y + c.h / 2, kx = c.w / Math.max(1, old.w), ky = c.h / Math.max(1, old.h);
+      put(ed.sel, { ...c, text: v });                       // new words in the picture (the block is measured again)
+      const nw = box(ed.sel).auto, c2 = sel(), w = nw.w * kx, h = nw.h * ky;
+      const mid = cx / dims().W, x = mid > 0.4 && mid < 0.6 ? cx - w / 2 : c.x;  // a centred block grows both ways, others keep their left edge
+      put(ed.sel, { ...c2, text: v, w, h, x, y: cy - h / 2 });  // old scale, same vertical centre
+      commit();
+      drawEdit();
+    };
+    tr.append(el("span", "", "Text"), ti);
+    p.append(layerHead(s, true), el("div", "sec", "Words"), tr, el("div", "sec", "Transform"));
+  } else p.append(layerHead(s, true), el("div", "sec", "Transform"));
   p.append(row("Position", num("x", "X", (c, v) => ({ ...c, x: v })), num("y", "Y", (c, v) => ({ ...c, y: v }))));
   const lk = btn(s.lock ? "lock" : "unlock", "Lock aspect ratio", () => act((c) => ({ ...c, lock: !c.lock })), "", s.lock);
   p.append(row("Size", num("w", "W", (c, v) => (c.lock ? { ...c, w: v, h: v * c.h / c.w } : { ...c, w: v })), lk,

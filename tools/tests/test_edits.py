@@ -164,3 +164,11 @@ def test_render_key_does_not_depend_on_the_python_process(tmp_path):
     keys = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=root,
                            env={**__import__("os").environ, "PYTHONHASHSEED": seed}).stdout.strip() for seed in ("1", "2", "3", "4")}
     assert len(keys) == 1 and "" not in keys
+
+
+def test_text_block_words_are_kept_and_cleaned():
+    """Editor 'Text' box: replacement words of a text block (L:t1) survive clean() and reach the scene (layers())."""
+    from pipeline import edits
+    m = edits.clean({"x": 0.1, "y": 0.2, "w": 0.3, "h": 0.1, "text": "  కొత్త   పదాలు  "})
+    assert m["text"] == "కొత్త పదాలు"
+    assert "text" not in edits.clean({"x": 0.1, "text": "   "}) and len(edits.clean({"text": "a" * 500})["text"]) == 200

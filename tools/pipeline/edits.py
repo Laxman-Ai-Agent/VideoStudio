@@ -27,6 +27,8 @@ def clean(m: dict) -> dict:
            "z": int(_num(m.get("z"), -50, 50, 0)), "lock": bool(m.get("lock", True)), "hidden": bool(m.get("hidden", False))}
     if m.get("dup"):
         out["dup"] = str(m["dup"])
+    if isinstance(m.get("text"), str) and m["text"].strip():  # replacement words of a text block (L:t1 ...)
+        out["text"] = " ".join(m["text"].split())[:200]
     return out
 
 

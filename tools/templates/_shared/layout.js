@@ -234,8 +234,26 @@ window.studioLayout = function (env) {
       name: e.textContent.trim().replace(/\s+/g, " ").slice(0, 28), src: "" } }));
     gl.forEach(g => { g.f0 = getComputedStyle(g.el).filter; if (g.f0 === "none") g.f0 = ""; });
   }
+  // Replacement words for a text block (manual.text): put them into the block's existing text nodes (word spans keep
+  // their animation); fewer words than nodes -> the rest stay empty, more words -> the last node takes them.
+  function applyText(g) {
+    const el = g.el;
+    if (!g.tn) {
+      g.tn = [];
+      const wk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let n; (n = wk.nextNode());) if (n.nodeValue.trim()) g.tn.push({ n, t0: n.nodeValue });
+    }
+    const want = g.kind === "text" && g.o.manual && g.o.manual.text;
+    if (!want) { g.tn.forEach(x => { x.n.nodeValue = x.t0; }); return; }
+    const words = want.split(/\s+/).filter(Boolean), k = g.tn.length;
+    g.tn.forEach((x, i) => {
+      const lead = x.t0.match(/^\s*/)[0], trail = x.t0.match(/\s*$/)[0];
+      x.n.nodeValue = lead + (i < k - 1 ? words[i] || "" : words.slice(i).join(" ")) + trail;
+    });
+  }
   function placeLayer(g) {
     const { el, o } = g, st = el.style;
+    applyText(g);
     st.translate = st.scale = st.rotate = st.transformOrigin = "";
     st.zIndex = ""; st.visibility = ""; st.filter = "";
     g.nat = boxOf(el);
@@ -308,7 +326,7 @@ window.studioLayout = function (env) {
   }
   // Dashboard editor hooks (same-origin iframe): boxes of editable elements, live apply, a time when all are on screen.
   const gbox = (g) => { const m = g.o.manual, b = m ? mbox(m) : g.nat;
-    return { id: g.o.id, kind: g.kind, name: g.o.name, src: g.o.src, x: b.x, y: b.y, w: b.w, h: b.h, rot: m ? m.rot : 0, base: 0,
+    return { id: g.o.id, kind: g.kind, name: g.o.name, text: g.kind === "text" ? g.el.textContent.trim().replace(/\s+/g, " ") : "", src: g.o.src, x: b.x, y: b.y, w: b.w, h: b.h, rot: m ? m.rot : 0, base: 0,
              z: m ? m.z : 0, opacity: m ? m.opacity : 1, edited: !!m, auto: g.nat, hidden: !!(m && m.hidden) }; };
   window.__boxes = () => gl.map(gbox).concat(reg.map(({ el, o, kind }) => ({ id: o.id, kind, cat: o.kind, src: o.src, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth,
     h: el.offsetHeight, rot: o.manual ? o.manual.rot : 0, base: kind === "stamp" ? -6 : 0, z: o.manual ? o.manual.z : 0,
