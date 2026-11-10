@@ -167,6 +167,7 @@ function showAsset(s) {  // no live preview (yet): the asset itself, or a tile f
 
 function move() {
   let t = aud.currentTime || 0;
+  if (st.stopAt && !aud.paused && t >= st.stopAt - 0.02) { aud.pause(); st.stopAt = 0; }  // "Play scene" ends with its scene
   if (st.loop && st.cur && !aud.paused && t >= st.cur.end - 0.02) {  // loop the selected scene
     t = st.cur.start;
     aud.currentTime = t;
@@ -314,12 +315,14 @@ async function load(pid) {
 }
 
 // ---- controls ----
-aud.onplay = () => { $("play").innerHTML = "&#10074;&#10074;"; loop(); };
-aud.onpause = () => { $("play").innerHTML = "&#9654;"; move(); };
+aud.onplay = () => { $("play").innerHTML = "&#10074;&#10074;"; $("tPlay").innerHTML = "&#10074;&#10074;"; loop(); };
+aud.onpause = () => { $("play").innerHTML = "&#9654;"; $("tPlay").innerHTML = "&#9654;"; move(); };
 $("seek").oninput = () => { if (st.cur) seek(st.cur.start + +$("seek").value); };
 aud.ontimeupdate = () => { if (!aud.paused) move(); };  // keeps cuts on time when rAF is throttled (hidden tab)
 aud.onloadedmetadata = () => { st.dur = Math.max(st.dur, aud.duration || 0); draw(); };
 $("play").onclick = () => (aud.paused ? aud.play() : aud.pause());
+$("tPlay").onclick = () => { st.stopAt = 0; $("play").click(); };  // whole timeline: play / pause
+$("tStop").onclick = () => { st.stopAt = 0; aud.pause(); seek(0); };  // stop = pause and back to the start
 $("prev").onclick = () => stepScene(-1);
 $("next").onclick = () => stepScene(1);
 $("loop").onclick = () => { st.loop = !st.loop; $("loop").classList.toggle("on", st.loop); };

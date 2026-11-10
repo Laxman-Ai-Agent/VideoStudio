@@ -164,8 +164,8 @@ const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "im
 function sceneBox() {  // the selected scene's own build, looping, scaled to fit the card (the "Scene" tab)
   const m = live.data.map[st.cur.id];
   if (!m) return el("div", "n", "This scene is not built yet");
-  const W = live.data.w, H = live.data.h, k = Math.min(330 / H, 560 / W), box = el("div", "scenebox");
-  box.dataset.sid = String(st.cur.id);
+  const W = live.data.w, H = live.data.h, k = Math.min(300 / H, 560 / W), box = el("div", "scenebox"), wrap = el("div", "scenewrap");
+  wrap.dataset.sid = String(st.cur.id);
   box.style.cssText = `width:${Math.round(W * k)}px;height:${Math.round(H * k)}px`;
   const f = el("iframe");
   f.setAttribute("scrolling", "no");
@@ -176,12 +176,20 @@ function sceneBox() {  // the selected scene's own build, looping, scaled to fit
   box.append(f, hint);
   box.title = "Click to edit this scene's layers";
   box.onclick = () => { setView("preview"); setEdit(true); ed.tab = "edit"; };  // the live preview + layer panel take over
-  return box;
+  const cur = st.cur, tl = () => { try { return f.contentWindow.__timelines.root; } catch { return null; } };
+  const ctl = el("div", "scctl");
+  ctl.append(
+    Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
+      st.stopAt = cur.end; seek(cur.start); aud.play(); const x = tl(); if (x) x.repeat(-1).repeatDelay(0.8).play(0); } }),
+    Object.assign(el("button", "ic", "■ Stop"), { title: "Stop and go back to the start of this scene", onclick: () => {
+      st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }));
+  wrap.append(box, ctl);
+  return wrap;
 }
 function drawStrip() {  // every element of the selected scene, below the preview; shares the selection with canvas + panel
   const root = $("assets");
   if (!st.cur || !live.data) { root.innerHTML = ""; return; }
-  const keep = root.querySelector(".scenebox");
+  const keep = root.querySelector(".scenewrap");
   if (ed.filter !== "scene" || !keep || keep.dataset.sid !== String(st.cur.id)) root.innerHTML = "";  // same scene: keep the playing frame, only the tabs redraw
   const all = ed.boxes, grp = (b) => (b.kind === "text" ? "text" : GROUP(b)), n = (g) => all.filter((b) => grp(b) === g).length;
   const head = el("div", "ah");
