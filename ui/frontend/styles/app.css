@@ -363,3 +363,10 @@ html { scroll-behavior: smooth; }
 .tile .status::before { width: 22px; height: 22px; background-size: 13px; }
 .scn { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap;
        background: rgba(8, 10, 24, .7); color: #e7e9ff; backdrop-filter: blur(4px); pointer-events: none; }
+
+/* tile status: a green circle with a white tick (found) / a red circle with a white cross (missing) */
+.tile .status::before { background-color: transparent; }
+.tile .status.found { background: #16a34a; }
+.tile .status.found::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.tile .status.missing { background: #dc2626; }
+.tile .status.missing::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 7l10 10M17 7 7 17' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E"); }
