@@ -340,3 +340,15 @@ html { scroll-behavior: smooth; }
 .tabs .stat b, .tabs .stat span { font-size: 13px; line-height: 1; }
 .tabs .stat-icon { width: 18px; height: 18px; }
 .tabs .stat-icon svg { width: 10px; height: 10px; }
+
+/* two centred rows: the three page buttons, and under them the smaller Prepare + Total / Found / Missing */
+.tabs { flex-direction: column; align-items: center; gap: 10px; }
+.tabs .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.tabs .main .tab { height: 34px; padding: 0 20px; font-size: 14px; }
+.tabs .sub .tab, .tabs .sub .stat { height: 26px; padding: 0 12px; font-size: 12px; }
+.tabs .sub .stat { padding-left: 5px; gap: 6px; }
+.tabs .sub .stat b, .tabs .sub .stat span { font-size: 12px; }
+.tabs .sub .stat-icon { width: 16px; height: 16px; }
+.tabs .sub .stat-icon svg { width: 9px; height: 9px; }
+.tabs .row[hidden], .tabs .sub:has(> .stats[hidden]) > .stats { display: none; }
+.tabs [hidden] { display: none; }
