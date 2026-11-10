@@ -220,7 +220,8 @@ function drawStrip() {  // every element of the selected scene, below the previe
     c.onclick = () => { ed.sel = b.id; ed.tab = "edit"; if (!ed.on) setEdit(true); drawSel(); drawEdit(); };
     cards.append(c);
   }
-  root.append(head, all.length ? cards : el("div", "n", "Loading elements..."));
+  const f = live.active, ready = f && f.dataset.ready && f.dataset.sid === String(st.cur.id);
+  root.append(head, all.length ? cards : el("div", "n", ready ? "No separate elements in this scene (it is one drawn template)." : "Loading elements..."));
 }
 
 $("tUndo").onclick = undo;
