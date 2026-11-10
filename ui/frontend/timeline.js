@@ -1,6 +1,6 @@
 // Timeline page: scene list, live preview (timeline_live.js), details, transport bar and tracks.
 // Data: work/scenes.json, work/resolved.json, visual-assets.json, plus POST /api/projects/<pid>/preview
-// (scene builds, captions, warnings). The clock is the narration (input/audio.wav). View only: the one
+// (scene builds, captions, warnings). The clock is the narration (input/audio.*). View only: the one
 // action is Render, which runs `studio run` in the background exactly like the command line.
 const $ = (id) => document.getElementById(id);
 const aud = $("aud");
@@ -129,7 +129,7 @@ function draw() {
     const c = clip("L-ovl", o.a, o.b, "o-ovl", o.label, () => seek(o.a + 0.01));
     if (o.file) c.prepend(Object.assign(el("img", "otn"), { src: url(o.file), loading: "lazy" }));
   }
-  clip("L-aud", 0, st.dur, "a-aud", "Narration · input/audio.wav", () => {});
+  clip("L-aud", 0, st.dur, "a-aud", "Narration · input/audio", () => {});
   move();
 }
 
@@ -281,7 +281,9 @@ async function load(pid) {
   st.dur = st.scenes.length ? st.scenes[st.scenes.length - 1].end : 1;
   $("sum").textContent = st.scenes.length ? `${st.scenes.length} scenes · ${fmt(st.dur)}` : "no work/scenes.json yet: run the project first";
   aud.pause();
-  aud.src = url("input/audio.wav");
+  const exts = ["wav", "mp3", "m4a", "aac", "ogg", "flac"];  // the project's narration can be any of these (studio.py: input/audio.*)
+  const tryAudio = (i) => { aud.src = url("input/audio." + exts[i]); aud.onerror = () => { if (i + 1 < exts.length) tryAudio(i + 1); }; };
+  tryAudio(0);
   setZoom(($("scroll").clientWidth - 40) / st.dur);  // start fitted
   drawList();
   buildLive();

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Timeline plays any narration format
+
+- Fix: timeline loaded only `input/audio.wav`, so projects with `audio.mp3` (e.g. 10_AI_Doctor, 03) did not play. It now tries wav, mp3, m4a, aac, ogg, flac. Frontend only, checked in the browser (no JS test harness).
+
 ## 2026-11-10 - Timeline Render uses the chosen format
 
 - Fix: the Timeline Render button never sent 16:9 / 9:16, so a 9:16 timeline rendered 16:9. Now `POST /render?fmt=9:16` -> `studio run NN --format 9:16`. Test added.
