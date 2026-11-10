@@ -7,7 +7,7 @@
     PUT  /api/projects/<pid>/assets/<aid>/media         {aspect, fit, crop_x, crop_y, zoom, trim_start, trim_end}
     POST /api/projects/<pid>/assets/<aid>/upload[?replace=1]   raw file body, header X-Filename
     POST /api/projects/<pid>/assets/<aid>/replace/confirm | /replace/cancel
-    POST /api/projects/<pid>/render[?final=1] | GET .../render   start `studio run` in the background / its state + log tail
+    POST /api/projects/<pid>/render[?final=1&fmt=9:16] | GET .../render   start `studio run` in the background / its state + log tail
     POST /api/projects/<pid>/preview?fmt=16:9             live preview: build scenes into work/preview/ (pipeline/preview.py)
     GET  /files/<pid>/<path inside the project>         previews (Range supported for video)
     GET  /                                              the dashboard (ui/frontend)
@@ -142,7 +142,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if rm := re.match(r"^/api/projects/([^/]+)/render$", url.path):
                 q = urllib.parse.parse_qs(url.query)
-                return self._json(service.start_render(rm[1], q.get("final", ["0"])[0] == "1", q.get("review", ["0"])[0] == "1"))
+                return self._json(service.start_render(rm[1], q.get("final", ["0"])[0] == "1", q.get("review", ["0"])[0] == "1", q.get("fmt", ["16:9"])[0]))
             if tm := re.match(r"^/api/projects/([^/]+)/thumb$", url.path):
                 q = urllib.parse.parse_qs(url.query)
                 return self._json(service.thumb(tm[1], q.get("fmt", ["16:9"])[0], int(q.get("scene", ["0"])[0])))

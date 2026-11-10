@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10 - Timeline Render uses the chosen format
+
+- Fix: the Timeline Render button never sent 16:9 / 9:16, so a 9:16 timeline rendered 16:9. Now `POST /render?fmt=9:16` -> `studio run NN --format 9:16`. Test added.
+
 ## 2026-11-10 - Timeline loads fast
 
 - Live preview is requested with `layout=0` (builds only, ~1 s when cached); the layout check (~8 s/scene, headless Chrome) runs afterwards and fills in warnings. Before, a first 9:16 open waited ~4.5 min on it.

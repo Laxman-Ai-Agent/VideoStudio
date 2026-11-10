@@ -413,18 +413,20 @@ def _times(p: Path) -> Path:
     return p / "work" / "logs" / "ui_render_times.json"
 
 
-def start_render(pid: str, final: bool, review: bool = False) -> dict:
+def start_render(pid: str, final: bool, review: bool = False, fmt: str = "16:9") -> dict:
     """`studio run <pid> [--final | --review]` in the background (same as the command line); one at a time per project.
     review = everything up to the storyboard, no render (the Visual Assets page runs it before opening the Timeline)."""
     import subprocess
     import time
+    if fmt not in ("16:9", "9:16"):
+        raise Invalid(f"format must be 16:9 or 9:16, got {fmt}")
     p = project_dir(pid)
     if (cur := _renders.get(p.name)) and cur["proc"].poll() is None:
         return render_status(pid)
     log = p / "work" / "logs" / "ui_render.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     fh = open(log, "w", encoding="utf-8")
-    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name.split("_")[0]] + (["--review"] if review else ["--final"] if final else [])
+    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name.split("_")[0]] + (["--review"] if review else ["--final"] if final else []) + ["--format", fmt]
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                             env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})

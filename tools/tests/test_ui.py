@@ -220,5 +220,19 @@ def test_prepare_runs_review_without_render_and_keeps_render_times(tmp_path, mon
     monkeypatch.setattr(service, "_renders", {})
     monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
     s = service.start_render("02", False, review=True)
-    assert seen[0][-2:] == ["02", "--review"] and s["review"] is True and s["state"] == "done"
+    assert seen[0][-4:] == ["02", "--review", "--format", "16:9"] and s["review"] is True and s["state"] == "done"
     assert not service._times(proj).exists()  # a prepare run is not a render time
+
+
+def test_timeline_render_passes_the_chosen_format(tmp_path, monkeypatch):
+    """Bug 2026-11-10: Render on the 9:16 timeline rendered 16:9 (the format was never sent)."""
+    import subprocess
+    from types import SimpleNamespace as NS
+    proj = tmp_path / "10_T"
+    (proj / "work" / "logs").mkdir(parents=True)
+    seen = []
+    monkeypatch.setattr(service, "project_dir", lambda pid: proj)
+    monkeypatch.setattr(service, "_renders", {})
+    monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
+    service.start_render("10", True, fmt="9:16")
+    assert seen[0][-4:] == ["10", "--final", "--format", "9:16"]
