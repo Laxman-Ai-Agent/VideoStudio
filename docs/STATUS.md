@@ -26,7 +26,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 - Timing correction (2026-11-09): user gives audio + Gemini JSON -> `tools\.venv\Scripts\python.exe -m pipeline.align_mms audio json out` (MMS, no Whisper). Keep every word, fix timings only, deliver the finished JSON. Not wired into `studio run` yet; 07 video still uses the older Whisper timing (~0.5 s early).
 
-- Kaggle add-on (2026-11-10, `kaggle/README.md`): CLI + token work. Next: private datasets (Whisper large-v3 from our cache, wheels, code), CPU-tested kernel script, `kaggleun.cmd NN` (audio -> transcript), then Claude word fix + `align_mms`. User has older Kaggle notebooks (`whisper-gpu-service-notebook`, `img-vide-notebook`), untouched.
+- Kaggle add-on (2026-11-10, `kaggle/README.md`): CLI + token work. Model kernel `videostudio-whisper-model` (CPU) holds Whisper large-v3 (8 s download on Kaggle; uploading from this PC was ~2 MB/s, dropped). Next: code upload, CPU-tested GPU kernel script, `kaggle
+un.cmd NN` (audio -> transcript), then Claude word fix + `align_mms`. User has older Kaggle notebooks (`whisper-gpu-service-notebook`, `img-vide-notebook`), untouched.
 
 ## Pending, user side
 - Generate the 12 prompt-ready 01 assets (A023 + A024 reference sheets first, then A010, A014-A022); upload in the dashboard or drop `A012.png` in `drop/` + `studio.cmd assets 01`.

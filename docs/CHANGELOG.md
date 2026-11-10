@@ -2,6 +2,7 @@
 
 ## 2026-11-10 · kaggle/ add-on: CLI + token
 - New self-contained `kaggle/` folder (own venv, `requirements.lock.txt`, `kg.cmd` wrapper reading the git-ignored `kaggle/access_token`, README). Token verified (`kg.cmd kernels list --mine`). Plan: audio-only videos -> Whisper large-v3 on Kaggle GPU -> Claude fixes words into a Gemini-style JSON -> local `align_mms`. Nothing in `tools/` changed.
+- Model: CPU kernel `kaggle/kernels/whisper-model` downloads the pinned faster-whisper large-v3 snapshot on Kaggle (8 s) into its output; GPU kernels attach it via `kernel_sources`. A private dataset upload from this PC was stopped (~2 MB/s upload, ~30 min).
 
 ## 2026-11-09 · align_mms: timing correction for a word-timed JSON
 - `python -m pipeline.align_mms audio json out` keeps the JSON's text and replaces every word / scene time with times measured by Meta's MMS forced aligner (torchaudio 2.8, optional `uv` group `align`, model cached in `tools/models/torch` via `TORCH_HOME`). On 07 the Gemini JSON was off by 5.5 s on average (max 11.8 s, it stretched 77 s to 89 s); corrected sentence starts match the audio pauses within 0.05 s. Not wired into `studio run`. Model licence CC-BY-NC 4.0 (user's own experiments). Tests: `test_align_mms.py`.

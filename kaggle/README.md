@@ -17,6 +17,12 @@ Without Kaggle: the user gives audio + Gemini JSON and only step 3 runs.
   (kaggle 2.2.5 needs `six`, which it does not declare).
 - Use: `kaggle\kg.cmd <kaggle args>`, e.g. `kaggle\kg.cmd kernels list --mine`.
 
+## Models (no uploads from this PC: home upload is ~2 MB/s, Kaggle downloads 3 GB in seconds)
+- `kernels/whisper-model/`: CPU-only private kernel `laxmand7221/videostudio-whisper-model`. It downloads
+  faster-whisper large-v3 (same pinned snapshot as the local cache) into its output. GPU kernels list it in
+  `kernel_sources`, so the model is mounted under `/kaggle/input/` and GPU time never downloads it.
+  Re-run: `kg.cmd kernels push -p kaggle\kernels\whisper-model` (CPU, no GPU quota).
+
 ## GPU quota rules
 - Test new code on a CPU session first; GPU only for proven code.
 - Models and wheels come from private Kaggle datasets (no download time on GPU).
