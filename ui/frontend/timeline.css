@@ -173,3 +173,5 @@ body[data-view="timeline"] #tlcard { flex:1; }
 #opts .views .tab { justify-content:center; height:34px; font-size:13.5px; }
 body[data-view="preview"] #tlcard, body[data-view="timeline"] #center { display:none; }
 #main #tlcard { width:auto; max-width:none; margin:0; flex:none; }
+.pagetabs { padding:24px 28px 0; }
+#main { padding:24px 28px 24px; }

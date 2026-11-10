@@ -23,3 +23,4 @@ button:active:not(:disabled) { transform: translateY(0) scale(.97); }
 .pagetabs { animation: fade-up .4s var(--ease) both; }
 
 .views { animation: fade-up .4s var(--ease) both; }
+.pagetabs { padding: 24px 28px 0; }
