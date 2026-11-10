@@ -164,14 +164,22 @@ function setEdit(on) {
 
 // ---- "Scene N - Assets" strip under the preview ----
 const GROUP = (b) => (b.kind === "stamp" ? "graphics" : isVid(b) ? "video" : "images");
+function settleBox(f) {  // still frame with every element in place (what editing needs); nothing plays until Play is pressed
+  try {
+    const w = f.contentWindow, t = w.__timelines.root;
+    t.pause();
+    t.seek(Math.min(w.__settle ? w.__settle() : 0, t.duration()), false);
+  } catch { /* frame not ready */ }
+}
 function sceneControls() {  // Play / Stop of the selected scene; they sit in the header of the card next to the Scene tab
   const tl = () => { try { return document.querySelector("#info .scenebox iframe").contentWindow.__timelines.root; } catch { return null; } };
   const ctl = el("div", "scctl");
   ctl.append(
     Object.assign(el("button", "ic", "▶ Play"), { title: "Play this scene (with its narration)", onclick: () => {
-      const cur = st.cur; st.stopAt = cur.end; seek(cur.start); aud.play(); const x = tl(); if (x) x.repeat(-1).repeatDelay(0.8).play(0); } }),
-    Object.assign(el("button", "ic", "■ Stop"), { title: "Stop and go back to the start of this scene", onclick: () => {
-      const cur = st.cur; st.stopAt = 0; aud.pause(); seek(cur.start); const x = tl(); if (x) { x.pause(); x.seek(0, false); } } }),
+      const cur = st.cur, f = document.querySelector("#info .scenebox iframe"); st.stopAt = cur.end; seek(cur.start); aud.play();
+      const x = tl(); if (x) { x.pause(); x.repeat(0).eventCallback("onComplete", () => settleBox(f)); x.play(0); } } }),
+    Object.assign(el("button", "ic", "■ Stop"), { title: "Stop (the picture stays as the finished frame)", onclick: () => {
+      const cur = st.cur, f = document.querySelector("#info .scenebox iframe"); st.stopAt = 0; aud.pause(); seek(cur.start); if (f) settleBox(f); } }),
     Object.assign(el("button", "ic", "Edit"), { title: "Edit this scene's layers (move, resize, rotate)", onclick: () => { setView("preview"); setEdit(true); ed.tab = "edit"; } }),
     Object.assign(el("button", "ic", "Save"), { title: "Save this scene's edits now", onclick: async (ev) => {
       const b = ev.currentTarget, t = b.textContent; b.textContent = "Saving..."; clearTimeout(ed.timer); await save(); b.textContent = "Saved ✓"; setTimeout(() => (b.textContent = t), 1500); } }),
@@ -253,7 +261,7 @@ function sceneBox() {  // the selected scene's own build, looping, scaled to fit
   const f = el("iframe");
   f.setAttribute("scrolling", "no");
   f.style.cssText = `width:${W}px;height:${H}px;transform:scale(${k})`;
-  f.onload = () => { try { f.contentWindow.__timelines.root.repeat(-1).repeatDelay(0.8).play(0); } catch { /* static frame */ } };
+  f.onload = () => settleBox(f);  // stands still (settled) until Play
   f.src = url(m.dir + "/index.html");
   const hint = el("div", "sbhint", "Click to edit layers");
   box.append(f, hint);
