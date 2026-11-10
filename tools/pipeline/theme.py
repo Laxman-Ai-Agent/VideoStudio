@@ -44,6 +44,7 @@ SHADOWS = {"none", "soft", "hard", "glow"}
 TEXT_IN = {"pop", "rise", "blur", "slide", "mask", "type", "fade"}
 CAMERA = {"drift", "push", "pull", "tilt", "still"}
 TRANSITIONS = {"blur", "wipe", "zoom", "circle", "slide", "dip", "flash", "cut"}
+TITLE_STYLES = {"plain", "split", "italic", "shadow", "outline", "caps"}  # big titles, like type-specimen cards
 CAPTION_STYLES = {"box", "marker", "underline", "pop"}  # spoken-word look; no card behind captions (2026-11-10)
 CAPTION_DEFAULT = {"style": "box", "font": "body"}
 MOTION_DEFAULT = {"text_in": "pop", "camera": "drift", "transitions": []}  # [] = brand.json list
@@ -156,6 +157,9 @@ def validate(spec: ThemeSpec, fonts_dir: Path = FONTS) -> ThemeSpec:
     if text["shadow"] not in SHADOWS:
         issues.append(f"text.shadow {text['shadow']!r} unsupported -> none")
         text["shadow"] = "none"
+    if text.get("title_style", "plain") not in TITLE_STYLES:
+        issues.append(f"text.title_style {text['title_style']!r} unsupported -> plain")
+        text["title_style"] = "plain"
     text["tracking"] = min(0.2, max(-0.05, float(text["tracking"] or 0)))
     text["scale"] = min(1.5, max(0.8, float(text["scale"] or 1)))
     text["outline"] = min(0.5, max(0.0, float(text.get("outline") or 0)))

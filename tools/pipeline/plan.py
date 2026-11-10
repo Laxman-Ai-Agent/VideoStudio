@@ -10,7 +10,7 @@ from pathlib import Path
 from .config import BRAND, ROOT
 from .contracts import ScenePlan, Transcript
 from .identity import memory_md
-from .theme import CAPTION_STYLES, CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
+from .theme import TITLE_STYLES, CAPTION_STYLES, CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
 
 RULES = ROOT / ".claude" / "skills" / "my-editor" / "rules.md"
 END_SLACK = 1.0  # last scene must end within this many seconds of the audio end
@@ -47,7 +47,9 @@ def write_brief(project: Path, transcript: Transcript, out: Path) -> None:
 ## Contract (tools/pipeline/contracts.py: ScenePlan, validated on the next run)
 - Scenes back to back: first starts at 0, each starts where the previous ends, last ends at {transcript.duration:.2f}.
 - ids 1..n. visual_type one of: photo, footage, screenshot, logo, chart, map, motion_graphic, diagram, text.
-- on_screen_text: 0-4 words. `query`: concrete, searchable description of the visual (English).
+- on_screen_text: 0-4 words, ENGLISH only (highlight words; user 2026-11-10), also in `lines` / `kicker`; Telugu stays in the captions.
+  Optional `params.kicker`: a small tracked label above a big title (e.g. "AI TOOLS").
+  Titles mostly ONE size (whole phrase big); a small line + huge word (`lines` with m + xxl) only sometimes. `query`: concrete, searchable description of the visual (English).
 - `asset`: a path from "Assets" below when one fits, else null.
 - Cut at phrase boundaries. Aim for 2-4 s per scene.
 - One plan is rendered in every format in brand.json (16:9 and 9:16): pick visuals whose subject survives a centre crop.
@@ -70,7 +72,9 @@ QA fails a final above it). Consistent inside this video, readable always, quali
  "fonts": {{"heading", "body", "hero", "script"}} (folders in _brand/fonts: {", ".join(font_list)}),
  "colors": {{"background", "text", "text2", "accent", "highlight", "panel", "capbg"}}, "background": {{"type": solid|linear|radial,
  "colors", "angle", "pattern": none|grid|dots|lines, "texture": none|grain|paper|smoke|particles|stars, ..._opacity}},
- "text": {{"heading_weight", "shadow": none|soft|hard|glow, "tracking", "scale"}},
+ "text": {{"heading_weight", "shadow": none|soft|hard|glow, "tracking", "scale", "title_style": {"|".join(sorted(TITLE_STYLES))}
+          (big titles like type-specimen cards: split = light + heavy accent last word, italic = serif italic accent,
+          shadow = hard accent offset, outline = hollow last word, caps)}},
  "motion": {{"text_in": {"|".join(sorted(TEXT_IN))}, "camera": {"|".join(sorted(CAMERA))},
             "transitions": [2-3 of {"|".join(sorted(TRANSITIONS))}] (subtle ones for normal story; flash/zoom only
             where the story needs drama, set per scene with `params.transition`)}},

@@ -88,3 +88,10 @@ def test_title_goes_to_the_calm_part_of_the_picture(tmp_path):
 def test_caption_style_is_validated():
     t = th.validate(ThemeSpec(name="x", colors={}, fonts={}, captions={"style": "card"}))
     assert t.captions == {"style": "box", "font": "body"} and any("captions.style" in i for i in t.issues)
+
+
+def test_title_style_is_validated_and_styled():
+    t = th.validate(ThemeSpec(name="x", colors={}, fonts={}, text={"title_style": "wavy"}))
+    assert t.text["title_style"] == "plain" and any("title_style" in i for i in t.issues)
+    css = (TOOLS / "templates" / "_shared" / "studio.css").read_text("utf-8")
+    assert all(f".ts-{s} " in css for s in th.TITLE_STYLES - {"plain"})  # every style has CSS

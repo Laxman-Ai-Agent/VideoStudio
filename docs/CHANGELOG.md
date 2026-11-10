@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-10 · Specimen-style English titles
+- Theme `text.title_style` plain|split|italic|shadow|outline|caps (like type-specimen cards; the last word carries the contrast) on photo zone titles, lottie / headline / cards titles and kinetic hero lines; `params.kicker` small tracked label above a big title. Lottie title 9u -> 12u.
+- Rule: highlight words (on_screen_text, lines, kicker) in English only; Telugu stays in the captions.
+- 09: Playfair Display 800, italic coral last word, English texts + kickers, titles mostly one size. Caption box now grows 0.06 s before the word (a short word showed one white frame on the light page).
+
 ## 2026-11-10 · Captions without a card, big photo titles in the calm part of the picture
 - Captions: card background removed (white + dark outline); spoken word styles box / marker / underline / pop from the theme's new `captions` field (default box), part of the similarity score (replaces text shadow).
 - `pipeline/textzone.py`: calmest zone of a photo -> `scene.zone`; photo template puts the title there, big, heading font, white or dark by tone.

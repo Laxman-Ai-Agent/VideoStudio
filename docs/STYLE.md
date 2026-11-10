@@ -47,4 +47,7 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
 - Transitions subtle for normal story, dramatic (flash, zoom) only where the moment needs it. Captions small and readable.
 - Captions (user, 2026-11-10): no card behind them; the spoken word gets a colour (box in the accent colour,
   highlighter, underline or colour pop), a different caption style per video.
+- Titles like type-specimen cards (user samples 2026-11-10): one designed English heading per screen (light + heavy
+  mix, serif italic accent, hard offset shadow, hollow word, caps, small tracked kicker), style chosen per video.
+  Highlight words are English only; Telugu lives in the captions.
 - Photo titles: big and bold, placed in the empty part of the picture, never a small panel.

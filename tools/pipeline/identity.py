@@ -45,7 +45,8 @@ def similarity(a: ThemeSpec, b: ThemeSpec, brand_transitions=()) -> tuple[float,
     parts = {  # weights sum to 1
         "heading font": (0.18, eq(a.fonts.get("heading"), b.fonts.get("heading"))),
         "body font": (0.10, eq(a.fonts.get("body"), b.fonts.get("body"))),
-        "hero font": (0.05, eq(hero(a), hero(b))),
+        "hero font / title style": (0.05, eq(hero(a), hero(b)) * 0.5
+                                    + 0.5 * eq(a.text.get("title_style", "plain"), b.text.get("title_style", "plain"))),
         "accent colour": (0.15, _colour_close(a.colors.get("accent", ""), b.colors.get("accent", ""))),
         "background colour": (0.10, _colour_close(a.colors.get("background", ""), b.colors.get("background", ""))),
         "background style": (0.10, sum(eq(a.background.get(k), b.background.get(k))

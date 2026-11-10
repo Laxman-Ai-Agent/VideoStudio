@@ -54,6 +54,7 @@
   Object.entries(vars).forEach(([k, v]) => r.setProperty(k, v));
   html.add(S.h > S.w ? "portrait" : "landscape", "theme-" + (S.theme || "dark"), light ? "tone-light" : "tone-dark");
   if (P.look) html.add("look-" + P.look);
+  html.add("ts-" + (TX.title_style || "plain"));
   window.U = u;
 
   const markWords = P.marker === true ? null : [].concat(P.marker || []).map(String);
@@ -127,7 +128,8 @@
           s.style.backgroundImage = `linear-gradient(${bgc}, ${bgc})`;
           s.style.backgroundSize = "0% " + size.split(" ")[1];
           const sh = getComputedStyle(el).textShadow;
-          tl.to(s, { backgroundSize: size, duration: 0.08, ease: "power1.out" }, w.s);
+          // the box is full by the time the word turns white (else one white frame on a light page)
+          tl.to(s, { backgroundSize: size, duration: 0.06, ease: "power1.out" }, Math.max(0, w.s - 0.06));
           if (kind !== "underline") tl.set(s, { color: ink(bgc), textShadow: "none" }, w.s);
           tl.set(s, { backgroundSize: "0% " + size.split(" ")[1], color: base, textShadow: sh }, off);
         }
@@ -294,6 +296,14 @@
       document.getElementById("root").insertBefore(d, document.querySelector("#root .safe"));
     }
     scaleText();
+    const big = document.querySelector("#t.zone, #wrap > #t, .card > #t, #col > #t");
+    if (P.kicker && big && big.textContent) {  // small tracked label above the big title (params.kicker)
+      const k = document.createElement("span");
+      k.className = "kick";
+      k.textContent = P.kicker;
+      big.prepend(k);
+      tl.fromTo(k, { opacity: 0, letterSpacing: ".5em" }, { opacity: 0.85, letterSpacing: ".28em", duration: 0.6, ease: "power2.out" }, 0.15);
+    }
     L.centreInk();
     marks(tl);
     L.logoGrid(tl);

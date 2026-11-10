@@ -15,8 +15,8 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 /* big title in the calm part of a photo (photo template, S.zone from textzone.py): no panel, contrast by tone */
 .zone { position: absolute; margin: 0; font-family: var(--font-head); font-weight: var(--hw); line-height: 1.12;
         letter-spacing: var(--tracking); color: #FFFFFF; z-index: 4;
-        text-shadow: 0 0 calc(var(--u) * 2) rgba(0,0,0,.45), 0 calc(var(--u) * .3) calc(var(--u) * .9) rgba(0,0,0,.6); }
-.zone-light { color: #141414; text-shadow: 0 0 calc(var(--u) * 2) rgba(255,255,255,.55); }
+      }  /* shadows: :root #t.zone at the end (beats the theme text-shadow rule) */
+.zone-light { color: #141414; }
 .zone-right, .zone-top-right, .zone-bottom-right { text-align: right; }
 .zone-top, .zone-upper-middle, .zone-lower { text-align: center; }
 .zone:empty { display: none; }
@@ -126,3 +126,17 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 /* callout label (marks type "callout") */
 .tag.callout { z-index: 6; font-size: calc(var(--u) * 4.2); white-space: nowrap; }
 .ovl.depth { z-index: 0; max-width: none; }
+
+/* ---- big titles (photo zone, lottie, headline, cards, kinetic hero): legibility on photos + the video's
+   title style (theme text.title_style, like type-specimen cards; the last word carries the contrast) ---- */
+:root #t.zone { text-shadow: 0 0 calc(var(--u) * 2) rgba(0,0,0,.45), 0 calc(var(--u) * .3) calc(var(--u) * .9) rgba(0,0,0,.6); }
+:root #t.zone-light { text-shadow: 0 0 calc(var(--u) * 2) rgba(255,255,255,.55); }
+.kick { display: block; font-family: var(--font); font-size: max(.2em, calc(var(--u) * 1.8)); font-weight: 600; letter-spacing: .28em;
+        text-transform: uppercase; opacity: .85; margin-bottom: .5em; font-style: normal; -webkit-text-fill-color: currentColor; }
+.ts-split :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) { font-weight: 300; }
+.ts-split :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) .word:last-of-type { font-weight: 900; color: var(--accent); }
+.ts-italic :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) .word:last-of-type { font-style: italic; color: var(--accent); }
+.ts-shadow :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) { text-shadow: .05em .05em 0 var(--accent); }
+.ts-outline :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) .word:last-of-type {
+  -webkit-text-fill-color: transparent; -webkit-text-stroke: .03em currentColor; }
+.ts-caps :is(#t.zone, #wrap > #t, .card > #t, #col > #t, .ln.st-hero) { text-transform: uppercase; letter-spacing: .03em; }
