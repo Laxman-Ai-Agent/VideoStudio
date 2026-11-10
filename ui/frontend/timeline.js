@@ -54,7 +54,8 @@ function drawList() {
     tx.append(el("b", "", `${s.id}. ${(s.on_screen_text || "").split("\n")[0].slice(0, 28) || k.label}`), el("span", "", `${fmt(s.start)} – ${fmt(s.end)} (${(s.end - s.start).toFixed(1)}s)`));
     b.append(tx, el("span", "badge", k.label.replace(/^./, (c) => c.toUpperCase())),
              Object.assign(el("i", "ok" + (bad ? " e" : w.length ? " w" : ""), bad || w.length ? "!" : "✓"), { title: w.join("\n") || "OK" }));
-    b.onclick = () => seek(s.start + 0.01);
+    b.title = `${s.id}. ${(s.on_screen_text || "").split(String.fromCharCode(10))[0] || k.label}  ·  ${fmt(s.start)} – ${fmt(s.end)}  ·  click to edit`;
+    b.onclick = () => { seek(s.start + 0.01); openEditor(); };  // a tile is just the picture: click opens it in the editor
     const ed1 = Object.assign(el("span", "scedit", "Edit"), { role: "button", title: "Open this scene big with all edit options" });
     ed1.onclick = (e) => { e.stopPropagation(); seek(s.start + 0.01); openEditor(); };
     b.append(ed1);
