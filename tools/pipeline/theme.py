@@ -1,7 +1,9 @@
 """theme stage: one visual identity per video -> work/theme.json (reused on every run and resume).
 
-Only text colours, fonts, text panels, background colour/gradient/pattern/texture and text
-outline/shadow. Layouts, motion, transitions and audio are not touched.
+Text colours, fonts, text panels, background colour/gradient/pattern/texture, text outline/shadow,
+and the motion language (`motion`: text animation, transition set, camera move). Layouts are per scene.
+Creative direction (2026-11-10): for a new video Claude writes the project theme.json (preset + overrides
++ `motion` + `direction`) so every video gets its own look; identity.py compares it with earlier videos.
 
 Selection, first hit wins:
 1. project `theme.json` with `"preset": "<name>"` (manual), plus optional overrides
@@ -38,6 +40,11 @@ BG_TYPES = {"solid", "linear", "radial", "multi"}
 PATTERNS = {"none", "grid", "dots", "lines"}
 TEXTURES = {"none", "grain", "paper", "smoke", "particles", "stars"}
 SHADOWS = {"none", "soft", "hard", "glow"}
+# motion: studio.js / photo template implement each value; {} on a theme = the look before 2026-11-10
+TEXT_IN = {"pop", "rise", "blur", "slide", "mask", "type", "fade"}
+CAMERA = {"drift", "push", "pull", "tilt", "still"}
+TRANSITIONS = {"blur", "wipe", "zoom", "circle", "slide", "dip", "flash", "cut"}
+MOTION_DEFAULT = {"text_in": "pop", "camera": "drift", "transitions": []}  # [] = brand.json list
 SYSTEM_FONT_DIRS = [Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts",
                     Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "Windows" / "Fonts"]
 
@@ -165,7 +172,17 @@ def validate(spec: ThemeSpec, fonts_dir: Path = FONTS) -> ThemeSpec:
         if f != SAFE_FONT and not (fonts_dir / f).is_dir():
             issues.append(f"fonts.{role} {f!r} is not from _brand/fonts: Telugu glyphs not checked "
                           f"(Telugu text falls back to {SAFE_FONT})")
-    return spec.model_copy(update={"colors": colors, "background": bg, "text": text, "fonts": fonts,
+    motion = dict(spec.motion)
+    for k, allowed in (("text_in", TEXT_IN), ("camera", CAMERA)):
+        if k in motion and motion[k] not in allowed:
+            issues.append(f"motion.{k} {motion[k]!r} unsupported -> {MOTION_DEFAULT[k]}")
+            motion[k] = MOTION_DEFAULT[k]
+    if "transitions" in motion:
+        bad = [t for t in motion["transitions"] if t not in TRANSITIONS]
+        if bad:
+            issues.append(f"motion.transitions {bad} unsupported -> dropped")
+        motion["transitions"] = [t for t in motion["transitions"] if t in TRANSITIONS]
+    return spec.model_copy(update={"colors": colors, "background": bg, "text": text, "fonts": fonts, "motion": motion,
                                    "issues": spec.issues + issues})
 
 
@@ -182,10 +199,12 @@ def build(text: str, override: dict | None = None, table: dict | None = None,
     if ov.get("preset") and ov["preset"] not in table:
         source = f"auto (unknown preset {ov['preset']!r})"
     base = table.get(name) or {"name": name}
-    merged = _merge(base, {k: ov[k] for k in ("colors", "fonts", "background", "text", "category") if k in ov})
+    merged = _merge(base, {k: ov[k] for k in ("colors", "fonts", "background", "text", "category", "motion", "direction")
+                              if k in ov})
     spec = ThemeSpec(name=name, category=merged.get("category", ""), source=source, scores=scores,
                      colors=merged.get("colors", {}), fonts=merged.get("fonts", {}),
-                     background=merged.get("background", {}), text=merged.get("text", {}))
+                     background=merged.get("background", {}), text=merged.get("text", {}),
+                     motion=merged.get("motion", {}), direction=merged.get("direction", {}))
     return validate(spec, fonts_dir)
 
 
@@ -214,3 +233,16 @@ def theme_text(project: Path) -> str:
             parts += [f"{s.get('query', '')} {s.get('narration', '')} {s.get('on_screen_text', '')}" for s in d.get("scenes", [])]
     parts.append(project.name.replace("_", " "))
     return " ".join(parts)
+
+
+def transitions(plan, brand, theme: ThemeSpec | None = None) -> dict[int, tuple[str, str]]:
+    """Scene id -> (in, out). Cut k (scene k -> k+1) uses scene k+1's `params.transition`, else the
+    video's `motion.transitions` (else brand.json's list) cycled; both sides of a cut get the same type
+    so out + in read as one move."""
+    out = {s.id: ["", ""] for s in plan.scenes}
+    cycle = [t for t in ((theme.motion.get("transitions") if theme else None) or brand.transitions) if t in TRANSITIONS]
+    for k, (a, b) in enumerate(zip(plan.scenes, plan.scenes[1:])):
+        t = str(b.params.get("transition") or (cycle[k % len(cycle)] if cycle else "cut"))
+        t = "" if t not in TRANSITIONS or t == "cut" else t
+        out[a.id][1] = out[b.id][0] = t
+    return {k: tuple(v) for k, v in out.items()}

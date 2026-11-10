@@ -257,13 +257,17 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
     # QA on every assembled file -> work/qa.json; previews are always exported, finals only on pass
     from pipeline.contracts import QAReport
     from pipeline.qa import check
+    from pipeline import identity
     qa_json = w / "qa.json"
+    looks = (identity.identity_check(p, theme, brand.transitions, final),
+             identity.variety_check(plan, rnd.transitions(plan, brand, theme), final))
 
     def qa():
-        files = [check(o, audio, c, h, final, p) for o, c, h in assembled]
+        files = [check(o, audio, c, h, final, p, looks) for o, c, h in assembled]
         atomic_write(qa_json, QAReport(mode=mode, files=files).model_dump_json(indent=2))
 
-    run_stage(p, "qa", [o for o, _, _ in assembled] + [audio], [qa_json], qa, extra=mode)
+    run_stage(p, "qa", [o for o, _, _ in assembled] + [audio], [qa_json], qa,
+              extra=mode + "|" + "|".join(x.model_dump_json() for x in looks))
     report = QAReport.model_validate_json(qa_json.read_text("utf-8"))
     qa_failed = False
     for f in report.files:
@@ -367,6 +371,15 @@ def theme_command(project: Path, preset: str | None, auto: bool) -> int:
     print(f"  colours: " + ", ".join(f"{k} {v}" for k, v in t.colors.items()))
     print(f"  background: {t.background['type']} {t.background['colors']}, pattern {t.background['pattern']}, "
           f"texture {t.background['texture']}")
+    print(f"  motion: {t.motion or 'default (pop, drift, brand transitions)'}")
+    if t.direction:
+        print(f"  direction: {t.direction}")
+    from pipeline import identity
+    bt = Brand.model_validate_json((BRAND / "brand.json").read_text("utf-8")).transitions
+    for name, prev in identity.previous(project):
+        score, shared = identity.similarity(t, prev, bt)
+        print(f"  vs {name}: {score:.0%} alike" + (f" (shared: {', '.join(shared)})" if shared else ""))
+    print(f"  {identity.identity_check(project, t, bt).detail}")
     for i in t.issues:
         print(f"  fallback: {i}")
     print(f"  saved: {project / 'work' / 'theme.json'}  (overrides: {manual})")

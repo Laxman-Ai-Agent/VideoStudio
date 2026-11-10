@@ -9,10 +9,11 @@
 //   bg_level: 0..1                                  background pattern/texture intensity for this scene
 // Video theme (work/theme.json via render): S.style.background {type, colors, angle, pattern, pattern_opacity,
 //   texture, texture_opacity}, S.style.text {heading_weight, body_weight, shadow, tracking, scale},
-//   S.fonts {heading, telugu (body), latin (body), script}.
+//   S.fonts {heading, telugu (body), latin (body), script}, S.style.motion {text_in, camera, transitions}
+//   (the video's motion language, theme.py TEXT_IN / CAMERA / TRANSITIONS; missing = pop / drift).
 (function () {
   const S = window.SCENE, P = S.params || {}, C = S.colors || {};
-  const ST = S.style || {}, BG = ST.background || {}, TX = ST.text || {};
+  const ST = S.style || {}, BG = ST.background || {}, TX = ST.text || {}, MO = ST.motion || {};
   const r = document.documentElement.style, html = document.documentElement.classList;
   const u = Math.min(S.w, S.h) / 100;  // 1u = 1% of the short side, so layouts scale to any size
   // safe areas as fractions of width/height; 9:16 keeps clear of the Shorts/Reels UI top and bottom
@@ -57,6 +58,16 @@
 
   const markWords = P.marker === true ? null : [].concat(P.marker || []).map(String);
   // Kinetic text: one span per word (spaces only, so Telugu conjuncts stay whole), staggered pop-in.
+  const bl = k => `blur(${(u * k).toFixed(1)}px)`;
+  const TEXT_IN = {  // word entrance per video (theme motion.text_in): [from, to]
+    pop: [{ opacity: 0, y: u * 4, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(2)" }],
+    rise: [{ opacity: 0, y: u * 6 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }],
+    blur: [{ opacity: 0, filter: bl(1.2), scale: 1.04 }, { opacity: 1, filter: bl(0), scale: 1, duration: 0.45, ease: "power2.out" }],
+    slide: [{ opacity: 0, x: -u * 5 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }],
+    mask: [{ clipPath: "inset(-30% -10% 130% -10%)", y: u * 2 }, { clipPath: "inset(-30% -10% -30% -10%)", y: 0, duration: 0.45, ease: "power3.out" }],
+    type: [{ opacity: 0 }, { opacity: 1, duration: 0.04, ease: "none" }],
+    fade: [{ opacity: 0 }, { opacity: 1, duration: 0.6, ease: "sine.out" }],
+  };
   window.kinetic = function (el, text, tl, at, step) {
     el.textContent = "";
     const words = (text || "").split(/\s+/).filter(Boolean);
@@ -66,8 +77,8 @@
       s.textContent = w;
       el.appendChild(s);
       if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
-      const t = at + i * (step || 0.12);
-      tl.fromTo(s, { opacity: 0, y: u * 4, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(2)" }, t);
+      const t = at + i * (step || 0.12), [from, to] = TEXT_IN[MO.text_in] || TEXT_IN.pop;
+      tl.fromTo(s, { ...from }, { ...to }, t);
       const bare = w.replace(/[.,!?;:"'“”‘’]/g, "");
       if (P.marker && (markWords ? markWords.includes(bare) : i === words.length - 1)) {
         s.classList.add("mk");
@@ -234,10 +245,23 @@
     const blur = k => `blur(${(u * k).toFixed(1)}px)`, open = "circle(75% at 50% 50%)", shut = "circle(0% at 50% 50%)";
     const IN = { blur: [{ filter: blur(2), scale: 1.06 }, { filter: blur(0), scale: 1 }],
                  zoom: [{ filter: blur(1.5), scale: 0.82 }, { filter: blur(0), scale: 1 }],
-                 circle: [{ clipPath: shut }, { clipPath: open }] };
+                 circle: [{ clipPath: shut }, { clipPath: open }],
+                 slide: [{ xPercent: 12, opacity: 0 }, { xPercent: 0, opacity: 1 }],
+                 dip: [{ opacity: 0 }, { opacity: 1 }], flash: [{ scale: 1.08 }, { scale: 1 }] };
     const OUT = { blur: [{ filter: blur(0), scale: 1 }, { filter: blur(2), scale: 1.06 }],
                   zoom: [{ filter: blur(0), scale: 1 }, { filter: blur(1.5), scale: 1.25 }],
-                  circle: [{ clipPath: open }, { clipPath: shut }] };
+                  circle: [{ clipPath: open }, { clipPath: shut }],
+                  slide: [{ xPercent: 0, opacity: 1 }, { xPercent: -12, opacity: 0 }],
+                  dip: [{ opacity: 1 }, { opacity: 0 }], flash: [{ scale: 1 }, { scale: 1.08 }] };
+    if (tin === "flash" || tout === "flash") {  // dramatic: a white flash over the cut (use sparingly)
+      const f = document.createElement("div");
+      f.className = "flash";
+      root.appendChild(f);
+      tl.set(f, { opacity: 0 }, 0);
+      if (tin === "flash") tl.fromTo(f, { opacity: 0.9 }, { opacity: 0, duration: TIN, ease: "power2.out" }, 0);
+      if (tout === "flash") tl.fromTo(f, { opacity: 0 }, { opacity: 0.9, duration: TOUT, ease: "power2.in", immediateRender: false },
+                                      Math.max(TIN, d - TOUT));
+    }
     if (IN[tin]) tl.fromTo(wrap, IN[tin][0], { ...IN[tin][1], duration: TIN, ease: "power2.out" }, 0);
     if (tin === "wipe") tl.fromTo(panel, { xPercent: 0 }, { xPercent: 101, duration: TIN, ease: "power2.in" }, 0);
     const at = Math.max(TIN, d - TOUT);

@@ -32,8 +32,15 @@
     tl.fromTo("#img", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 0);
     tl.to("#img", { scale: 1.05, duration: Math.max(0.1, S.duration - 0.45), ease: "none" }, 0.45);
   } else {
+    // camera move: params.pan (per scene) wins, else the video's motion.camera (theme), else drift
+    const cam = p.pan ? "drift" : ((S.style || {}).motion || {}).camera || "drift", z = p.zoom || 1.12;
     const pan = p.pan || ["left", "right"][S.id % 2], dx = pan === "none" ? 0 : (pan === "left" ? -1 : 1) * U * 3;
-    tl.fromTo("#img", { scale: 1.0, x: -dx }, { scale: p.zoom || 1.12, x: dx, duration: S.duration, ease: "none" }, 0);
+    const CAM = { drift: [{ scale: 1.0, x: -dx }, { scale: z, x: dx, ease: "none" }],
+                  push: [{ scale: 1.0 }, { scale: z + 0.04, ease: "sine.inOut" }],
+                  pull: [{ scale: z + 0.04 }, { scale: 1.0, ease: "sine.out" }],
+                  tilt: [{ scale: 1.1, y: -U * 2.5 }, { scale: 1.1, y: U * 2.5, ease: "sine.inOut" }],
+                  still: [{ scale: 1.02 }, { scale: 1.04, ease: "none" }] }[cam] || [{}, {}];
+    tl.fromTo("#img", CAM[0], { ...CAM[1], duration: S.duration }, 0);
     tl.fromTo("#img", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
   }
   kinetic(document.getElementById("t"), S.text, tl, 0.3);

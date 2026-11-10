@@ -1,4 +1,5 @@
-"""qa stage: loudness, true peak, black/frozen frames, length vs narration, scene clips present.
+"""qa stage: loudness, true peak, black/frozen frames, length vs narration, scene clips present, plus the
+look checks from identity.py (distinct from earlier videos, no repeated visual type / transition runs).
 Writes work/qa.json; studio exports to output/ (final only when every check passed)."""
 import re
 import subprocess
@@ -29,7 +30,8 @@ def video_events(f: Path) -> tuple[list[str], list[str]]:
 
 
 def check(video: Path, narration: Path, clips: list[Path], placeholders: list[int], final: bool,
-          rel_to: Path) -> QAFile:
+          rel_to: Path, extra: tuple[QACheck, ...] = ()) -> QAFile:
+    """extra: video-level checks computed once by studio (identity, variety, see identity.py)."""
     c = []
     m = measure(video)
     i, tp = float(m["input_i"]), float(m["input_tp"])
@@ -46,4 +48,5 @@ def check(video: Path, narration: Path, clips: list[Path], placeholders: list[in
     c.append(QACheck(name="clips", status="fail" if gone else "ok", detail=f"missing: {gone}" if gone else f"{len(clips)} present"))
     c.append(QACheck(name="placeholders", status=("fail" if final else "warn") if placeholders else "ok",
                      detail=f"scenes {placeholders} are MISSING/failed tiles" if placeholders else "none"))
+    c.extend(extra)
     return QAFile(file=video.relative_to(rel_to).as_posix(), passed=all(x.status != "fail" for x in c), checks=c)

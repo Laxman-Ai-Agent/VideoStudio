@@ -13,15 +13,16 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
                    border-bottom: calc(var(--u) * 0.8) solid var(--accent); font-size: calc(var(--u) * 8); }
 .lower:empty { display: none; }
 .shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0) 45%); }
-/* captions overlay (studio.js): bottom third inside the safe area; lower thirds move above it */
-.captions { position: absolute; left: var(--sl); right: var(--sr); bottom: var(--sb); height: calc(var(--u) * 15);
+/* captions overlay (studio.js): a slim band at the bottom of the safe area (2026-11-10: ~50% smaller,
+   user: big captions covered the visuals); lower thirds move above it */
+.captions { position: absolute; left: var(--sl); right: var(--sr); bottom: var(--sb); height: calc(var(--u) * 8);
             display: flex; align-items: flex-end; justify-content: center; text-align: center; pointer-events: none; }
-.cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 800; font-size: calc(var(--u) * 5.2 * var(--tscale, 1));
-            line-height: 1.3; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9);
-            background: var(--capbg); border-radius: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.6); }
-.portrait .cap-page { font-size: calc(var(--u) * 6.4 * var(--tscale, 1)); }
+.cap-page { position: absolute; bottom: 0; max-width: 100%; font-weight: 700; font-size: calc(var(--u) * 2.9 * var(--tscale, 1));
+            line-height: 1.35; letter-spacing: .01em; text-shadow: 0 0 calc(var(--u) * .6) #000, 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(0,0,0,.9);
+            background: var(--capbg); border-radius: calc(var(--u) * 1); padding: calc(var(--u) * .25) calc(var(--u) * 1.2); }
+.portrait .cap-page { font-size: calc(var(--u) * 3.6 * var(--tscale, 1)); }
 .cap-word { transform-origin: 50% 70%; margin: 0 .12em; }  /* the hot word grows; Telugu fonts have narrow spaces */
-.has-captions .safe { bottom: calc(var(--sb) + var(--u) * 16); }
+.has-captions .safe { bottom: calc(var(--sb) + var(--u) * 9); }
 
 /* ---- paper theme (brand.json "theme": "paper"): light page, dark ink, softer photo shade ---- */
 .tone-light .shade { background: linear-gradient(to top, rgba(0,0,0,.25), rgba(0,0,0,0) 35%); }
@@ -57,6 +58,7 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
 /* ---- transitions (studio.js): the frame wrapper and the accent wipe panel ---- */
 .tx { position: absolute; inset: 0; transform-origin: 50% 50%; }
 .wipe { position: absolute; inset: 0; background: var(--accent); z-index: 20; }
+.flash { position: absolute; inset: 0; background: #fff; z-index: 21; pointer-events: none; }
 
 /* ---- per-video theme (work/theme.json; studio.js sets the variables) ---- */
 .grid, .logo-grid { background-image: var(--pat-img) !important; background-size: var(--pat-size) !important;

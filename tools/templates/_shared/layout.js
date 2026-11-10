@@ -12,8 +12,9 @@ window.studioLayout = function (env) {
     for (let e = el; e && e.id !== "root"; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
     return { x, y, w: el.offsetWidth, h: el.offsetHeight };
   }
+  const CAP_BAND = 9;  // caption band height in u, matches .has-captions .safe in studio.css
   const capBand = () => ((S.captions || []).length
-    ? [{ x: safe.l * S.w, y: S.h * (1 - safe.b) - u * 16, w: S.w * (1 - safe.l - safe.r), h: u * 16 }] : []);
+    ? [{ x: safe.l * S.w, y: S.h * (1 - safe.b) - u * CAP_BAND, w: S.w * (1 - safe.l - safe.r), h: u * CAP_BAND }] : []);
   const textBoxes = () => [...document.querySelectorAll(TEXT)]
     .filter(e => e.offsetWidth && e.textContent.trim()).map(boxOf).concat(capBand());
   const overlap = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
@@ -120,7 +121,7 @@ window.studioLayout = function (env) {
   }
   const add = (el, o, kind, place) => { el.dataset.eid = o.id || ""; reg.push({ el, o, kind, place }); };
   const area = () => ({ x: safe.l * S.w, y: safe.t * S.h, w: S.w * (1 - safe.l - safe.r),
-                        h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * 16 : 0) });
+                        h: S.h * (1 - safe.t - safe.b) - ((S.captions || []).length ? u * CAP_BAND : 0) });
   function placeOverlays() {
     const a = area(), busy = textBoxes().concat(panels);
     placed.forEach(([el, o, bd]) => {
@@ -144,7 +145,7 @@ window.studioLayout = function (env) {
   const SUBJECT = ["character_expression", "reaction"];
   const isSubject = o => SUBJECT.includes(o.kind) && document.querySelector("#root .fill") && !html.contains("logo-mode");
   function subjectPanel(tl, o, at) {
-    const bottom = S.h * (1 - safe.b) - ((S.captions || []).length ? u * 16 : 0), w = bottom * 9 / 16;
+    const bottom = S.h * (1 - safe.b) - ((S.captions || []).length ? u * CAP_BAND : 0), w = bottom * 9 / 16;
     const rect = side => ({ x: side === "right" ? S.w - w : 0, y: 0, w, h: bottom });
     const pref = (o.cx === undefined || o.cx >= 0.4) ? (o.cx > 0.6 ? "left" : "right") : "right";
     const texts = textBoxes().filter(b => b.y + b.h < bottom);

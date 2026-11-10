@@ -19,6 +19,7 @@ from .config import BRAND, ENGINES, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
                         TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
+from .theme import TRANSITIONS, transitions  # noqa: F401  (moved to theme.py 2026-11-10; render.transitions kept)
 
 TEMPLATES = TOOLS / "templates"
 SHARED = TEMPLATES / "_shared"
@@ -100,21 +101,6 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
     return "screenshot" if scene.visual_type == "screenshot" else "photo"
 
 
-TRANSITIONS = {"blur", "wipe", "zoom", "circle", "cut"}
-
-
-def transitions(plan: ScenePlan, brand: Brand) -> dict[int, tuple[str, str]]:
-    """Scene id -> (in, out). Cut k (scene k -> k+1) uses scene k+1's `params.transition`, else the
-    brand list cycled; both sides of a cut get the same type so out + in read as one move."""
-    out = {s.id: ["", ""] for s in plan.scenes}
-    cycle = [t for t in brand.transitions if t in TRANSITIONS]
-    for k, (a, b) in enumerate(zip(plan.scenes, plan.scenes[1:])):
-        t = str(b.params.get("transition") or (cycle[k % len(cycle)] if cycle else "cut"))
-        t = "" if t not in TRANSITIONS or t == "cut" else t
-        out[a.id][1] = out[b.id][0] = t
-    return {k: tuple(v) for k, v in out.items()}
-
-
 def caption_pages(scene: Scene, words: list[Word], max_words: int) -> list[list[dict]]:
     """Words whose midpoint falls inside the scene, as pages of <= max_words, times relative to the
     scene start. A page never crosses a cut, a long pause or a sentence end."""
@@ -179,13 +165,13 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
     w, h = size_for(of.width, of.height, final)
     fonts = [f"{f.relative_to(FONTS)}:{f.stat().st_size}" for fam in sorted(set(style.fonts.values())) if fam
              for f in sorted((FONTS / fam).glob("*.ttf"))]  # adding/removing a font file re-renders
-    look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name"})
+    look = style.model_dump_json(include={"colors", "fonts", "background", "text", "name", "motion"})
     brand_hash = hashlib.sha256((brand.model_dump_json() + str(fonts) + look).encode()).hexdigest()[:16]
     shared = _dir_hash(SHARED)
     jobs, tpl_hash = [], {}
     by_id = {r.id: r for r in resolved.scenes}
     prep = {c.id: c for c in (prepared.scenes if prepared else [])}
-    trans = transitions(plan, brand)
+    trans = transitions(plan, brand, style)
     for s in plan.scenes:
         r = by_id.get(s.id) or ResolvedScene(id=s.id, status="missing")
         name = pick_template(s, r)
@@ -321,7 +307,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
              "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
              "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
-             "theme": st.name, "style": {"background": st.background, "text": st.text},
+             "theme": st.name, "style": {"background": st.background, "text": st.text, "motion": st.motion},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
              "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl,

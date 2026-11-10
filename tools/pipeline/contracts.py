@@ -228,8 +228,8 @@ class QAReport(BaseModel):
 
 class ThemeSpec(BaseModel):
     """work/theme.json - one visual identity per video (theme stage, tools/pipeline/theme.py): text
-    colours, fonts, text panels, background colour/gradient/pattern/texture, outline/shadow.
-    Scene layouts, motion and transitions are NOT part of it."""
+    colours, fonts, text panels, background colour/gradient/pattern/texture, outline/shadow, and the
+    video's motion language (text animation, transition set, camera move) + its creative direction."""
     schema_version: int = SCHEMA_VERSION
     name: str                     # preset it came from (tools/themes/<name>.json)
     category: str = ""
@@ -239,6 +239,8 @@ class ThemeSpec(BaseModel):
     fonts: dict[str, str]         # heading body script hero (folder names in _brand/fonts, or installed fonts)
     background: dict = Field(default_factory=dict)  # type colors angle pattern pattern_opacity texture texture_opacity
     text: dict = Field(default_factory=dict)        # heading_weight body_weight shadow tracking scale
+    motion: dict = Field(default_factory=dict)      # text_in transitions camera (theme.MOTION_DEFAULT); {} = old look
+    direction: dict = Field(default_factory=dict)   # creative direction (Claude): topic tone look elements notes
     issues: list[str] = Field(default_factory=list)  # validation fallbacks that were applied
 
 

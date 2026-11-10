@@ -36,3 +36,12 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
 - `meme` template (sunburst + caption boxes + 1-2 subjects), `callout` mark (circle + label).
 - Kinetic `hero` / `pill` styles + theme `fonts.hero`; cards `rows` (icon tiles); `placement.depth` corner props.
 - Not built: pinned paper notes / curved road, head-replaced-by-bulb concept shots, duotone tint.
+
+## Every video its own look (user, 2026-11-10)
+- No fixed template: topic decides style, story decides editing; consistent inside a video, different between videos
+  (max ~30% alike the previous videos; earlier videos are references to avoid, never defaults).
+- Per video: fonts, heading design, word animation, palette, background, camera move, transition set, chosen from the
+  topic and tone (Claude writes the project `theme.json` with `motion` + `direction`, see plan brief).
+- Visual kinds by topic, never all at once: geopolitics footage/maps/data; science diagrams/2D animation; history
+  archival photos/maps; mystery atmosphere/dramatic light; tech UI/diagrams/futuristic motion.
+- Transitions subtle for normal story, dramatic (flash, zoom) only where the moment needs it. Captions small and readable.

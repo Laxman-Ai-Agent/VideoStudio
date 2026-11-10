@@ -9,6 +9,8 @@ from pathlib import Path
 
 from .config import BRAND, ROOT
 from .contracts import ScenePlan, Transcript
+from .identity import memory_md
+from .theme import CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
 
 RULES = ROOT / ".claude" / "skills" / "my-editor" / "rules.md"
 END_SLACK = 1.0  # last scene must end within this many seconds of the audio end
@@ -36,9 +38,11 @@ def write_brief(project: Path, transcript: Transcript, out: Path) -> None:
     assets = sorted(p.relative_to(project).as_posix() for p in (project / "assets").rglob("*") if p.is_file())
     lines = "\n".join(f"[{a:6.2f} - {b:6.2f}] {txt}" for a, b, txt in timed_lines(transcript))
     brand = (BRAND / "brand.json").read_text("utf-8") if (BRAND / "brand.json").exists() else "{}"
+    font_list = sorted(d.name for d in FONTS.iterdir() if d.is_dir()) if FONTS.is_dir() else []
     out.write_text(f"""# Plan brief: {project.name}
 
-Write `work/scenes.json` for this narration, then run `studio.cmd run {project.name[:2]}` again.
+1. Creative direction FIRST: write `theme.json` in the project folder (see "Creative direction" below).
+2. Then `work/scenes.json` for this narration, then run `studio.cmd run {project.name[:2]}` again.
 
 ## Contract (tools/pipeline/contracts.py: ScenePlan, validated on the next run)
 - Scenes back to back: first starts at 0, each starts where the previous ends, last ends at {transcript.duration:.2f}.
@@ -57,6 +61,27 @@ Example:
 ```json
 {json.dumps(EXAMPLE, ensure_ascii=False, indent=1)}
 ```
+
+## Creative direction (user rule 2026-11-10: every video gets its own look)
+Listen to the topic, story and emotional tone, then design this video. Earlier videos are references to
+stay AWAY from, never defaults: at most ~30% alike any of them (`studio.cmd theme NN` shows the score;
+QA fails a final above it). Consistent inside this video, readable always, quality over effects.
+`theme.json` = {{"preset": <closest of {", ".join(sorted(p.stem for p in PRESETS.glob("*.json")))}>, overrides:
+ "fonts": {{"heading", "body", "hero", "script"}} (folders in _brand/fonts: {", ".join(font_list)}),
+ "colors": {{"background", "text", "text2", "accent", "highlight", "panel", "capbg"}}, "background": {{"type": solid|linear|radial,
+ "colors", "angle", "pattern": none|grid|dots|lines, "texture": none|grain|paper|smoke|particles|stars, ..._opacity}},
+ "text": {{"heading_weight", "shadow": none|soft|hard|glow, "tracking", "scale"}},
+ "motion": {{"text_in": {"|".join(sorted(TEXT_IN))}, "camera": {"|".join(sorted(CAMERA))},
+            "transitions": [2-3 of {"|".join(sorted(TRANSITIONS))}] (subtle ones for normal story; flash/zoom only
+            where the story needs drama, set per scene with `params.transition`)}},
+ "direction": {{"topic", "tone", "look" (one line), "elements" (which visual kinds fit THIS topic, e.g. geopolitics:
+            footage/maps/data; science: diagrams/2D animation; history: archival photos/maps; mystery: atmosphere,
+            dramatic light; tech: UI, diagrams, futuristic motion; never force every technique), "avoid" (what the
+            earlier videos already used), "notes"}}}}.
+Then vary compositions per scene (layouts, `pan`/`zoom`, templates); no visual type 3x in a row.
+
+### Earlier videos (style memory, newest first)
+{memory_md(project, json.loads(brand).get("transitions", []))}
 
 ## Editing rules
 {RULES.read_text("utf-8") if RULES.exists() else "(none)"}

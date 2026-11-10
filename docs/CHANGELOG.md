@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-10 · Creative direction per video, smaller captions
+- Captions ~45% smaller (2.9u / 3.6u in 9:16, band 15-16u -> 8-9u, lighter weight, small padding); `CAP_BAND` in layout.js.
+- `ThemeSpec.motion` (text_in, camera, transitions) + `direction` (optional, no schema bump); `transitions()` moved to theme.py (render re-exports), new transitions slide / dip / flash, 7 word entrances, 5 camera moves.
+- `pipeline/identity.py`: style memory from earlier projects' work/theme.json, similarity score, QA `identity` + `variety` checks (warn on preview, fail on final); `studio.cmd theme NN` prints the score vs the 3 previous videos; plan brief asks for the creative direction first.
+- 09 re-rendered with its own direction (ivory art-print look, Ponnala / Mandali, coral accent, mask words, push-in, dip/slide cuts): 0% alike 02/03/07.
+
 ## 2026-11-10 · Measured: hybrid text-layer render not worth building
 - Text-only Chrome layer (photo hidden) vs full scene render, 07 scene 8: 720p 22.3 s -> 17-19 s, 1080p 29.5 s -> 21.5-23 s, before the FFmpeg photo motion + composite. Per-frame screenshot + ~5 s init dominate; dedup barely pays. Not built (details in STATUS GPU plan).
 
@@ -19,7 +25,8 @@
 - Fixes on the way: text encoder needs `torch.no_grad()` (OOM), fp16 gives black/NaN images -> bf16, bf16 attention on T4 needs ~2 GB extra -> transformer split over both GPUs (accelerate). Resume key includes the runner code (a stale failed run was reused once). Old weight-mount kernels (zimage/qwenimage model/te) deleted.
 
 ## 2026-11-10 · kaggle/run.py resumes an interrupted run
-- Network drop / PC sleep / closed window during `kaggleun.cmd`: the Kaggle run keeps going on Kaggle; a rerun with the same files now waits for it or downloads its output instead of pushing a second GPU run (`resume()`, marker `.work/last_push.json`, cleared once results are used). Test: `kaggle/test_run.py`.
+- Network drop / PC sleep / closed window during `kaggle
+un.cmd`: the Kaggle run keeps going on Kaggle; a rerun with the same files now waits for it or downloads its output instead of pushing a second GPU run (`resume()`, marker `.work/last_push.json`, cleared once results are used). Test: `kaggle/test_run.py`.
 
 ## 2026-11-10 · kaggle/ hybrid GPU render test (one scene)
 - `kaggle/hybrid_local.py 07 8` builds one scene like `run --final` into `kaggle/.work/hybrid` (07 outputs untouched): full Chrome render (36.2 s) and a text-only render (photo hidden, transparent page, `--format png-sequence`, 18.5 s, 84 RGBA frames, 6 MB).
