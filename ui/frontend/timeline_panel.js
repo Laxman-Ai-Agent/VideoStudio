@@ -55,7 +55,7 @@ function drawEdit() {
     tabs.append(Object.assign(el("button", ed.tab === k ? "on" : "", label), { onclick: () => { ed.tab = k; drawEdit(); } }));
   }
   info.prepend(tabs);
-  tabs.after(sceneControls());  // own row under the tabs
+  det.prepend(sceneControls());  // beside the "Scene N" heading of the Scene Details tab
   det.classList.toggle("on", ed.tab === "details");
   fields = {};
   if (ed.tab !== "details") info.append(Object.assign(pane(ed.tab), { className: "pane on " + ed.tab }));
