@@ -17,7 +17,7 @@ from . import assets, providers
 from .contracts import AssetEntry, Resolved, ResolvedScene, Scene, ScenePlan
 
 TEMPLATE_TYPES = {"motion_graphic", "diagram", "chart", "text", "map"}
-TEMPLATE_PARAMS = ("lines", "bg_word", "items", "stat", "button", "rows", "quote", "meme", "events", "focus", "pin", "lottie", "bars", "number")
+TEMPLATE_PARAMS = ("lines", "bg_word", "items", "stat", "button", "rows", "quote", "meme", "events", "focus", "pin", "lottie", "bars", "number", "iso")
 THRESHOLD = 0.34  # share of query keywords found in the description
 STOP = set("""the and for with from into onto that this these those its are was were has have had
 not but out off over under about than then them they their there here what when where which who

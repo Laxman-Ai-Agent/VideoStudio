@@ -55,3 +55,24 @@ def test_image2_is_copied_and_part_of_the_cache_key(tmp_path):
 
 
 RESOLVED_2 = [ResolvedScene(id=1, status="template"), ResolvedScene(id=2, status="template")]
+
+
+def test_iso_param_picks_the_iso_template_and_camera_always_moves(tmp_path):
+    plan = _plan()
+    plan.scenes[0].visual_type = "diagram"
+    plan.scenes[0].params = {"iso": {"items": [{"at": [1, 1], "size": [1, 1, 1]}]}}
+    from pipeline.resolve import TEMPLATE_PARAMS
+    assert "iso" in TEMPLATE_PARAMS
+    res = Resolved(scenes=[ResolvedScene(id=1, status="template")] + RESOLVED_2[1:] + [ResolvedScene(id=3, status="missing")])
+    job = rnd.plan_jobs(plan, res, BRAND, "16:9", tmp_path, tmp_path / "o", False)[0]
+    assert job.template == "iso"
+    rnd.build(job, tmp_path / "b", "iso")
+    assert (tmp_path / "b" / "iso.js").exists()
+    iso = Path(rnd.TEMPLATES) / "iso" / "iso.js"
+    run = lambda e: json.loads(subprocess.run(["node", "-e", f"const I = require({json.dumps(str(iso))}); console.log(JSON.stringify({e}))"],  # noqa: E731
+                                              capture_output=True, text=True, check=True).stdout)
+    keys = "[{t: 0, x: 6, y: 4, zoom: 1}, {t: 4, x: 8, y: 4, zoom: 2}]"
+    mid = run(f"I.camAt({keys}, 2, 10)")
+    assert mid["x"] == 7 and 1.4 < mid["zoom"] < 1.45  # eased, log zoom, plus drift
+    assert run("I.camAt(null, 9, 10)")["zoom"] > run("I.camAt(null, 1, 10)")["zoom"]  # no keys: still drifts
+    assert run(f"I.camAt({keys}, 9, 10)")["x"] == 8  # after the last key: holds (drift only)

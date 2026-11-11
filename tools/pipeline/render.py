@@ -83,6 +83,8 @@ def pick_template(scene: Scene, r: ResolvedScene) -> str:
             return "lottie"
         if any(scene.params.get(k) for k in ("items", "stat", "button", "rows")):
             return "cards"
+        if scene.params.get("iso"):
+            return "iso"
         if scene.params.get("quote"):
             return "quote"
         if scene.params.get("meme"):

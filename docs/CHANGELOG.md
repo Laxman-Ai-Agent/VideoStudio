@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 - iso template (isometric infographic)
+
+- New template `iso`, picked by `params.iso` (also a template param in resolve): three-tone isometric blocks (`items`: box / house / wheel, rise or fill from an `in` time), drawn flow lines with moving drops or coloured wires (`flows`), leader pins with labels (`pins`), eased camera keys with log zoom and a constant slow drift (`camera`), title top-left that leaves at `title_until`, closing `card`. The ground fills the whole frame (user: no empty margins, camera always moving). Flat decals (rivers, roads) draw under standing blocks.
+- Style grammar from the lemo-opuscar "iso-infographic" style prompt (MIT); the code is our own. Proof: a 10 s dam scene (`projects/12_Dam_Iso/dam_scene.json`, music only, no voice) rendered at 480p -> `projects/12_Dam_Iso/output/preview_iso_template_16x9.mp4`. Tests: camera easing / drift in node, template pick + build.
+
 ## 2026-11-11 - Photo template: in-scene layouts and dim-while-title
 
 - `params.layout`: `split_text` (picture on one half, title on the other), `split2` (two pictures left / right, top / bottom in 9:16), `stack` (two pictures top / bottom), `crop` (full frame shrinks to a 1:1 square on `side`, title in the rest). `params.side`, `params.image2` (project-relative path, copied as `asset2.*`, part of the cache key), `params.crop_at`. Pictures slide in from their own edge one after the other; panel layouts skip textzone. Geometry and timing in `tools/templates/photo/layouts.js` (tested in node).

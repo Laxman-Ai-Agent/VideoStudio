@@ -1,0 +1,117 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script><script src="iso.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+#cv { position: absolute; inset: 0; }
+#col { position: absolute; left: var(--sl); top: var(--st); max-width: 60%; }
+#col #t { font-family: var(--font-head); font-weight: var(--hw); font-size: calc(var(--u) * 7 * var(--tscale)); line-height: 1.15;
+          color: var(--ink); text-shadow: 0 0 calc(var(--u) * .6) var(--ground), 0 0 calc(var(--u) * 1.2) var(--ground); }
+#card { position: absolute; left: var(--sl); top: var(--st); padding: calc(var(--u) * 1.6) calc(var(--u) * 3);
+        border: calc(var(--u) * .4) solid var(--ink); border-radius: calc(var(--u) * 1.4); background: var(--ground);
+        font-family: var(--font-head); font-weight: var(--hw); font-size: calc(var(--u) * 5.4); color: var(--ink); opacity: 0; }
+#card:empty { display: none; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <canvas id="cv"></canvas>
+  <div id="col"><div id="t"></div></div><div id="card"></div>
+</div>
+<script>
+  // params.iso: an isometric diorama that fills the frame, a camera that always moves, pins, flows, a closing card.
+  const S = window.SCENE, D = (S.params || {}).iso || {}, I = window.ISO, tl = gsap.timeline({ paused: true });
+  const W = S.w, H = S.h, cv = document.getElementById("cv"), g = cv.getContext("2d");
+  cv.width = W; cv.height = H;
+  const GROUND = D.ground || "#F3EEE3", INK = D.ink || "#2B2433";
+  document.documentElement.style.setProperty("--ground", GROUND);
+  document.documentElement.style.setProperty("--ink", INK);
+  const HUE = Object.assign({ grass: "#8DBF6A", soil: "#B98B5E", rock: "#9C9488", water: "#3E8ED0", concrete: "#C9C4BA",
+    plant: "#E07A4F", town: "#E9B949", roof: "#C2554A", steel: "#6E6878", sand: "#E3C98D" }, D.hues || {});
+  const hue = h => HUE[h] || h || HUE.concrete;
+  const [BX, BY] = D.board || [12, 8], dur = S.duration;
+  const base = Math.max(W, H * 1.6) / ((BX + BY) * I.C30) * 1.15;  // a bit closer than the fit: the world runs past the frame edges
+  const bodyF = `"${S.fonts.telugu || "Noto Sans Telugu"}", sans-serif`;
+  let cam = { x: BX / 2, y: BY / 2, k: base };
+  const P = (x, y, z) => I.project(x, y, z, cam, W, H);
+  function poly(pts, fill) { g.beginPath(); pts.forEach((p, i) => { const s = P(...p); i ? g.lineTo(...s) : g.moveTo(...s); });
+    g.closePath(); g.fillStyle = fill; g.fill(); }
+  let Q = [];
+  function box(x, y, z, w, d, h, col, bias = 0) { if (w <= 0 || d <= 0 || h <= .001) return; const T = I.tones(hue(col));
+    if (h < .15) bias -= 100;  // flat decals (rivers, roads) lie under everything standing on them
+    Q.push({ depth: x + w / 2 + y + d / 2 + z + bias, draw() {
+      poly([[x + w, y, z], [x + w, y + d, z], [x + w, y + d, z + h], [x + w, y, z + h]], T.right);
+      poly([[x, y + d, z], [x + w, y + d, z], [x + w, y + d, z + h], [x, y + d, z + h]], T.left);
+      poly([[x, y, z + h], [x + w, y, z + h], [x + w, y + d, z + h], [x, y + d, z + h]], T.top); } }); }
+  function flush() { Q.sort((a, b) => a.depth - b.depth).forEach(q => q.draw()); Q = []; }
+  function line(pts, w, dash, col, frac) {  // ink line drawn on by arc length
+    const s = pts.map(p => P(...p)); let L = 0; for (let i = 1; i < s.length; i++) L += Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]);
+    g.save(); g.strokeStyle = col; g.lineWidth = w; g.lineCap = "round"; g.setLineDash(dash); g.beginPath(); g.moveTo(...s[0]);
+    let left = L * frac;
+    for (let i = 1; i < s.length && left > 0; i++) { const d = Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]), f = Math.min(1, left / d);
+      g.lineTo(s[i - 1][0] + (s[i][0] - s[i - 1][0]) * f, s[i - 1][1] + (s[i][1] - s[i - 1][1]) * f); left -= d; }
+    g.stroke(); g.restore(); }
+  function along(pts, u) {  // point at fraction u of a polyline (world space)
+    const L = []; let tot = 0;
+    for (let i = 1; i < pts.length; i++) { const d = Math.hypot(...pts[i].map((v, j) => v - pts[i - 1][j])); L.push(d); tot += d; }
+    let r = u * tot;
+    for (let i = 0; i < L.length; i++) { if (r <= L[i]) return pts[i].map((v, j) => v + (pts[i + 1][j] - v) * r / L[i]); r -= L[i]; }
+    return pts[pts.length - 1]; }
+  function pin(p, f) {  // dot -> leader -> rule -> label
+    if (f <= 0) return; const [x, y] = P(...p.at), up = p.up || 1, side = p.side || 1, lh = U * 9.5 * up, rw = U * 13 * side;
+    const a = I.clamp(f / .35), b = I.seg(f, .3, .6), c = I.seg(f, .55, 1);
+    g.save(); g.strokeStyle = INK; g.lineWidth = U * .42;
+    g.beginPath(); g.arc(x, y, U * .95 * I.back(a), 0, 7); g.fillStyle = GROUND; g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(x, y - U * up); g.lineTo(x, y - U * up - (lh - U * up) * b); g.stroke();
+    if (b >= 1) { g.beginPath(); g.moveTo(x, y - lh); g.lineTo(x + rw * c, y - lh); g.stroke(); }
+    g.globalAlpha = c; g.font = `600 ${U * 5.2}px ${bodyF}`; g.textAlign = side > 0 ? "left" : "right"; g.lineJoin = "round";
+    const tx = side > 0 ? x + U : x - U; g.strokeStyle = GROUND; g.lineWidth = U * 1.4; g.strokeText(p.text, tx, y - lh - U * 1.4);
+    g.fillStyle = INK; g.fillText(p.text, tx, y - lh - U * 1.4); g.restore(); }
+
+  function draw(t) {
+    const cm = I.camAt(D.camera, t, dur);
+    cam = { x: isNaN(cm.x) ? BX / 2 : cm.x, y: isNaN(cm.y) ? BY / 2 : cm.y, k: base * cm.zoom };
+    g.fillStyle = I.tones(hue(D.floor || "grass")).top; g.fillRect(0, 0, W, H);  // the ground fills the whole frame
+    g.fillStyle = "rgba(43,36,51,.06)"; const st = U * 5;
+    for (let j = 0; j * st * .58 < H; j++) for (let i = 0; i * st < W + st; i++) g.fillRect(i * st + (j % 2) * st / 2, j * st * .58, U * .4, U * .4);
+    const pop = I.back(I.seg(t, 0, .6));
+    for (const it of D.items || []) {  // blocks rise (back ease) or fill (smooth) from their `in` time
+      if (it.type === "wheel") continue;
+      const f = I.seg(t, it.in || 0, (it.in || 0) + (it.dur || .7)), [x, y, z = 0] = it.at, [w, d, h] = it.size || [1, 1, 1];
+      if (it.type === "house") { if (f <= 0) continue; const s = I.back(f);
+        box(x, y, z, .7, .7, .55 * s, it.hue || "town"); box(x + .1, y + .1, z + .55 * s, .5, .5, .25 * s, "roof");
+        const l = it.lit ? I.seg(t, it.lit, it.lit + .3) : 0;
+        if (l > 0) Q.push({ depth: x + y + z + 1.9, draw() { const [sx, sy] = P(x + .7, y + .35, z + .28);
+          g.fillStyle = `rgba(255,225,90,${l})`; g.fillRect(sx - U * .8, sy - U * .8, U * 1.5, U * 1.2);
+          g.fillStyle = `rgba(255,230,120,${.25 * l})`; g.beginPath(); g.arc(sx, sy, U * 2.8, 0, 7); g.fill(); } });
+        continue; }
+      const s = it.in ? (it.grow === "fill" ? I.eio(f) : I.back(f)) : pop;
+      box(x, y, z, w, d, h * s, it.hue, it.bias || 0);
+    }
+    flush();
+    for (const fl of D.flows || []) {  // a line is drawn first, then things move along it
+      const f = I.seg(t, fl.in || 0, (fl.in || 0) + (fl.dur || .6)); if (f <= 0) continue;
+      if (fl.color) line(fl.path, U * .9, [], hue(fl.color), f);
+      line(fl.path, U * (fl.color ? .3 : .55), fl.dash === false || fl.color ? [] : [U * 1.4, U * 1.2], INK, f);
+      if (fl.drops && f >= 1) for (let i = 0; i < 9; i++) {
+        const u = ((t - (fl.in || 0) - (fl.dur || .6)) * (fl.speed || .5) + i / 9) % 1, [sx, sy] = P(...along(fl.path, u));
+        g.fillStyle = "#EAF5FF"; g.beginPath(); g.arc(sx, sy, U * .6, 0, 7); g.fill(); g.strokeStyle = HUE.water; g.lineWidth = U * .3; g.stroke(); }
+    }
+    for (const it of D.items || []) if (it.type === "wheel" && t >= (it.in || 0)) {  // turbine / gear on a face
+      const [x, y] = P(...it.at), sp = it.spin !== undefined && t > it.spin ? (t - it.spin) * 9 : 0, r = U * 2.2 * cam.k / base;
+      g.save(); g.translate(x, y); g.scale(1, .82); g.strokeStyle = INK; g.lineWidth = U * .42; g.fillStyle = I.mix(hue(it.hue || "plant"), "#FFF8EC", .5);
+      g.beginPath(); g.arc(0, 0, r * I.back(I.seg(t, it.in || 0, (it.in || 0) + .4)), 0, 7); g.fill(); g.stroke();
+      for (let i = 0; i < 6; i++) { const a = sp + i * Math.PI / 3; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(a) * r, Math.sin(a) * r); g.stroke(); }
+      g.restore(); }
+    for (const p of D.pins || []) pin(p, I.seg(t, p.in || 0, (p.in || 0) + .6));
+  }
+  const T = { t: 0 };
+  tl.to(T, { t: dur, duration: dur, ease: "none", onUpdate: () => draw(T.t) }, 0);
+  draw(0);
+  // title top-left, leaves at iso.title_until (default 45% of the scene); the closing card takes its place
+  kinetic(document.getElementById("t"), S.text, tl, 0.3);
+  const tu = Math.min(dur - .3, D.title_until || dur * .45);
+  tl.to("#col", { opacity: 0, y: -U * 2, duration: .35 }, tu);
+  const card = document.getElementById("card");
+  if (D.card && D.card.text) { card.textContent = D.card.text; const at = Math.max(tu + .4, D.card.in || dur * .8);
+    tl.fromTo(card, { opacity: 0, y: -U * 2 }, { opacity: 1, y: 0, duration: .4, ease: "back.out(1.6)" }, Math.min(at, dur - .5)); }
+  finish(tl);
+  if (document.fonts) document.fonts.ready.then(() => draw(T.t));
+</script></body></html>
