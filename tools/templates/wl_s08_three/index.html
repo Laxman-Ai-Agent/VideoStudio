@@ -26,7 +26,7 @@
   const t3 = at("three", 2.8);
   const n3 = place(mk("div", "kh", st, "3"), W * 0.07, H * 0.04); n3.style.cssText += `font-size:${u * 22}px;color:transparent;-webkit-text-stroke:${u * 0.3}px ${PAL.acc};opacity:0`;
   tl.fromTo(n3, { scale: 0.4, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.7, ease: E.pop }, t3 - 0.3);
-  const k = place(mk("div", "kt", st), W * 0.07, H * 0.08); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(k, "FINLAND RESEARCH", 0.3, 24);
+  const k = place(mk("div", "kt", st), W * 0.07 + u * 17, H * 0.08); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(k, "FINLAND RESEARCH", 0.3, 24);
   const m = place(mk("div", "kh", st), W * 0.07 + u * 17, H * 0.12); m.style.fontSize = u * 6.5 + "px"; type(m, "methods", t3 + 0.2, 16);
   const ry = H * 0.7, rail = place(mk("div", "", st), W * 0.05, ry, W * 0.9); rail.id = "rail";
   tl.fromTo(rail, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: E.io }, t3 + 0.6);

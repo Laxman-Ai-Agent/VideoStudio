@@ -48,7 +48,7 @@
   tl.to(pl, { scale: 1.08, duration: 0.5, yoyo: true, repeat: 5, ease: E.soft }, tC + 1);
   const fv = place(mk("div", "kh", st, "Full <em>video</em>"), W * 0.06, H * 0.14 + vh + u * 4); fv.style.cssText += `font-size:${u * 12}px;opacity:0`; rise(fv, tFu - 0.6);
   const ld = place(mk("div", "kt", st), W * 0.06, H * 0.14 + vh + u * 20); ld.style.fontSize = u * 4.4 + "px"; type(ld, "LINK IN THE *DESCRIPTION*", tDe, 24);
-  const ar = place(mk("div", "", st, "↓"), W * 0.78, H * 0.14 + vh + u * 8); ar.id = "arrow";
+  const ar = place(mk("div", "", st, "↓"), W * 0.86, H * 0.14 + vh + u * 3); ar.id = "arrow";
   tl.fromTo(ar, { opacity: 0, y: -u * 6 }, { opacity: 1, y: 0, duration: 0.4, ease: E.pop }, tDe);
   tl.to(ar, { y: u * 4, duration: 0.3, yoyo: true, repeat: 5, ease: "sine.inOut" }, tDe + 0.4);
   K.done();

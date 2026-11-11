@@ -69,9 +69,9 @@
   const L = place(mk("div", "half", $("root")), 0, 0, W / 2), R = place(mk("div", "half", $("root")), W / 2, 0, W / 2);
   L.style.cssText += `top:0;height:${H}px;background:linear-gradient(90deg,#0B2A4A,${PAL.pri}55)`; R.style.cssText += `top:0;height:${H}px;background:linear-gradient(90deg,#FF5A3C55,#3A0D08)`;
   $("root").insertBefore(L, $("shake")); $("root").insertBefore(R, $("shake"));
-  const wT = place(mk("div", "w", L, "TRUE"), W * 0.06, 0); wT.style.color = PAL.pri;
-  const wH = place(mk("div", "w", R, "HYPE"), W * 0.16, 0); wH.style.color = PAL.warn;
-  const pT = place(mk("div", "pct", L, "50%"), W * 0.07, 0), pH = place(mk("div", "pct", R, "50%"), W * 0.3, 0);
+  const wT = place(mk("div", "w", L, "TRUE"), W * 0.06, H * 0.08); wT.style.color = PAL.pri;
+  const wH = place(mk("div", "w", R, "HYPE"), W * 0.16, H * 0.08); wH.style.color = PAL.warn;
+  const pT = place(mk("div", "pct", L, "50%"), W * 0.07, H * 0.3), pH = place(mk("div", "pct", R, "50%"), W * 0.3, H * 0.3);
   tl.fromTo(L, { xPercent: -100 }, { xPercent: 0, duration: 0.6, ease: E.io }, tS - 0.2);
   tl.fromTo(R, { xPercent: 100 }, { xPercent: 0, duration: 0.6, ease: E.io }, tS - 0.2);
   tl.to(phone, { x: -W * 0.4, opacity: 0, duration: 0.6, ease: "power3.in" }, tS - 0.3);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-11 - 03_Wireless_Power previews checked
+
+- Both previews re-rendered (pool paths: spark / phone_float) and QA'd one frame per beat. Fixed overlaps: seq 02 TRUE / HYPE / 50% all sat at top 0 (`place()` y overrides CSS top), seq 05 "1000s" over its label, seq 08 kicker over the hollow 3, seq 12 "Shocking Update" over the counters and "20%" over its label, seq 19 title at the right edge; 9x16 v01 FAN label over the laptop card and "No Wire" too wide, v02 labels past the edge, v03 arrow over the description line. Only those sequences re-rendered. Tests 149 pass.
+
 ## 2026-11-11 - 03_Wireless_Power rebuilt as written sequences (no templates)
 
 - 16x9 long video = 20 sequences (10-27 s), 9x16 short = 3; each its own HTML/CSS/GSAP folder `tools/templates/wl_sNN_*` / `wl_v0N_*` (+ the approved `wireless_intro`), saved as named templates. Storyboard + picture list in `projects/03_Wireless_Power/<variation>/scripts/make_sequences.py` (writes `work/scenes.json`: `params.code`, `images`, `names`, `ar`, `beats` from the word times, `kit`).

@@ -26,7 +26,7 @@
   pop(hel, tFi + 0.3, { y: H * 0.2, opacity: 0 }, 0.7, E.in);
   const lab = card({ i: "lab_clip", video: "lab_clip_v", vstart: tFi + 1.4, vdur: 5, x: W * 0.16, y: H * 0.15 + chh + u * 5, w: cw * 0.9, h: cw * 0.9 * 9 / 16, focus: [0.5, 0.45, 1.1] });
   pop(lab, tFi + 1.4, { x: W * 0.5, opacity: 0, rotation: 4 }, 0.7, E.in); dim(hel, tFi + 1.8, 0.5);
-  const ta = place(mk("div", "kt", st), W * 0.08, H * 0.15 + chh + u * 10 + cw * 0.9 * 9 / 16); ta.style.fontSize = u * 5 + "px";
+  const ta = place(mk("div", "kt", st), W * 0.08, H * 0.15 + chh + u * 10 + cw * 0.9 * 9 / 16); ta.style.fontSize = u * 4.2 + "px";
   type(ta, "POWER *THROUGH THE AIR*", tAi, 22);
   beam(0, H * 0.15 + chh + u * 2.5, W, H * 0.15 + chh + u * 2.5, tAi + 0.1, 0.8);
 
@@ -55,8 +55,8 @@
   const so = card({ i: "ultra_clip", video: "ultra_clip_v", vstart: tSo - 0.3, vdur: 5, x: W * 0.06, y: cy, w: cs, h: cs, focus: [0.5, 0.5, 1.2] });
   const la = card({ i: "redlaser_clip", video: "redlaser_clip_v", vstart: tLa - 0.3, vdur: 5, x: W * 0.56, y: cy, w: cs, h: cs, focus: [0.5, 0.5, 1.2] });
   pop(so, tSo - 0.3, { x: -W * 0.4, opacity: 0 }, 0.6, E.in); pop(la, tLa - 0.3, { x: W * 0.4, opacity: 0 }, 0.6, E.in);
-  const l1 = place(mk("div", "kt", st), W * 0.06, cy + cs + u * 2); l1.style.fontSize = u * 4 + "px"; type(l1, "*SOUND* WAVES", tSo, 18);
-  const l2 = place(mk("div", "kt", st), W * 0.56, cy + cs + u * 2); l2.style.fontSize = u * 4 + "px"; type(l2, "*LASER* BEAMS", tLa, 18);
+  const l1 = place(mk("div", "kt", st), W * 0.06, cy + cs + u * 2); l1.style.fontSize = u * 3.4 + "px"; type(l1, "*SOUND* WAVES", tSo, 18);
+  const l2 = place(mk("div", "kt", st), W * 0.56, cy + cs + u * 2); l2.style.fontSize = u * 3.4 + "px"; type(l2, "*LASER* BEAMS", tLa, 18);
   tl.to([so, la], { y: u * 6, opacity: 0.55, duration: 0.6, ease: E.io }, tFo - 0.6);
   const fo = place(mk("div", "kh", st, "<em>Focus</em> · one direction"), W * 0.06, H * 0.12); fo.style.cssText += `font-size:${u * 5}px;opacity:0`;
   tl.to(hw, { opacity: 0, duration: 0.3 }, tFo - 0.4); rise(fo, tFo - 0.1, 0.1);

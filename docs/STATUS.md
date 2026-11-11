@@ -15,20 +15,12 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - Photo layouts built 2026-11-11 (`params.layout` split_text | split2 | stack | crop, `dim`, `text_until`; see CHANGELOG). Used in project 11 (18 scenes, `LAYOUT` in its make_scenes.py; preview QA PASS, rendered from this branch). Cross-scene continuity still not built.
 - Timeline render popup (live clock, scenes done, ETA, green tick) + `11-AI` project-name bug fixed 2026-11-11. Restart `studio.cmd ui` after merging.
 - iso template built 2026-11-11 (`params.iso`, see CHANGELOG); 12_Dam_Iso is a 10 s demo (no voice, not a studio project).
-- NEXT SESSION FIRST (updated 2026-11-11 evening): 03_Wireless_Power rebuild is CODED, preview not yet checked.
-  Done: 16x9 = 20 written sequences (`tools/templates/wl_s02..s20_*` + approved `wireless_intro`), 9x16 = 3 (`wl_v01..v03_*`), shared kit
-  `tools/templates/wireless_kit/kit.js`; scenes.json written by `projects/03_Wireless_Power/<variation>/scripts/make_sequences.py`;
-  colour correction `pipeline/grade.py`; Kaggle objects in `03_Wireless_Power/work/kaggle_objects`, 9x16 Kaggle images moved to `work/pool`;
-  both visual-assets.json reset to [] (old lists in */work/visual-assets.template-era.json). Samples sent: `16x9/output/samples/seq02_04.mp4`.
-  Cleanup list DONE (DARPA butterfly, stat trend line, plan_brief, DECISIONS #19/#28).
-  Pending, in order:
-  1. Re-run `16x9/scripts/make_sequences.py` (pool paths changed: spark / phone_float now in work/pool, phone_float = A004), then
-     `studio.cmd run 03/16x9 --format 16:9` (a run was in progress when the session ended; cached scenes are kept). QA one frame per beat
-     of every sequence (sheet script idea: ffmpeg frames per beat), fix overlaps / text in the caption band, re-render only those.
-  2. 9x16: `9x16/scripts/make_sequences.py` already ran; `studio.cmd run 03/9x16 --format 9:16 --review`, then render, QA.
-  3. Report both previews to the user; never --final.
-  4. tests: `test_theme.py::test_shipped_presets_validate_cleanly` failed in the worktree run (not checked: maybe missing _brand/fonts there,
-     like `test_rows_pick_cards...`); run the full suite in E:/My-AI-Studio/VideoStudio and fix if real.
+- 03_Wireless_Power rebuild (2026-11-11 night): both 480p previews rendered and QA'd frame by frame (one frame per beat),
+  QA PASS; sent to the user. Overlaps fixed in 16x9 seq 02/05/08/12/19 and 9x16 v01/v02/v03. Waiting for the user's notes;
+  --final only when the user says. Written sequences: `tools/templates/wl_s02..s20_*`, `wl_v01..v03_*`, kit `wireless_kit/kit.js`;
+  scenes.json from `projects/03_Wireless_Power/<variation>/scripts/make_sequences.py`. Beat-frame QA idea: ffmpeg one frame at
+  scene start + beat + 0.9 s, tiled per sequence (not a studio command yet). Tests: 149 pass (the theme preset test fails only in
+  worktrees without `_brand/fonts`).
 - Wires topic `projects/03_Wireless_Power` (2026-11-11): variations `16x9` (79 scenes, 307 s) and `9x16` (13 scenes, 45 s), shared `drop/`, `theme.json` (tech, amber), `assets/originals` (40 Whisk files picked by `studio.cmd match`, the rest in `drop/_unused`). Scripts per variation: `scripts/make_scenes.py`, `make_assets.py`. Only 1 AI image is missing (16x9 scene 66 Safety Risk, `kaggle\images.cmd 03`, A066); Tesla / Helsinki / Oulu photos come from `entity`. Previews (480p) rendered with `run 03/9x16 --format 9:16` and `run 03/16x9 --format 16:9`; check them, then the user decides on --final. Layout (CHANGELOG, ARCHITECTURE): all older projects migrated; 01_AI_Doctor / 02-AI_Doctor_5min are the renamed 10 / 11. Drop thinning: `studio.cmd clean NN`, `studio.cmd match NN` (CLIP, local).
 - Next build (agreed 2026-11-11, build before the paired videos below): image frames for overlays and motion graphics. `frame`: device frames drawn in SVG/CSS (phone, laptop, monitor / tv, tablet; the image sits on the screen) and masks (circle, rounded card, 1:1, 9:16, hexagon, blob, star); entrances pop / slide / mask reveal (circle grows) / screen turns on; theme colours. Used for app / website / post shots (phone, laptop), faces (circle), 9:16 images inside 16:9 and 16:9 images in a box inside 9:16. Assets brief states each image's aspect. No SCHEMA_VERSION bump (new optional key).
 - Next videos (agreed 2026-11-11): the user gives ONE topic twice: `input/16x9/` (long video) and `input/9x16/` (~1 min short), each with audio + script + Gemini JSON; content differs a little. Plan: two projects (`studio new`, files moved and logged), timings by `align_mms` (words never changed; `voice.cmd` only if asked); plan BOTH scene lists together; one shared theme (pin the same `theme.json`; exempt the pair from the 30% identity check, small code change); one shared image pool, generated natively per format (16:9 landscape, 9:16 portrait with a re-framed prompt, one Kaggle run), cross-used where it fits (9:16 images in long-video splits / phone cards, 16:9 images in boxes / stack in the short); write each scene's image + layout in the plan; 480p previews with placeholders first, each project only in its own format; final 1080p only when the user says.

@@ -27,7 +27,7 @@
   flash(tSh - 0.15, 0.7);
   tl.fromTo(pr, { scale: 1.35, opacity: 0, transformOrigin: "50% 60%" }, { scale: 1, opacity: 1, duration: 0.35, ease: E.slam }, tSh - 0.15);
   shake($("shake"), tSh + 0.2, u * 1.2);
-  const su = place(mk("div", "kh", st, "Shocking<br><em>Update</em>"), W * 0.06, H * 0.22); su.style.cssText += `font-size:${u * 9}px;opacity:0`;
+  const su = place(mk("div", "kh", st, "Shocking<br><em>Update</em>"), W * 0.06, H * 0.55); su.style.cssText += `font-size:${u * 9}px;opacity:0`;
   slam(su, tSh + 0.05);
 
   // B. DARPA (USA): the presenter steps back to a corner, a badge stamps on, the test range opens wide
@@ -79,7 +79,7 @@
   const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: draw }, 0);
   const p20 = place(mk("div", "big", st, "20%"), W * 0.06, H * 0.56); tl.fromTo(p20, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.slam }, tTw);
   ring(rc, tTw + 0.6);
-  const of = place(mk("div", "kt", st), W * 0.06 + u * 22, H * 0.6); of.style.fontSize = u * 3.2 + "px"; type(of, "ONLY *1 IN 5* ARRIVED", tFi - 0.2, 24);
+  const of = place(mk("div", "kt", st), W * 0.06 + u * 32, H * 0.6); of.style.fontSize = u * 3.2 + "px"; type(of, "ONLY *1 IN 5* ARRIVED", tFi - 0.2, 24);
   const p80 = place(mk("div", "big", st, "80% <span style='font-size:.45em'>LOST IN THE AIR</span>"), W * 0.06, H * 0.66);
   p80.style.color = PAL.warn; p80.style.textShadow = `0 0 ${u * 3}px ${PAL.warn}88`;
   tl.to([p20, of], { opacity: 0.35, duration: 0.3 }, tEi - 0.2);
