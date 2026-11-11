@@ -1,0 +1,15 @@
+{
+ "name": "wl_s16_reality",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (230-246 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "truth low distance loss ac fridge washing no"
+ },
+ "description": "Chapter ! Reality Check; low power / short distance bars; a distance slider knob drives a growing red loss bar; AC, fridge, washing machine cropped from one kitchen arrive on their words and are crossed, Not for high power slam"
+}

@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 20 (293-307 s): like, share, subscribe -> will wireless power reach everyone? YES / NO -> comment -> see you next video */
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+.btn { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.4); padding: calc(var(--u) * 1.4) calc(var(--u) * 3); border-radius: calc(var(--u) * 6);
+       background: #ffffff14; border: 1px solid #ffffff33; color: var(--text); font: 800 calc(var(--u) * 3.2) var(--font-head); letter-spacing: .06em; white-space: nowrap; }
+.btn.on { background: var(--accent); color: #0A0E17; }
+.btn.sub.on { background: #E52D27; color: #fff; }
+.yn { position: absolute; display: grid; place-items: center; border-radius: calc(var(--u) * 2); font: 900 calc(var(--u) * 7) var(--font-head); color: #0A0E17;
+      box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 5) #000b; backface-visibility: hidden; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, camera, circuits, url } = K;
+  circuits({ seed: 293, sparks: 50 });
+  const st = $("stage"); camera(st, 1.03, 0.01);
+  const tLi = at("like", 1.56), tSh = at("share", 3), tSu = at("subscribe", 5.6), tWi = at("wireless", 7.3), tBe = at("believe", 10.7), tCo = at("comment", 12.3), tNe = at("next", 13.4);
+
+  // A. the presenter (phone in hand) on the right; LIKE, SHARE, SUBSCRIBE buttons press on their words
+  const pr = place(mk("div", "", st), W * 0.58, H * 0.06, W * 0.4, H * 0.94); pr.id = "pres"; pr.style.backgroundImage = url("pres_phone");
+  tl.fromTo(pr, { x: W * 0.3, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: E.in }, 0.1);
+  const k = place(mk("div", "kt", st), W * 0.07, H * 0.1); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(k, "IF YOU LIKED IT", 0.3, 22);
+  const ico = { like: "M2 21h4V9H2zm20-11a2 2 0 0 0-2-2h-6.3l1-4.6v-.3a1.5 1.5 0 0 0-.4-1L13.2 1 6.6 7.6A2 2 0 0 0 6 9v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.8-1.2l3-7.1A2 2 0 0 0 22 12z",
+                share: "M18 16a3 3 0 0 0-2 .8L8.9 12.7a3 3 0 0 0 0-1.4L16 7.2A3 3 0 1 0 15 5a3 3 0 0 0 0 .7L8 9.8a3 3 0 1 0 0 4.4l7.1 4.1a3 3 0 1 0 2.9-2.3z",
+                sub: "M10 15l5.2-3L10 9zm11.6-7.8A2.5 2.5 0 0 0 19.8 5.4C18.3 5 12 5 12 5s-6.3 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.7 19 12 19 12 19s6.3 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8z" };
+  const svg = (d) => `<svg width="${u * 4}" height="${u * 4}" viewBox="0 0 24 24"><path fill="currentColor" d="${d}"/></svg>`;
+  [["like", "LIKE", tLi], ["share", "SHARE", tSh], ["sub", "SUBSCRIBE", tSu]].forEach(([c, lab, t], i) => {
+    const b = place(mk("div", "btn " + c, st, svg(ico[c]) + lab), W * 0.07, H * (0.18 + i * 0.13));
+    pop(b, t - 0.5, { x: -u * 8, opacity: 0 }, 0.45, E.in);
+    tl.to(b, { scale: 0.88, duration: 0.09, yoyo: true, repeat: 1, ease: "power1.inOut" }, t);
+    tl.set(b, { className: "btn " + c + " on" }, t + 0.1);
+  });
+
+  // B. the question: the future city (21:9) slides in; YES / NO cards flip; COMMENT types
+  tl.to(st.children, { opacity: 0, x: -W * 0.1, duration: 0.5, ease: E.out, stagger: 0.02 }, tWi - 0.6);
+  const lay = mk("div", ""); lay.style.cssText = "position:absolute;inset:0"; $("shake").append(lay);
+  const cw = W * 0.88, chh = cw * 9 / 21, city = card({ i: "city_clip", video: "city_clip_v", vstart: tWi - 0.5, vdur: 5.2, x: W * 0.06, y: H * 0.06, w: cw, h: chh, parent: lay, focus: [0.5, 0.5, 1.05] });
+  tl.fromTo(city, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: E.io }, tWi - 0.5);
+  tl.to(city, { opacity: 0.4, duration: 0.5 }, tBe - 1.2);
+  const q = place(mk("div", "kh", lay), W * 0.1, H * 0.12); q.style.cssText += `font-size:${u * 5.5}px;white-space:normal;width:${W * 0.8}px`;
+  type(q, "Will wireless power reach *everyone?*", tWi + 0.4, 26);
+  [["YES", "#3BD16F", W * 0.28], ["NO", PAL.warn, W * 0.52]].forEach(([t, col, x], i) => {
+    const c = place(mk("div", "yn", lay, t), x, H * 0.36, W * 0.2, H * 0.22); c.style.background = col;
+    tl.fromTo(c, { rotationY: 90, opacity: 0 }, { rotationY: 0, opacity: 1, duration: 0.55, ease: E.pop, immediateRender: true }, tBe - 0.2 + i * 0.25);
+  });
+  const cm = place(mk("div", "kt", lay), W * 0.28, H * 0.62); cm.style.fontSize = u * 3 + "px"; type(cm, "WRITE YOUR *OPINION* IN THE COMMENTS", tCo - 0.2, 30);
+  const nx = place(mk("div", "kh", lay, "See you <i>next video</i>"), 0, H * 0.24); nx.style.cssText += `width:${W}px;text-align:center;font-size:${u * 7}px;opacity:0`;
+  tl.to([q, city, cm, ...lay.querySelectorAll(".yn")], { opacity: 0, duration: 0.4 }, tNe - 0.3);
+  rise(nx, tNe - 0.1, 0.1);
+  K.done();
+</script></body></html>

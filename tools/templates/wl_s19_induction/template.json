@@ -1,0 +1,15 @@
+{
+ "name": "wl_s19_induction",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (277-293 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "phone ev induction different world only step"
+ },
+ "description": "Floating phone + EV pad cards, Magnetic Induction typed, Already here; they shrink, a big not-equal sign vs Through the air + beam; the city clip opens in a growing circle, not a wire-free world yet, wires are not the only way, A great step"
+}

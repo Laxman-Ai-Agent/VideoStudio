@@ -20,7 +20,7 @@
   type(k, "ANOTHER BIG PROBLEM", 0.15, 26);
   const h = place(mk("div", "kh", st, "IoT <em>Devices</em>"), W * 0.07, H * 0.18); h.style.cssText += `font-size:${u * 10}px;opacity:0`;
   rise(h, at("iot", 1.6) - 0.15, 0.12);
-  const cs = H * 0.42, one = card({ i: "iot", x: W * 0.62, y: H * 0.12, w: cs * 3 / 4, h: cs, focus: [0.5, 0.5, 1.05] });
+  const cs = H * 0.42, one = card({ i: "iot", x: W * 0.62, y: H * 0.12, w: cs * 3 / 4, h: cs, focus: [0.5, 0.62, 1.3] });
   pop(one, at("iot", 1.6), { scale: 0.4, opacity: 0, rotation: 8 });
 
   // B. "thousands of sensors, smart gadgets": the factory floor fades in behind, the card multiplies into a wall of sensors
@@ -29,7 +29,7 @@
   st.prepend(fac); tl.fromTo(fac, { opacity: 0 }, { opacity: 0.32, duration: 0.8 }, tS - 0.4);
   tl.to(h, { y: -H * 0.08, scale: 0.6, transformOrigin: "0 0", duration: 0.6, ease: E.io }, tS - 0.3);
   tl.to(k, { opacity: 0, duration: 0.3 }, tS - 0.3);
-  const pics = ["iot", "sensor_white", "sensor_hand"], cols = 8, rows = 3, gw = W * 0.86 / cols, gh = gw * 0.8, g0 = W * 0.07, gy = H * 0.24;
+  const pics = ["iot", "sensor_white", "sensor_hand"], cols = 8, rows = 3, gw = W * 0.86 / cols, gh = gw * 0.8, g0 = W * 0.07, gy = H * 0.17;
   tl.to(one, { left: g0 + 3 * gw + gw * 0.06, top: gy + gh + gh * 0.06, width: gw * 0.88, height: gh * 0.88, duration: 0.6, ease: E.io }, tS - 0.2);
   const tiles = [];
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
@@ -40,9 +40,9 @@
     const d = Math.hypot(c - 3, r - 1);
     tl.fromTo(t, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: E.pop, immediateRender: true }, tS + 0.1 + d * 0.12);
   }
-  const n = place(mk("div", "kh", st, "1000s"), W * 0.07, H * 0.62); n.style.cssText += `font-size:${u * 9}px;color:${PAL.acc};opacity:0`;
+  const n = place(mk("div", "kh", st, "1000s"), W * 0.07, H * 0.65); n.style.cssText += `font-size:${u * 9}px;color:${PAL.acc};opacity:0`;
   rise(n, tG - 0.2);
-  const ng = place(mk("div", "kt", st), W * 0.07 + u * 34, H * 0.66); type(ng, "SENSORS + GADGETS", tG, 24);
+  const ng = place(mk("div", "kt", st), W * 0.07 + u * 34, H * 0.69); type(ng, "SENSORS + GADGETS", tG, 24);
 
   // C. batteries: the wall dims, a battery drains and refills again and again on "change the battery"
   const tB = at("battery", 7.0);

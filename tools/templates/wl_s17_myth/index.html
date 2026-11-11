@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 17 (246-258 s): high power through the air = safety / radiation risk for people and animals -> "wires will vanish" posts: MYTH */
+#pulse { position: absolute; border-radius: calc(var(--u) * 1.4); box-shadow: 0 0 0 calc(var(--u) * .5) var(--warn), 0 0 calc(var(--u) * 6) var(--warn); opacity: 0; }
+#myth { position: absolute; padding: calc(var(--u) * .6) calc(var(--u) * 3); border: calc(var(--u) * .7) solid var(--warn); border-radius: calc(var(--u) * 1);
+        font: 900 calc(var(--u) * 9) var(--font-head); color: var(--warn); letter-spacing: .12em; background: #0A0E17aa; }
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, shake, camera, circuits, post, url } = K;
+  circuits({ seed: 246, color: "#FF5A3C", spark: "#FF5A3C" });
+  const st = $("stage"); camera(st, 1.05, 0);
+  const tSa = at("safety", 2.8), tRa = at("radiation", 3.4), tPe = at("people", 4.4), tAn = at("animals", 5.1), tVi = at("viral", 10), tDo = at("dont", 11.3);
+
+  // A. the radiation-warning site opens big (16:9) and pulses red; SAFETY RISK types; PEOPLE / ANIMALS chips on their words
+  const rw = W * 0.56, rh = rw * 9 / 16, rx = W * 0.06, ry = H * 0.08;
+  const rad = card({ i: "radiation", x: rx, y: ry, w: rw, h: rh, focus: [0.3, 0.6, 1.15] });
+  tl.fromTo(rad, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.9, ease: E.io }, 0.2);
+  tl.fromTo(rad, { scale: 1.08 }, { scale: 1, duration: 3, ease: E.soft }, 0.2);
+  const pu = place(mk("div", "", st), rx, ry, rw, rh); pu.id = "pulse";
+  tl.fromTo(pu, { opacity: 0 }, { opacity: 1, duration: 0.35, yoyo: true, repeat: 5, ease: E.soft }, tRa - 0.2);
+  const sr = place(mk("div", "kh", st), rx + rw + u * 4, ry + u * 2); sr.style.cssText += `font-size:${u * 5.5}px;white-space:normal;width:${W * 0.3}px`;
+  type(sr, "Safety *risk*", tSa - 0.2, 16);
+  tl.set(sr, { color: PAL.text }, 0);
+  const rr = place(mk("div", "kt", st), rx + rw + u * 4, ry + u * 17); rr.style.cssText += `font-size:${u * 2.8}px;color:${PAL.warn}`; type(rr, "RADIATION", tRa, 18);
+  const c1 = chip("People", rx + rw + u * 4, ry + u * 25), c2 = chip("Animals", rx + rw + u * 4, ry + u * 32);
+  pop(c1, tPe - 0.1, { x: u * 6, opacity: 0 }, 0.4, E.in); pop(c2, tAn - 0.1, { x: u * 6, opacity: 0 }, 0.4, E.in);
+
+  // B. so the viral post ("wires will vanish") slides in over it; a red MYTH stamp slams and a line strikes the claim
+  tl.to([rad, pu, sr, rr, c1, c2], { opacity: 0.18, filter: "blur(3px)", duration: 0.6 }, tVi - 1.2);
+  const pr = place(mk("div", "", st), W * 0.68, H * 0.12, W * 0.3, H * 0.88); pr.id = "pres"; pr.style.backgroundImage = url("pres_up");
+  tl.fromTo(pr, { x: W * 0.25, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: E.in }, tVi - 1);
+  const p = post(W * 0.12, H * 0.16, W * 0.5, "Wires will *vanish* forever! ⚡⚡", tVi - 1.1, "2.4M");
+  const ln = place(mk("div", "", st), W * 0.14, H * 0.16 + u * 12, W * 0.44, u * 0.8); ln.style.background = PAL.warn;
+  tl.fromTo(ln, { scaleX: 0, transformOrigin: "0 50%" }, { scaleX: 1, duration: 0.3, ease: E.in }, tDo - 0.15);
+  const my = place(mk("div", "", st, "MYTH"), W * 0.3, H * 0.42); my.id = "myth";
+  tl.fromTo(my, { scale: 2.6, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.28, ease: E.slam }, tDo - 0.3);
+  shake($("shake"), tDo, u);
+  K.done();
+</script></body></html>

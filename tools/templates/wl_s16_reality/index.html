@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 16 (230-246 s): the real truth: low power, short distance; more distance = more loss; not for AC, fridge, washing machine */
+.trk { position: absolute; height: calc(var(--u) * 1.4); border-radius: var(--u); background: #ffffff1c; }
+.trk i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: var(--u); transform-origin: 0 50%; }
+.knob { position: absolute; width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); margin: calc(var(--u) * -1.5) 0 0 calc(var(--u) * -2.2); border-radius: 50%;
+        background: #fff; box-shadow: 0 0 0 calc(var(--u) * .5) var(--accent), 0 calc(var(--u) * .6) calc(var(--u) * 2) #000a; }
+.tl { position: absolute; font: 800 calc(var(--u) * 2.6) var(--font-head); color: var(--text2); letter-spacing: .14em; }
+.tl b { color: var(--text); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, camera, circuits, chapter, xmark } = K;
+  circuits({ seed: 230, color: "#FF8A5A" });
+  const st = $("stage"); camera(st, 1.03, 0.01);
+  const tTr = at("truth", 1.2), tLo = at("low", 4.5), tDi = at("distance", 7.6), tLs = at("loss", 9.1), tAc = at("ac", 11.7), tFr = at("fridge", 12.2), tWa = at("washing", 12.75), tNo = at("no", 15.5);
+
+  // A. chapter: REALITY CHECK (same chapter design as the methods)
+  const ch = chapter("!", "Reality <em>Check</em>", tTr - 0.6);
+  tl.to(ch, { opacity: 0, y: -H * 0.08, duration: 0.5, ease: E.out }, tLo - 0.8);
+
+  // B. today: low power, short distance (two short bars, labelled, no invented numbers)
+  const bx = W * 0.08, mk2 = (y, label, f, col) => { const t = place(mk("div", "trk", st, "<i></i>"), bx, y, W * 0.5);
+    t.querySelector("i").style.cssText += `width:100%;background:${col}`;
+    const l = place(mk("div", "tl", st, label), bx, y - u * 4.2); return [t, l, f]; };
+  const rows = [mk2(H * 0.16, "TODAY'S <b>POWER</b>", 0.18, PAL.pri), mk2(H * 0.3, "TODAY'S <b>DISTANCE</b>", 0.12, PAL.pri)];
+  rows.forEach(([t, l, f], i) => { tl.fromTo([t, l], { opacity: 0, x: -u * 4 }, { opacity: 1, x: 0, duration: 0.4, ease: E.in }, tLo - 0.3 + i * 0.25);
+    tl.fromTo(t.querySelector("i"), { scaleX: 0 }, { scaleX: f, duration: 0.8, ease: E.in }, tLo + i * 0.25); });
+  const lw = place(mk("div", "kt", st), bx + W * 0.53, H * 0.2); lw.style.fontSize = u * 3.2 + "px"; type(lw, "LOW + *SHORT*", tLo + 0.6, 18);
+
+  // C. cause -> effect: a distance slider moves right; the loss bar grows red with it
+  const sy = H * 0.5, ly = H * 0.64;
+  const s = place(mk("div", "trk", st), bx, sy, W * 0.6), sl = place(mk("div", "tl", st, "<b>DISTANCE</b> →"), bx, sy - u * 4.2);
+  const lo = place(mk("div", "trk", st, "<i></i>"), bx, ly, W * 0.6), ll = place(mk("div", "tl", st, "ENERGY <b style='color:#FF5A3C'>LOSS</b>"), bx, ly - u * 4.2);
+  lo.querySelector("i").style.cssText += `width:100%;background:linear-gradient(90deg,${PAL.acc},${PAL.warn})`;
+  const kn = place(mk("div", "knob", s), 0, 0);
+  tl.fromTo([s, sl, lo, ll], { opacity: 0, y: u * 3 }, { opacity: 1, y: 0, duration: 0.4, ease: E.in, stagger: 0.06 }, tDi - 0.5);
+  tl.fromTo(kn, { left: 0 }, { left: W * 0.6, duration: 2.2, ease: "power1.inOut" }, tDi);
+  tl.fromTo(lo.querySelector("i"), { scaleX: 0.05 }, { scaleX: 1, duration: 2.2, ease: "power2.in" }, tDi);
+  tl.fromTo(lo, { boxShadow: "0 0 0 #0000" }, { boxShadow: `0 0 ${u * 3}px ${PAL.warn}`, duration: 0.4, yoyo: true, repeat: 1 }, tLs);
+
+  // D. big appliances: AC, fridge and washing machine cropped from one real kitchen; each arrives on its word, then all are crossed
+  tl.to(st.children, { opacity: 0, x: -W * 0.08, duration: 0.5, ease: E.out, stagger: 0.01 }, tAc - 0.75);
+  const ch2 = mk("div", ""); ch2.style.cssText = "position:absolute;inset:0"; $("shake").append(ch2);
+  const ah = H * 0.5, apps = [["AC", tAc, W * 0.1, ah * 0.55, [0.295, 0.5, 1.75]], ["FRIDGE", tFr, W * 0.36, ah * 0.6, [0.64, 0.52, 1.6]], ["WASHING MACHINE", tWa, W * 0.62, ah * 0.85, [0.49, 0.66, 2.9]]];
+  const cs = apps.map(([lab, t, x, w, f]) => { const c = card({ i: "kitchen", x, y: H * 0.12, w, h: ah, focus: f, parent: ch2 });
+    pop(c, t - 0.15, { y: H * 0.2, opacity: 0, rotation: 3 }, 0.55, E.in);
+    const l = place(mk("div", "kt", ch2), x, H * 0.12 + ah + u * 1.8); l.style.fontSize = u * 2.6 + "px"; type(l, lab, t, 26); return c; });
+  cs.forEach((c, i) => xmark(c, tNo - 0.9 + i * 0.15));
+  const nf = place(mk("div", "kh", ch2, "<em style='color:#FF5A3C'>Not</em> for high power"), W * 0.1, H * 0.02); nf.style.cssText += `font-size:${u * 5}px;opacity:0`;
+  slam(nf, tNo - 0.3);
+  K.done();
+</script></body></html>

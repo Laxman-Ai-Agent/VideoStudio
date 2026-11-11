@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 09 (119-142 s): method 1 ultrasonic (Helsinki): a wild spark -> sound waves give it a straight path -> warm air, low density, a channel -> the spark follows */
+#arc { position: absolute; inset: 0; }
+.li { position: absolute; font: 800 calc(var(--u) * 3) var(--font-head); color: var(--text); letter-spacing: .06em; white-space: pre; }
+.li i { font-style: normal; color: var(--accent); margin-right: calc(var(--u) * 1.4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"><canvas id="arc"></canvas></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, camera, circuits, chapter, rnd } = K;
+  circuits({ seed: 119, lines: 10 });
+  const st = $("stage"); camera(st, 1.04, -0.01);
+  const tSp = at("spark", 7.6), tRa = at("random", 9.4), tWa = at("waves", 11.25), tPa = at("path", 14.3), tWr = at("warm", 17.05), tDe = at("density", 17.8), tRo = at("road", 19), tFo = at("follows", 22.4);
+
+  // A. METHOD 01 chapter, then the Helsinki building settles as a round badge in the corner
+  const ch = chapter("01", "Ultrasonic <em>Waves</em>", at("first", 0.56) - 0.3);
+  const bs = H * 0.2, hel = card({ i: "helsinki", x: W * 0.84 - bs / 2, y: H * 0.05, w: bs, h: bs, shape: "round", focus: [0.5, 0.45, 1.6] });
+  pop(hel, at("helsinki", 4.2) - 0.2, { scale: 0.3, opacity: 0, rotation: 30 });
+  const hc = chip("University of Helsinki", W * 0.84 - bs / 2 - u * 30, H * 0.05 + bs * 0.38); pop(hc, at("helsinki", 4.2) + 0.2, { x: u * 4, opacity: 0 }, 0.45, E.in);
+  tl.to(ch, { opacity: 0, y: -H * 0.06, duration: 0.5, ease: E.out }, at("helsinki", 4.2) - 0.4);
+  const ti = place(mk("div", "kt", st), W * 0.06, H * 0.08); ti.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(ti, "METHOD 01 · ULTRASONIC", at("helsinki", 4.2), 26);
+
+  // B. the spark: its real picture as a tall card, and a live arc between two electrodes that jumps around (seeded)
+  const pw = H * 0.5 * 9 / 16, ph = H * 0.5, sp = card({ i: "spark", x: W * 0.06, y: H * 0.16, w: pw, h: ph, focus: [0.5, 0.42, 1.25] });
+  pop(sp, tSp - 0.3, { y: H * 0.2, opacity: 0, rotation: -4 }, 0.7, E.in);
+  const ax = W * 0.36, bx = W * 0.8, ay = H * 0.4;
+  const el = (x) => { const e = place(mk("div", "", st), x - u * 0.8, ay - u * 5, u * 1.6, u * 10); e.style.cssText += `background:linear-gradient(#c9d3e3,#5b6b85);border-radius:${u}px`; return e; };
+  const e1 = el(ax), e2 = el(bx); pop(e1, tSp, { scaleY: 0, opacity: 0 }, 0.4, E.in); pop(e2, tSp + 0.1, { scaleY: 0, opacity: 0 }, 0.4, E.in);
+  const cv = $("arc"); cv.width = W; cv.height = H; const g = cv.getContext("2d");
+  const S = { on: 0, amp: 1, waves: 0, chan: 0, dot: -1 };
+  tl.to(S, { on: 1, duration: 0.3 }, tSp + 0.3);
+  tl.to(S, { amp: 0.06, duration: tPa - tWa, ease: "power2.inOut" }, tWa);
+  tl.to(S, { waves: 1, duration: 0.5 }, tWa - 0.2);
+  tl.to(S, { chan: 1, duration: 1.2, ease: E.in }, tWr);
+  tl.fromTo(S, { dot: 0 }, { dot: 1, duration: 0.6, ease: E.io, immediateRender: false }, tFo - 0.2);
+  const draw = (t) => {
+    g.clearRect(0, 0, W, H);
+    if (S.chan > 0) { const gr = g.createLinearGradient(0, ay - u * 4, 0, ay + u * 4); gr.addColorStop(0, "#FF8A3C00"); gr.addColorStop(0.5, "#FF8A3C" + Math.round(S.chan * 120).toString(16).padStart(2, "0")); gr.addColorStop(1, "#FF8A3C00");
+      g.fillStyle = gr; g.fillRect(ax, ay - u * 4, (bx - ax) * S.chan, u * 8); }
+    if (S.waves > 0) for (let k = 0; k < 5; k++) { const ph = ((t * 0.9 + k / 5) % 1), r = ph * W * 0.45;
+      g.strokeStyle = PAL.pri + Math.round((1 - ph) * S.waves * 140).toString(16).padStart(2, "0"); g.lineWidth = u * 0.3;
+      g.beginPath(); g.arc(W * 0.86, H * 0.66, r, Math.PI * 1.05, Math.PI * 1.45); g.stroke(); }
+    if (!S.on) return;
+    const r = rnd(1 + Math.floor(t * 14)), n = 18;   // a new random shape every frame-pair: the spark flickers
+    g.strokeStyle = "#ffffff"; g.shadowColor = S.amp < 0.3 ? PAL.acc : PAL.pri; g.shadowBlur = u * 3; g.lineWidth = u * 0.45;
+    g.beginPath(); g.moveTo(ax, ay);
+    for (let i = 1; i < n; i++) { const x = ax + (bx - ax) * i / n, y = ay + (r() - 0.5) * H * 0.5 * S.amp * Math.sin(Math.PI * i / n); g.lineTo(x, y); }
+    g.lineTo(bx, ay); g.stroke(); g.shadowBlur = 0;
+    if (S.dot >= 0 && S.dot <= 1) { g.fillStyle = "#fff"; g.shadowColor = PAL.acc; g.shadowBlur = u * 5; g.beginPath(); g.arc(ax + (bx - ax) * S.dot, ay, u * 1.4, 0, 6.28); g.fill(); g.shadowBlur = 0; }
+  };
+  const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: () => draw(o.t) }, 0);
+  const rw = place(mk("div", "kh", st, "<em style='color:#FF5A3C'>Random</em>"), ax, H * 0.62); rw.style.cssText += `font-size:${u * 6}px;opacity:0`; rise(rw, tRa - 0.1);
+
+  // C. sound waves: the ultrasonic clip card (bottom right) sends rings; the arc calms into a straight STABLE PATH
+  const uw = W * 0.24, uh = uw * 3 / 4, us = card({ i: "ultra2_clip", video: "ultra2_clip_v", vstart: tWa - 0.4, vdur: 5, x: W * 0.74, y: H * 0.5, w: uw, h: uh, focus: [0.5, 0.5, 1.2] });
+  pop(us, tWa - 0.4, { x: W * 0.2, opacity: 0 }, 0.6, E.in);
+  tl.to(rw, { opacity: 0, duration: 0.3 }, tWa);
+  const pa = place(mk("div", "kh", st, "Stable <em>Path</em>"), ax, H * 0.62); pa.style.cssText += `font-size:${u * 6}px;opacity:0`; rise(pa, tPa - 0.1);
+
+  // D. why it works, typed as a list on the words; the warm channel glows along the path
+  tl.to([pa, sp], { opacity: 0, duration: 0.4 }, tWr - 0.5);
+  [[tWr, "1", "AIR WARMS UP"], [tDe, "2", "DENSITY DROPS"], [tRo, "3", "A CHANNEL FORMS"]].forEach(([t, n, s], i) => {
+    const li = place(mk("div", "li", st), W * 0.06, H * (0.2 + i * 0.09)); li.innerHTML = `<i>${n}</i>`; const sp2 = mk("span", "", li);
+    tl.fromTo(li, { opacity: 0, x: -u * 3 }, { opacity: 1, x: 0, duration: 0.3, ease: E.in }, t - 0.1); type(sp2, s, t, 24); });
+  const fl = place(mk("div", "kh", st, "Spark <em>follows</em>"), ax, H * 0.6); fl.style.cssText += `font-size:${u * 6}px;opacity:0`; rise(fl, tFo - 0.3);
+  K.done();
+</script></body></html>

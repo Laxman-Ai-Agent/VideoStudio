@@ -1,0 +1,15 @@
+{
+ "name": "wl_s13_ask",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (190-201 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "question device easy phone laptop fan comment"
+ },
+ "description": "Presenter finger-up + hollow ? builds; question typed; phone / laptop / fan option cards flip in on their words; amber comment bubble types"
+}

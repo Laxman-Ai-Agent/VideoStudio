@@ -63,7 +63,7 @@
 
   // torch: the whole diagram slides away; the torch card arrives and its beam makes one sharp circle on the lens picture
   tl.to([src, tgt, rc, mt, w3, w4, cv], { x: -W * 0.6, opacity: 0, duration: 0.7, ease: "power3.in", stagger: 0.02 }, tTo - 0.6);
-  const ts = H * 0.5, torch = card({ i: "torch", x: W * 0.07, y: H * 0.12, w: ts * 3 / 4, h: ts, focus: [0.5, 0.5, 1.15] });
+  const ts = H * 0.5, torch = card({ i: "torch", x: W * 0.07, y: H * 0.12, w: ts * 3 / 4, h: ts, focus: [0.4, 0.62, 1.1] });
   pop(torch, tTo - 0.1, { x: -W * 0.2, rotation: -6, opacity: 0 }, 0.7, E.in);
   const tt = place(mk("div", "kt", st), W * 0.07, H * 0.12 + ts + u * 2); tt.style.fontSize = u * 3 + "px"; type(tt, "LIKE A *TORCH*", tTo + 0.2, 20);
   const lw = W * 0.5, lh = lw * 9 / 16, lens = card({ i: "lens", x: W * 0.42, y: H * 0.1, w: lw, h: lh, focus: [0.5, 0.5, 1.1] });

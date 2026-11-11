@@ -16,7 +16,7 @@
   const st = $("stage"); camera(st, 1.05, -0.01);
 
   // A. the future city opens from a thin amber line into a cinema band; the question types over it
-  const bw = W * 0.88, bh = bw * 9 / 21, bx = W * 0.06, by = H * 0.08;
+  const bw = W * 0.8, bh = bw * 9 / 24, bx = W * 0.06, by = H * 0.08;
   const line = place(mk("div", "", st), bx, by + bh / 2, bw, u * 0.4); line.style.background = PAL.acc;
   tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E.io }, 0);
   const city = card({ i: "city_clip", video: "city_clip_v", vstart: 0.3, vdur: 5, x: bx, y: by, w: bw, h: bh, focus: [0.5, 0.5, 1.05] });
@@ -34,9 +34,9 @@
   const pr = place(mk("div", "", st), W * 0.56, H * 0.06, W * 0.4, H * 0.94); pr.id = "pres"; pr.style.backgroundImage = url("pres_point");
   tl.fromTo(pr, { x: W * 0.3, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: E.in }, tC + 0.15);
   tl.fromTo(pr, { scale: 1 }, { scale: 1.04, duration: 3, ease: E.soft, transformOrigin: "50% 100%" }, tC + 0.9);
-  const w1 = place(mk("div", "kh", st, "Watch till<br><em>the end</em>"), W * 0.06, H * 0.3); w1.style.cssText += `font-size:${u * 8.5}px;opacity:0`;
+  const w1 = place(mk("div", "kh", st, "Watch till<br><em>the end</em>"), W * 0.06, H * 0.38); w1.style.cssText += `font-size:${u * 8.5}px;opacity:0`;
   rise(w1, at("clear", 4.5) + 0.1, 0.12);
-  const bar = place(mk("div", "", st, "<i></i>"), W * 0.06, H * 0.62, W * 0.4); bar.id = "bar";
+  const bar = place(mk("div", "", st, "<i></i>"), W * 0.06, H * 0.68, W * 0.4); bar.id = "bar";
   tl.fromTo(bar, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("end", 5.7) - 0.3);
   tl.fromTo(bar.querySelector("i"), { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power2.inOut" }, at("end", 5.7));
 

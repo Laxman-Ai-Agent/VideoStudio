@@ -1,0 +1,15 @@
+{
+ "name": "wl_s08_three",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (93-119 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "three ultra laser rf harvest machine projects social secret subscribe bell"
+ },
+ "description": "Hollow 3 + methods typed; ultrasonic / laser / RF clip cards of three shapes stand on an amber rail with numbers; red gaps: not one machine, PROJECT chips; street backdrop with wrong-claim bubbles crossed out, Misunderstood; The real secret; presenter + subscribe press + bell shake"
+}

@@ -1,0 +1,87 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 08 (93-119 s): three methods -> not one machine, three projects -> social media got it wrong -> the secret -> subscribe */
+#rail { position: absolute; height: calc(var(--u) * .4); background: var(--accent); transform-origin: 0 50%; box-shadow: 0 0 calc(var(--u) * 1.4) var(--accent); }
+.num { position: absolute; font: 900 calc(var(--u) * 3.2) var(--font-head); color: var(--accent); }
+.gap { position: absolute; width: calc(var(--u) * .5); background: var(--warn); box-shadow: 0 0 calc(var(--u) * 2) var(--warn); transform-origin: 50% 0; }
+.bub { position: absolute; padding: calc(var(--u) * 1.4) calc(var(--u) * 2.2); border-radius: calc(var(--u) * 2) calc(var(--u) * 2) calc(var(--u) * 2) calc(var(--u) * .4);
+       background: #F4F7FF; color: #0A0E17; font: 800 calc(var(--u) * 2.8) var(--font-head); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #000b; white-space: nowrap; }
+.bub b { color: var(--warn); }
+#sub { position: absolute; padding: calc(var(--u) * 1.6) calc(var(--u) * 4); border-radius: calc(var(--u) * 1.2); background: #E52D27; color: #fff;
+       font: 900 calc(var(--u) * 3.6) var(--font-head); letter-spacing: .06em; box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #000b; }
+#bell { position: absolute; transform-origin: 50% 10%; }
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, slam, camera, circuits, xmark, url } = K;
+  circuits({ seed: 93 });
+  const st = $("stage"); camera(st, 1.03, 0.01);
+
+  // A. a hollow "3" grows; "methods" types beside it; the rail draws under where the three cards will stand
+  const t3 = at("three", 2.8);
+  const n3 = place(mk("div", "kh", st, "3"), W * 0.07, H * 0.04); n3.style.cssText += `font-size:${u * 22}px;color:transparent;-webkit-text-stroke:${u * 0.3}px ${PAL.acc};opacity:0`;
+  tl.fromTo(n3, { scale: 0.4, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.7, ease: E.pop }, t3 - 0.3);
+  const k = place(mk("div", "kt", st), W * 0.07, H * 0.08); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(k, "FINLAND RESEARCH", 0.3, 24);
+  const m = place(mk("div", "kh", st), W * 0.07 + u * 17, H * 0.12); m.style.fontSize = u * 6.5 + "px"; type(m, "methods", t3 + 0.2, 16);
+  const ry = H * 0.7, rail = place(mk("div", "", st), W * 0.05, ry, W * 0.9); rail.id = "rail";
+  tl.fromTo(rail, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: E.io }, t3 + 0.6);
+
+  // B. three cards of three shapes stand on the rail on their words: ultrasonic (1:1), laser (3:4), RF (16:9)
+  const tU = at("ultra", 5.2), tLa = at("laser", 6.7), tR = at("rf", 7.9);
+  const c1s = H * 0.36, c2h = H * 0.42, c2w = c2h * 3 / 4, c3w = W * 0.3, c3h = c3w * 9 / 16;
+  const spec = [["ultra_clip", tU, W * 0.07, c1s, c1s, "01", "ULTRASONIC"], ["redlaser_clip", tLa, W * 0.36, c2w, c2h, "02", "LASER"], ["rf_clip", tR, W * 0.6, c3w, c3h, "03", "RF HARVESTING"]];
+  const cards = spec.map(([nm, t, x, w, h, no, lab], i) => {
+    const c = card({ i: nm, video: nm + "_v", vstart: t, vdur: 5, x, y: ry - h - u * 2, w, h, focus: [0.5, 0.5, 1.15], shape: i === 0 ? "round" : "" });
+    pop(c, t - 0.1, { y: H * 0.2, opacity: 0, rotation: (i - 1) * 4 }, 0.7, E.pop);
+    const nn = place(mk("div", "num", st, no), x, ry + u * 1.5); tl.fromTo(nn, { opacity: 0, y: u * 2 }, { opacity: 1, y: 0, duration: 0.3 }, t);
+    const l = place(mk("div", "kt", st), x + u * 6, ry + u * 2); l.style.fontSize = u * 2.4 + "px"; type(l, lab, t + 0.1, 24);
+    return [c, nn, l];
+  });
+  tl.to([n3, m, k], { opacity: 0, y: -u * 3, duration: 0.4 }, tU - 0.4);
+  const head = place(mk("div", "kh", st), W * 0.07, H * 0.06); head.style.fontSize = u * 5 + "px"; type(head, "3 *methods*", tU - 0.2, 18);
+
+  // C. "not one machine": the cards push apart, red gaps slam down between them, each becomes its own PROJECT
+  const tM = at("machine", 11.8), tP = at("projects", 14);
+  cards.forEach(([c, nn, l], i) => tl.to([c, nn, l], { x: (i - 1) * W * 0.025, duration: 0.5, ease: E.io }, tM - 0.4));
+  [W * 0.33, W * 0.575].forEach((x, i) => { const gp = place(mk("div", "gap", st), x, H * 0.22, null, H * 0.55); tl.fromTo(gp, { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: E.slam }, tM + i * 0.12); });
+  tl.to(head, { opacity: 0, duration: 0.25 }, tM - 0.3);
+  const nm = place(mk("div", "kh", st, "Not <em>one</em> machine"), W * 0.07, H * 0.06); nm.style.cssText += `font-size:${u * 5}px;opacity:0`; rise(nm, tM);
+  cards.forEach(([c], i) => { const ch = chip("PROJECT " + (i + 1), parseFloat(c.style.left) + u, parseFloat(c.style.top) + u); pop(ch, tP + i * 0.15, { scale: 0.5, opacity: 0 }, 0.4); });
+
+  // D. social media misread it: the cards fall back, the street of phone users fills the frame, wrong claims pop in bubbles
+  const tS = at("social", 14.9) + 0.3;
+  tl.to(st.children, { opacity: 0, y: H * 0.1, duration: 0.6, ease: "power3.in", stagger: 0.01 }, tS);
+  const lay = mk("div", ""); lay.style.cssText = "position:absolute;inset:0"; $("shake").append(lay);
+  const bg = card({ i: "street", x: 0, y: 0, w: W, h: H, shape: "sharp", parent: lay, focus: [0.5, 0.5, 1.05] });
+  tl.fromTo(bg, { opacity: 0, scale: 1.15 }, { opacity: 0.55, scale: 1, duration: 1, ease: E.in }, tS + 0.3);
+  tl.to(bg, { scale: 1.08, duration: 5, ease: "none" }, tS + 1.3);
+  [["It's ONE machine!", 0.12, 0.14], ["Wires <b>gone</b> next year!", 0.5, 0.24], ["Free power everywhere!", 0.2, 0.44]].forEach(([tx, x, y], i) => {
+    const bb = place(mk("div", "bub", lay, tx), W * x, H * y); pop(bb, tS + 0.9 + i * 0.5, { scale: 0.3, opacity: 0, y: u * 4 }, 0.5);
+    xmark(bb, tS + 3.2 + i * 0.2);
+  });
+  const mi = place(mk("div", "kh", lay, "Misunderstood"), W * 0.07, H * 0.6); mi.style.cssText += `font-size:${u * 7}px;color:${PAL.warn};opacity:0`; rise(mi, tS + 2.6);
+
+  // E. "the real secret": everything recedes into a keyhole of light; then subscribe with the presenter
+  const tSe = at("secret", 19.8);
+  tl.to(lay.children, { opacity: 0, duration: 0.5 }, tSe - 0.6);
+  const se = place(mk("div", "kh", lay, "The real <em>secret</em> →"), 0, H * 0.34); se.style.cssText += `width:${W}px;text-align:center;font-size:${u * 8}px;opacity:0`;
+  rise(se, tSe - 0.2, 0.1);
+  const tB = at("subscribe", 24.9) - 2.2;
+  tl.to(se, { opacity: 0, scale: 0.8, duration: 0.4 }, tB - 0.2);
+  const pr = place(mk("div", "", lay), W * 0.55, H * 0.08, W * 0.4, H * 0.92); pr.id = "pres"; pr.style.backgroundImage = url("pres_point");
+  tl.fromTo(pr, { x: W * 0.3, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: E.in }, tB);
+  const sb = place(mk("div", "", lay, "SUBSCRIBE"), W * 0.1, H * 0.3); sb.id = "sub"; pop(sb, tB + 0.4, { scale: 0.4, opacity: 0 });
+  const tPr = at("subscribe", 24.9);
+  tl.to(sb, { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1 }, tPr);
+  tl.to(sb, { background: "#3A4352", duration: 0.2 }, tPr + 0.15);
+  const sbt = { v: 0 }; tl.to(sbt, { v: 1, duration: 0.01, onUpdate: () => { sb.textContent = sbt.v > 0.5 ? "SUBSCRIBED ✓" : "SUBSCRIBE"; } }, tPr + 0.2);
+  const bell = place(mk("div", "", lay, `<svg width="${u * 9}" height="${u * 9}" viewBox="0 0 24 24"><path fill="${PAL.acc}" d="M12 22a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.84V3a1.5 1.5 0 0 0-3 0v1.16A7 7 0 0 0 5 11v5l-2 2v1h18v-1z"/></svg>`), W * 0.1 + u * 34, H * 0.29); bell.id = "bell";
+  pop(bell, tB + 0.6, { scale: 0, opacity: 0 });
+  tl.fromTo(bell, { rotation: -18 }, { rotation: 18, duration: 0.09, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, at("bell", 25.8) - 0.1);
+  K.done();
+</script></body></html>

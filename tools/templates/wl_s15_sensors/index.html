@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 15 (216-230 s): not enough to charge a phone, enough for tiny IoT sensors -> battery-less sensors -> thousands, a real solution */
+#vs { position: absolute; font: 900 calc(var(--u) * 7) var(--font-head); color: var(--text2); }
+.dotc { position: absolute; border-radius: 50%; background: var(--accent); box-shadow: 0 0 calc(var(--u) * 1.5) var(--accent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, slam, camera, circuits, xmark } = K;
+  circuits({ seed: 216, sparks: 50 });
+  const st = $("stage"); camera(st, 1.04, -0.012);
+  const tPh = at("phone", 0.85), tIo = at("iot", 3.7), tBa = at("battery", 6.1), tCo = at("concept", 7.6), tTh = at("thousands", 9.5), tSo = at("solution", 13.25);
+
+  // A. a phone (9:16) on the left: CHARGE A PHONE? -> crossed out, NOT ENOUGH
+  const ph = H * 0.56, pw = ph * 9 / 16, phone = card({ i: "phone", x: W * 0.1, y: H * 0.1, w: pw, h: ph, focus: [0.5, 0.55, 1.4] });
+  pop(phone, tPh - 0.3, { y: H * 0.3, opacity: 0, rotation: -5 }, 0.7, E.in);
+  const q = place(mk("div", "kt", st), W * 0.1, H * 0.1 + ph + u * 2); q.style.fontSize = u * 3 + "px"; type(q, "CHARGE A PHONE?", tPh, 22);
+  const xp = xmark(phone, tPh + 1.3); tl.to(q, { color: PAL.warn, duration: 0.2 }, tPh + 1.4);
+  dim(phone, tIo - 0.4, 0.4);
+  const vs = place(mk("div", "", st, "vs"), W * 0.38, H * 0.3); vs.id = "vs"; pop(vs, tIo - 0.4, { scale: 0.3, opacity: 0 }, 0.4);
+
+  // B. a tiny sensor (1:1) on the right lights up: IoT SENSORS, enough
+  const ss = H * 0.4, sen = card({ i: "iot", x: W * 0.52, y: H * 0.14, w: ss, h: ss, focus: [0.5, 0.62, 1.4] });
+  pop(sen, tIo - 0.1, { scale: 0.3, opacity: 0, rotation: 8 }); ring(sen, tIo + 0.5);
+  const s1 = place(mk("div", "kt", st), W * 0.52, H * 0.14 + ss + u * 2); s1.style.fontSize = u * 3 + "px"; type(s1, "*IOT SENSORS* ✓", tIo + 0.1, 20);
+
+  // C. battery-less: a battery outline on the sensor is struck away; the phrase rises
+  const bt = place(mk("div", "", st), W * 0.52 + ss + u * 3, H * 0.2, u * 12, u * 6);
+  bt.style.cssText += `border:${u * 0.5}px solid ${PAL.text};border-radius:${u}px`; pop(bt, tBa - 0.2, { scale: 0.4, opacity: 0 }, 0.4);
+  const xb = xmark(bt, tBa + 0.3);
+  const bl = place(mk("div", "kh", st, "Battery-less <em>Sensors</em>"), W * 0.06, H * 0.62); bl.style.cssText += `font-size:${u * 6.5}px;opacity:0`;
+  tl.to(q, { opacity: 0, duration: 0.3 }, tCo - 0.5);
+  rise(bl, tCo - 0.2, 0.12);
+
+  // D. thousands: the factory floor opens behind, the sensor card multiplies into a field of small cards that light up in a wave
+  tl.to([phone, vs, bt, xp, xb], { opacity: 0, duration: 0.4 }, tTh - 0.7);
+  tl.to(sen, { left: W * 0.06, top: H * 0.08, width: H * 0.16, height: H * 0.16, duration: 0.6, ease: E.io }, tTh - 0.7);
+  tl.to(s1, { opacity: 0, duration: 0.3 }, tTh - 0.7);
+  tl.to(bl, { top: H * 0.66, fontSize: u * 5 + "px", duration: 0.6, ease: E.io }, tTh - 0.7);
+  const fac = card({ i: "factory_clip", video: "factory_clip_v", vstart: tTh - 0.6, vdur: 4.5, x: 0, y: 0, w: W, h: H, shape: "sharp" });
+  st.prepend(fac); tl.fromTo(fac, { opacity: 0 }, { opacity: 0.35, duration: 0.6 }, tTh - 0.6);
+  const cols = 12, rows = 4, gw = W * 0.7 / cols, x0 = W * 0.26, y0 = H * 0.1;
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const pic = (r + c) % 3 === 0 ? "sensor_hand" : (r + c) % 3 === 1 ? "iot" : "sensor_white";
+    const t = card({ i: pic, x: x0 + c * gw + gw * 0.08, y: y0 + r * gw + gw * 0.08, w: gw * 0.84, h: gw * 0.84, shape: "round",
+                     focus: pic === "iot" ? [0.5, 0.62, 1.4] : pic === "sensor_hand" ? [0.42, 0.55, 2.4] : [0.5, 0.55, 2.6] });
+    tl.fromTo(t, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: E.pop, immediateRender: true }, tTh - 0.2 + (c + r) * 0.05);
+    ring(t, tTh + 1.2 + (c + r) * 0.06);
+  }
+  const ct = place(mk("div", "kt", st), x0, y0 + rows * gw + u * 2); ct.style.fontSize = u * 3 + "px"; type(ct, "THOUSANDS · *NO BATTERY CHANGES*", tTh + 0.4, 28);
+  const so = place(mk("div", "kchip", st, "A real solution"), W * 0.26, H * 0.6); pop(so, tSo - 0.3, { scale: 0.5, opacity: 0 }, 0.45);
+  K.done();
+</script></body></html>

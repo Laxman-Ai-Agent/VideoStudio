@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 10 (142-154 s): reality check: only about 4 cm -> not a whole home -> surface treatment, for now */
+#stamp { position: absolute; padding: calc(var(--u) * .8) calc(var(--u) * 2.2); border: calc(var(--u) * .5) solid var(--accent); border-radius: calc(var(--u) * .8);
+         font: 900 calc(var(--u) * 3.6) var(--font-head); color: var(--accent); letter-spacing: .12em; }
+#ruler { position: absolute; height: calc(var(--u) * 5); }
+#ruler .bar { position: absolute; left: 0; top: 0; height: 100%; width: 100%; transform-origin: 0 50%;
+              background: repeating-linear-gradient(90deg, var(--text) 0 2px, transparent 2px calc(var(--u) * 1.6)) 0 0 / 100% 45% no-repeat, #ffffff14;
+              border-top: calc(var(--u) * .35) solid var(--accent); }
+.cap { position: absolute; top: calc(var(--u) * -2); width: calc(var(--u) * .5); height: calc(var(--u) * 9); background: var(--accent); }
+#cm { position: absolute; font: 900 calc(var(--u) * 13) var(--font-head); color: var(--accent); text-shadow: 0 0 calc(var(--u) * 4) #FFB21A88; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, camera, circuits, xmark, count } = K;
+  circuits({ seed: 142 });
+  const st = $("stage"); camera(st, 1.05, 0.01);
+  const tC = at("check", 1.3), tF = at("four", 4.25), tCm = at("cm", 4.6), tHo = at("home", 6.5), tSu = at("surface", 9.7);
+
+  // A. the ultrasonic set-up as a wide 2.35:1 card; REALITY CHECK stamps onto it
+  const cw = W * 0.88, chh = cw / 2.35, cx = W * 0.06, cy = H * 0.07;
+  const set = card({ i: "ultra2_clip", video: "ultra2_clip_v", vstart: 0, vdur: 5, x: cx, y: cy, w: cw, h: chh, focus: [0.5, 0.55, 1.1], shape: "sharp" });
+  tl.fromTo(set, { clipPath: "inset(0 50% 0 50%)" }, { clipPath: "inset(0 0% 0 0%)", duration: 0.8, ease: E.io }, 0);
+  const sm = place(mk("div", "", st, "REALITY CHECK"), cx + u * 2, cy + u * 2); sm.id = "stamp";
+  tl.fromTo(sm, { scale: 2, opacity: 0, rotation: -10 }, { scale: 1, opacity: 1, rotation: -4, duration: 0.3, ease: E.slam }, tC - 0.1);
+
+  // B. a ruler draws between two end caps and counts up to 4 cm; the number lands big on "centimeters"
+  const rx = W * 0.14, rw = W * 0.42, ry = cy + chh * 0.62;  // the ruler lies over the set-up picture
+  tl.to(set, { opacity: 0.55, duration: 0.4 }, tF - 1);
+  const ru = place(mk("div", "", st, '<div class="bar"></div>'), rx, ry, rw); ru.id = "ruler";
+  const c1 = place(mk("div", "cap", ru), 0, -u * 2), c2 = place(mk("div", "cap", ru), 0, -u * 2);
+  tl.fromTo(ru, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tF - 0.9);
+  tl.fromTo(ru.querySelector(".bar"), { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: E.io }, tF - 0.7);
+  tl.fromTo(c2, { left: 0 }, { left: rw, duration: 1.1, ease: E.io }, tF - 0.7);
+  const n = place(mk("div", "", st), rx + rw + u * 4, ry - u * 6); n.id = "cm";
+  count(n, 0, 4, tF - 0.7, 1.1, (v) => (v >= 3.99 ? "~4 cm" : v.toFixed(1)));
+  tl.fromTo(n, { scale: 1 }, { scale: 1.15, duration: 0.12, yoyo: true, repeat: 1 }, tCm);
+  const on = place(mk("div", "kt", st), rx, ry + u * 7); on.style.fontSize = u * 3.2 + "px"; type(on, "ONLY ABOUT *4 CENTIMETRES*", tCm, 26);
+
+  // C. not the whole home: the living room card arrives and is crossed out
+  tl.to([ru, n, on, set, sm], { opacity: 0, y: -u * 6, duration: 0.5, ease: E.out, stagger: 0.03 }, tHo - 0.6);
+  const hw = W * 0.4, hh = hw * 9 / 16, home = card({ i: "room_tv", x: W * 0.06, y: H * 0.14, w: hw, h: hh, focus: [0.5, 0.5, 1.05] });
+  pop(home, tHo - 0.3, { x: -W * 0.2, opacity: 0, rotation: -3 }, 0.6, E.in);
+  const ht = place(mk("div", "kt", st), W * 0.06, H * 0.14 + hh + u * 2); ht.style.fontSize = u * 3 + "px"; type(ht, "POWER A WHOLE HOME?", tHo, 26);
+  xmark(home, tHo + 1.1); dim(home, tHo + 1.4, 0.55);
+
+  // D. what it is good for today: the laser-lab clip card, SURFACE TREATMENT typed, FOR NOW
+  const lw = W * 0.4, lh = lw * 3 / 4, lab = card({ i: "laserlab_clip", video: "laserlab_clip_v", vstart: tSu - 0.5, vdur: 5, x: W * 0.54, y: H * 0.08, w: lw, h: lh, focus: [0.5, 0.5, 1.1] });
+  pop(lab, tSu - 0.5, { x: W * 0.2, opacity: 0, rotation: 3 }, 0.7, E.in);
+  const s1 = place(mk("div", "kt", st), W * 0.54, H * 0.08 + lh + u * 2); s1.style.fontSize = u * 3.2 + "px"; type(s1, "*SURFACE TREATMENT*", tSu, 24);
+  const fn = chip("For now", W * 0.54 + lw - u * 16, H * 0.08 + u * 1.5); pop(fn, tSu + 1, { scale: 0.5, opacity: 0 }, 0.4);
+  K.done();
+</script></body></html>

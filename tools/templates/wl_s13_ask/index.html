@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 13 (190-201 s): a question to you: which device without a wire would make life easy? phone, laptop, fan -> comment */
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+#qm { position: absolute; font: 900 calc(var(--u) * 40) var(--font-head); color: transparent; -webkit-text-stroke: calc(var(--u) * .4) var(--accent); line-height: 1; }
+.opt { position: absolute; perspective: calc(var(--u) * 80); }
+.opt .kc { position: absolute; inset: 0; backface-visibility: hidden; }
+.ol { position: absolute; left: 0; right: 0; text-align: center; font: 800 calc(var(--u) * 2.8) var(--font-head); letter-spacing: .12em; color: var(--text); }
+#bub { position: absolute; padding: calc(var(--u) * 1.6) calc(var(--u) * 2.6); border-radius: calc(var(--u) * 2.4) calc(var(--u) * 2.4) calc(var(--u) * 2.4) calc(var(--u) * .4);
+       background: var(--accent); color: #0A0E17; font: 800 calc(var(--u) * 3.2) var(--font-head); white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, camera, circuits, url } = K;
+  circuits({ seed: 190 });
+  const st = $("stage"); camera(st, 1.04, -0.01);
+  const tQ = at("question", 1.2), tDv = at("device", 3.1), tEa = at("easy", 5.8), tPh = at("phone", 6.9), tLa = at("laptop", 7.5), tFa = at("fan", 8.3), tCo = at("comment", 10.4);
+
+  // A. the presenter (finger up) on the left; a hollow question mark builds on the right; the question types
+  const pr = place(mk("div", "", st), W * 0.01, H * 0.1, W * 0.34, H * 0.9); pr.id = "pres"; pr.style.backgroundImage = url("pres_up");
+  tl.fromTo(pr, { x: -W * 0.25, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: E.in }, 0.1);
+  const qm = place(mk("div", "", st, "?"), W * 0.74, -H * 0.02); qm.id = "qm";
+  tl.fromTo(qm, { scale: 0.3, rotation: -40, opacity: 0 }, { scale: 1, rotation: 8, opacity: 0.9, duration: 0.9, ease: E.pop }, tQ - 0.3);
+  tl.to(qm, { rotation: -4, duration: 2.4, ease: E.soft, yoyo: true, repeat: 1 }, tQ + 0.6);
+  const k = place(mk("div", "kt", st), W * 0.36, H * 0.12); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(k, "A QUICK *QUESTION*", tQ, 24);
+  const q = place(mk("div", "kh", st), W * 0.36, H * 0.18); q.style.cssText += `font-size:${u * 4.6}px;white-space:normal;width:${W * 0.4}px`;
+  type(q, "Which device without a wire would make *your* life easy?", tDv - 0.2, 30);
+
+  // B. three option cards flip in on their words: phone (9:16), laptop (4:3), fan (circle)
+  tl.to(qm, { opacity: 0.18, duration: 0.5 }, tPh - 0.8);
+  tl.to(q, { opacity: 0.35, duration: 0.4 }, tPh - 0.3);
+  const oy = H * 0.4, opts = [["phone", tPh, W * 0.37, H * 0.3 * 9 / 16, H * 0.3, "", [0.5, 0.5, 1.15], "PHONE"],
+    ["room_tv", tLa, W * 0.5, H * 0.26 * 4 / 3, H * 0.26, "", [0.49, 0.72, 5], "LAPTOP"],
+    ["room_tv", tFa, W * 0.73, H * 0.26, H * 0.26, "round", [0.53, 0.18, 2.6], "FAN"]];
+  opts.forEach(([nm, t, x, w, h, sh, f, lab]) => {
+    const box = place(mk("div", "opt", st), x, oy, w, h);
+    const c = card({ i: nm, x: 0, y: 0, w, h, shape: sh, focus: f, parent: box });
+    tl.fromTo(c, { rotationY: -90, opacity: 0 }, { rotationY: 0, opacity: 1, duration: 0.6, ease: E.pop, immediateRender: true }, t - 0.1);
+    K.sweep(c, t + 0.4);
+    const l = place(mk("div", "ol", box, lab), 0, h + u * 1.2); tl.fromTo(l, { opacity: 0, y: u * 2 }, { opacity: 1, y: 0, duration: 0.3 }, t + 0.1);
+    ring(c, t + 0.1); ring(c, t + 0.75, 0);
+  });
+
+  // C. "tell me in the comments": an amber speech bubble types below the options
+  const bb = place(mk("div", "", st), W * 0.37, H * 0.06); bb.id = "bub"; bb.style.opacity = 0;
+  tl.to(q, { opacity: 0, duration: 0.3 }, tCo - 0.5); tl.to(k, { opacity: 0, duration: 0.3 }, tCo - 0.5);
+  pop(bb, tCo - 0.3, { scale: 0.3, opacity: 0, transformOrigin: "0% 100%" }, 0.5);
+  type(bb, "Tell me in the comments ↓", tCo, 26);
+  K.done();
+</script></body></html>

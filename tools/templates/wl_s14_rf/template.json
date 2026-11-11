@@ -1,0 +1,15 @@
+{
+ "name": "wl_s14_rf",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (201-216 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "third rf oulu wifi mobile receiver catch small"
+ },
+ "description": "Chapter 03 RF Harvesting; Oulu campus card; street clip backdrop, router + cell tower cards send rings that bend into the receiver clip card; the LED board card lights: a tiny bit of electricity"
+}

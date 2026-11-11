@@ -1,0 +1,15 @@
+{
+ "name": "wl_s10_4cm",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (142-154 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "see params.names of the scene (projects/03_Wireless_Power/16x9/scripts/make_sequences.py)",
+  "beats": "check four cm home surface"
+ },
+ "description": "Wide set-up card opens, REALITY CHECK stamp; a ruler draws over it and counts to ~4 cm; living room card crossed out; laser-lab clip card SURFACE TREATMENT, For now chip"
+}

@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 12 (167-190 s): shocking update: DARPA (USA) sent 800+ W over 8+ km by laser, but only 20 % arrived, 80 % lost */
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+#badge { position: absolute; padding: calc(var(--u) * 1) calc(var(--u) * 2.6); border: calc(var(--u) * .5) solid var(--text); border-radius: calc(var(--u) * .6);
+         font: 900 calc(var(--u) * 6.5) var(--font-head); color: var(--text); letter-spacing: .14em; background: #0A0E17cc; }
+.big { position: absolute; font: 900 calc(var(--u) * 9) var(--font-head); color: var(--accent); text-shadow: 0 0 calc(var(--u) * 3) #FFB21A88; white-space: nowrap; }
+.lbl { position: absolute; font: 800 calc(var(--u) * 2.4) var(--font-head); color: var(--text2); letter-spacing: .14em; }
+#tank { position: absolute; border: calc(var(--u) * .4) solid var(--text); border-radius: calc(var(--u) * 1.2); overflow: hidden; }
+#tank i { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; background: linear-gradient(0deg, var(--accent), #fff3); transform-origin: 50% 100%; }
+#fx { position: absolute; inset: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"><canvas id="fx"></canvas></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, flash, shake, beam, count, camera, circuits, url, rnd } = K;
+  circuits({ seed: 167, sparks: 70 });
+  const st = $("stage"); camera(st, 1.03, 0.01);
+  const tSh = at("shock", 0.8), tDa = at("darpa", 3), tKm = at("km", 5.25), tWa = at("watts", 7.95), tEf = at("eff", 10.35), tTw = at("twenty", 11.65),
+        tFi = at("fifth", 14.45), tEi = at("eighty", 16.5), tLo = at("lost", 17.8), tPr = at("problem", 21.9);
+
+  // A. SHOCK: flash, the presenter punches in big at centre-right, SHOCKING UPDATE slams
+  const pr = place(mk("div", "", st), W * 0.46, H * 0.02, W * 0.48, H * 0.98); pr.id = "pres"; pr.style.backgroundImage = url("pres_shock");
+  flash(tSh - 0.15, 0.7);
+  tl.fromTo(pr, { scale: 1.35, opacity: 0, transformOrigin: "50% 60%" }, { scale: 1, opacity: 1, duration: 0.35, ease: E.slam }, tSh - 0.15);
+  shake($("shake"), tSh + 0.2, u * 1.2);
+  const su = place(mk("div", "kh", st, "Shocking<br><em>Update</em>"), W * 0.06, H * 0.22); su.style.cssText += `font-size:${u * 9}px;opacity:0`;
+  slam(su, tSh + 0.05);
+
+  // B. DARPA (USA): the presenter steps back to a corner, a badge stamps on, the test range opens wide
+  tl.to(pr, { left: W * 0.8, top: H * 0.5, width: W * 0.18, height: H * 0.34, duration: 0.7, ease: E.io }, tDa - 0.6);
+  tl.to(su, { opacity: 0, y: -u * 4, duration: 0.35 }, tDa - 0.6);
+  const rw = W * 0.88, rh = rw * 9 / 21, rx = W * 0.06, ry = H * 0.06;
+  const rg = card({ i: "range", x: rx, y: ry, w: rw, h: rh, focus: [0.5, 0.55, 1.05], shape: "sharp" });
+  st.insertBefore(rg, pr);
+  tl.fromTo(rg, { clipPath: "inset(0 50% 0 50%)", opacity: 1 }, { clipPath: "inset(0 0% 0 0%)", duration: 0.8, ease: E.io }, tDa - 0.4);
+  const bd = place(mk("div", "", st, "DARPA"), rx + u * 2.5, ry + u * 2.5); bd.id = "badge";
+  tl.fromTo(bd, { scale: 2.2, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.3, ease: E.slam }, tDa);
+  const us = chip("USA · laser test", rx + u * 2.5, ry + u * 13); pop(us, tDa + 0.3, { x: -u * 4, opacity: 0 }, 0.4, E.in);
+
+  // C. 8 km: a distance line draws between transmitter and receiver over the range, the counter runs to 8+ km
+  const y8 = ry + rh * 0.62, x0 = rx + rw * 0.1, x1 = rx + rw * 0.9;
+  beam(x0, y8, x1, y8, tKm - 0.6, 1.2);
+  const km = place(mk("div", "big", st), rx + rw * 0.38, y8 - u * 13); count(km, 0, 8, tKm - 0.6, 1.2, (v) => (v > 7.95 ? "8+ km" : v.toFixed(1) + " km"));
+
+  // D. 800 W: an energy tank fills beside the range, the number counts with it
+  tl.to(rg, { opacity: 0.45, duration: 0.4 }, tWa - 0.6);
+  const tk = place(mk("div", "", st, "<i></i>"), rx + rw * 0.06, ry + rh + u * 2, u * 5, H * 0.12); tk.id = "tank";
+  tl.set(tk, { top: ry + u * 18, height: H * 0.2 }, 0);
+  tl.fromTo(tk, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tWa - 0.5);
+  tl.fromTo(tk.querySelector("i"), { scaleY: 0 }, { scaleY: 1, duration: 1.2, ease: "power2.out" }, tWa - 0.3);
+  const wt = place(mk("div", "big", st), rx + rw * 0.06 + u * 8, ry + u * 20); count(wt, 0, 800, tWa - 0.3, 1.2, (v) => (v > 799 ? "800+ W" : Math.round(v) + " W"));
+  tl.to([km, wt], { color: PAL.text, duration: 0.3 }, tEf - 0.8);
+
+  // E. efficiency: five beams leave the transmitter, only one reaches the receiver, four break up into sparks (20 % / 80 %)
+  tl.to([rg, tk, wt, km, bd, us, ".kbeam", ".kdot"], { opacity: 0, duration: 0.5, ease: E.out }, tEf - 0.4);
+  const sx = W * 0.12, ex = W * 0.78, ys = [0.2, 0.28, 0.36, 0.44, 0.52].map((f) => H * f);
+  const tx = card({ i: "laser", x: sx - H * 0.12, y: H * 0.24, w: H * 0.24, h: H * 0.24, shape: "round", focus: [0.25, 0.5, 2] });
+  const rc = card({ i: "pvcell", x: ex, y: H * 0.26, w: H * 0.2, h: H * 0.2, focus: [0.5, 0.5, 1.2] });
+  pop(tx, tEf - 0.2, { scale: 0.3, opacity: 0 }); pop(rc, tEf, { scale: 0.3, opacity: 0 });
+  const ef = place(mk("div", "lbl", st), W * 0.06, H * 0.06); type(ef, "EFFICIENCY", tEf, 20);
+  const cv = $("fx"); cv.width = W; cv.height = H; const g = cv.getContext("2d"); const S = { p: 0, burst: 0 };
+  tl.to(S, { p: 1, duration: 1.4, ease: E.io }, tTw - 0.6);
+  tl.to(S, { burst: 1, duration: 1.6, ease: "power2.out" }, tTw + 0.5);
+  const R = rnd(5), parts = Array.from({ length: 120 }, () => [R(), R() * 6.28, 0.4 + R()]);
+  const draw = () => {
+    g.clearRect(0, 0, W, H); if (!S.p) return;
+    ys.forEach((y, i) => { const ok = i === 2, end = ok ? ex : sx + (ex - sx) * (0.35 + i * 0.07), x = sx + (end - sx) * S.p;
+      g.strokeStyle = ok ? PAL.acc : PAL.pri + (S.burst ? Math.round((1 - S.burst) * 255).toString(16).padStart(2, "0") : "ff");
+      g.lineWidth = u * (ok ? 0.8 : 0.5); g.shadowColor = g.strokeStyle; g.shadowBlur = u * 2;
+      g.beginPath(); g.moveTo(sx, H * 0.36); g.lineTo(x, y); g.stroke(); g.shadowBlur = 0;
+      if (!ok && S.burst > 0) parts.forEach(([a, ang, v], k) => { if (k % 4 !== (i > 2 ? i - 1 : i)) return;
+        g.fillStyle = PAL.warn + Math.round((1 - S.burst) * 220).toString(16).padStart(2, "0");
+        g.beginPath(); g.arc(end + Math.cos(ang) * S.burst * u * 12 * v, y + Math.sin(ang) * S.burst * u * 12 * v, u * 0.35, 0, 6.28); g.fill(); }); });
+  };
+  const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: draw }, 0);
+  const p20 = place(mk("div", "big", st, "20%"), W * 0.06, H * 0.56); tl.fromTo(p20, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.slam }, tTw);
+  ring(rc, tTw + 0.6);
+  const of = place(mk("div", "kt", st), W * 0.06 + u * 22, H * 0.6); of.style.fontSize = u * 3.2 + "px"; type(of, "ONLY *1 IN 5* ARRIVED", tFi - 0.2, 24);
+  const p80 = place(mk("div", "big", st, "80% <span style='font-size:.45em'>LOST IN THE AIR</span>"), W * 0.06, H * 0.66);
+  p80.style.color = PAL.warn; p80.style.textShadow = `0 0 ${u * 3}px ${PAL.warn}88`;
+  tl.to([p20, of], { opacity: 0.35, duration: 0.3 }, tEi - 0.2);
+  tl.fromTo(p80, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.slam }, tEi);
+  shake($("shake"), tLo, u * 0.6);
+
+  // F. "efficiency is still the big problem": everything dims, the lab clip card + the line types
+  tl.to([tx, rc, cv, p20, of, p80, ef], { opacity: 0, duration: 0.5 }, tLo + 1.2);
+  const lw = W * 0.42, lab = card({ i: "lab2_clip", video: "lab2_clip_v", vstart: tLo + 1.3, vdur: 5, x: W * 0.06, y: H * 0.1, w: lw, h: lw * 9 / 16, focus: [0.5, 0.45, 1.05] });
+  pop(lab, tLo + 1.3, { x: -W * 0.2, opacity: 0 }, 0.7, E.in);
+  const bp = place(mk("div", "kh", st), W * 0.52, H * 0.18); bp.style.cssText += `font-size:${u * 5.5}px;white-space:normal;width:${W * 0.42}px`;
+  type(bp, "Tech grows. *Efficiency* is still the big problem.", tLo + 1.6, 24);
+  ring(lab, tPr);
+  K.done();
+</script></body></html>

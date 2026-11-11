@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 14 (201-216 s): method 3 RF energy harvesting (Oulu): Wi-Fi + mobile signals all around -> a receiver catches them -> a tiny bit of electricity */
+#fx { position: absolute; inset: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"><canvas id="fx"></canvas></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, camera, circuits, chapter } = K;
+  circuits({ seed: 201 });
+  const st = $("stage"); camera(st, 1.04, 0.01);
+  const tTh = at("third", 0.8), tRf = at("rf", 1.8), tOu = at("oulu", 4.3), tWi = at("wifi", 6.7), tMo = at("mobile", 7.3), tRe = at("receiver", 10.8), tCa = at("catch", 12), tSm = at("small", 13.3);
+
+  // A. METHOD 03 chapter; the Oulu campus opens as a wide card with its name chip
+  const ch = chapter("03", "RF <em>Harvesting</em>", tTh - 0.4);
+  tl.to(ch, { opacity: 0, y: -H * 0.08, duration: 0.5, ease: E.out }, tOu - 0.7);
+  const ow = W * 0.5, oh = ow * 9 / 16, ou = card({ i: "oulu", x: W * 0.25, y: H * 0.1, w: ow, h: oh, focus: [0.5, 0.5, 1.05] });
+  pop(ou, tOu - 0.4, { y: H * 0.25, opacity: 0, rotation: 2 }, 0.8, E.in);
+  const oc = chip("University of Oulu", W * 0.25 + u * 1.5, H * 0.1 + oh - u * 6); pop(oc, tOu + 0.2, { x: -u * 4, opacity: 0 }, 0.4, E.in);
+
+  // B. the signals around us: the street clip fills the back; router (top left) and cell tower (bottom left) cards send rings
+  tl.to([ou, oc], { scale: 0.5, left: W * 0.62, top: H * 0.06, opacity: 0, duration: 0.6, ease: E.io }, tWi - 0.8);
+  const bg = card({ i: "street_phone", video: "street_phone_v", vstart: tWi - 0.8, vdur: 5, x: 0, y: 0, w: W, h: H, shape: "sharp", focus: [0.5, 0.5, 1.05] });
+  st.prepend(bg); tl.fromTo(bg, { opacity: 0 }, { opacity: 0.3, duration: 0.8 }, tWi - 0.8);
+  const rs = H * 0.26, ro = card({ i: "router", x: W * 0.06, y: H * 0.08, w: rs, h: rs, focus: [0.5, 0.4, 1.25] });
+  const tw = H * 0.32 * 3 / 4, tower = card({ i: "celltower", x: W * 0.08, y: H * 0.42, w: tw, h: H * 0.32, focus: [0.5, 0.3, 1.4] });
+  pop(ro, tWi - 0.2, { scale: 0.3, opacity: 0 }); pop(tower, tMo - 0.2, { y: H * 0.2, opacity: 0 }, 0.6, E.in);
+  const l1 = place(mk("div", "kt", st), W * 0.06 + rs + u * 2, H * 0.08 + rs * 0.4); l1.style.fontSize = u * 3 + "px"; type(l1, "*WI-FI*", tWi, 14);
+  const l2 = place(mk("div", "kt", st), W * 0.08 + tw + u * 2, H * 0.42 + H * 0.12); l2.style.fontSize = u * 3 + "px"; type(l2, "*MOBILE* SIGNALS", tMo, 20);
+
+  // rings: from both sources outward; after "receiver" they bend and travel into the receiver card (drawn as moving arcs)
+  const rx = W * 0.68, ry = H * 0.38, cv = $("fx"); cv.width = W; cv.height = H; const g = cv.getContext("2d");
+  const src = [[W * 0.06 + rs / 2, H * 0.08 + rs / 2, tWi], [W * 0.08 + tw / 2, H * 0.48, tMo]], S = { pull: 0 };
+  tl.to(S, { pull: 1, duration: 1, ease: E.io }, tRe);
+  const draw = (t) => { g.clearRect(0, 0, W, H);
+    src.forEach(([x, y, t0]) => { if (t < t0) return;
+      for (let k = 0; k < 4; k++) { const ph = ((t - t0) * 0.7 + k / 4) % 1, r = ph * W * 0.62;
+        const cx = x + (rx - x) * S.pull * ph, cy = y + (ry - y) * S.pull * ph, rr = r * (1 - S.pull * 0.85);
+        g.strokeStyle = PAL.pri + Math.round((1 - ph) * 170).toString(16).padStart(2, "0"); g.lineWidth = u * 0.35;
+        g.beginPath(); g.arc(cx, cy, Math.max(1, rr), -0.7, 0.7); g.stroke(); } }); };
+  const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: () => draw(o.t) }, 0);
+
+  // C. the receiver catches the waves; a tiny LED on the board lights: "a tiny bit of electricity"
+  const vw = W * 0.26, vh = vw * 3 / 4, rc = card({ i: "rf_clip", video: "rf_clip_v", vstart: tRe - 0.4, vdur: 5, x: rx - vw / 2, y: ry - vh / 2, w: vw, h: vh, focus: [0.7, 0.5, 1.2] });
+  pop(rc, tRe - 0.4, { x: W * 0.2, opacity: 0 }, 0.7, E.in);
+  const rl = place(mk("div", "kt", st), rx - vw / 2, ry + vh / 2 + u * 2); rl.style.fontSize = u * 3 + "px"; type(rl, "*CATCH* THE WAVES", tCa, 22);
+  ring(rc, tCa);
+  const ps = H * 0.22, pcb = card({ i: "pcb", x: rx + vw / 2 - ps * 0.6, y: ry - vh / 2 - ps * 0.7, w: ps, h: ps, shape: "round", focus: [0.4, 0.4, 1.8] });
+  tl.fromTo(pcb, { scale: 0.3, opacity: 0, filter: "brightness(.3)" }, { scale: 1, opacity: 1, duration: 0.5, ease: E.pop }, tSm - 0.4);
+  tl.to(pcb, { filter: "brightness(1.3)", boxShadow: `0 0 ${u * 5}px ${PAL.acc}`, duration: 0.4 }, tSm + 0.2);
+  const ti = place(mk("div", "kt", st), rx - vw / 2, ry + vh / 2 + u * 7); ti.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`; type(ti, "A *TINY* BIT OF ELECTRICITY", tSm, 26);
+  K.done();
+</script></body></html>

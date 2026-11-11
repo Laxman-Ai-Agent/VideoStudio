@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 11 (154-167 s): method 2 laser, power by light: beam -> receiver -> electricity -> industrial use */
+#wire { position: absolute; height: calc(var(--u) * .5); background: var(--accent); transform-origin: 0 50%; box-shadow: 0 0 calc(var(--u) * 1.5) var(--accent); }
+.flow { position: absolute; font: 800 calc(var(--u) * 2.6) var(--font-head); color: var(--text2); letter-spacing: .12em; }
+.flow b { color: var(--accent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, beam, camera, circuits, chapter } = K;
+  circuits({ seed: 154, color: "#FF6B5A" });
+  const st = $("stage"); camera(st, 1.04, 0.012);
+  const tLa = at("laser", 1.4), tLi = at("light", 3.3), tBe = at("beam", 5.15), tRe = at("receiver", 5.75), tEl = at("electricity", 9), tIn = at("industrial", 11.3);
+
+  // A. METHOD 02 chapter on "laser"; "power by light" types in the serif accent
+  const ch = chapter("02", "<em>Laser</em>", tLa - 0.6);
+  const pb = place(mk("div", "kh", st, "Power by <i>light</i>"), W * 0.07, H * 0.62); pb.style.cssText += `font-size:${u * 6}px;opacity:0`;
+  rise(pb, tLi - 0.1, 0.12);
+  tl.to(ch, { opacity: 0, y: -H * 0.08, duration: 0.5, ease: E.out }, tBe - 1.2);
+  tl.to(pb, { top: H * 0.05, fontSize: u * 4 + "px", duration: 0.6, ease: E.io }, tBe - 1.2);
+
+  // B. the laser clip (4:3) on the left fires a beam into the receiver card (1:1) on the right; the receiver lights up
+  const lw = W * 0.32, lh = lw * 3 / 4, ly = H * 0.18;
+  const las = card({ i: "laser_clip", video: "laser_clip_v", vstart: tBe - 1, vdur: 5, x: W * 0.05, y: ly, w: lw, h: lh, focus: [0.4, 0.5, 1.2] });
+  pop(las, tBe - 1, { x: -W * 0.2, opacity: 0, rotation: -3 }, 0.7, E.in);
+  const rs = H * 0.36, rx = W * 0.62, ry = ly + (lh - rs) / 2;
+  const rec = card({ i: "pvcell", x: rx, y: ry, w: rs, h: rs, focus: [0.5, 0.5, 1.15] });
+  pop(rec, tRe - 0.4, { scale: 0.4, opacity: 0, rotation: 10 });
+  beam(W * 0.05 + lw, ly + lh / 2, rx, ly + lh / 2, tBe - 0.1, 0.6);
+  ring(rec, tRe + 0.2);
+  const r1 = place(mk("div", "kt", st), rx, ry + rs + u * 2); r1.style.fontSize = u * 2.6 + "px"; type(r1, "*RECEIVER*", tRe, 20);
+  const l1 = place(mk("div", "kt", st), W * 0.05, ly + lh + u * 2); l1.style.fontSize = u * 2.6 + "px"; type(l1, "*LASER* BEAM", tBe, 20);
+
+  // C. light -> electricity: a wire runs from the receiver into a round bulb card that brightens from dark
+  const bs = H * 0.24, bx = W * 0.86 - bs / 2, by = ry + rs + u * 8;
+  const wr = place(mk("div", "", st), rx + rs / 2, ry + rs, (by + bs / 2) - (ry + rs)); wr.id = "wire"; wr.style.transform = "rotate(90deg)"; wr.style.transformOrigin = "0 50%";
+  tl.fromTo(wr, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E.io }, tEl - 0.9);
+  const bulb = card({ i: "bulb", x: bx, y: by - bs * 0.2, w: bs, h: bs, shape: "round", focus: [0.5, 0.45, 1.3] });
+  tl.fromTo(bulb, { scale: 0.4, opacity: 0, filter: "brightness(.25)" }, { scale: 1, opacity: 1, duration: 0.5, ease: E.pop }, tEl - 0.5);
+  tl.to(bulb, { filter: "brightness(1.25)", boxShadow: `0 0 ${u * 6}px ${PAL.acc}`, duration: 0.4, ease: E.in }, tEl);
+  const fl = place(mk("div", "flow", st, ""), W * 0.05, H * 0.66); type(fl, "LIGHT → *ELECTRICITY*", tEl, 26);
+
+  // D. industrial use: the factory clip slides up as a wide strip under everything; the chip names it
+  tl.to([las, l1, fl], { opacity: 0.3, duration: 0.4 }, tIn - 0.6);
+  const fw = W * 0.5, fh = fw * 9 / 21, fac = card({ i: "factory_clip", video: "factory_clip_v", vstart: tIn - 0.5, vdur: 3, x: W * 0.05, y: H * 0.36, w: fw, h: fh, focus: [0.5, 0.5, 1.05] });
+  pop(fac, tIn - 0.5, { y: H * 0.3, opacity: 0 }, 0.6, E.in);
+  const ic = chip("Industrial use", W * 0.05 + u * 1.5, H * 0.36 + u * 1.5); pop(ic, tIn, { scale: 0.5, opacity: 0 }, 0.4);
+  K.done();
+</script></body></html>
