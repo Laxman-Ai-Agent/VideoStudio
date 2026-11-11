@@ -3,6 +3,11 @@
 **Core rule (above everything below):** never a template; think a fresh design every time. Build scenes from real
 IMAGES and VIDEOS with a lot of MOTION ANIMATION (cards, masks, slides, zooms, reveals, text motion, transitions).
 Drawn 2D graphics and 3D are not the point: use them only a little, where no picture can show the idea.
+- Card / frame sizes: every shape, mixed through the video (1:1, 4:3, 3:4, 16:9, 9:16, 21:9 strips, circles, tall
+  pillars, small thumbnails + one hero), each cropped around the picture's main object; never only one or two sizes.
+- Text motion is as important as images: when the voice lists points, each point is typed / revealed on screen as it
+  is spoken (a growing list); key lines, numbers and names appear as they are said (type-on, mask reveal, slam,
+  highlight sweep), next to or over the pictures.
 
 ## Rules
 1. No templates. Every scene is written fresh (HTML/CSS/GSAP, rendered by HyperFrames). Never pick from `tools/templates`
