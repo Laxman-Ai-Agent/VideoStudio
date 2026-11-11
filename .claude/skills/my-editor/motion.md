@@ -69,3 +69,12 @@
 - Depth: blurred props in front, subject in the middle, moving background behind.
 - Light / colour storytelling: problem = red / dim, solution = accent glow, future = bright.
 - Topic FX layer per video (electricity: sparks, arcs, flicker, glow pulses).
+
+## Tools (user, 2026-11-11)
+- On the PC (render): HyperFrames + GSAP (free plugins SplitText, DrawSVG, MorphSVG, MotionPath, Flip after registering in
+  docs/LIBRARIES.md) + CSS / SVG + canvas 2D (sparks, particles, arcs, glow). Depth feel only by 2D: CSS perspective tilt,
+  parallax layers, shadows.
+- NO 3D: no Three.js, no WebGL scenes (PixiJS included): the PC (Iris Xe, no GPU) cannot handle it.
+- On Kaggle GPU, in the ONE images run per video: Z-Image images, Depth-Anything (2.5D parallax), BiRefNet cut-outs,
+  Real-ESRGAN upscale. Image-to-video (LTX-Video) only when the drop clips do not cover a scene (slow: minutes per clip).
+- Measure the render time on the sample scenes before planning the whole video around a heavy effect.
