@@ -1,13 +1,17 @@
 # Motion catalog (user, 2026-11-11, STRICT)
 
+**Core rule (above everything below):** never a template; think a fresh design every time. Build scenes from real
+IMAGES and VIDEOS with a lot of MOTION ANIMATION (cards, masks, slides, zooms, reveals, text motion, transitions).
+Drawn 2D graphics and 3D are not the point: use them only a little, where no picture can show the idea.
+
 ## Rules
 1. No templates. Every scene is written fresh (HTML/CSS/GSAP, rendered by HyperFrames). Never pick from `tools/templates`
    by default. Save each written scene as a named template (`tools/templates/<video>_<category>`); reuse a saved one only
    when the user says so.
 2. Visuals follow the words. Every meaningful spoken word (object, person, place, number, action, idea) brings its own
    visual at its exact time (`work/transcript.json` word times). Filler words do not. A scene has 2-4 such beats.
-3. Motion graphics carry images: devices drawn in code with the image on their screen, masks, image cards, images at
-   both ends of a drawn flow. Never a full-frame still with only a slow zoom.
+3. Motion graphics carry images and video: image / clip cards, masks, split and stacked frames, images at both ends of a
+   flow. Never draw an object that a picture can show. Never a full-frame still with only a slow zoom.
 4. Heavy motion: something new every 1-2 s, layout change every 4-6 s, the virtual camera always moves.
 5. One design per category per video (consistent inside the video); the next video uses different designs and a
    different category mix. The same category never more than 2 times in a row.
