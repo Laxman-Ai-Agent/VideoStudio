@@ -20,7 +20,7 @@ Newest last. Format: decision · why · revisit when. All dated 2026-11-07. Full
 16. Assets described once by Claude from ONE contact sheet per batch, cached by hash; keyword match (local >= 0.34, internet >= 0.5 and >= 2 words); template types are 'template', not 'missing' · Pro usage; Wikimedia returns loose matches · picks wrong files (then a local vision check).
 17. Render v1: one HyperFrames clip per scene per format, cache key = scene + asset hash + template + brand + size; 720p preview, `--final` full size; 2 workers; videos pre-trimmed by FFmpeg (raw 1080p decode is slow) · render time matters.
 18. `output/preview_*.mp4` vs `output/final_*.mp4` · a 720p file must never be mistaken for the upload.
-19. Charts never invent numbers: data only from `scene.params`; without data, decorative bars (or text).
+19. Charts never invent numbers: data only from `scene.params` (cited); without data, text motion, never decorative bars or trend lines (2026-11-11: the stat card's drawn trend line was removed) · numbers as objects (motion.md 5, 6), a new graph look per video.
 20. Captions are an overlay inside each scene render · keeps the per-scene cache · a caption style must cross cuts.
 21. Music = first file in `_library/music/<music_mood>/`, 18 LU under narration, ducked, faded; whoosh before cuts into headline/chart; loudnorm on the mix · per-project music choice wanted.
 22. Parallax: rembg `silueta` on CPU, opt-in, hole filled with blur · rough edges (try `STUDIO_REMBG_MODEL=isnet-general-use`).
@@ -29,7 +29,7 @@ Newest last. Format: decision · why · revisit when. All dated 2026-11-07. Full
 25. Raw footage cut by FFmpeg scene filter into real shot files · no new library · slow fades are missed.
 26. Maps: offline Natural Earth outlines (India's view of borders), SVG · no tiles, no key · streets or satellite needed.
 27. Screenshots: browser-frame template + honest headless capture of `params.url` (no user-agent spoofing); blocked sites need a dropped `scene_NNN.png`.
-28. Timeline and map chosen by `params` (`events`, `focus`/`pin`), not new visual types · no contract change.
+28. Template era (until 2026-11-10): timeline and map chosen by `params` (`events`, `focus`/`pin`). Superseded by #40: a new video writes its own sequence code; stock templates only when the user asks.
 29. Contact sheet shows max 20 files per run · long raw videos make 100+ shots; one readable image per read.
 30. Fonts in `_brand/fonts/<Family>/`, loaded by @font-face; default Gidugu; headline back on HyperFrames (Remotion cannot load these fonts yet) · Remotion gets font loading.
 31. Paper style: brand themes, grain/looks/marks in shared studio.js, cut-out poster via rembg; SFX generated with FFmpeg (CC0 packs needed a donate dialog) · user drops real SFX.
@@ -41,3 +41,4 @@ Newest last. Format: decision · why · revisit when. All dated 2026-11-07. Full
 37. Replacing a Found asset = upload -> preview next to the current -> confirm; framing/trim always re-process from the original upload · never lose a working asset.
 38. No keyword web image search in the pipeline (Pexels, Openverse, Wikimedia search removed 2026-11-09): the separate asset-collector MCP finds images in a Claude session; exact-name sources stay (Wikidata entity, Simple Icons, Noto Lottie) · unattended runs need loose stock images again.
 39. Creative direction per video (2026-11-10): Claude writes the project `theme.json` (preset + overrides + `motion` + `direction`) at plan time; style memory = earlier projects' `work/theme.json`, similarity score in `identity.py`, QA fails a final > 30% alike one of the 3 previous videos; captions halved · user: videos looked the same · the score's features/weights (fonts, colour, background, motion) miss what makes videos feel alike.
+40. Written sequences (2026-11-11, user: no templates): a video = 15-20 sequences of 10-25 s, each its own HTML/CSS/GSAP folder in `tools/templates/<video>_sNN_<name>` (scene `params.code`, `images`, `beats`, optional `kit` = the video's shared motion tokens + helpers, copied into the build and part of the cache key); every picture / clip graded toward the palette by `grade.py` (Pillow + numpy, ffmpeg for clips, cached in tools/.cache/graded); plan contract allows the same visual type in a row for written sequences · more Claude usage per video; old templates stay for old projects.

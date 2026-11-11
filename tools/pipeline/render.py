@@ -20,6 +20,7 @@ from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, Sce
                         TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
 from . import grade, textzone
+from .fonts import FONTS, font_css  # noqa: F401  (rnd.font_css kept for callers)
 from .theme import TRANSITIONS, transitions  # noqa: F401  (moved to theme.py 2026-11-10; render.transitions kept)
 
 TEMPLATES = TOOLS / "templates"
@@ -53,9 +54,6 @@ def safe_workers(requested: int, free_gb: float) -> int:
         return max(1, requested)
     return max(1, min(requested, int((free_gb - RAM_HEADROOM_GB) / GB_PER_WORKER)))
 REMOTION = ENGINES / "remotion" / "render.mjs"
-FONTS = BRAND / "fonts"  # _brand/fonts/<Family>/*.ttf (Google Fonts, OFL), loaded by @font-face
-WEIGHTS = {"thin": 100, "extralight": 200, "light": 300, "regular": 400, "medium": 500, "semibold": 600,
-           "bold": 700, "extrabold": 800, "black": 900}
 CAPTION_WORDS = {"landscape": 4, "portrait": 3}  # max words per caption page
 CAPTION_BREAK = 0.5  # a pause longer than this starts a new caption page
 
@@ -263,22 +261,6 @@ def _prep_video(src: Path, dest: Path, job: Job, fit: str) -> None:
     _ffmpeg(["-stream_loop", "-1", "-ss", f"{start}", "-i", str(src), "-t", f"{job.duration:.4f}", "-an",
              "-vf", vf + ",setsar=1", "-r", str(job.fps), "-c:v", "libx264", "-preset", "veryfast",
              "-crf", "18", "-pix_fmt", "yuv420p", str(dest)])
-
-
-def font_css(families, dest: Path, fonts_dir: Path = FONTS) -> str:
-    """@font-face rules for brand fonts saved in _brand/fonts/<Family>/*.ttf (copied into dest).
-    A variable font or a single-file family covers every weight, so templates asking for 800/900
-    get the real glyphs, not a synthetic bold. A family without a folder falls back to system fonts."""
-    css = []
-    for fam in dict.fromkeys(families):
-        files = [f for f in sorted((fonts_dir / fam).glob("*.ttf")) if "italic" not in f.name.lower()] if fam else []
-        for f in files:
-            style = f.stem.rsplit("-", 1)[-1].lower()
-            w = "100 900" if "[" in f.name or len(files) == 1 else WEIGHTS.get(style, 400)
-            name = f"font{len(css)}.ttf"
-            shutil.copy2(f, dest / name)
-            css.append(f'@font-face {{ font-family: "{fam}"; src: url("{name}"); font-weight: {w}; }}')
-    return "\n".join(css)
 
 
 def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
