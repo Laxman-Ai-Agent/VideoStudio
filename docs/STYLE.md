@@ -29,14 +29,6 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
 8. Depth: blurred props in the corners (foreground), subject sharp in the middle; slides and scale-ins,
    blur transitions between beats. Concept shots: a head replaced by a bulb or a word bubble.
 
-## How it maps to the pipeline (status, all built 2026-11-08)
-- Subject panel (big side cut-out), stamp words, layout zones, overlap check (phase A).
-- Presenter reference photo in prompts + dashboard box (`Character.reference_image`, `outfit`).
-- Cut-out treatments: `placement.outline` / `bw` / `backdrop` (glow, rings, rays).
-- `meme` template (sunburst + caption boxes + 1-2 subjects), `callout` mark (circle + label).
-- Kinetic `hero` / `pill` styles + theme `fonts.hero`; cards `rows` (icon tiles); `placement.depth` corner props.
-- Not built: pinned paper notes / curved road, head-replaced-by-bulb concept shots, duotone tint.
-
 ## Every video its own look (user, 2026-11-10)
 - No fixed template: topic decides style, story decides editing; consistent inside a video, different between videos
   (max ~30% alike the previous videos; earlier videos are references to avoid, never defaults).
@@ -85,20 +77,8 @@ narration, assets and scene length; never every effect on every scene. Merges wi
    layer, timing, movement, transition and continuity, reusing the existing JSON (scenes.json params, edits.json
    layers, theme.json motion) before adding fields.
 
-### What the pipeline can do today (checked 2026-11-11; update when a part is built)
-- Built: per-video theme (fonts, 2-3 colours, background type, pattern none|grid|dots|lines, texture
-  grain|paper|smoke|particles|stars, title_style, caption style, motion text_in / camera / transitions) with the 30%
-  alike check; templates photo (full frame Ken Burns; in-scene `params.layout` split_text | split2 | stack | crop with
-  `side`, `image2`, `crop_at`; `params.dim` darkens the picture only while the title shows, `text_until`), photo_parallax, cutout_title, kinetic, cards (rows, stat),
-  chart, map, lottie, meme (1-2 characters), quote, timeline, screenshot, video_clip, iso (isometric infographic diorama:
-  blocks, pins, drawn flow lines, camera keys, fills the frame, camera always moving; `params.iso`); overlays with placement
-  (position, size, at / until, animation, outline, backdrop, depth); textzone puts photo titles in the calm area;
-  per-element edits in edits.json (Timeline editor); one transition per cut from the theme set.
-- Not built (plan around it, say so in the plan, do not claim it): elements that persist or morph across cuts (every
-  scene is rendered as its own clip and joined by a transition); images inside motion graphics (cards / chart / stat) in 9:16 / 1:1 / masked frames (planned next); three or more
-  images in one scene; drawn
-  connector lines; colour grading of images to the palette (only the `look` filters such as sepia); topic patterns beyond grid / dots /
-  lines (ECG lines, circuits, maps, anatomy); characters moving between scenes.
-- Until those exist: get the closest result with what is built (overlays with `at` timing to stage elements in
-  order, cutout_title / meme for character + text, cards / kinetic beside photos, varied templates, a carried-over
-  background through the theme), and list the wanted continuity moves in scene `notes` so they can be built later.
+### How scenes are made (user, 2026-11-11, STRICT)
+- No templates: every scene is written fresh (HTML/CSS/GSAP) and saved as a template; a saved one is reused only when the
+  user says so. Visuals follow the spoken words; motion graphics carry images; heavy motion.
+- The full catalog (23 word / moment categories, their motion and where the image goes, rules across all of them):
+  `.claude/skills/my-editor/motion.md`.
