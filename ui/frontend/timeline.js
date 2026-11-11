@@ -301,6 +301,42 @@ function paintOpts() {  // output size line + which quality card is on
   const fin = $("rmode").value === "final", short = fin ? 1080 : 480, long = fin ? 1920 : 854;
   document.querySelectorAll("#resSeg button").forEach((x) => x.classList.toggle("on", x.dataset.v === $("rmode").value));
   $("outSize").querySelector("b").textContent = st.fmt === "9:16" ? `${short} × ${long} px` : `${long} × ${short} px`;
+  paintRenders();
+}
+// What is already rendered for this ratio: each quality card says so, and a rendered video plays right in the stage
+// (output/final_16x9.mp4 = 1080p, preview_16x9.mp4 = 480p). Real files only, no estimates.
+async function paintRenders() {
+  const pid = st.pid, fmt = st.fmt;
+  if (!pid) return;
+  for (const [v, pre] of [["final", "final"], ["preview", "preview"]]) {
+    const card = document.querySelector(`#resSeg button[data-v="${v}"]`);
+    let line = card.querySelector(".rs");
+    if (!line) { line = document.createElement("em"); line.className = "rs"; card.append(line); }
+    const url = `/files/${enc(pid)}/output/${pre}_${fmt.replace(":", "x")}.mp4`;
+    let r = null;
+    try { r = await fetch(url, { headers: { Range: "bytes=0-0" } }); } catch { /* server stopped */ }
+    if (pid !== st.pid || fmt !== st.fmt) return;  // switched meanwhile
+    const size = r && r.ok ? +((r.headers.get("Content-Range") || "").split("/")[1] || 0) : 0;
+    line.replaceChildren();
+    if (!size) { line.textContent = "Not rendered yet"; line.className = "rs none"; continue; }
+    line.className = "rs ok";
+    line.append(`✓ Rendered · ${(size / 2 ** 20).toFixed(1)} MB `);
+    const play = Object.assign(document.createElement("span"), { className: "rplay", textContent: "▶ Play here" });
+    play.onclick = (e) => { e.stopPropagation(); playRendered(url, v === "final" ? "1080p" : "480p"); };
+    line.append(play);
+  }
+}
+function playRendered(url, label) {
+  const stage = $("stage");
+  let box = $("rv");
+  if (!box) { box = document.createElement("div"); box.id = "rv"; stage.append(box); }
+  box.replaceChildren();
+  const v = Object.assign(document.createElement("video"), { src: url, controls: true, autoplay: true });
+  const back = Object.assign(document.createElement("button"), { type: "button", textContent: "Back to live preview" });
+  back.onclick = () => { v.pause(); box.remove(); $("screen").hidden = false; };
+  const tag = Object.assign(document.createElement("span"), { textContent: `Rendered ${label}` });
+  box.append(tag, back, v);
+  $("screen").hidden = true;
 }
 document.querySelectorAll("#resSeg button").forEach((b) => (b.onclick = () => { $("rmode").value = b.dataset.v; paintOpts(); }));
 paintOpts();

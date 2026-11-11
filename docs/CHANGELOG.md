@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-11 - Timeline: what is already rendered, playable in the stage
+
+- The two quality cards (1080p / 480p) say whether `output/final_<fmt>.mp4` / `preview_<fmt>.mp4` exists (real file size) and have "Play here": the rendered video plays in the player area, "Back to live preview" returns. No estimates. Frontend only (`timeline.js paintRenders / playRendered`, `timeline.css`); checked on port 8797 with 01_AI_Doctor (1080x1920, 76.7 s).
+
 ## 2026-11-11 - Dashboard: one row per topic, 16x9 | 9x16 tabs
 
 - Projects table: a topic with variations (03_Wireless_Power) is ONE row; each video (16x9, 9x16) has its own line with its own duration, assets, missing and Preview / Render badge. The eye button per line opens that video, the bin button deletes the whole topic.

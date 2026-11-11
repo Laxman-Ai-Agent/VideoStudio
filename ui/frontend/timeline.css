@@ -302,3 +302,14 @@ body[data-view="timeline"] #list .sc .scedit, body[data-view="timeline"] #list .
   background:rgba(8,10,24,.55); opacity:0; transition:opacity .18s; font-size:13px; }
 body[data-view="timeline"] #list .sc:hover .scedit { opacity:1; }
 body[data-view="timeline"] #list .sc .scedit:hover { background:rgba(124,92,255,.75); }
+
+/* quality cards: what is already rendered, and a rendered video playing in the stage */
+#resSeg .rs { font-size:12px; font-style:normal; margin-top:2px; }
+#resSeg .rs.ok { color:#5fe08f; } #resSeg .rs.none { color:var(--muted); }
+#resSeg .rplay { margin-left:6px; padding:1px 8px; border-radius:999px; background:#2c2570; color:#fff; cursor:pointer; }
+#rv { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:#000; }
+#rv video { max-width:100%; max-height:calc(100% - 44px); }
+#rv span { position:absolute; top:8px; left:12px; font-size:12px; background:#0009; padding:3px 9px; border-radius:999px; }
+#rv button { position:absolute; top:8px; right:12px; font-size:12px; }
+#stage { position:relative; }
+#screen[hidden] { display:none; }
