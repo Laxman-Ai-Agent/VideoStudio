@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-11 - 03_Wireless_Power rebuilt as written sequences (no templates)
+
+- 16x9 long video = 20 sequences (10-27 s), 9x16 short = 3; each its own HTML/CSS/GSAP folder `tools/templates/wl_sNN_*` / `wl_v0N_*` (+ the approved `wireless_intro`), saved as named templates. Storyboard + picture list in `projects/03_Wireless_Power/<variation>/scripts/make_sequences.py` (writes `work/scenes.json`: `params.code`, `images`, `names`, `ar`, `beats` from the word times, `kit`).
+- `params.kit` (render.py): the video's shared motion kit `tools/templates/wireless_kit/kit.js` (tokens, cards cropped around the object in any shape, clip cards with their still behind, typed text with caret, mask rise, beams, chapter wipe, X mark, social post card, seeded circuit background) is copied into the build and hashed into the cache key.
+- Colour correction (`pipeline/grade.py`): every picture / clip of written scene code is graded toward the palette (exposure to one target, S-curve, split toning shadows -> secondary, highlights -> accent, saturation trim; ffmpeg `eq` + `colorbalance` for clips), cached in `tools/.cache/graded`. theme.json has palette roles primary / secondary / accent / background / text / highlight.
+- Plan contract: written sequences may share a visual type in a row. `plan_brief` teaches sequences + `params.code`, not stock template params.
+- One Kaggle images run (10 objects: torch, router, cell tower, drone, implant, PV receiver, bulb, laser range, IoT sensor, phone) into `03_Wireless_Power/work/kaggle_objects`; square sizes ran out of T4 memory (1024 and 960), so `1:1` is made as 3:4 and 3:2 shrank (kaggle/images.py, test).
+- Cleanup: entity lookup skips taxa and prefers a hit with a logo (DARPA gave Darpa, a butterfly genus); stat card draws no invented trend line; DECISIONS #19 / #28 updated, #40 added; `fonts.py` split out of render.py (450-line rule).
+
 ## 2026-11-11 - Chart template v2: a different graph look per video
 
 - `params.style`: numbers -> count (old) | gauge (ring) | meter (track with `marks`) | dots (100-dot share); bars -> bars (old) | split (one bar cut into parts). User: graphs looked the same in the last 4 videos. `max` for gauge / meter. Not yet rendered in a real scene (03_Wireless_Power uses meter / gauge / split on its next render).
