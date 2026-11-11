@@ -34,6 +34,8 @@ def pick(p: Path, ids: list[str], force: bool) -> list[dict]:
         pr = a.get("prompt") or {}
         if ids and a["id"] not in ids or not ids and a.get("method") != "ai_generate" or not pr.get("text"):
             continue
+        if not ids and (a.get("character") or "chatgpt" in pr.get("tool", "").lower()):
+            continue  # presenter shots need the reference photo (ChatGPT image): the user makes them, Z-Image cannot
         if not ids and not force and (a.get("file") or any(f for d in ("drop", "work/generated") for f in (p / d).glob(a["id"] + ".*"))):
             print(f"  {a['id']}: has a file already, skipped (--force to regenerate)")
             continue

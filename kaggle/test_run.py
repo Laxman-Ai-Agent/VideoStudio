@@ -24,9 +24,10 @@ def test_resume(tmp_path, monkeypatch):
 def test_topic_images_one_run_for_every_variation(tmp_path):
     import images
     a = {"id": "A001", "method": "ai_generate", "prompt": {"text": "x", "aspect_ratio": "9:16"}}
+    c1 = {"id": "A101", "method": "ai_generate", "character": "C1", "prompt": {"text": "me", "tool": "ChatGPT image"}}
     for v in ("16x9", "9x16"):
         (tmp_path / v).mkdir()
-        (tmp_path / v / "visual-assets.json").write_text(json.dumps({"assets": [a]}), "utf-8")
+        (tmp_path / v / "visual-assets.json").write_text(json.dumps({"assets": [a, c1]}), "utf-8")
     jobs, dests = images.topic_jobs(tmp_path, [], False)
     assert [j["id"] for j in jobs] == ["16x9_A001", "9x16_A001"]
     assert dests["9x16_A001"] == (tmp_path / "9x16" / "work" / "generated", "A001.png")
