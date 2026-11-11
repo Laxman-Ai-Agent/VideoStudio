@@ -343,7 +343,9 @@ def test_variations_are_listed_and_addressed(tmp_path, monkeypatch):
     for v in ("16x9", "9x16"):
         ensure_layout(tmp_path / "03_Topic" / v)
     monkeypatch.setattr(service, "PROJECTS", tmp_path)
-    assert [p["id"] for p in service.list_projects()] == ["03~16x9", "03~9x16"]
+    rows = service.list_projects()
+    assert [p["id"] for p in rows] == ["03~16x9", "03~9x16"]
+    assert {(p["topic"], p["variation"]) for p in rows} == {("03_Topic", "16x9"), ("03_Topic", "9x16")}  # the page groups them into ONE row
     assert service.project_dir("03~9x16") == tmp_path / "03_Topic" / "9x16"
     assert service.project_dir("03_Topic~16x9") == tmp_path / "03_Topic" / "16x9"
     assert service.pid_of(tmp_path / "03_Topic" / "16x9") == "03_Topic~16x9"

@@ -89,6 +89,7 @@ async function select(pid) {
   render();
   localStorage.setItem("va-project", pid);
   history.replaceState(null, "", `#p=${encodeURIComponent(pid)}`);
+  drawVTabs();
   await refresh();
 }
 
@@ -108,6 +109,7 @@ function showView(name) {
   $("prep").hidden = p;
   $("nav-projects").classList.toggle("active", p);
   $("nav-assets").classList.toggle("active", !p);
+  if (p) $("vtabs").hidden = true; else drawVTabs();
 }
 
 async function showProjects() {
@@ -144,41 +146,64 @@ async function removeProject(p) {
   await drawProjects();
 }
 
+// one table row per project; a topic with variations (03_Topic/16x9, /9x16) is ONE row, each variation on its own line
+const groups = (list) => { const g = new Map(); list.forEach((p) => { const k = p.topic || p.id; g.set(k, [...(g.get(k) || []), p]); }); return [...g.values()]; };
+const TICK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg>', WAIT = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>';
+
+function badge(p, mode) {
+  const fm = (p.renders || []).filter((r) => r.mode === mode).map((r) => r.fmt).filter(Boolean);
+  const done = (p.renders || []).some((r) => r.mode === mode);
+  const el = document.createElement("span");
+  el.className = `rbadge ${done ? "done" : "wait"}`;
+  el.innerHTML = (done ? TICK : WAIT) + "<span></span>";
+  el.lastChild.textContent = done ? fm.join(" · ") || "done" : "pending";
+  return el;
+}
+
 async function drawProjects() {
   let fresh;
   try { fresh = await api.projects(); } catch (e) { return notice(`Cannot reach the dashboard server: ${e.message}`); }
   if (JSON.stringify(fresh) === JSON.stringify(projectList) && $("ptbody").children.length) return;  // unchanged: keep the rows
   projectList = fresh;
-  $("ptbody").replaceChildren(...projectList.map((p, n) => {
-    const tr = document.createElement("tr");
+  $("ptbody").replaceChildren(...groups(projectList).map((g, n) => {
+    const p = g[0], multi = g.length > 1, tr = document.createElement("tr");
     const cell = (...nodes) => { const td = document.createElement("td"); td.append(...nodes); tr.append(td); return td; };
+    const open = async (q) => { showView("assets"); await select(q.id); };
+    // one line per variation (16x9 / 9x16) so each has its own numbers and its own preview / render badge
+    const lines = (fn, cls = "") => g.map((q) => { const d = document.createElement("div"); d.className = "vl " + cls;
+      if (multi) { const t = document.createElement("b"); t.textContent = q.variation; d.append(t); }
+      d.append(fn(q)); return d; });
+    const txt = (s) => document.createTextNode(s);
     cell(String(n + 1));
     const t = document.createElement("div"); t.className = "pt"; t.textContent = p.title;
-    const i = document.createElement("div"); i.className = "pid"; i.textContent = p.name;
+    const i = document.createElement("div"); i.className = "pid"; i.textContent = multi ? p.topic : p.name;
     cell(t, i);
-    cell(p.duration ? mmss(p.duration) : "-");
-    cell(p.has_assets ? `${p.found}/${p.total}` : "-");
-    const miss = cell(p.has_assets ? String(p.missing) : "-");
-    if (p.missing) miss.className = "miss";
-    const TICK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg>', WAIT = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>';
-    const badge = (mode, label) => {
-      const fm = (p.renders || []).filter((r) => r.mode === mode).map((r) => r.fmt).filter(Boolean);
-      const el = document.createElement("span");
-      el.className = `rbadge ${fm.length || (p.renders || []).some((r) => r.mode === mode) ? "done" : "wait"}`;
-      el.innerHTML = (el.className.includes("done") ? TICK : WAIT) + `<span></span>`;
-      el.lastChild.textContent = el.className.includes("done") ? fm.join(" · ") || "done" : "pending";
-      return el;
-    };
-    cell(badge("preview", ""));  // Preview column: the 480p / 720p check videos
-    cell(badge("final", ""));    // Render column: the final full-size video
-    const open = async () => { showView("assets"); await select(p.id); };
+    cell(...lines((q) => txt(q.duration ? mmss(q.duration) : "-")));
+    cell(...lines((q) => txt(q.has_assets ? `${q.found}/${q.total}` : "-")));
+    const miss = cell(...lines((q) => txt(q.has_assets ? String(q.missing) : "-")));
+    if (g.some((q) => q.missing)) miss.className = "miss";
+    cell(...lines((q) => badge(q, "preview")));  // Preview column: the 480p / 720p check videos
+    cell(...lines((q) => badge(q, "final")));    // Render column: the final full-size video
     const btn = (svg, tip, cls, fn) => Object.assign(document.createElement("button"), { type: "button", className: `ico ${cls}`, title: tip,
       innerHTML: `<svg viewBox="0 0 24 24">${svg}</svg>`, onclick: (e) => { e.stopPropagation(); fn(); } });
-    cell(btn('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', "View: open this project's assets", "", open),
-         btn('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>', "Delete this project", "danger", () => removeProject(p)));
-    tr.onclick = open;
+    const eye = '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
+    const del = '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>';
+    cell(...g.slice(0, multi ? g.length : 1).map((q) => { const d = document.createElement("div"); d.className = "vl";
+          d.append(btn(eye, multi ? `View ${q.variation}: open its assets` : "View: open this project's assets", "", () => open(q))); return d; }),
+         btn(del, multi ? "Delete the whole topic (both videos)" : "Delete this project", "danger",
+             () => removeProject(multi ? { id: p.id.split("~")[0], title: p.title, name: p.topic } : p)));
+    tr.onclick = () => open(p);
     return tr;
   }));
+}
+
+// 16x9 | 9x16 tabs on the Assets page of a topic with variations
+function drawVTabs() {
+  const box = $("vtabs"), cur = projectList.find((p) => p.id === state.pid);
+  const sibs = cur && cur.topic ? projectList.filter((p) => p.topic === cur.topic) : [];
+  box.hidden = sibs.length < 2;
+  box.replaceChildren(...sibs.map((q) => Object.assign(document.createElement("button"), { type: "button",
+    className: "tab" + (q.id === state.pid ? " active" : ""), textContent: q.variation, onclick: () => q.id !== state.pid && select(q.id) })));
 }
 
 async function init() {
@@ -190,6 +215,7 @@ async function init() {
     return;
   }
   if (!projects.length) return notice('No projects yet. Create one with studio.cmd new "Name".');
+  projectList = projects;  // the Assets page tabs need the list before the Projects table is opened
   const wantProjects = /view=projects/.test(location.hash);
   const fromHash = decodeURIComponent((location.hash.match(/p=([^&]+)/) || [])[1] || "");
   const saved = localStorage.getItem("va-project");

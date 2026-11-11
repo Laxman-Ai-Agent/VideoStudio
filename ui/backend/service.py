@@ -168,7 +168,7 @@ def list_projects() -> list[dict]:
             continue
         for v in variations(d):  # one row per variation of a topic: 03~16x9, 03~9x16
             va = visual.load(v) if visual.path(v).exists() else None
-            out.append({"id": f"{d.name.split('_')[0]}~{v.name}", "name": f"{d.name}/{v.name}",
+            out.append({"id": f"{d.name.split('_')[0]}~{v.name}", "name": f"{d.name}/{v.name}", "topic": d.name, "variation": v.name,
                         "title": (va.project.get("title") if va else "") or f"{d.name} {v.name}",
                         "has_assets": va is not None, **_overview(v), **(counts(va, v) if va else {"total": 0, "found": 0, "missing": 0})})
         if variations(d):

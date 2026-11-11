@@ -382,3 +382,10 @@ html { scroll-behavior: smooth; }
 main { padding: 24px 28px 50px; }
 .tabs { margin-bottom: 24px; }
 .tabs .row.sub:not(:has(.tab:not([hidden]))) { display: none; }  /* Projects view: no empty second row */
+
+/* topic with variations: one table row, one line per video; 16x9 | 9x16 tabs on the Assets page */
+.ptable .vl { display: flex; align-items: center; gap: 8px; min-height: 26px; }
+.ptable .vl b { min-width: 38px; font-size: 11px; color: var(--muted); font-weight: 700; }
+.ptable td:last-child .vl { justify-content: flex-end; }
+.vtabs { flex-direction: row; margin: -8px 0 14px; }
+.vtabs .tab { font-size: 13px; padding: 5px 14px; }

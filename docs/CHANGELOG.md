@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 - Dashboard: one row per topic, 16x9 | 9x16 tabs
+
+- Projects table: a topic with variations (03_Wireless_Power) is ONE row; each video (16x9, 9x16) has its own line with its own duration, assets, missing and Preview / Render badge. The eye button per line opens that video, the bin button deletes the whole topic.
+- Assets page: `16x9 | 9x16` tabs under the page tabs switch between the videos of a topic (hash `#p=03~9x16`). `list_projects` rows carry `topic` / `variation`. Checked in the browser on port 8795; restart `studio.cmd ui` to see it.
+
 ## 2026-11-11 - Thin out a big drop/ without tokens (clean + match)
 
 - `studio.cmd clean NN [--apply]` (`pipeline/cull.py`, Pillow + ffmpeg only): exact duplicates, look-alikes (dHash, a video keeps priority over its source still), unreadable, small, blurry, blank, clips < 1 s. Real drop of 03_Wireless_Power (155 files, 22 s): 76 flagged (70 stills that have their video, 4 look-alikes, 2 blurry).
