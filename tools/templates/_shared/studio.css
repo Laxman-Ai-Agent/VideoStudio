@@ -31,8 +31,9 @@ html, body { margin: 0; padding: 0; background: var(--bg); }
             text-shadow: 0 0 calc(var(--u) * .25) #000, 0 0 calc(var(--u) * .5) rgba(0,0,0,.85), 0 calc(var(--u) * .2) calc(var(--u) * .8) rgba(0,0,0,.7); }
 .portrait .cap-page { font-size: calc(var(--u) * 5.2 * var(--tscale, 1)); }  /* 2026-11-10 later: ~+23% both formats (16:9 2.9 -> 3.6u, 9:16 4.3 -> 5.2u), user asked for bigger subtitles */
 .cap-word { transform-origin: 50% 70%; margin: 0 .04em; padding: 0 .14em; border-radius: .18em;
-            background-repeat: no-repeat; background-position: 0 100%; }  /* spoken-word fill: studio.js captions() */
-.cap-box .cap-word, .cap-marker .cap-word { background-position: 0 85%; }  /* the hot word grows; Telugu fonts have narrow spaces */
+            background-repeat: no-repeat; background-size: var(--bw, 0%) var(--bh, 14%); background-position: 0 var(--by, 100%); }
+/* spoken-word fill (studio.js captions): --bw grows 0 -> 100%; --bh / --by come from the measured ink of the page's
+   words (capInk), so the box sits on the letters, not on the font's line box (Telugu fonts have a deep descent) */
 .has-captions .safe { bottom: calc(var(--sb) + var(--u) * 10.5); }
 
 /* ---- paper theme (brand.json "theme": "paper"): light page, dark ink, softer photo shade ---- */

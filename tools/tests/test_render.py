@@ -232,3 +232,13 @@ def test_rows_pick_cards_and_hero_font_falls_back_to_heading(tmp_path):
     spec = theme.validate(theme.ThemeSpec(name="t", colors={"background": "#000000", "text": "#FFFFFF", "accent": "#FFC400"},
                                           fonts={"heading": "Gidugu", "body": "Gidugu", "script": "Gidugu", "hero": "NoSuchFont"}))
     assert spec.fonts["hero"] == "Gidugu" and any("fonts.hero" in i for i in spec.issues)
+
+
+def test_caption_box_is_fitted_to_the_ink_of_the_words():
+    """Bug 2026-11-11: the yellow box / marker behind the spoken word sat below the letters (line box, lower-62% band).
+    Now capInk measures the page's ink and the baseline, in em, and re-measures once the caption font has loaded."""
+    js = (rnd.SHARED / "studio.js").read_text("utf-8")
+    css = (rnd.SHARED / "studio.css").read_text("utf-8")
+    assert "actualBoundingBoxAscent" in js and "function capInk" in js and "document.fonts.load(" in js
+    assert '"em")' in js and '"--bw": "100%"' in js
+    assert "var(--bh" in css and "var(--by" in css and "(A + D) * .62" not in js

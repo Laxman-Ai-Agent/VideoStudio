@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-11 - Caption highlight box centred on the words
+
+- Bug: the yellow box / marker behind the spoken caption word sat low (it followed the font's line box, and `marker` covered only the lower 62%). `studio.js` `capInk` now measures the ink of each caption page (canvas `actualBoundingBox*`) and the baseline in the DOM, sets `--bh` / `--by` in em on every word, and measures again once the caption font has loaded. Box and marker both cover the whole word, centred; underline unchanged. All templates and videos use it (shared code). Checked on project 11 scene 7 at 480p; test added.
+
 ## 2026-11-11 - Render popup and project-name fix
 
 - Bug: Timeline Render failed in 6 s with "project not found: 11-AI": the dashboard id (folder name up to the first `_`) was passed to `studio run`, which only knows full names and numbers. `start_render` now passes the full folder name (test).

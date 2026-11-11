@@ -124,16 +124,46 @@
           tl.fromTo(s, { color: base, scale: 1 }, { color: hl, scale: 1.1, duration: 0.08, ease: "power1.out" }, w.s);
           tl.to(s, { color: base, scale: 1, duration: 0.1 }, off);
         } else {
-          const bgc = kind === "box" ? acc : hl, size = { box: "100% 100%", marker: "100% 62%", underline: "100% 14%" }[kind];
+          const bgc = kind === "box" ? acc : hl;
           s.style.backgroundImage = `linear-gradient(${bgc}, ${bgc})`;
-          s.style.backgroundSize = "0% " + size.split(" ")[1];
+          s.style.setProperty("--bw", "0%");
           const sh = getComputedStyle(el).textShadow;
           // the box is full by the time the word turns white (else one white frame on a light page)
-          tl.to(s, { backgroundSize: size, duration: 0.06, ease: "power1.out" }, Math.max(0, w.s - 0.06));
+          tl.to(s, { "--bw": "100%", duration: 0.06, ease: "power1.out" }, Math.max(0, w.s - 0.06));
           if (kind !== "underline") tl.set(s, { color: ink(bgc), textShadow: "none" }, w.s);
-          tl.set(s, { backgroundSize: "0% " + size.split(" ")[1], color: base, textShadow: sh }, off);
+          tl.set(s, { "--bw": "0%", color: base, textShadow: sh }, off);
         }
       });
+    });
+    if (kind === "box" || kind === "marker") {
+      capInk(box, kind);
+      // fonts.ready can resolve before the caption font is even requested: load it explicitly, then measure again
+      const pg = box.querySelector(".cap-page"), cs = getComputedStyle(pg);
+      if (document.fonts) document.fonts.load(`${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`, box.textContent)
+        .then(() => capInk(box, kind), () => {});
+    }
+  }
+  // Box / marker behind the spoken word, fitted to the ink of the page's words: one height per page, centred on
+  // the letters (bug 2026-11-11: the box followed the font's line box and hung below the text).
+  function capInk(box, kind) {
+    const ctx = document.createElement("canvas").getContext("2d");
+    box.querySelectorAll(".cap-page").forEach((el) => {
+      const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize), words = [...el.querySelectorAll(".cap-word")];
+      ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      let A = 0, D = 0;
+      words.forEach((w) => { const m = ctx.measureText(w.textContent);
+        A = Math.max(A, m.actualBoundingBoxAscent); D = Math.max(D, m.actualBoundingBoxDescent); });
+      if (!words.length) return;
+      // the baseline inside the word's box, measured in the DOM (font metrics differ per font / fallback)
+      const pr = document.createElement("i");
+      pr.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+      words[0].appendChild(pr);
+      const fA = pr.getBoundingClientRect().bottom - words[0].getBoundingClientRect().top;
+      pr.remove();
+      // box and marker both cover the whole ink, centred (user 2026-11-11: a lower-62% highlighter band looked misaligned)
+      const p = fs * (kind === "box" ? .12 : .08), h = A + D + 2 * p, top = fA - A - p;
+      // in em: the caption size can still change after this (theme text scale, relayout), the box follows it
+      words.forEach((w) => { w.style.setProperty("--bh", (h / fs).toFixed(3) + "em"); w.style.setProperty("--by", (top / fs).toFixed(3) + "em"); });
     });
   }
 
