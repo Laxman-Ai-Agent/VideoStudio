@@ -24,6 +24,11 @@ SIZES = {"16:9": (1344, 768), "9:16": (768, 1344), "1:1": (1024, 1024), "4:3": (
          "3:4": (864, 1152), "3:2": (1248, 832), "2:3": (832, 1248)}
 
 
+def clean_prompt(text: str) -> str:
+    """Z-Image draws a size written in the prompt ("768x1344") as text in the picture: the size goes in width / height only."""
+    return re.sub(r"\s*,?\s*\d{3,4}\s*[x×X]\s*\d{3,4}", "", text)
+
+
 def pick(p: Path, ids: list[str], force: bool) -> list[dict]:
     assets = json.loads((p / "visual-assets.json").read_text("utf-8"))["assets"]
     missing = set(ids) - {a["id"] for a in assets}
@@ -40,7 +45,7 @@ def pick(p: Path, ids: list[str], force: bool) -> list[dict]:
             print(f"  {a['id']}: has a file already, skipped (--force to regenerate)")
             continue
         w, h = SIZES.get(pr.get("aspect_ratio"), SIZES["16:9"])
-        jobs.append({"id": a["id"], "prompt": pr["text"], "width": w, "height": h})
+        jobs.append({"id": a["id"], "prompt": clean_prompt(pr["text"]), "width": w, "height": h})
     return jobs
 
 

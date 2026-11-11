@@ -34,3 +34,8 @@ def test_topic_images_one_run_for_every_variation(tmp_path):
     (tmp_path / "16x9" / "work" / "generated").mkdir(parents=True)
     (tmp_path / "16x9" / "work" / "generated" / "A001.png").write_bytes(b"x")
     assert [j["id"] for j in images.topic_jobs(tmp_path, [], False)[0]] == ["9x16_A001"]  # already generated: skipped
+
+
+def test_size_numbers_never_reach_the_image_model():
+    import images
+    assert images.clean_prompt("A lab. Vertical 9:16 portrait composition, 768x1344, subject centred. No text.") ==         "A lab. Vertical 9:16 portrait composition, subject centred. No text."
