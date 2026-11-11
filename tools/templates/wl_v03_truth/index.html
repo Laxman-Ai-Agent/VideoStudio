@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power 9:16 short, seq 03 (30-45 s): "wires gone from tomorrow" is a myth -> the real questions -> watch the full video (link in the description) */
+#myth { position: absolute; padding: calc(var(--u) * .6) calc(var(--u) * 3); border: calc(var(--u) * .9) solid var(--warn); border-radius: calc(var(--u) * 1.2);
+        font: 900 calc(var(--u) * 15) var(--font-head); color: var(--warn); letter-spacing: .1em; background: #0A0E17bb; }
+.qq { position: absolute; font: 800 calc(var(--u) * 5.2) var(--font-head); color: var(--text); white-space: nowrap; }
+.qq i { font-style: normal; color: var(--accent); margin-right: calc(var(--u) * 2); }
+#pres { position: absolute; background: no-repeat 50% 100% / contain; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+#play { position: absolute; border-radius: 50%; background: #E52D27; display: grid; place-items: center; box-shadow: 0 0 calc(var(--u) * 6) #E52D2788; }
+#play::after { content: ""; margin-left: 12%; border-style: solid; border-width: calc(var(--u) * 3.2) 0 calc(var(--u) * 3.2) calc(var(--u) * 5.4); border-color: transparent transparent transparent #fff; }
+#arrow { position: absolute; font: 900 calc(var(--u) * 14) var(--font-head); color: var(--accent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, shake, camera, circuits, post, url } = K;
+  circuits({ seed: 30 });
+  const st = $("stage"); camera(st, 1.04, 0);
+  const tVi = at("viral", 1.5), tWi = at("wires", 3.2), tFa = at("facts", 6.2), tRe = at("research", 7.1), tWh = at("when", 9.7), tDe = at("description", 13.2), tFu = at("full", 14.45);
+
+  // A. the viral post types over a blurred street of phone users; a red MYTH stamp slams on "will not vanish"
+  const bg = card({ i: "street", x: 0, y: 0, w: W, h: H, shape: "sharp", focus: [0.5, 0.5, 1] });
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 0.35, duration: 0.8 }, 0); tl.set(bg, { filter: "blur(6px) saturate(.6)" }, 0);
+  const p = post(W * 0.06, H * 0.12, W * 0.88, "Wires *gone* from tomorrow! ⚡", tVi - 0.4, "3.1M");
+  const my = place(mk("div", "", st, "MYTH"), W * 0.14, H * 0.36); my.id = "myth";
+  tl.fromTo(my, { scale: 2.6, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.28, ease: E.slam }, tWi + 0.55);
+  shake($("shake"), tWi + 0.8, u);
+
+  // B. the real questions type in as a list (facts / how far / when), the presenter stands below them
+  tl.to([p, my], { opacity: 0, y: -H * 0.1, duration: 0.5, ease: E.out }, tFa - 0.7);
+  [[tFa, "1", "Real facts?"], [tRe, "2", "How far is research?"], [tWh, "3", "When, in real life?"]].forEach(([t, n, s], i) => {
+    const q = place(mk("div", "qq", st, `<i>${n}</i><span></span>`), W * 0.06, H * (0.08 + i * 0.07));
+    tl.fromTo(q, { opacity: 0, x: -u * 6 }, { opacity: 1, x: 0, duration: 0.35, ease: E.in }, t - 0.15); type(q.querySelector("span"), s, t, 20);
+  });
+  const pr = place(mk("div", "", st), W * 0.15, H * 0.3, W * 0.7, H * 0.42); pr.id = "pres"; pr.style.backgroundImage = url("pres_up");
+  tl.fromTo(pr, { y: H * 0.3, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: E.in }, tFa);
+
+  // C. FULL VIDEO: the city clip becomes a video card with a play button; an arrow bounces down to the description
+  const tC = tDe - 1.6;
+  tl.to(st.querySelectorAll(".qq"), { opacity: 0, y: -u * 6, duration: 0.4, stagger: 0.05 }, tC - 0.3);
+  tl.to(pr, { opacity: 0, y: H * 0.2, duration: 0.5, ease: E.out }, tC - 0.3);
+  const vw = W * 0.88, vh = vw * 9 / 16, vid = card({ i: "city_clip", video: "city_clip_v", vstart: tC, vdur: D - tC, x: W * 0.06, y: H * 0.14, w: vw, h: vh, focus: [0.5, 0.5, 1.05] });
+  pop(vid, tC, { scale: 0.5, opacity: 0, rotation: -4 }, 0.7, E.pop);
+  const pl = place(mk("div", "", st), W / 2 - u * 9, H * 0.14 + vh / 2 - u * 9, u * 18, u * 18); pl.id = "play"; pop(pl, tC + 0.4, { scale: 0, opacity: 0 });
+  tl.to(pl, { scale: 1.08, duration: 0.5, yoyo: true, repeat: 5, ease: E.soft }, tC + 1);
+  const fv = place(mk("div", "kh", st, "Full <em>video</em>"), W * 0.06, H * 0.14 + vh + u * 4); fv.style.cssText += `font-size:${u * 12}px;opacity:0`; rise(fv, tFu - 0.6);
+  const ld = place(mk("div", "kt", st), W * 0.06, H * 0.14 + vh + u * 20); ld.style.fontSize = u * 4.4 + "px"; type(ld, "LINK IN THE *DESCRIPTION*", tDe, 24);
+  const ar = place(mk("div", "", st, "↓"), W * 0.78, H * 0.14 + vh + u * 8); ar.id = "arrow";
+  tl.fromTo(ar, { opacity: 0, y: -u * 6 }, { opacity: 1, y: 0, duration: 0.4, ease: E.pop }, tDe);
+  tl.to(ar, { y: u * 4, duration: 0.3, yoyo: true, repeat: 5, ease: "sine.inOut" }, tDe + 0.4);
+  K.done();
+</script></body></html>

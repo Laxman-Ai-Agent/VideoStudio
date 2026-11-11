@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power 9:16 short, seq 01 (0-11 s): a phone charging with no plug -> TV, fan, laptop stack in -> NO WIRE -> sci-fi? */
+#sci { position: absolute; inset: 0; background: no-repeat center / cover; opacity: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div><div id="sci"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, slam, camera, circuits, url } = K;
+  circuits({ seed: 9, lines: 10 });
+  const st = $("stage"); camera(st, 1.05, 0);
+  const tPh = at("phone", 1.9), tPl = at("plug", 2.3), tTv = at("tv", 4.26), tFa = at("fan", 4.9), tLa = at("laptop", 5.5), tWi = at("wire", 7.15), tSc = at("scifi", 9.6);
+
+  // A. IMAGINE: a tall phone card drops onto the screen, NO PLUG? types under it, a NO CABLE chip pops
+  const k = place(mk("div", "kt", st), W * 0.08, H * 0.05); k.style.cssText += `font-size:${u * 4.5}px;color:${PAL.acc};letter-spacing:.4em`; type(k, "IMAGINE", 0.3, 14);
+  const pw = W * 0.46, ph = pw * 16 / 9, phone = card({ i: "phone", x: (W - pw) / 2, y: H * 0.1, w: pw, h: ph, focus: [0.5, 0.55, 1.15] });
+  pop(phone, tPh - 0.5, { y: -H * 0.3, rotation: -8, opacity: 0 }, 0.8, E.in);
+  const np = place(mk("div", "kh", st), W * 0.08, H * 0.1 + ph + u * 4); np.style.fontSize = u * 13 + "px"; type(np, "No *plug?*", tPl, 12);
+  const nc = chip("Charging · no cable", W * 0.08, H * 0.1 + ph + u * 22); pop(nc, tPl + 0.7, { x: -u * 6, opacity: 0 }, 0.4, E.in);
+
+  // B. the phone steps back to a corner; TV (16:9), fan (circle), laptop (4:3) stack down the screen on their words
+  tl.to([np, nc, k], { opacity: 0, y: -u * 6, duration: 0.4, ease: E.out }, tTv - 0.6);
+  tl.to(phone, { left: W * 0.66, top: H * 0.04, width: W * 0.26, height: W * 0.26 * 16 / 9, duration: 0.7, ease: E.io }, tTv - 0.6);
+  const room = (i, f) => ({ i: "room_tv", focus: f });
+  const tw = W * 0.6, th = tw * 9 / 16, tv = card({ ...room(0, [0.5, 0.47, 3.2]), x: W * 0.06, y: H * 0.07, w: tw, h: th });
+  const fd = W * 0.4, fan = card({ ...room(0, [0.53, 0.18, 2.6]), x: W * 0.52, y: H * 0.07 + th + u * 6, w: fd, h: fd, shape: "round" });
+  const lw = W * 0.56, lh = lw * 3 / 4, lap = card({ ...room(0, [0.49, 0.72, 5]), x: W * 0.06, y: H * 0.07 + th + u * 6 + fd * 0.55, w: lw, h: lh });
+  [[tv, tTv, "TV", W * 0.06, H * 0.07 + th + u * 1.5, { x: -W * 0.5, rotation: -6 }], [fan, tFa, "FAN", W * 0.52, H * 0.07 + th + fd + u * 7.5, { scale: 0.3, rotation: -120 }],
+   [lap, tLa, "LAPTOP", W * 0.06, H * 0.07 + th + u * 6 + fd * 0.55 + lh + u * 1.5, { x: W * 0.5, rotation: 6 }]].forEach(([c, t, lab, x, y, from]) => {
+    pop(c, t - 0.1, { ...from, opacity: 0 }, 0.6, E.pop);
+    const l = place(mk("div", "kt", st), x, y); l.style.fontSize = u * 4.6 + "px"; type(l, `*${lab}*`, t + 0.1, 14);
+  });
+  dim(tv, tFa + 0.1, 0.55); dim(fan, tLa + 0.1, 0.55);
+
+  // C. NO WIRE: every card lights (rings), the title slams across the middle with a flash
+  lit([tv, fan], tWi - 0.2); [tv, fan, lap, phone].forEach((c, i) => ring(c, tWi - 0.1 + i * 0.08));
+  const nw = place(mk("div", "kh", st, "No <em>Wire</em>"), 0, H * 0.3); nw.style.cssText += `width:${W}px;text-align:center;font-size:${u * 19}px;opacity:0;text-shadow:0 0 ${u * 5}px #000`;
+  slam(nw, tWi);
+
+  // D. zoom-through into the sci-fi clip; SCI-FI? rises
+  const tz = tSc - 0.8;
+  tl.to("#shake", { scale: 2.6, opacity: 0, duration: 0.7, ease: "power3.in" }, tz);
+  const sci = $("sci"); sci.style.backgroundImage = url("scifi");
+  const sv = card({ i: "scifi", video: "scifi_v", vstart: tz + 0.2, vdur: D - tz - 0.2, x: 0, y: 0, w: W, h: H, shape: "sharp", parent: sci, focus: [0.5, 0.5, 1] });
+  tl.fromTo(sci, { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.9, ease: E.in }, tz + 0.2);
+  const sf = place(mk("div", "kh", sci, "Sci-fi<em>?</em>"), W * 0.08, H * 0.42); sf.style.cssText += `font-size:${u * 17}px;opacity:0;text-shadow:0 0 ${u * 4}px #000`;
+  rise(sf, tSc);
+  K.done();
+</script></body></html>

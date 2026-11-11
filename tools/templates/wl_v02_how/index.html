@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power 9:16 short, seq 02 (11-30 s): Finland researchers send power through the air -> how? loose power scatters (loss) -> sound waves + laser focus it into one beam */
+#flag { position: absolute; border-radius: calc(var(--u) * .6); background: #fff; overflow: hidden; }
+#flag i { position: absolute; background: #1D4FA0; }
+#fx { position: absolute; inset: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"><canvas id="fx"></canvas></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, slam, beam, camera, circuits, rnd } = K;
+  circuits({ seed: 11, lines: 10 });
+  const st = $("stage"); camera(st, 1.04, 0);
+  const tFi = at("finland", 1.2), tAi = at("air", 3.9), tHo = at("how", 7.5), tPo = at("power", 9.6), tLo = at("loss", 11.6), tSo = at("sound", 13.65), tLa = at("laser", 14.5), tFo = at("focus", 17.45);
+
+  // A. FINLAND: flag draws + name types; the Helsinki building and the researchers clip stack below; a beam crosses: through the air
+  const fw = u * 22, fh = fw * 11 / 18, flag = place(mk("div", "", st), W * 0.08, H * 0.05, fw, fh); flag.id = "flag";
+  const cv = place(mk("i", "", flag), fw * 5 / 18, 0, fw * 3 / 18, fh), chb = place(mk("i", "", flag), 0, fh * 4 / 11, fw, fh * 3 / 11);
+  pop(flag, tFi - 0.3, { scale: 0.4, rotation: -10, opacity: 0 });
+  tl.fromTo(cv, { scaleY: 0 }, { scaleY: 1, duration: 0.4, ease: E.in }, tFi); tl.fromTo(chb, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: E.in }, tFi + 0.15);
+  const fn = place(mk("div", "kt", st), W * 0.08 + fw + u * 4, H * 0.05 + fh * 0.2); fn.style.fontSize = u * 7.5 + "px"; type(fn, "FINLAND", tFi + 0.1, 14);
+  const cw = W * 0.76, chh = cw * 9 / 16, hel = card({ i: "helsinki", x: W * 0.12, y: H * 0.15, w: cw, h: chh, focus: [0.5, 0.5, 1.05] });
+  pop(hel, tFi + 0.3, { y: H * 0.2, opacity: 0 }, 0.7, E.in);
+  const lab = card({ i: "lab_clip", video: "lab_clip_v", vstart: tFi + 1.4, vdur: 5, x: W * 0.16, y: H * 0.15 + chh + u * 5, w: cw * 0.9, h: cw * 0.9 * 9 / 16, focus: [0.5, 0.45, 1.1] });
+  pop(lab, tFi + 1.4, { x: W * 0.5, opacity: 0, rotation: 4 }, 0.7, E.in); dim(hel, tFi + 1.8, 0.5);
+  const ta = place(mk("div", "kt", st), W * 0.08, H * 0.15 + chh + u * 10 + cw * 0.9 * 9 / 16); ta.style.fontSize = u * 5 + "px";
+  type(ta, "POWER *THROUGH THE AIR*", tAi, 22);
+  beam(0, H * 0.15 + chh + u * 2.5, W, H * 0.15 + chh + u * 2.5, tAi + 0.1, 0.8);
+
+  // B. HOW?: everything slides up and out; a big question rises
+  tl.to([flag, fn, hel, lab, ta, ".kbeam", ".kdot"], { y: -H * 0.4, opacity: 0, duration: 0.7, ease: "power3.in", stagger: 0.02 }, tHo - 0.8);
+  const hw = place(mk("div", "kh", st, "How<em>?</em>"), 0, H * 0.06); hw.style.cssText += `width:${W}px;text-align:center;font-size:${u * 18}px;opacity:0`; rise(hw, tHo - 0.1);
+
+  // C. power let loose: particles fly every way from a round lamp card (ENERGY LOSS); then sound waves + laser cards arrive and the stream focuses into one beam down to a target
+  const sx = W / 2, sy = H * 0.3, rs = W * 0.26;
+  const src = card({ i: "lamp", x: sx - rs / 2, y: sy - rs / 2, w: rs, h: rs, shape: "round", focus: [0.3, 0.55, 2] });
+  pop(src, tPo - 0.4, { scale: 0.3, opacity: 0 });
+  tl.to(hw, { fontSize: u * 9 + "px", top: H * 0.02, duration: 0.6, ease: E.io }, tPo - 0.4);
+  const tgY = H * 0.66, cvs = $("fx"); cvs.width = W; cvs.height = H; const g = cvs.getContext("2d"), r = rnd(3);
+  const PP = Array.from({ length: 220 }, () => ({ a: r() * 6.28, v: 0.6 + r() * 0.8, t0: r() * 2 })), Sx = { on: 0, focus: 0 };
+  tl.to(Sx, { on: 1, duration: 0.5 }, tPo); tl.to(Sx, { focus: 1, duration: 1.4, ease: E.io }, tFo - 0.6);
+  const draw = (t) => { g.clearRect(0, 0, W, H); if (!Sx.on) return; const reach = tgY - sy;
+    PP.forEach((p) => { const life = (((t - p.t0) % 2) + 2) % 2 / 2, a = Math.PI / 2 + (p.a - Math.PI / 2) * (1 - Sx.focus) * 1, d = life * reach * p.v * (1 + 0.2 * Sx.focus);
+      g.fillStyle = (Sx.focus > 0.5 ? PAL.acc : PAL.pri) + Math.round((1 - life) * Sx.on * 220).toString(16).padStart(2, "0");
+      g.beginPath(); g.arc(sx + Math.cos(a) * d * (1 - Sx.focus * 0.97), sy + Math.sin(a) * d, u * 0.7 * (1 - life * 0.5), 0, 6.28); g.fill(); });
+    if (Sx.focus > 0.3) { g.strokeStyle = PAL.acc; g.lineWidth = u * 1.4 * Sx.focus; g.shadowColor = PAL.acc; g.shadowBlur = u * 4;
+      g.beginPath(); g.moveTo(sx, sy + rs / 2); g.lineTo(sx, tgY); g.stroke(); g.shadowBlur = 0; } };
+  const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: () => draw(o.t) }, 0);
+  const el = place(mk("div", "kh", st, "Energy <em style='color:#FF5A3C'>Loss</em>"), W * 0.08, H * 0.48); el.style.cssText += `font-size:${u * 10}px;opacity:0`; rise(el, tLo - 0.1);
+  tl.to(el, { opacity: 0, duration: 0.3 }, tSo - 0.5);
+  const cs = W * 0.38, cy = H * 0.46;
+  const so = card({ i: "ultra_clip", video: "ultra_clip_v", vstart: tSo - 0.3, vdur: 5, x: W * 0.06, y: cy, w: cs, h: cs, focus: [0.5, 0.5, 1.2] });
+  const la = card({ i: "redlaser_clip", video: "redlaser_clip_v", vstart: tLa - 0.3, vdur: 5, x: W * 0.56, y: cy, w: cs, h: cs, focus: [0.5, 0.5, 1.2] });
+  pop(so, tSo - 0.3, { x: -W * 0.4, opacity: 0 }, 0.6, E.in); pop(la, tLa - 0.3, { x: W * 0.4, opacity: 0 }, 0.6, E.in);
+  const l1 = place(mk("div", "kt", st), W * 0.06, cy + cs + u * 2); l1.style.fontSize = u * 4 + "px"; type(l1, "*SOUND* WAVES", tSo, 18);
+  const l2 = place(mk("div", "kt", st), W * 0.56, cy + cs + u * 2); l2.style.fontSize = u * 4 + "px"; type(l2, "*LASER* BEAMS", tLa, 18);
+  tl.to([so, la], { y: u * 6, opacity: 0.55, duration: 0.6, ease: E.io }, tFo - 0.6);
+  const fo = place(mk("div", "kh", st, "<em>Focus</em> · one direction"), W * 0.06, H * 0.12); fo.style.cssText += `font-size:${u * 5}px;opacity:0`;
+  tl.to(hw, { opacity: 0, duration: 0.3 }, tFo - 0.4); rise(fo, tFo - 0.1, 0.1);
+  K.done();
+</script></body></html>
