@@ -16,8 +16,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - Timeline render popup (live clock, scenes done, ETA, green tick) + `11-AI` project-name bug fixed 2026-11-11. Restart `studio.cmd ui` after merging.
 - iso template built 2026-11-11 (`params.iso`, see CHANGELOG); 12_Dam_Iso is a 10 s demo (no voice, not a studio project).
 - 03_Wireless_Power rebuild (2026-11-11 night): both 480p previews rendered and QA'd frame by frame (one frame per beat),
-  QA PASS; sent to the user. Overlaps fixed in 16x9 seq 02/05/08/12/19 and 9x16 v01/v02/v03. Waiting for the user's notes;
-  --final only when the user says. Written sequences: `tools/templates/wl_s02..s20_*`, `wl_v01..v03_*`, kit `wireless_kit/kit.js`;
+  QA PASS; sent to the user. Overlaps fixed in 16x9 seq 02/05/08/12/19 and 9x16 v01/v02/v03. FINAL 1080p rendered 2026-11-11 on the
+  user's go (16x9/output/final_16x9.mp4, 9x16/output/final_9x16.mp4, QA PASS, sent). Written sequences: `tools/templates/wl_s02..s20_*`, `wl_v01..v03_*`, kit `wireless_kit/kit.js`;
   scenes.json from `projects/03_Wireless_Power/<variation>/scripts/make_sequences.py`. Beat-frame QA idea: ffmpeg one frame at
   scene start + beat + 0.9 s, tiled per sequence (not a studio command yet). Tests: 149 pass (the theme preset test fails only in
   worktrees without `_brand/fonts`).

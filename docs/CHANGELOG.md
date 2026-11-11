@@ -3,6 +3,7 @@
 ## 2026-11-11 - 03_Wireless_Power previews checked
 
 - Both previews re-rendered (pool paths: spark / phone_float) and QA'd one frame per beat. Fixed overlaps: seq 02 TRUE / HYPE / 50% all sat at top 0 (`place()` y overrides CSS top), seq 05 "1000s" over its label, seq 08 kicker over the hollow 3, seq 12 "Shocking Update" over the counters and "20%" over its label, seq 19 title at the right edge; 9x16 v01 FAN label over the laptop card and "No Wire" too wide, v02 labels past the edge, v03 arrow over the description line. Only those sequences re-rendered. Tests 149 pass.
+- Finals rendered on the user's go: `16x9/output/final_16x9.mp4` (1920x1080) and `9x16/output/final_9x16.mp4` (1080x1920), QA PASS.
 
 ## 2026-11-11 - 03_Wireless_Power rebuilt as written sequences (no templates)
 
