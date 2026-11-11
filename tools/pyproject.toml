@@ -17,6 +17,10 @@ align = [
     "torchaudio==2.8.0",
     "uroman==1.*",
 ]
+match = [
+    "torch==2.8.0",
+    "transformers==4.*",
+]
 dev = ["pytest==8.*"]
 
 [tool.uv]
