@@ -92,3 +92,19 @@
 - On Kaggle GPU, in the ONE images run per video: Z-Image images, Depth-Anything (2.5D parallax), BiRefNet cut-outs,
   Real-ESRGAN upscale. Image-to-video (LTX-Video) only when the drop clips do not cover a scene (slow: minutes per clip).
 - Measure the render time on the sample scenes before planning the whole video around a heavy effect.
+
+## Craft (how it moves; Claude as motion designer, 2026-11-11)
+- Storyboard first: before writing code, one line per scene: word -> visual -> motion -> transition; show the user.
+- Motion tokens per video (`work/motion.json` or the scene code's top): durations (small 0.25-0.4 s, cards 0.5-0.7 s,
+  big moves 0.8-1.2 s), easing set (in: power3 / expo out; out: power2 in), distances, card style (radius, shadow,
+  border, light sweep), transition set. Every scene uses them: consistent inside the video, new set for the next video.
+- Principles: ease every move (linear only for continuous spin / drift); a small anticipation before pops, a slight
+  overshoot when settling; stagger related elements 60-120 ms; motion blur only on fast slides / zooms.
+- One focal point at a time: when a new element arrives, the previous one dims or steps back.
+- Text: on screen at least (words / 3) seconds; 2-3 text animations per video; the key word in the accent colour.
+- Layout: a grid and safe zones per format (bottom band free for captions); same card sizes and margins in a video.
+- Rhythm: big moves on word beats; a pattern interrupt (layout change, zoom, flash) every 5-8 s.
+- Transitions: match cuts (a shape / colour / move carries into the next scene); big ones only between chapters.
+- Sound: one SFX per animation kind (pop = soft click, slam = hit, wipe = whoosh, spark = zap), under the voice.
+- Images: subject-aware 1:1 crop, graded toward the palette, cards with depth shadow + light sweep.
+- QA after the sample render: one frame per beat (overlaps, cut text, contrast, wrong image) + the clip at full speed.
