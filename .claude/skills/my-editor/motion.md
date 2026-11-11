@@ -16,10 +16,20 @@
    moves instead of one-after-another stops, 30 fps, deterministic (seeded) particles; check a sample clip at full speed.
 7. Graphs never repeat a look from earlier videos; numbers become objects, not plain bars (see 5, 6).
 
+## Objects = real images (user, 2026-11-11, STRICT)
+- When the narration names an object (laptop, fan, phone, TV, ...), show its actual picture, never a drawing made of shapes.
+- Layout: a 1:1 picture in a clean, cinematic, modern card, the keyword text beside or inside it.
+- The picture itself stays still; the motion is on the card, the text, the transitions and the surrounding elements
+  (subtle, smooth: slide / scale / mask reveal, light sweep, depth shadow, staggered text).
+- Card and word appear on the keyword's beat in the voice-over (transcript word times).
+- No fitting picture: a clean text motion graphic for that word instead; never an inaccurate image.
+- Pictures: the drop pool first, else the ONE Kaggle images run (1:1, object alone, clean background).
+
 ## Categories (word / moment -> motion -> where the image goes)
 ### A. Things and people
-1. Object / device (TV, phone, laptop, fan, drone): device frame drawn in code pops / slides in, screen turns on with a
-   glow -> image inside the screen; a non-device object sits in a mask (circle / topic shape).
+1. Object / device (TV, phone, laptop, fan, drone): the REAL picture of that object (never drawn in code), 1:1, inside a
+   beautifully designed card, the word beside / under it; the card arrives on the spoken word. See "Objects = real
+   images" below.
 2. Person (scientist, historic figure, people): cut-out slides in with a depth shadow, a name-tag line draws ->
    image large on one third, name + role beside it.
 3. Presenter reaction (shock, surprise, question, no-no): zoom punch + shake, background blurs and moves, words slam in
