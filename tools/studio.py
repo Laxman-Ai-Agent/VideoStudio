@@ -20,9 +20,10 @@ from pipeline import doctor, pending
 from pipeline import assets
 from pipeline.config import BRAND, LIBRARY, ROOT, setup_env
 from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
-from pipeline.ingest import AmbiguousInput, ingest
+from pipeline.ingest import AmbiguousInput, ingest, ingest_shared
 from pipeline.plan import RULES, validate, write_brief
-from pipeline.project import atomic_write, ensure_layout, find_project, load_state, new_project, run_stage
+from pipeline.project import (atomic_write, ensure_layout, find_project, is_variation, load_state, new_project, run_stage,
+                              variations)
 
 from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
 
@@ -39,8 +40,14 @@ def _one(folder: Path, stem: str) -> Path | None:
 def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = False, only: str | None = None) -> int:
     """Run every stage in order. Finished stages with unchanged inputs are skipped (run_stage)."""
     w = p / "work"
+    if vs := variations(p):
+        print(f"  STOP: {p.name} has variations; run one of: {', '.join(f'{p.name}/{v.name}' for v in vs)}")
+        return NEEDS_USER
     ensure_layout(p)  # a folder the user made by hand has no drop/, work/ ...
-    drop = [f for f in (p / "drop").iterdir() if f.is_file()]
+    if is_variation(p):
+        for src, dest in ingest_shared(p.parent):
+            print(f"  ingest (shared drop): {src.name} -> {dest.relative_to(p.parent).as_posix()}")
+    drop = [f for f in (p / "drop").iterdir() if f.is_file()] if (p / "drop").is_dir() else []
     try:
         if drop:
             run_stage(p, "ingest", drop, [], lambda: print(f"  ingest: moved {len(ingest(p))} file(s)"), force=True)
@@ -297,6 +304,8 @@ def make_theme(p: Path, force: bool = False):
     from pipeline import theme as th
     from pipeline.contracts import ThemeSpec
     w, manual = p / "work", p / "theme.json"
+    if is_variation(p) and not manual.exists():
+        manual = p.parent / "theme.json"  # one look for every variation of the topic
     out = w / "theme.json"
     inputs = [f for f in (w / "transcript.json", w / "scenes.json", manual, *sorted((p / "input").glob("script.*")),
                           *sorted(th.PRESETS.glob("*.json"))) if f.exists()]

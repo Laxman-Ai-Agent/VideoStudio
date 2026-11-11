@@ -43,9 +43,26 @@ def next_number(projects_dir: Path = PROJECTS) -> int:
     return max(nums, default=0) + 1
 
 
+VARIATION = re.compile(r"^\d+x\d+$")  # projects/03_Topic/16x9: one video of a topic, the drop folder is shared
+
+
+def is_variation(project: Path) -> bool:
+    return bool(VARIATION.match(project.name))
+
+
+def variations(project: Path) -> list[Path]:
+    return sorted(d for d in project.iterdir() if d.is_dir() and is_variation(d)) if project.is_dir() else []
+
+
+def ref(project: Path, projects_dir: Path = PROJECTS) -> str:
+    """What `studio.cmd run` takes: '03_Topic' or '03_Topic/16x9'."""
+    return f"{project.parent.name}/{project.name}" if is_variation(project) else project.name
+
+
 def ensure_layout(project: Path) -> None:
     for d in PROJECT_DIRS:
-        (project / d).mkdir(parents=True, exist_ok=True)
+        if not (d == "drop" and is_variation(project)):  # one drop/ for the whole topic, in the parent
+            (project / d).mkdir(parents=True, exist_ok=True)
 
 
 def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
@@ -57,10 +74,16 @@ def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
 
 
 def find_project(ref: str, projects_dir: Path = PROJECTS) -> Path:
-    """Accepts '01', '1', '01_AI_Agents' or a full path."""
+    """Accepts '01', '1', '01_AI_Agents', '03/16x9' (a variation) or a full path."""
     p = Path(ref)
     if p.is_dir():
         return p
+    if "/" in ref.replace("\\", "/"):
+        head, tail = ref.replace("\\", "/").split("/", 1)
+        v = find_project(head, projects_dir) / tail
+        if is_variation(v) and v.is_dir():
+            return v
+        raise FileNotFoundError(f"variation not found: {ref}")
     for d in sorted(projects_dir.glob("*")):
         m = re.match(r"(\d+)[_-]", d.name)
         if d.is_dir() and (d.name == ref or (m and ref.isdigit() and int(m.group(1)) == int(ref))):

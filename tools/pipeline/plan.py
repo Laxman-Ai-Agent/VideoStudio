@@ -10,6 +10,7 @@ from pathlib import Path
 from .config import BRAND, ROOT
 from .contracts import ScenePlan, Transcript
 from .identity import memory_md
+from .project import VARIATION, ref
 from .theme import TITLE_STYLES, CAPTION_STYLES, CAMERA, FONTS, PRESETS, TEXT_IN, TRANSITIONS
 
 RULES = ROOT / ".claude" / "skills" / "my-editor" / "rules.md"
@@ -36,13 +37,16 @@ def timed_lines(t: Transcript, max_words: int = 12, pause: float = 0.6) -> list[
 
 def write_brief(project: Path, transcript: Transcript, out: Path) -> None:
     assets = sorted(p.relative_to(project).as_posix() for p in (project / "assets").rglob("*") if p.is_file())
+    if VARIATION.match(project.name):  # the topic's shared pool (03_Topic/assets/originals)
+        assets += sorted("../" + p.relative_to(project.parent).as_posix()
+                         for p in (project.parent / "assets").rglob("*") if p.is_file())
     lines = "\n".join(f"[{a:6.2f} - {b:6.2f}] {txt}" for a, b, txt in timed_lines(transcript))
     brand = (BRAND / "brand.json").read_text("utf-8") if (BRAND / "brand.json").exists() else "{}"
     font_list = sorted(d.name for d in FONTS.iterdir() if d.is_dir()) if FONTS.is_dir() else []
     out.write_text(f"""# Plan brief: {project.name}
 
 1. Creative direction FIRST: write `theme.json` in the project folder (see "Creative direction" below).
-2. Then `work/scenes.json` for this narration, then run `studio.cmd run {project.name[:2]}` again.
+2. Then `work/scenes.json` for this narration, then run `studio.cmd run {ref(project)}` again.
 
 ## Contract (tools/pipeline/contracts.py: ScenePlan, validated on the next run)
 - Scenes back to back: first starts at 0, each starts where the previous ends, last ends at {transcript.duration:.2f}.

@@ -93,3 +93,22 @@ def ingest(project: Path, duration: Callable[[Path], float] = probe_duration) ->
             f.writelines(f"- {stamp} ingest: `{s.relative_to(project).as_posix()}` -> "
                          f"`{d.relative_to(project).as_posix()}`\n" for s, d in moves)
     return moves
+
+
+def ingest_shared(topic: Path, duration: Callable[[Path], float] = probe_duration) -> list[tuple[Path, Path]]:
+    """A topic with variations (03_Topic/16x9, 03_Topic/9x16) has ONE drop/: its images and videos move to the
+    topic's assets/originals (shared by every variation, used via `../assets/originals/...`). Audio and
+    scripts stay in drop/: they belong to one variation, the user puts them in its input/."""
+    d = topic / "drop"
+    files = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in IMAGE | VIDEO) if d.is_dir() else []
+    moves = []
+    for src in files:
+        dest = _free_name(topic / classify(src, duration) / src.name)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(src, dest)
+        moves.append((src, dest))
+    if moves:
+        stamp = f"{datetime.now():%Y-%m-%d %H:%M}"
+        with open(topic / "project.md", "a", encoding="utf-8") as f:
+            f.writelines(f"- {stamp} ingest: `drop/{s.name}` -> `{d.relative_to(topic).as_posix()}`\n" for s, d in moves)
+    return moves

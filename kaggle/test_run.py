@@ -19,3 +19,17 @@ def test_resume(tmp_path, monkeypatch):
     assert run.resume(jobs) is None                      # failed run -> push again
     status["s"] = "KernelWorkerStatus.COMPLETE"
     assert run.resume({"c": None}) is None               # other files -> fresh run
+
+
+def test_topic_images_one_run_for_every_variation(tmp_path):
+    import images
+    a = {"id": "A001", "method": "ai_generate", "prompt": {"text": "x", "aspect_ratio": "9:16"}}
+    for v in ("16x9", "9x16"):
+        (tmp_path / v).mkdir()
+        (tmp_path / v / "visual-assets.json").write_text(json.dumps({"assets": [a]}), "utf-8")
+    jobs, dests = images.topic_jobs(tmp_path, [], False)
+    assert [j["id"] for j in jobs] == ["16x9_A001", "9x16_A001"]
+    assert dests["9x16_A001"] == (tmp_path / "9x16" / "work" / "generated", "A001.png")
+    (tmp_path / "16x9" / "work" / "generated").mkdir(parents=True)
+    (tmp_path / "16x9" / "work" / "generated" / "A001.png").write_bytes(b"x")
+    assert [j["id"] for j in images.topic_jobs(tmp_path, [], False)[0]] == ["9x16_A001"]  # already generated: skipped

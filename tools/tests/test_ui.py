@@ -336,3 +336,16 @@ def test_render_info_reads_the_log_and_this_pc(tmp_path):
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=c=red:s=64x36:r=30", "-frames:v", "30", "-pix_fmt", "yuv420p", str(clip)], check=True)
     assert render_info.frame(clip, tmp_path / "logs" / "f.jpg", at=0.2) and (tmp_path / "logs" / "f.jpg").stat().st_size > 0
     assert not render_info.frame(tmp_path / "missing.mp4", tmp_path / "x.jpg")
+
+
+def test_variations_are_listed_and_addressed(tmp_path, monkeypatch):
+    from pipeline.project import ensure_layout
+    for v in ("16x9", "9x16"):
+        ensure_layout(tmp_path / "03_Topic" / v)
+    monkeypatch.setattr(service, "PROJECTS", tmp_path)
+    assert [p["id"] for p in service.list_projects()] == ["03~16x9", "03~9x16"]
+    assert service.project_dir("03~9x16") == tmp_path / "03_Topic" / "9x16"
+    assert service.project_dir("03_Topic~16x9") == tmp_path / "03_Topic" / "16x9"
+    assert service.pid_of(tmp_path / "03_Topic" / "16x9") == "03_Topic~16x9"
+    with pytest.raises(service.NotFound):
+        service.project_dir("03~work")

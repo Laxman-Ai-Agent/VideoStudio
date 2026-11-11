@@ -1,6 +1,6 @@
 r"""kaggle\images.cmd NN [A010 A023 ...] [--out DIR] [--force]  |  kaggle\images.cmd prompts.json [--out DIR]
 Generate AI image assets of a project with Z-Image-Turbo (Apache-2.0) on Kaggle GPU -> projects/NN/work/generated/<id>.png (processed into assets/, then deleted),
-so `studio.cmd assets NN` picks them up unchanged. Default ids: every asset with a prompt and method ai_generate
+so `studio.cmd assets NN` picks them up unchanged. A topic with variations (03_Topic/16x9, /9x16): one run for all of them. Default ids: every asset with a prompt and method ai_generate
 that has no file yet (no `file` in visual-assets.json and nothing in work/generated/). --force regenerates anyway.
 --out DIR writes DIR/<id>.png instead of work/generated/ (test runs). prompts.json = free test prompts
 ([{"id", "prompt", "aspect_ratio"}]), images go to the folder next to it named like the file. Weights are downloaded inside the GPU run.
@@ -9,6 +9,7 @@ A rerun with the same ids resumes the previous Kaggle run instead of starting a 
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import time
 from pathlib import Path
@@ -33,12 +34,26 @@ def pick(p: Path, ids: list[str], force: bool) -> list[dict]:
         pr = a.get("prompt") or {}
         if ids and a["id"] not in ids or not ids and a.get("method") != "ai_generate" or not pr.get("text"):
             continue
-        if not ids and not force and (a.get("file") or any((p / d).glob(a["id"] + ".*") for d in ("drop", "work/generated"))):
+        if not ids and not force and (a.get("file") or any(f for d in ("drop", "work/generated") for f in (p / d).glob(a["id"] + ".*"))):
             print(f"  {a['id']}: has a file already, skipped (--force to regenerate)")
             continue
         w, h = SIZES.get(pr.get("aspect_ratio"), SIZES["16:9"])
         jobs.append({"id": a["id"], "prompt": pr["text"], "width": w, "height": h})
     return jobs
+
+
+def topic_jobs(p: Path, ids: list[str], force: bool) -> tuple[list[dict], dict]:
+    """Jobs of a project, or of every variation of a topic, plus where each image goes (folder, file name)."""
+    vs = [d for d in sorted(p.iterdir()) if re.match(r"^\d+x\d+$", d.name) and (d / "visual-assets.json").exists()] or [p]
+    jobs, dests = [], {}
+    for v in vs:
+        for j in pick(v, ids, force):
+            name = j["id"] + ".png"
+            if v != p:
+                j["id"] = f"{v.name}_{j['id']}"  # 16x9_A001 and 9x16_A001 never clash in the kernel output
+            dests[j["id"]] = (v / "work" / "generated", name)
+            jobs.append(j)
+    return jobs, dests
 
 
 def main() -> int:
@@ -53,9 +68,10 @@ def main() -> int:
         jobs = [{"id": i["id"], "prompt": i["prompt"], "width": SIZES[i.get("aspect_ratio", "16:9")][0],
                  "height": SIZES[i.get("aspect_ratio", "16:9")][1]} for i in items]
         a.out = a.out or str(p.with_suffix(""))
+        dests = {}
     else:
-        p = find_project(a.project)
-        jobs = pick(p, a.ids, a.force)
+        p = find_project(a.project)  # a topic with variations (03_Topic/16x9, /9x16): ONE Kaggle run for all of them
+        jobs, dests = topic_jobs(p, a.ids, a.force)
     if not jobs:
         print(f"{p.name}: nothing to generate")
         return 0
@@ -81,17 +97,18 @@ def main() -> int:
     kg("kernels", "output", KERNEL, "-p", str(out))
     report = json.loads(next(out.rglob("report.json")).read_text("utf-8"))
     print("  report:", json.dumps(report))
-    dest = Path(a.out) if a.out else p / "work" / "generated"  # sync processes it, then deletes it
-    dest.mkdir(parents=True, exist_ok=True)
     n = 0
     for j in jobs:
         got = next(out.rglob(f"{j['id']}.png"), None)
         if got:
-            shutil.copy(got, dest / got.name)
+            # work/generated: `studio.cmd assets` processes it into assets/A001.png, then deletes it
+            folder, name = (Path(a.out), got.name) if a.out else dests[j["id"]]
+            folder.mkdir(parents=True, exist_ok=True)
+            shutil.copy(got, folder / name)
             n += 1
         else:
             print(f"  {j['id']}: FAILED ({report.get('error')})")
-    print(f"  {n}/{len(jobs)} image(s) written to {dest}")
+    print(f"  {n}/{len(jobs)} image(s) written to {a.out or sorted({str(f) for f, _ in dests.values()})}")
     if n == len(jobs):
         MARKER.unlink(missing_ok=True)
         if not a.out:

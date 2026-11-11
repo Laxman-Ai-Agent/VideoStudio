@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from pipeline import visual  # noqa: E402
 from pipeline.contracts import Resolved, ScenePlan, Transcript  # noqa: E402
+from pipeline.project import is_variation, ref, variations  # noqa: E402
 
 PROJECTS = ROOT / "projects"
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
@@ -49,11 +50,22 @@ class Conflict(Exception):
     pass
 
 
+def pid_of(p: Path) -> str:
+    """The dashboard id of a project folder: '01_AI_Agents', or '03_Topic~16x9' for a variation."""
+    return f"{p.parent.name}~{p.name}" if is_variation(p) else p.name
+
+
 def project_dir(pid: str, projects: Path | None = None) -> Path:
-    """'01' or '01_AI_Agents' -> folder; never leaves projects/."""
+    """'01' or '01_AI_Agents' -> folder; '03~16x9' -> a variation folder (03_Topic/16x9); never leaves projects/."""
     base = projects or PROJECTS
     if not pid or "/" in pid or "\\" in pid or ".." in pid:
         raise NotFound(pid)
+    if "~" in pid:
+        head, var = pid.split("~", 1)
+        v = project_dir(head, projects) / var
+        if not (is_variation(v) and v.is_dir()):
+            raise NotFound(pid)
+        return v
     hits = [d for d in base.iterdir() if d.is_dir() and (d.name == pid or d.name.split("_")[0] == pid)] \
         if base.is_dir() else []
     if len(hits) != 1:
@@ -87,9 +99,9 @@ def reference(a, p: Path, chars: dict) -> dict | None:
     if rel.startswith("_brand/presenter/") and (ROOT / rel).is_file():
         src = "/brand/presenter/" + urllib.parse.quote(Path(rel).name)
     elif rel and _inside(p, rel):
-        src = f"/files/{p.name}/{urllib.parse.quote(rel)}"
+        src = f"/files/{pid_of(p)}/{urllib.parse.quote(rel)}"
     elif (r := next((x for x in chars.get('_assets', []) if x.id == c.reference_asset), None)) and _inside(p, r.file):
-        rel, src = r.file, f"/files/{p.name}/{urllib.parse.quote(r.file)}"
+        rel, src = r.file, f"/files/{pid_of(p)}/{urllib.parse.quote(r.file)}"
     else:
         rel, src = rel, ""
     return {"character": c.name, "name": Path(rel).name if rel else "", "path": rel, "src": src, "outfit": c.outfit}
@@ -141,7 +153,7 @@ def _overview(d: Path) -> dict:
 def delete_project(pid: str) -> dict:
     """Moves the project folder to projects/_deleted/<name>-<time> (nothing is erased: move it back to restore)."""
     p = project_dir(pid)
-    if (cur := _renders.get(p.name)) and cur["proc"].poll() is None:
+    if (cur := _renders.get(pid_of(p))) and cur["proc"].poll() is None:
         raise Conflict(f"{p.name} is rendering right now; wait for it to finish")
     dest = PROJECTS / "_deleted" / f"{p.name}-{datetime.now():%Y%m%d-%H%M%S}"
     dest.parent.mkdir(exist_ok=True)
@@ -154,6 +166,13 @@ def list_projects() -> list[dict]:
     for d in sorted(PROJECTS.iterdir()) if PROJECTS.is_dir() else []:
         if not d.is_dir() or d.name.startswith("_"):
             continue
+        for v in variations(d):  # one row per variation of a topic: 03~16x9, 03~9x16
+            va = visual.load(v) if visual.path(v).exists() else None
+            out.append({"id": f"{d.name.split('_')[0]}~{v.name}", "name": f"{d.name}/{v.name}",
+                        "title": (va.project.get("title") if va else "") or f"{d.name} {v.name}",
+                        "has_assets": va is not None, **_overview(v), **(counts(va, v) if va else {"total": 0, "found": 0, "missing": 0})})
+        if variations(d):
+            continue
         va = visual.load(d) if visual.path(d).exists() else None
         out.append({"id": d.name.split("_")[0], "name": d.name, "title": (va.project.get("title") if va else "") or d.name,
                     "has_assets": va is not None, **_overview(d), **(counts(va, d) if va else {"total": 0, "found": 0, "missing": 0})})
@@ -164,7 +183,7 @@ def _load(pid: str):
     p = project_dir(pid)
     va = visual.load(p)
     if va is None:
-        raise NotFound(f"{p.name} has no {visual.FILE} yet (run studio.cmd run {p.name[:2]})")
+        raise NotFound(f"{p.name} has no {visual.FILE} yet (run studio.cmd run {ref(p)})")
     return p, va
 
 
@@ -182,7 +201,7 @@ def _log(a, action: str, **kw) -> None:
 def project_assets(pid: str) -> dict:
     p, va = _load(pid)
     sc = _scenes(p)
-    return {"project": {**va.project, "id": p.name.split("_")[0], "name": p.name}, "counts": counts(va, p),
+    return {"project": {**va.project, "id": (f"{p.parent.name.split('_')[0]}~{p.name}" if is_variation(p) else p.name.split("_")[0]), "name": ref(p)}, "counts": counts(va, p),
             "summary": va.summary, "characters": [c.model_dump() for c in va.characters],
             "assets": [view(a, p, sc, {c.id: c for c in va.characters} | {"_assets": va.assets}) for a in va.assets]}
 
@@ -470,16 +489,16 @@ def start_render(pid: str, final: bool, review: bool = False, fmt: str = "16:9")
     if fmt not in ("16:9", "9:16"):
         raise Invalid(f"format must be 16:9 or 9:16, got {fmt}")
     p = project_dir(pid)
-    if (cur := _renders.get(p.name)) and cur["proc"].poll() is None:
+    if (cur := _renders.get(pid_of(p))) and cur["proc"].poll() is None:
         return render_status(pid)
     log = p / "work" / "logs" / "ui_render.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     fh = open(log, "w", encoding="utf-8")
-    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name] + (["--review"] if review else ["--final"] if final else []) + ["--format", fmt]
+    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", ref(p)] + (["--review"] if review else ["--final"] if final else []) + ["--format", fmt]
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                             env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})
-    _renders[p.name] = {"proc": proc, "final": final, "review": review, "fmt": fmt, "t0": time.time(), "t1": None}
+    _renders[pid_of(p)] = {"proc": proc, "final": final, "review": review, "fmt": fmt, "t0": time.time(), "t1": None}
     return render_status(pid)
 
 
@@ -515,7 +534,7 @@ def render_status(pid: str) -> dict:
     import json
     import time
     p = project_dir(pid)
-    cur = _renders.get(p.name)
+    cur = _renders.get(pid_of(p))
     log = p / "work" / "logs" / "ui_render.log"
     tail = log.read_text("utf-8", errors="replace").splitlines()[-8:] if log.exists() else []
     try:

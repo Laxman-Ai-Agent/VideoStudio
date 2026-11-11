@@ -111,6 +111,10 @@ projects/NN_Name/
   output/      final videos, credits.txt, script.txt (final spoken words from the corrected JSON)
   project.md, theme.json, visual-assets.json, edits.json   settings (root)
 ```
+One topic, several videos (e.g. a long 16:9 and a 1 min 9:16): `projects/03_Topic/` holds ONE `drop/`, the shared
+`theme.json` and `assets/originals/` (images from drop, used as `../assets/originals/x.jpg`), plus one full project
+folder per variation (`16x9/`, `9x16/`: input, assets, work, output, visual-assets.json; no drop). Run one at a time:
+`studio.cmd run 03/16x9`; the dashboard lists them as `03~16x9`; `kaggle\images.cmd 03` makes every variation's images in one run.
 Files Claude downloaded or generated (work/generated, web downloads) are deleted once processed; only the
 processed `assets/A012.png` stays. Existing projects: `tools\.venv\Scripts\python.exe tools\migrate_layout.py PROJECT_DIR [--apply]`
 (report first; moves files, rewrites paths in the JSON files and the scene cache keys, deletes only exact byte duplicates and empty folders).

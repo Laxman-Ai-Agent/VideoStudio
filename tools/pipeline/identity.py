@@ -60,11 +60,15 @@ def similarity(a: ThemeSpec, b: ThemeSpec, brand_transitions=()) -> tuple[float,
 
 
 def previous(project: Path, n: int = LOOKBACK) -> list[tuple[str, ThemeSpec]]:
-    """The n projects before this one (folder name order) that have a theme, newest first."""
+    """The n projects before this one (folder name order) that have a theme, newest first. Variations of one
+    topic (03_Topic/16x9, /9x16) share a look on purpose: they are compared with earlier topics only."""
+    import re
+    if re.match(r"^\d+x\d+$", project.name):
+        project = project.parent
     out = []
     for d in sorted((x for x in project.parent.iterdir() if x.is_dir() and x.name < project.name), reverse=True):
-        f = d / "work" / "theme.json"
-        if f.exists():
+        f = next((g for g in [d / "work" / "theme.json", *sorted(d.glob("*x*/work/theme.json"))] if g.exists()), None)
+        if f:
             try:
                 out.append((d.name, ThemeSpec.model_validate_json(f.read_text("utf-8"))))
             except ValueError:

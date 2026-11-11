@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 - One topic, two videos (variations)
+
+- `projects/03_Topic/{16x9,9x16}/` are full project folders of one topic with ONE shared `drop/` (images/videos -> `03_Topic/assets/originals`, `ingest.ingest_shared`; audio/scripts stay for the user to place) and one `theme.json` (variation falls back to the topic's). `find_project("03/16x9")`, `project.ref`, `run 03` alone asks for a variation, identity check compares a variation with earlier topics only (not its sibling), plan brief lists the shared pool, dashboard ids `03~16x9` (`service.pid_of`, render runs `studio run 03_Topic/16x9`).
+- `kaggle/images.py`: a topic gets ONE Kaggle run for all variations (`topic_jobs`, ids `16x9_A001`, saved as `16x9/work/generated/A001.png`). Bug fixed: the "already has a file" check was always true since the layout change (a generator is truthy), so no image would have been generated; test added.
+
 ## 2026-11-11 - Simple project folder layout (no duplicate files)
 
 - New layout (see ARCHITECTURE.md "Project layout"): `assets/` holds one processed file per asset (`A001.png`), the user's own files go to `assets/originals/` (never deleted), everything the pipeline makes is in `work/` (thumbs, asset index, replaced old versions, pending replace candidates), `input/voice/` replaces `input/converted/`, per-project code in `scripts/`, `output/script.txt` = final spoken words from the corrected JSON (`pipeline/script_out.py`, written each run).
