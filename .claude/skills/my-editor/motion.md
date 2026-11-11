@@ -117,3 +117,16 @@ Drawn 2D graphics and 3D are not the point: use them only a little, where no pic
 - Sound: one SFX per animation kind (pop = soft click, slam = hit, wipe = whoosh, spark = zap), under the voice.
 - Images: subject-aware 1:1 crop, graded toward the palette, cards with depth shadow + light sweep.
 - QA after the sample render: one frame per beat (overlaps, cut text, contrast, wrong image) + the clip at full speed.
+
+## Visual identity per video (user, 2026-11-11, STRICT)
+Analyse topic, category, script and emotional tone first, then choose the identity; never force a fixed design.
+- Background: colours, gradients, patterns, textures, particles / shapes that show the subject (electricity: circuit
+  lines, arcs; medicine: ECG; space: stars); attractive but never fighting the content.
+- Typography: Telugu + English fonts, weights, sizes and layout chosen for the category; clear hierarchy, readable.
+- Palette with named roles: primary, secondary, accent, background, text, highlight; every element uses only these.
+- Colour correction on EVERY image, clip and graphic: brightness, contrast, saturation, temperature and tone matched to
+  the palette, consistent between consecutive scenes, natural skin tones, nothing looking pasted-in.
+- One design system inside the video (background, type, images, motion, transitions, effects work together); scenes
+  vary within it.
+- Between videos: at least 70% different (background, fonts, palette, image treatment, layouts, text animation, motion
+  graphics, transitions, effects, editing rhythm); similarity below ~30% (`studio.cmd theme NN` shows the score).
