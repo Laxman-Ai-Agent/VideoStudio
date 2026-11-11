@@ -12,6 +12,8 @@
 5. One design per category per video (consistent inside the video); the next video uses different designs and a
    different category mix. The same category never more than 2 times in a row.
 6. Before rendering the whole video, render 1-2 sample scenes and show the user.
+8. Smooth motion always (user, 2026-11-11): eased curves (power3 / expo / back), no jumps or pops without easing, overlapping
+   moves instead of one-after-another stops, 30 fps, deterministic (seeded) particles; check a sample clip at full speed.
 7. Graphs never repeat a look from earlier videos; numbers become objects, not plain bars (see 5, 6).
 
 ## Categories (word / moment -> motion -> where the image goes)
