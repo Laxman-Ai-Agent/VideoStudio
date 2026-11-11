@@ -417,6 +417,9 @@ def main() -> int:
     tc.add_argument("project")
     tc.add_argument("--preset", help="pin a preset (tools/themes/<name>.json)")
     tc.add_argument("--auto", action="store_true", help="drop the pinned preset, pick from the content again")
+    cc = sub.add_parser("clean", help="thin out drop/ locally (duplicates, look-alikes, blurry, tiny, blank, short clips): report, --apply moves them to drop/_unused")
+    cc.add_argument("project")
+    cc.add_argument("--apply", action="store_true")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
@@ -437,6 +440,10 @@ def main() -> int:
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
+    if a.cmd == "clean":
+        from pipeline.cull import clean
+        clean(find_project(a.project) / "drop", a.apply)
+        return 0
     if a.cmd == "theme":
         return theme_command(find_project(a.project), a.preset, a.auto)
     if a.cmd == "assets":
