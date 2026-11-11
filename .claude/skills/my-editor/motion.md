@@ -18,12 +18,14 @@
 
 ## Objects = real images (user, 2026-11-11, STRICT)
 - When the narration names an object (laptop, fan, phone, TV, ...), show its actual picture, never a drawing made of shapes.
-- Layout: a 1:1 picture in a clean, cinematic, modern card, the keyword text beside or inside it.
+- Layout: a 1:1 picture in a clean, cinematic, modern card, the keyword text beside or inside it. The source may be any
+  shape (16:9, 9:16): crop the 1:1 square around the MAIN OBJECT of the picture (find it with the rembg subject mask /
+  its bounding box), never a blind centre crop that cuts the object.
 - The picture itself stays still; the motion is on the card, the text, the transitions and the surrounding elements
   (subtle, smooth: slide / scale / mask reveal, light sweep, depth shadow, staggered text).
 - Card and word appear on the keyword's beat in the voice-over (transcript word times).
 - No fitting picture: a clean text motion graphic for that word instead; never an inaccurate image.
-- Pictures: the drop pool first, else the ONE Kaggle images run (1:1, object alone, clean background).
+- Pictures: the drop pool first (any aspect, cropped as above), else the ONE Kaggle images run (object alone, clean background).
 
 ## Categories (word / moment -> motion -> where the image goes)
 ### A. Things and people
