@@ -4,7 +4,7 @@
 <style>
 /* written for 03_Wireless_Power: TV, fan and laptop drawn in code; pictures on their screens; cables snap with sparks */
 #cam { position: absolute; inset: 0; transform-origin: 50% 55%; }
-#row { position: absolute; left: 3%; right: 3%; top: 14%; height: 56%; display: flex; align-items: flex-end;
+#row { position: absolute; left: 7%; right: 7%; top: 22%; height: 50%; display: flex; align-items: flex-end;
        justify-content: space-around; }
 .portrait #row { top: 12%; height: 58%; flex-direction: column; align-items: center; justify-content: space-around; }
 .dev { position: relative; display: flex; flex-direction: column; align-items: center; }
@@ -12,16 +12,16 @@
        letter-spacing: .08em; text-transform: uppercase; }
 .lab b { color: var(--accent); }
 /* TV */
-.tv { width: calc(var(--u) * 66); aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1.2); background: #05070c;
+.tv { width: calc(var(--u) * 54); aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1.2); background: #05070c;
       border: calc(var(--u) * .9) solid #1d2433; box-shadow: 0 0 0 2px #2d3648, 0 calc(var(--u) * 2) calc(var(--u) * 5) #0009; overflow: hidden; position: relative; }
 .stand { width: calc(var(--u) * 14); height: calc(var(--u) * 2.4); background: #1d2433; border-radius: 0 0 calc(var(--u)) calc(var(--u)); }
 .scr { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; }
 .scr::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, #fff2 0 18%, transparent 30%); }
 .glow { position: absolute; inset: -30%; background: radial-gradient(circle, var(--accent) 0, transparent 60%); opacity: 0; filter: blur(calc(var(--u) * 3)); z-index: -1; }
 /* fan */
-.fan { width: calc(var(--u) * 40); height: calc(var(--u) * 46); }
+.fan { width: calc(var(--u) * 34); height: calc(var(--u) * 39); }
 /* laptop */
-.lap { position: relative; width: calc(var(--u) * 58); perspective: calc(var(--u) * 80); }
+.lap { position: relative; width: calc(var(--u) * 48); perspective: calc(var(--u) * 80); }
 .lid { width: 100%; aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1) calc(var(--u) * 1) 0 0; background: #05070c;
        border: calc(var(--u) * .8) solid #1d2433; transform-origin: 50% 100%; overflow: hidden; position: relative; }
 .base { width: 116%; margin-left: -8%; height: calc(var(--u) * 2.2); background: linear-gradient(#2d3648, #141a26);
@@ -30,7 +30,7 @@
 svg.cables { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .cable { fill: none; stroke: #3a4458; stroke-width: calc(var(--u) * .7); stroke-linecap: round; }
 #fx { position: absolute; inset: 0; width: 100%; height: 100%; }
-#title { position: absolute; left: 0; right: 0; bottom: 20%; text-align: center; font: 900 calc(var(--u) * 13) var(--heading, sans-serif);
+#title { position: absolute; left: 0; right: 0; top: 5%; text-align: center; font: 900 calc(var(--u) * 13) var(--heading, sans-serif);
          color: var(--text); opacity: 0; text-shadow: 0 0 calc(var(--u) * 3) var(--accent); }
 #title em { font-style: normal; color: var(--accent); }
 #flash { position: absolute; inset: 0; background: #fff; opacity: 0; mix-blend-mode: screen; }
