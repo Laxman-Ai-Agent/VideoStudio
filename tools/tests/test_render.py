@@ -242,3 +242,11 @@ def test_caption_box_is_fitted_to_the_ink_of_the_words():
     assert "actualBoundingBoxAscent" in js and "function capInk" in js and "document.fonts.load(" in js
     assert '"em")' in js and '"--bw": "100%"' in js
     assert "var(--bh" in css and "var(--by" in css and "(A + D) * .62" not in js
+
+
+def test_stat_card_draws_no_invented_trend():
+    """A stat card drew a made-up down line + arrow under '800 W' (user 2026-11-11): only the given value,
+    an arrow only when params.stat.trend says so."""
+    html = (rnd.TEMPLATES / "cards" / "index.html").read_text("utf-8")
+    assert "<path/></svg>" not in html and "L98" not in html          # no trend-line shape
+    assert "if (trend) ar.innerHTML" in html                          # the arrow needs an explicit trend

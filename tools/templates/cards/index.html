@@ -45,7 +45,7 @@
 </div>
 <script>
   // UI cards: optional title, a checklist card (params.items), a stat card (params.stat: value from the
-  // script/plan only; the line is a drawn up/down trend shape, not data), and a call-to-action button.
+  // script/plan only; no trend line: it would be invented data), and a call-to-action button.
   const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true }), d = S.duration;
   const col = document.getElementById("col"), add = (html, cls, id) => {
     const el = document.createElement("div");
@@ -96,14 +96,14 @@
     t += 0.5 + items.length * 0.12;
   });
   if (p.stat) {
-    const up = p.stat.trend === "up", c = up ? "#1f9d55" : "var(--warn)";
-    const card = add('<div class="lab"></div><div class="row"><div class="val"></div><div class="arrow"></div></div>' +
-                     '<svg viewBox="0 0 100 30" preserveAspectRatio="none"><path/></svg>', "card", "stat");
+    // no invented data (user 2026-11-11, "800 W down arrow"): an arrow only when params.stat.trend is given, never a drawn trend line
+    const trend = ["up", "down"].includes(p.stat.trend) ? p.stat.trend : "", up = trend === "up", c = up ? "#1f9d55" : "var(--warn)";
+    const card = add('<div class="lab"></div><div class="row"><div class="val"></div><div class="arrow"></div></div>', "card", "stat");
     card.querySelector(".lab").textContent = p.stat.label || "";
     const val = card.querySelector(".val");
     val.textContent = String(p.stat.value || "").replace(/(\d)\s*:\s*(\d)/g, "$1:$2");  // "1 : 811" reads as the ratio 1:811
     const ar = card.querySelector(".arrow");  // SVG arrow: brand fonts may not have the arrow glyph
-    ar.innerHTML = `<svg viewBox="0 0 24 24" style="width:calc(var(--u)*10);height:calc(var(--u)*10)"><path fill="${up ? "#1f9d55" : "currentColor"}" d="${
+    if (trend) ar.innerHTML = `<svg viewBox="0 0 24 24" style="width:calc(var(--u)*10);height:calc(var(--u)*10)"><path fill="${up ? "#1f9d55" : "currentColor"}" d="${
       up ? "M12 3l8 9h-5v9H9v-9H4z" : "M12 21l8-9h-5V3H9v9H4z"}"/></svg>`;
     ar.style.color = c;
     const row = card.querySelector(".row");  // the value stays on ONE line: shrink the font until it fits next to the arrow
@@ -113,13 +113,7 @@
     };
     fit();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-    const path = card.querySelector(":scope > svg path");  // trend line (the arrow svg has its own path)
-    path.setAttribute("d", up ? "M2 26 L20 22 L34 24 L50 15 L64 17 L80 8 L98 3" : "M2 4 L18 8 L32 6 L48 15 L62 13 L80 22 L98 27");
-    path.style.stroke = c;
-    path.setAttribute("vector-effect", "non-scaling-stroke");
-    const line = card.querySelector(":scope > svg");  // the trend line, not the arrow inside .row
     tl.fromTo(card, { opacity: 0, y: U * 4 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, t);
-    tl.fromTo(line, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power1.inOut" }, t + 0.25);
     tl.fromTo(ar, { opacity: 0, y: up ? U * 3 : -U * 3 }, { opacity: 1, y: 0, duration: 0.3 }, t + 0.7);
     t += 0.8;
   }
