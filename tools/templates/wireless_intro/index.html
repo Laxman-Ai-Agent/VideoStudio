@@ -79,12 +79,12 @@
   tl.to("#pres", { x: -W * 0.56, y: H * 0.5, scale: 0.34, transformOrigin: "0% 0%", duration: 0.7, ease: "power3.inOut" }, tB);
 
   // B. TV (16:9), fan (circle), laptop (4:3): each arrives on its word, the list types under it
-  const tvw = W * 0.34, tvh = tvw * 9 / 16, fd = W * 0.2, lw = W * 0.24, lh = lw * 3 / 4, top = H * 0.2;
-  box($("c-tv"), W * 0.06, top, tvw, tvh); crop($("c-tv"), cr.tv || [0.5, 0.47, 3.2], tvw, tvh);
-  box($("c-fan"), W * 0.44, top + (tvh - fd) / 2, fd, fd); crop($("c-fan"), cr.fan || [0.53, 0.18, 2.6], fd, fd);
-  box($("c-lap"), W * 0.7, top + (tvh - lh) / 2, lw, lh); crop($("c-lap"), cr.laptop || [0.49, 0.72, 5], lw, lh);
+  const tvw = W * 0.34, tvh = tvw * 9 / 16, fd = W * 0.2, lw = W * 0.24, lh = lw * 3 / 4, y0 = H * 0.2;
+  box($("c-tv"), W * 0.06, y0, tvw, tvh); crop($("c-tv"), cr.tv || [0.5, 0.47, 3.2], tvw, tvh);
+  box($("c-fan"), W * 0.44, y0 + (tvh - fd) / 2, fd, fd); crop($("c-fan"), cr.fan || [0.53, 0.18, 2.6], fd, fd);
+  box($("c-lap"), W * 0.7, y0 + (tvh - lh) / 2, lw, lh); crop($("c-lap"), cr.laptop || [0.49, 0.72, 5], lw, lh);
   [["#l-tv", W * 0.06, "TV"], ["#l-fan", W * 0.44, "Fan"], ["#l-lap", W * 0.7, "Laptop"]].forEach(([s, x, t]) => {
-    Object.assign(document.querySelector(s).style, { left: x + "px", top: (top + tvh + H * 0.03) + "px" }); document.querySelector(s).innerHTML = `<b>${t}</b>`; });
+    Object.assign(document.querySelector(s).style, { left: x + "px", top: (y0 + tvh + H * 0.03) + "px" }); document.querySelector(s).innerHTML = `<b>${t}</b>`; });
   const arrive = (c, l, t, from) => { tl.fromTo(c, from, { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1, duration: 0.7, ease: E.pop }, t);
     tl.fromTo(l, { y: H * 0.03, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: E.in }, t + 0.15); sweep(c, t + 0.45); };
   arrive("#c-tv", "#l-tv", b.tv ?? 4.0, { y: H * 0.3, rotation: -4, opacity: 0 });
