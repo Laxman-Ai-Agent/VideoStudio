@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-11 - Thin out a big drop/ without tokens (clean + match)
+
+- `studio.cmd clean NN [--apply]` (`pipeline/cull.py`, Pillow + ffmpeg only): exact duplicates, look-alikes (dHash, a video keeps priority over its source still), unreadable, small, blurry, blank, clips < 1 s. Real drop of 03_Wireless_Power (155 files, 22 s): 76 flagged (70 stills that have their video, 4 look-alikes, 2 blurry).
+- `studio.cmd match NN [--apply]` (`pipeline/clipmatch.py`, CLIP via optional uv group `match`: transformers 4.57.6): each scene `query` keeps its best file; unused files are reported / moved to `drop/_unused/`. Embeddings cached by file hash. Needs scenes.json.
+- Both move, never delete (user media). Tests: test_cull, test_clipmatch (fake CLIP).
+
 ## 2026-11-11 - One topic, two videos (variations)
 
 - `projects/03_Topic/{16x9,9x16}/` are full project folders of one topic with ONE shared `drop/` (images/videos -> `03_Topic/assets/originals`, `ingest.ingest_shared`; audio/scripts stay for the user to place) and one `theme.json` (variation falls back to the topic's). `find_project("03/16x9")`, `project.ref`, `run 03` alone asks for a variation, identity check compares a variation with earlier topics only (not its sibling), plan brief lists the shared pool, dashboard ids `03~16x9` (`service.pid_of`, render runs `studio run 03_Topic/16x9`).

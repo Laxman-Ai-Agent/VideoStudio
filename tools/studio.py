@@ -420,6 +420,9 @@ def main() -> int:
     cc = sub.add_parser("clean", help="thin out drop/ locally (duplicates, look-alikes, blurry, tiny, blank, short clips): report, --apply moves them to drop/_unused")
     cc.add_argument("project")
     cc.add_argument("--apply", action="store_true")
+    mc = sub.add_parser("match", help="keep the drop/ files that fit the scene plan (CLIP, local): report, --apply moves the rest to drop/_unused")
+    mc.add_argument("project")
+    mc.add_argument("--apply", action="store_true")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
@@ -440,6 +443,10 @@ def main() -> int:
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
+    if a.cmd == "match":
+        from pipeline.clipmatch import match
+        match(find_project(a.project), a.apply)
+        return 0
     if a.cmd == "clean":
         from pipeline.cull import clean
         clean(find_project(a.project) / "drop", a.apply)

@@ -115,7 +115,10 @@ One topic, several videos (e.g. a long 16:9 and a 1 min 9:16): `projects/03_Topi
 `theme.json` and `assets/originals/` (images from drop, used as `../assets/originals/x.jpg`), plus one full project
 folder per variation (`16x9/`, `9x16/`: input, assets, work, output, visual-assets.json; no drop). Run one at a time:
 `studio.cmd run 03/16x9`; the dashboard lists them as `03~16x9`; `kaggle\images.cmd 03` makes every variation's images in one run.
-Files Claude downloaded or generated (work/generated, web downloads) are deleted once processed; only the
+Big drops are thinned out locally, without Claude tokens: `studio.cmd clean 03` (duplicates, look-alikes such as a Whisk
+video and its source still, blurry, tiny, blank, very short; a video wins over its still) and, once scenes.json has
+queries, `studio.cmd match 03` (CLIP: each scene keeps its best file, the rest is unused). Both only report; `--apply`
+MOVES rejects to `drop/_unused/` (never deletes). Files Claude downloaded or generated (work/generated, web downloads) are deleted once processed; only the
 processed `assets/A012.png` stays. Existing projects: `tools\.venv\Scripts\python.exe tools\migrate_layout.py PROJECT_DIR [--apply]`
 (report first; moves files, rewrites paths in the JSON files and the scene cache keys, deletes only exact byte duplicates and empty folders).
 
