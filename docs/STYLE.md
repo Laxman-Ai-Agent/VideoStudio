@@ -94,7 +94,8 @@ narration, assets and scene length; never every effect on every scene. Merges wi
   (position, size, at / until, animation, outline, backdrop, depth); textzone puts photo titles in the calm area;
   per-element edits in edits.json (Timeline editor); one transition per cut from the theme set.
 - Not built (plan around it, say so in the plan, do not claim it): elements that persist or morph across cuts (every
-  scene is rendered as its own clip and joined by a transition); three or more images in one scene; drawn
+  scene is rendered as its own clip and joined by a transition); images inside motion graphics (cards / chart / stat) in 9:16 / 1:1 / masked frames (planned next); three or more
+  images in one scene; drawn
   connector lines; colour grading of images to the palette (only the `look` filters such as sepia); topic patterns beyond grid / dots /
   lines (ECG lines, circuits, maps, anatomy); characters moving between scenes.
 - Until those exist: get the closest result with what is built (overlays with `at` timing to stage elements in

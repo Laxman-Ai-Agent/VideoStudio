@@ -12,7 +12,8 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 ## Where we are
-- Photo layouts built 2026-11-11 (`params.layout` split_text | split2 | stack | crop, `dim`, `text_until`; see CHANGELOG). Not used in a real video yet; the next `run` re-renders photo scenes once (template changed). Cross-scene continuity still not built.
+- Photo layouts built 2026-11-11 (`params.layout` split_text | split2 | stack | crop, `dim`, `text_until`; see CHANGELOG). Used in project 11 (18 scenes, `LAYOUT` in its make_scenes.py; preview QA PASS, rendered from this branch). Cross-scene continuity still not built.
+- Next build (agreed 2026-11-11, for future videos, not 11): images inside motion graphics. Overlay placement gets `frame` 9:16 | 1:1 | circle | rounded | mask (reveal); PNG cut-outs as today; assets brief states each overlay's aspect (9:16, 1:1, transparent PNG) so Kaggle Z-Image makes that size; STYLE "can do" + plan brief updated so plans put image slots in cards / chart / stat scenes. No SCHEMA_VERSION bump (new optional key).
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.
 - `studio.cmd run 01` works end to end (720p previews 16:9 + 9:16, QA PASS). Tests: 96. Doctor: all green.
 - 01 picked the `tech` theme automatically; its previews are still the older paper render (user asked not to render yet).
