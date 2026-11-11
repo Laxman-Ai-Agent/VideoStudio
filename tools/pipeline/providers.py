@@ -51,12 +51,24 @@ def entity(name: str, logo: bool) -> list[Candidate]:
     image (P18), as a Commons file with its licence. Far more reliable than a keyword search for
     'Sam Altman' or 'Anthropic'."""
     qs = urllib.parse.urlencode({"action": "wbsearchentities", "search": name, "language": "en",
-                                 "limit": 1, "format": "json"})
-    hits = _get(f"{WIKIDATA_API}?{qs}").get("search", [])
-    if not hits:
-        return []
-    qs = urllib.parse.urlencode({"action": "wbgetclaims", "entity": hits[0]["id"], "format": "json"})
-    claims = _get(f"{WIKIDATA_API}?{qs}").get("claims", {})
+                                 "limit": 5, "format": "json"})
+    fallback = None
+    for hit in _get(f"{WIKIDATA_API}?{qs}").get("search", []):
+        qs = urllib.parse.urlencode({"action": "wbgetclaims", "entity": hit["id"], "format": "json"})
+        claims = _get(f"{WIKIDATA_API}?{qs}").get("claims", {})
+        kinds = {c.get("mainsnak", {}).get("datavalue", {}).get("value", {}).get("id") for c in claims.get("P31", [])}
+        if kinds & TAXA:  # 'DARPA' first hit was Darpa, a butterfly genus
+            continue
+        if not logo or claims.get("P154"):
+            return _entity_files(name, hit, claims, logo)
+        fallback = fallback or (hit, claims)  # a logo search prefers a hit that has a logo
+    return _entity_files(name, *fallback, logo) if fallback else []
+
+
+TAXA = {"Q16521", "Q310890", "Q34740", "Q7432"}  # taxon, monotypic taxon, genus, species
+
+
+def _entity_files(name: str, hit: dict, claims: dict, logo: bool) -> list[Candidate]:
     for prop in (("P154", "P18") if logo else ("P18",)):
         for c in claims.get(prop, []):
             f = c.get("mainsnak", {}).get("datavalue", {}).get("value")
@@ -65,7 +77,7 @@ def entity(name: str, logo: bool) -> list[Candidate]:
                                              "prop": "imageinfo", "iiprop": "url|extmetadata|mime", "iiurlwidth": 1920})
                 found = _commons(_get(f"{WIKI_API}?{qs}").get("query", {}).get("pages", {}), "wikidata")
                 for x in found:
-                    x.title = f"{name} {hits[0].get('description', '')} {x.title}"
+                    x.title = f"{name} {hit.get('description', '')} {x.title}"
                 if found:
                     return found
     return []
