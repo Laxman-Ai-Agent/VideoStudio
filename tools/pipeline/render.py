@@ -198,6 +198,8 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         imgs = [root / f for f in s.params.get("images", [])]
         if imgs:  # pictures used inside written scene code: their content is part of the key
             asset_hash += f":g{grade.GRADE_VERSION}:" + ":".join(file_hash(f) if f.exists() else "none" for f in imgs)
+        if s.params.get("kit") and (TEMPLATES / s.params["kit"]).is_dir():  # the video's shared motion kit (tokens + helpers)
+            asset_hash += ":kit" + _dir_hash(TEMPLATES / s.params["kit"])
         a2 = root / s.params["image2"] if name == "photo" and s.params.get("image2") else None
         a2 = a2 if a2 and a2.exists() else None
         if a2:
@@ -344,7 +346,8 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     if load_template(template).engine == "remotion":
         shutil.copy2(TEMPLATES / template / "Composition.jsx", build_dir / "Composition.jsx")
         return
-    for f in (TEMPLATES / template).glob("*.js"):  # template data, e.g. map/map.js
+    kit = job.scene.params.get("kit")  # written scene code of one video shares that video's kit (motion tokens, helpers)
+    for f in [*((TEMPLATES / kit).glob("*.js") if kit and (TEMPLATES / kit).is_dir() else []), *(TEMPLATES / template).glob("*.js")]:  # + template data, e.g. map/map.js
         shutil.copy2(f, build_dir / f.name)
     html = (TEMPLATES / template / "index.html").read_text("utf-8")
     for k, v in {"{{W}}": job.w, "{{H}}": job.h, "{{DUR}}": f"{job.duration:.4f}", "{{ASSET}}": asset_name}.items():

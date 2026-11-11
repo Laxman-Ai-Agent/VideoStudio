@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 02 (11-27 s): Finland research is real -> a viral post -> half true / half hype -> Fact or Hype? */
+#flag { position: absolute; border-radius: calc(var(--u) * .5); background: #fff; overflow: hidden; box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #000a; }
+#flag i { position: absolute; background: #1D4FA0; }
+#post { position: absolute; border-radius: calc(var(--u) * 1.6); background: #F4F7FF; color: #0A0E17; padding: calc(var(--u) * 2.2);
+        box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 6) #000c; font: 600 calc(var(--u) * 2.4) var(--font); }
+#post .who { display: flex; align-items: center; gap: calc(var(--u) * 1.2); font: 800 calc(var(--u) * 2.1) var(--font-head); letter-spacing: .02em; }
+#post .av { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); border-radius: 50%; background: linear-gradient(135deg, var(--accent), #FF5A3C); }
+#post .tx { margin-top: calc(var(--u) * 1.6); font: 800 calc(var(--u) * 3.6) var(--font-head); line-height: 1.15; min-height: 2.4em; white-space: normal; }
+#post .tx b { color: #E8590C; }
+#post .meta { margin-top: calc(var(--u) * 1.4); display: flex; gap: calc(var(--u) * 3); color: #5B6B85; font: 700 calc(var(--u) * 2) var(--font-head); }
+#post .meta span:first-child { color: #E03131; }
+.half { position: absolute; top: 0; bottom: 0; overflow: hidden; }
+.half .w { position: absolute; top: 14%; font: 900 calc(var(--u) * 12) var(--font-head); letter-spacing: .02em; }
+#divider { position: absolute; top: 6%; bottom: 22%; width: calc(var(--u) * .5); margin-left: calc(var(--u) * -.25); background: #fff;
+           box-shadow: 0 0 calc(var(--u) * 2) #fff, 0 0 calc(var(--u) * 5) var(--accent); transform-origin: 50% 0; }
+.pct { position: absolute; top: 40%; font: 800 calc(var(--u) * 4.5) var(--font-head); color: var(--text); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, lit, ring, type, rise, chip, slam, beam, count, camera, circuits } = K;
+  circuits({ seed: 21 });
+  const st = $("stage"); camera(st, 1.04, 0.01);
+
+  // A. FINLAND: the flag draws (white, then the blue cross grows), the Helsinki building rises beside it
+  const tF = at("finland", 1);
+  const fw = u * 13, fh = fw * 11 / 18, flag = place(mk("div", "", st), W * 0.06, H * 0.1, fw, fh); flag.id = "flag";
+  const cv = place(mk("i", "", flag), fw * 5 / 18, 0, fw * 3 / 18, fh), ch = place(mk("i", "", flag), 0, fh * 4 / 11, fw, fh * 3 / 11);
+  pop(flag, tF - 0.25, { scale: 0.4, rotation: -8, opacity: 0 });
+  tl.fromTo(cv, { scaleY: 0 }, { scaleY: 1, duration: 0.4, ease: E.in }, tF);
+  tl.fromTo(ch, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: E.in }, tF + 0.15);
+  const kF = place(mk("div", "kt", st), W * 0.06 + fw + u * 2.4, H * 0.1 + fh * 0.18); kF.style.fontSize = u * 5.6 + "px";
+  type(kF, "FINLAND", tF + 0.1, 16);
+  const hw = W * 0.42, hh = hw * 0.62, hel = card({ i: "helsinki", x: W * 0.06, y: H * 0.1 + fh + u * 3, w: hw, h: hh, focus: [0.5, 0.5, 1.05] });
+  pop(hel, tF + 0.35, { y: H * 0.25, opacity: 0, rotation: -3 }, 0.8, E.in);
+  const cH = chip("University of Helsinki", W * 0.06 + u * 1.5, H * 0.1 + fh + u * 3 + hh - u * 6.5);
+  pop(cH, tF + 1.1, { x: -u * 4, opacity: 0 }, 0.45, E.in);
+
+  // B. RESEARCH: the lab clip arrives on the word (4:3 card), the building steps back; RESULTS ticks in
+  const tR = at("research", 3.3), lw = W * 0.36, lh = lw * 3 / 4;
+  const lab = card({ i: "lab_clip", video: "lab_clip_v", vstart: tR - 0.3, vdur: 5, x: W * 0.56, y: H * 0.12, w: lw, h: lh, focus: [0.5, 0.45, 1.1] });
+  pop(lab, tR - 0.3, { x: W * 0.3, rotation: 5, opacity: 0 }, 0.8, E.in);
+  dim([hel, cH], tR + 0.2, 0.5);
+  const kR = place(mk("div", "kt", st), W * 0.56, H * 0.12 + lh + u * 2.5); kR.style.fontSize = u * 3.4 + "px";
+  type(kR, "REAL *RESEARCH*", tR, 20);
+  const kRes = place(mk("div", "kt", st), W * 0.56, H * 0.12 + lh + u * 7.5); kRes.style.fontSize = u * 3.4 + "px";
+  type(kRes, "REAL *RESULTS* ✓", at("results", 5.5), 20); ring(lab, at("results", 5.5));
+
+  // C. VIRAL: everything slides left out of frame; a 9:16 phone clip and a social post card take the stage
+  const tV = at("viral", 7.9);
+  tl.to([flag, kF, hel, cH, lab, kR, kRes], { x: -W * 0.75, opacity: 0, duration: 0.8, ease: "power3.in", stagger: 0.03 }, tV - 0.85);
+  const pw = H * 0.62 * 9 / 16, ph = H * 0.62;
+  const phone = card({ i: "street_phone", video: "street_phone_v", vstart: tV - 0.4, vdur: 5, x: W * 0.12, y: H * 0.08, w: pw, h: ph, focus: [0.56, 0.62, 1.6] });
+  pop(phone, tV - 0.4, { y: H * 0.5, rotation: -6, opacity: 0 }, 0.8, E.in);
+  const post = place(mk("div", "", st, `<div class="who"><div class="av"></div>TechNews Today • <span style="color:#5B6B85">2m</span></div>
+    <div class="tx"></div><div class="meta"><span>♥ <span id="likes">0</span></span><span>↻ 48K</span></div>`), W * 0.38, H * 0.14, W * 0.48);
+  post.id = "post";
+  pop(post, tV + 0.15, { x: W * 0.2, opacity: 0, rotation: 2 }, 0.7, E.in);
+  type(post.querySelector(".tx"), "BREAKING: Wires are *history*! Power through the air ⚡", tV + 0.5, 30);
+  count($("likes"), 0, 1.3, tV + 0.6, 2.2, (v) => v.toFixed(1) + "M");
+
+  // D. HALF TRUE / HALF HYPE: the frame splits behind the post; the divider fights, HYPE wins on its word
+  const tS = at("half", 9.1), tHy = at("hype", 11.5);
+  const L = place(mk("div", "half", $("root")), 0, 0, W / 2), R = place(mk("div", "half", $("root")), W / 2, 0, W / 2);
+  L.style.cssText += `top:0;height:${H}px;background:linear-gradient(90deg,#0B2A4A,${PAL.pri}55)`; R.style.cssText += `top:0;height:${H}px;background:linear-gradient(90deg,#FF5A3C55,#3A0D08)`;
+  $("root").insertBefore(L, $("shake")); $("root").insertBefore(R, $("shake"));
+  const wT = place(mk("div", "w", L, "TRUE"), W * 0.06, 0); wT.style.color = PAL.pri;
+  const wH = place(mk("div", "w", R, "HYPE"), W * 0.16, 0); wH.style.color = PAL.warn;
+  const pT = place(mk("div", "pct", L, "50%"), W * 0.07, 0), pH = place(mk("div", "pct", R, "50%"), W * 0.3, 0);
+  tl.fromTo(L, { xPercent: -100 }, { xPercent: 0, duration: 0.6, ease: E.io }, tS - 0.2);
+  tl.fromTo(R, { xPercent: 100 }, { xPercent: 0, duration: 0.6, ease: E.io }, tS - 0.2);
+  tl.to(phone, { x: -W * 0.4, opacity: 0, duration: 0.6, ease: "power3.in" }, tS - 0.3);
+  tl.to(post, { left: W * 0.26, top: H * 0.44, scale: 0.8, duration: 0.7, ease: E.io }, tS - 0.2);
+  rise(wT, tS + 0.2); tl.fromTo(pT, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tS + 0.5);
+  const dv = place(mk("div", "", $("root")), W / 2, 0); dv.id = "divider"; $("root").insertBefore(dv, $("shake"));
+  tl.fromTo(dv, { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: E.in }, tS);
+  // the divider pushes left and right (the two halves resize with it) before settling in the middle
+  [[0.42, 0.55], [0.58, 0.5], [0.47, 0.45], [0.5, 0.4]].forEach(([f, d], i) => {
+    const t0 = tS + 0.8 + i * 0.55;
+    tl.to(dv, { left: W * f, duration: d, ease: E.io }, t0); tl.to(L, { width: W * f, duration: d, ease: E.io }, t0);
+    tl.to(R, { left: W * f, width: W * (1 - f), duration: d, ease: E.io }, t0);
+  });
+  slam(wH, tHy); tl.fromTo(pH, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tHy + 0.3);
+
+  // E. FACT or HYPE?: the halves close into a dark street still, the question rises, "Hype?" lights on "exaggeration"
+  const tQ = tHy + 1.3;
+  tl.to([L, R, dv, post], { opacity: 0, duration: 0.5, ease: E.out }, tQ);
+  const bg = card({ i: "street", x: -W * 0.02, y: -H * 0.02, w: W * 1.04, h: H * 1.04, focus: [0.5, 0.45, 1], shape: "sharp" });
+  tl.fromTo(bg, { opacity: 0, scale: 1.15 }, { opacity: 0.38, scale: 1, duration: 1.2, ease: E.in }, tQ);
+  tl.set(bg, { filter: "blur(4px) saturate(.6)" }, tQ);
+  const q = place(mk("div", "kh", st, "Fact <i>or</i> <em id='hy'>Hype?</em>"), 0, H * 0.3); q.style.cssText += `width:${W}px;text-align:center;opacity:0`;
+  rise(q, tQ + 0.35, 0.12, 0.7);
+  tl.fromTo(q, { scale: 0.96 }, { scale: 1.04, duration: D - tQ, ease: "none" }, tQ + 0.35);
+  const tE = at("exag", 15) - 0.4;
+  tl.fromTo(q.querySelector("#hy") || q, { textShadow: "0 0 0px #FFB21A" }, { textShadow: `0 0 ${u * 3}px ${PAL.acc}`, duration: 0.4, yoyo: true, repeat: 1 }, Math.max(tQ + 1, tE));
+  K.done();
+</script></body></html>
