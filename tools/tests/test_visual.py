@@ -164,3 +164,20 @@ def test_claude_made_file_is_deleted_after_processing_user_upload_is_kept(tmp_pa
     assert not (proj / visual.CLAUDE_OUT / "A001.png").exists() and a1.source_file == ""
     assert a2.file == "assets/A002.png" and (proj / visual.UPLOADS / "A002.png").exists()
     assert a2.source_file == "assets/originals/A002.png"
+
+
+def test_written_scene_code_gets_its_pictures_and_their_content_is_in_the_key(tmp_path, monkeypatch):
+    monkeypatch.setattr(rnd, "ROOT", tmp_path)
+    pic = _png(tmp_path / "p" / "tv.png", (64, 40))
+    brand = Brand(formats={"16:9": {"width": 1920, "height": 1080}}, colors={"background": "#000000", "accent": "#FFC400",
+                  "text": "#FFFFFF"}, fonts={"telugu": "Gidugu"})
+    sc = {"id": 1, "start": 0, "end": 1, "narration": "x", "visual_type": "motion_graphic", "query": "q",
+          "params": {"code": "wireless_devices", "images": ["p/tv.png"], "beats": {"tv": 0.2}}}
+    res = Resolved(scenes=[{"id": 1, "status": "template"}])
+    job = rnd.plan_jobs(ScenePlan(scenes=[sc]), res, brand, "16:9", tmp_path, tmp_path / "o", False)[0]
+    assert job.template == "wireless_devices"            # params.code wins over the stock pick
+    _png(pic, (64, 41))                                  # a changed picture re-renders the scene
+    assert rnd.plan_jobs(ScenePlan(scenes=[sc]), res, brand, "16:9", tmp_path, tmp_path / "o", False)[0].key != job.key
+    rnd.build(job, tmp_path / "build", job.template)
+    scene = json.loads((tmp_path / "build" / "scene.json").read_text("utf-8"))
+    assert scene["images"] == ["img0.png"] and (tmp_path / "build" / "img0.png").exists()

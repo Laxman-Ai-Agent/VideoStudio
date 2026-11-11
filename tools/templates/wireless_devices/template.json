@@ -1,0 +1,7 @@
+{"name": "wireless_devices", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "motion_graphic", "diagram", "text"],
+ "params": {"code": "wireless_devices: written for 03_Wireless_Power (category 1 object / device + 18 shock); reuse only when the user asks",
+            "images": "[tv screen picture, laptop screen picture] paths from the studio root",
+            "beats": "{\"tv\": s, \"fan\": s, \"laptop\": s, \"cut\": s} seconds from the scene start (from transcript word times)",
+            "mode": "devices (the three devices arrive on their words, plugged in) | cut (the same row; the cables snap with sparks, title slams)"},
+ "description": "TV, fan and laptop drawn in code, the pictures play on their screens, each arrives on its spoken word; mode cut snaps every cable with canvas sparks and slams the title"}

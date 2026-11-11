@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+/* written for 03_Wireless_Power: TV, fan and laptop drawn in code; pictures on their screens; cables snap with sparks */
+#cam { position: absolute; inset: 0; transform-origin: 50% 55%; }
+#row { position: absolute; left: 6%; right: 6%; top: 16%; height: 52%; display: flex; align-items: flex-end;
+       justify-content: space-around; }
+.portrait #row { top: 12%; height: 58%; flex-direction: column; align-items: center; justify-content: space-around; }
+.dev { position: relative; display: flex; flex-direction: column; align-items: center; }
+.lab { margin-top: calc(var(--u) * 1.6); font: 800 calc(var(--u) * 3.4) var(--heading, sans-serif); color: var(--text);
+       letter-spacing: .08em; text-transform: uppercase; }
+.lab b { color: var(--accent); }
+/* TV */
+.tv { width: calc(var(--u) * 46); aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1.2); background: #05070c;
+      border: calc(var(--u) * .9) solid #1d2433; box-shadow: 0 0 0 2px #2d3648, 0 calc(var(--u) * 2) calc(var(--u) * 5) #0009; overflow: hidden; position: relative; }
+.stand { width: calc(var(--u) * 14); height: calc(var(--u) * 2.4); background: #1d2433; border-radius: 0 0 calc(var(--u)) calc(var(--u)); }
+.scr { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; }
+.scr::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, #fff2 0 18%, transparent 30%); }
+.glow { position: absolute; inset: -30%; background: radial-gradient(circle, var(--accent) 0, transparent 60%); opacity: 0; filter: blur(calc(var(--u) * 3)); z-index: -1; }
+/* fan */
+.fan { width: calc(var(--u) * 30); height: calc(var(--u) * 34); }
+/* laptop */
+.lap { position: relative; width: calc(var(--u) * 40); perspective: calc(var(--u) * 80); }
+.lid { width: 100%; aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1) calc(var(--u) * 1) 0 0; background: #05070c;
+       border: calc(var(--u) * .8) solid #1d2433; transform-origin: 50% 100%; overflow: hidden; position: relative; }
+.base { width: 116%; margin-left: -8%; height: calc(var(--u) * 2.2); background: linear-gradient(#2d3648, #141a26);
+        border-radius: 0 0 calc(var(--u) * 1.4) calc(var(--u) * 1.4); }
+/* cables + sparks */
+svg.cables { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cable { fill: none; stroke: #3a4458; stroke-width: calc(var(--u) * .7); stroke-linecap: round; }
+#fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+#title { position: absolute; left: 0; right: 0; bottom: 20%; text-align: center; font: 900 calc(var(--u) * 13) var(--heading, sans-serif);
+         color: var(--text); opacity: 0; text-shadow: 0 0 calc(var(--u) * 3) var(--accent); }
+#title em { font-style: normal; color: var(--accent); }
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; mix-blend-mode: screen; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="cam">
+    <svg class="cables" id="cables"></svg>
+    <div id="row">
+      <div class="dev" id="d-tv"><div class="glow"></div><div class="tv"><div class="scr" id="s-tv"></div></div><div class="stand"></div><div class="lab"><b>TV</b></div></div>
+      <div class="dev" id="d-fan"><div class="glow"></div>
+        <svg class="fan" viewBox="0 0 100 114"><g id="blades" style="transform-origin:50px 42px">
+          <path d="M50 42 C40 10, 62 6, 56 36Z" fill="#c8d3e6"/><path d="M50 42 C80 40, 78 66, 54 48Z" fill="#c8d3e6"/><path d="M50 42 C30 70, 12 52, 44 46Z" fill="#c8d3e6"/></g>
+          <circle cx="50" cy="42" r="38" fill="none" stroke="#3a4458" stroke-width="3"/><circle cx="50" cy="42" r="6" fill="var(--accent)"/>
+          <rect x="47" y="80" width="6" height="22" fill="#2d3648"/><rect x="30" y="102" width="40" height="7" rx="3" fill="#2d3648"/></svg>
+        <div class="lab"><b>Fan</b></div></div>
+      <div class="dev" id="d-lap"><div class="glow"></div><div class="lap"><div class="lid" id="lid"><div class="scr" id="s-lap"></div></div><div class="base"></div></div><div class="lab"><b>Laptop</b></div></div>
+    </div>
+    <canvas id="fx"></canvas>
+  </div>
+  <div id="title"></div><div id="flash"></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, b = p.beats || {}, tl = gsap.timeline({ paused: true });
+  const cut = p.mode === "cut", D = S.duration, $ = (id) => document.getElementById(id);
+  [["s-tv", 0], ["s-lap", 1]].forEach(([id, i]) => { if ((S.images || [])[i]) $(id).style.backgroundImage = `url("${S.images[i]}")`; });
+  // camera: a slow push and drift the whole scene (never a still frame)
+  tl.fromTo("#cam", { scale: 1, x: 0 }, { scale: 1.07, x: -S.w * 0.01, duration: D, ease: "sine.inOut" }, 0);
+  // devices arrive on their spoken words (or are already there in the cut scene: continuity)
+  const arrive = (sel, t, from) => cut ? null : tl.fromTo(sel, from, { y: 0, x: 0, scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, t);
+  arrive("#d-tv", b.tv ?? 0.1, { y: S.h * 0.25, opacity: 0, scale: 0.6 });
+  arrive("#d-fan", b.fan ?? 0.6, { y: S.h * 0.25, opacity: 0, rotation: -12 });
+  arrive("#d-lap", b.laptop ?? 1.1, { y: S.h * 0.25, opacity: 0, scale: 0.7 });
+  // screens switch on: a thin line opens to the full picture, then a glow pulse
+  const on = (scr, dev, t) => { tl.fromTo(scr, { scaleY: 0.02, filter: "brightness(3)" }, { scaleY: 1, filter: "brightness(1)", duration: 0.35, ease: "power3.out" }, t);
+    tl.fromTo(`${dev} .glow`, { opacity: 0 }, { opacity: 0.35, duration: 0.3, yoyo: true, repeat: 1 }, t); };
+  if (!cut) { on("#s-tv", "#d-tv", (b.tv ?? 0.1) + 0.25); tl.fromTo("#lid", { rotationX: -95 }, { rotationX: 0, duration: 0.5, ease: "power2.out" }, (b.laptop ?? 1.1) + 0.1);
+    on("#s-lap", "#d-lap", (b.laptop ?? 1.1) + 0.5); }
+  tl.to("#blades", { rotation: 360 * D * 3, duration: D, ease: "none" }, 0);  // the fan keeps spinning
+  // cables: a curve from each device down past the bottom edge (they are what gets cut)
+  const svg = $("cables"), plugs = [];
+  requestAnimationFrame(() => {});  // layout is ready: positions below are measured synchronously
+  const R = $("root").getBoundingClientRect();
+  ["#d-tv .tv", "#d-fan svg", "#d-lap .base"].forEach((sel, i) => {
+    const r = document.querySelector(sel).getBoundingClientRect(), x = r.left + r.width / 2 - R.left, y = r.bottom - R.top;
+    const ns = "http://www.w3.org/2000/svg", top = document.createElementNS(ns, "path"), low = document.createElementNS(ns, "path");
+    const cy = y + (S.h - y) * 0.45;  // where the cable snaps
+    top.setAttribute("d", `M${x} ${y} C ${x} ${y + 40}, ${x + 30} ${cy - 30}, ${x + 18} ${cy}`);
+    low.setAttribute("d", `M${x + 18} ${cy} C ${x + 6} ${cy + 40}, ${x - 20} ${S.h - 60}, ${x - 10} ${S.h + 40}`);
+    [top, low].forEach((e) => { e.setAttribute("class", "cable"); svg.appendChild(e); });
+    plugs.push({ x: x + 18, y: cy, low, delay: i * 0.12 });
+    if (!cut) tl.fromTo([top, low], { opacity: 0 }, { opacity: 1, duration: 0.3 }, [b.tv, b.fan, b.laptop][i] ?? 0.2);
+  });
+  if (cut) {
+    const t0 = b.cut ?? 0.8;
+    // canvas sparks: deterministic (seeded) so every rendered frame is the same on a re-render
+    const cv = $("fx"), cx = cv.getContext("2d"); cv.width = S.w; cv.height = S.h;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const parts = plugs.flatMap((pl) => Array.from({ length: 46 }, () => ({ x: pl.x, y: pl.y, a: rnd() * Math.PI * 2,
+      v: (0.25 + rnd()) * S.h * 0.35, life: 0.35 + rnd() * 0.5, d: pl.delay })));
+    const st = { t: 0 }, accent = getComputedStyle(document.documentElement).getPropertyValue("--accent") || "#FFB21A";
+    tl.to(st, { t: 1.6, duration: 1.6, ease: "none", onUpdate: () => {
+      cx.clearRect(0, 0, S.w, S.h); cx.globalCompositeOperation = "lighter";
+      parts.forEach((q) => { const t = st.t - q.d; if (t < 0 || t > q.life) return; const k = 1 - t / q.life;
+        const x = q.x + Math.cos(q.a) * q.v * t, y = q.y + Math.sin(q.a) * q.v * t + 900 * t * t;
+        cx.strokeStyle = `rgba(255,${180 + 60 * k | 0},${60 * k | 0},${k})`; cx.lineWidth = 2 + 2 * k;
+        cx.beginPath(); cx.moveTo(x, y); cx.lineTo(x - Math.cos(q.a) * 14 * k, y - Math.sin(q.a) * 14 * k + 6); cx.stroke(); });
+      if (st.t >= 1.6) cx.clearRect(0, 0, S.w, S.h); } }, t0);
+    plugs.forEach((pl) => tl.to(pl.low, { y: S.h * 0.5, rotation: 18, opacity: 0, transformOrigin: "50% 0%", duration: 0.7, ease: "power2.in" }, t0 + pl.delay + 0.05));
+    tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.55, duration: 0.06, yoyo: true, repeat: 1 }, t0);
+    tl.fromTo("#cam", { x: -8 }, { x: 8, duration: 0.05, repeat: 7, yoyo: true, ease: "none", immediateRender: false }, t0);  // shake
+    $("title").innerHTML = (S.text || "No Wire").replace(/(\S+)$/, "<em>$1</em>");
+    tl.fromTo("#title", { scale: 3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power4.in" }, t0 + 0.25);
+    tl.fromTo("#d-tv .glow, #d-fan .glow, #d-lap .glow", { opacity: 0 }, { opacity: 0.45, duration: 0.6 }, t0 + 0.5);  // still running, powered through the air
+  }
+  finish(tl);
+</script></body></html>

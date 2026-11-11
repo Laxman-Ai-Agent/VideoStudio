@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .assets import VIDEO, file_hash, probe
-from .config import BRAND, ENGINES, TOOLS
+from .config import BRAND, ENGINES, ROOT, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
                         TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
@@ -78,6 +78,9 @@ def frame_count(scene: Scene, fps: int) -> int:
 
 
 def pick_template(scene: Scene, r: ResolvedScene) -> str:
+    code = scene.params.get("code")  # scene code written for this video (user rule 2026-11-11: no stock templates)
+    if code and (TEMPLATES / code / "template.json").exists():
+        return code
     if r.status == "template":
         if scene.params.get("lottie") and r.asset:
             return "lottie"
@@ -192,6 +195,9 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
         if layers:
             asset_hash += ":" + ":".join(file_hash(f) for f in layers)
+        imgs = [root / f for f in s.params.get("images", [])]
+        if imgs:  # pictures used inside written scene code: their content is part of the key
+            asset_hash += ":" + ":".join(file_hash(f) if f.exists() else "none" for f in imgs)
         a2 = root / s.params["image2"] if name == "photo" and s.params.get("image2") else None
         a2 = a2 if a2 and a2.exists() else None
         if a2:
@@ -303,6 +309,13 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         else:
             asset_name = "asset" + job.asset.suffix.lower()
             shutil.copy2(job.asset, build_dir / asset_name)
+    images = []
+    for i, src in enumerate(ROOT / f for f in job.scene.params.get("images", [])):  # written scene code: every picture it shows
+        if src.exists():
+            images.append(f"img{i}{src.suffix.lower()}")
+            shutil.copy2(src, build_dir / images[-1])
+        else:
+            images.append("")
     asset2 = ""
     if template == "photo" and job.asset2:
         asset2 = "asset2" + job.asset2.suffix.lower()
@@ -317,7 +330,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         ovl.append({"src": name, **pl, "w": d["asset_w"], "h": d["asset_h"], "cx": _centre_x(src)})
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "asset2": asset2, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
+             "asset": asset_name, "asset2": asset2, "images": images, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
              "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
              "theme": st.name, "style": {"background": st.background, "text": st.text, "motion": st.motion, "captions": st.captions},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
