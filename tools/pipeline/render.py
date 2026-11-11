@@ -19,7 +19,7 @@ from .config import BRAND, ENGINES, ROOT, TOOLS
 from .contracts import (Brand, RenderReport, Resolved, ResolvedScene, Scene, ScenePlan, SceneRender,
                         TemplateSpec, ThemeSpec, Word, Prepared)
 from .project import atomic_write
-from . import textzone
+from . import grade, textzone
 from .theme import TRANSITIONS, transitions  # noqa: F401  (moved to theme.py 2026-11-10; render.transitions kept)
 
 TEMPLATES = TOOLS / "templates"
@@ -197,7 +197,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
             asset_hash += ":" + ":".join(file_hash(f) for f in layers)
         imgs = [root / f for f in s.params.get("images", [])]
         if imgs:  # pictures used inside written scene code: their content is part of the key
-            asset_hash += ":" + ":".join(file_hash(f) if f.exists() else "none" for f in imgs)
+            asset_hash += f":g{grade.GRADE_VERSION}:" + ":".join(file_hash(f) if f.exists() else "none" for f in imgs)
         a2 = root / s.params["image2"] if name == "photo" and s.params.get("image2") else None
         a2 = a2 if a2 and a2.exists() else None
         if a2:
@@ -311,9 +311,10 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
             shutil.copy2(job.asset, build_dir / asset_name)
     images = []
     for i, src in enumerate(ROOT / f for f in job.scene.params.get("images", [])):  # written scene code: every picture it shows
-        if src.exists():
-            images.append(f"img{i}{src.suffix.lower()}")
-            shutil.copy2(src, build_dir / images[-1])
+        if src.exists():  # graded toward the video palette (colour correction, grade.py)
+            g = grade.graded(src, job.style.colors)
+            images.append(f"img{i}{g.suffix}")
+            shutil.copy2(g, build_dir / images[-1])
         else:
             images.append("")
     asset2 = ""
