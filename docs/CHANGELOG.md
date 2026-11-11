@@ -335,3 +335,7 @@ un.cmd`: the Kaggle run keeps going on Kaggle; a rerun with the same files now w
 - tools: uv venv (pydantic, pytest), HyperFrames 0.9.19 engine (isolated), cache redirection to E:.
 - `studio.py`: `doctor`, `new`, `status`. `pipeline/project.py`: checkpoints, resume, atomic writes. `pipeline/contracts.py` v1.
 - Tests: project layout, numbering, Telugu-safe names, stage skip/rerun/failure, hashing.
+
+## 2026-11-11 Visual storytelling and motion guidelines
+- docs/STYLE.md: new section "Visual storytelling and motion" (topic identity, backgrounds, type + image grade, text-time dimming, compositions, scene-to-scene continuity, motion vocabulary, in-scene staging, characters, variety, joint visual + motion plan) with an honest built / not built list.
+- Referenced from CLAUDE.md, the my-editor skill (step 3), rules.md (2026-11-11 rule, copied into every plan brief), the plan brief (plan.py) and the assets brief (visual.py).

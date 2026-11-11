@@ -139,6 +139,9 @@ Every asset also gets `context`: one or two sentences on what situation it shows
 what the viewer should understand. (`narration` is filled from the transcript automatically.)
 Keep 16:9 main visuals centred (they are centre-cropped for 9:16). Overlays: square or portrait, subject
 fills the frame, transparent or plain background, `processing.remove_background: true`.
+Plan assets for the composition (docs/STYLE.md "Visual storytelling and motion"): related second images, 1:1-safe
+crops, transparent characters and graphic pieces where a scene shows a split, stack, card or character + info layout;
+one shared `style` line so every image fits the video's palette.
 Cut-out treatments (placement, optional; docs/STYLE.md): `outline` \"white\" | \"accent\" (sticker edge), `bw` true
 (black-and-white subject), `backdrop` \"glow\" | \"rings\" | \"rays\" (accent-colour shape behind the subject). Use them
 on the hero cut-out of a scene (a person, an object); at most one treatment set per scene, same set across the video.

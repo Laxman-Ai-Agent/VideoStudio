@@ -85,6 +85,8 @@ QA fails a final above it). Consistent inside this video, readable always, quali
             dramatic light; tech: UI, diagrams, futuristic motion; never force every technique), "avoid" (what the
             earlier videos already used), "notes"}}}}.
 Then vary compositions per scene (layouts, `pan`/`zoom`, templates); no visual type 3x in a row.
+Read docs/STYLE.md "Visual storytelling and motion" first: topic identity, composition per line, elements staged on
+the narration, scene-to-scene continuity (built vs not built is listed there; put wanted continuity moves in `notes`).
 
 ### Earlier videos (style memory, newest first)
 {memory_md(project, json.loads(brand).get("transitions", []))}

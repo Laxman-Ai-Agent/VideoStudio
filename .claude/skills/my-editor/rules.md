@@ -18,3 +18,6 @@ Creative rules from the user's corrections. Newest last. Format: date · rule ·
 - 2026-11-10 · Titles mostly one size for the whole phrase; small line + huge word only sometimes · ("konni sarlu text motham oke size lo vundali")
 - 2026-11-10 · Never wait for AI images: render the preview at once with MISSING placeholders, leave `output/images_pending.txt` (prompts + the drop path), add the images later, then re-render only those scenes · ("images system off lo vunnapudu ... aa prompt output folder oka text file pettu")
 - 2026-11-10 · 9:16 captions 20% bigger than the 16:9 scaling gave (3.6u -> 4.3u): they read small on a phone · ("9x16 lo caption koncham chinnaga vastunnai")
+
+## 2026-11-11
+- 2026-11-11 · Documentary motion design, not a slideshow: topic-based identity (pattern, 2-3 colours, type, image grade, motion set) kept for the whole video; varied compositions (split, stack, crops, cards, character + info); elements staged on the narration; each scene grows out of the previous one (what stays, moves, resizes, leaves, enters). Full rules + what is built: docs/STYLE.md "Visual storytelling and motion" · (user's visual storytelling brief)

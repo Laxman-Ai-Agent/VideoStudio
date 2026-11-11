@@ -4,7 +4,7 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 
 ## Read first, every session
 - `docs/STATUS.md` only (short: where we are, what is pending, known issues).
-- Before planning scenes or asset prompts: `docs/STYLE.md` (the look the user wants).
+- Before planning scenes or asset prompts: `docs/STYLE.md` (the look the user wants, incl. "Visual storytelling and motion": composition, staging, scene-to-scene continuity).
 - On demand, only the part you need (`grep -n` then read those lines): `docs/ARCHITECTURE.md` (design), `docs/LIBRARIES.md` (before adding a library), `docs/DECISIONS.md` (before re-arguing a choice), `docs/CHANGELOG.md` (history).
 
 ## Hard rules

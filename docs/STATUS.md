@@ -57,6 +57,7 @@ un.cmd NN` works: Whisper large-v3 on a Kaggle T4 -> `work/whisper.json` (07 aud
   B. Visual grammar: beat type per scene -> format, rhythm rules, one art direction per video.
   C. Templates: logo wall, split-screen, meme/reaction, news card, process diagram, character + speech bubble, end card.
   D. Sound: music library + SFX (01 final has no music).
+- [ ] Motion engine for docs/STYLE.md "Visual storytelling and motion" (not built): elements that persist / morph across cuts, split / stack / multi-image / 1:1 layouts, connector lines, image grading to the palette, dim-while-text, topic patterns (ECG, circuits, maps). Big job, one part per session.
 - [ ] Re-render 01 in the chosen theme once the user says so (~11 min, background).
 - [ ] One small test render of the new theme presets (gradients, textures, fonts) before a real video.
 - [ ] Not built yet (from the style references): logo watermark + CTA end card (needs the channel logo), duotone tint, several floating cut-outs per scene, dark glow style. Dashboard Settings page is a placeholder.

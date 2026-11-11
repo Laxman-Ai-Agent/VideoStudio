@@ -51,3 +51,52 @@ marketing post, agency reel, infographic reel, business reel) + two sample photo
   mix, serif italic accent, hard offset shadow, hollow word, caps, small tracked kicker), style chosen per video.
   Highlight words are English only; Telugu lives in the captions.
 - Photo titles: big and bold, placed in the empty part of the picture, never a small panel.
+
+## Visual storytelling and motion (user, 2026-11-11)
+Goal: a designed, animated documentary, never a slideshow of full-screen stills with zoom. Pick what fits the topic,
+narration, assets and scene length; never every effect on every scene. Merges with "Every video its own look" above.
+
+1. Topic identity, kept for the whole video: background pattern + texture from the topic (medical: ECG lines, anatomy,
+   medical grid; space: stars, planets, atmosphere; history: old maps, vintage paper, architecture; tech: circuits,
+   data lines, digital grid); 2-3 main colours; one typography + highlight style; one image grade; one graphic
+   language; one animation / transition set. Background may vary in light, depth and motion, never in identity.
+2. Backgrounds support the content, never compete with it; no plain unrelated backgrounds.
+3. Type: same size and style for every highlight word, readable always, few font variations. Images from mixed
+   sources get a grade toward the palette. Text over an image: dim the image or add a soft overlay only while the
+   text is on screen, then restore it.
+4. Composition varies with the narration: full screen, half image + half text, left/right split, vertical stack, two
+   or more images, 1:1 crops, image cards, image + infographic, character + information. E.g. full image that
+   shrinks into a 1:1 crop on one side; images entering from top / bottom; images joined by drawn lines and diagrams.
+5. Continuity (most important): the video is one connected piece. At every cut decide what stays, moves, resizes,
+   transforms, leaves and enters, and morph the old layout into the new one (image moves up, the next one rises from
+   the bottom into its place, text changes in place, background stays). Examples only, not fixed layouts.
+6. Motion vocabulary, rotated, never one move on repeat: slide / reposition, stack / replace, split-screen change,
+   scale + crop, position morph, mask / clip reveal, vertical / horizontal moves, parallax, layered motion, drawn
+   lines + connectors, text transforms, character entrances / moves, graphic transitions, image-to-image, layout
+   transforms, animated infographics, coordinated multi-element moves.
+7. Inside a scene elements enter one after another on the narration (sequential, overlapping, independent or
+   coordinated), stay as long as they are needed, and may carry over the scene boundary. Short and long scenes both
+   get timing that fits.
+8. Transparent PNG characters (the presenter C1 or others) take part: character right + info left (or the reverse),
+   beside a diagram, moving / resizing between scenes with the narration; never a static sticker for a whole scene.
+9. No layout twice in a row without a reason; variety never breaks the video's identity.
+10. Visual plan and motion plan are made together: what the line explains, which assets, which composition, which
+   elements animate and when, how they interact, what carries into the next scene. The plan holds position, size,
+   layer, timing, movement, transition and continuity, reusing the existing JSON (scenes.json params, edits.json
+   layers, theme.json motion) before adding fields.
+
+### What the pipeline can do today (checked 2026-11-11; update when a part is built)
+- Built: per-video theme (fonts, 2-3 colours, background type, pattern none|grid|dots|lines, texture
+  grain|paper|smoke|particles|stars, title_style, caption style, motion text_in / camera / transitions) with the 30%
+  alike check; templates photo (full frame Ken Burns), photo_parallax, cutout_title, kinetic, cards (rows, stat),
+  chart, map, lottie, meme (1-2 characters), quote, timeline, screenshot, video_clip; overlays with placement
+  (position, size, at / until, animation, outline, backdrop, depth); textzone puts photo titles in the calm area;
+  per-element edits in edits.json (Timeline editor); one transition per cut from the theme set.
+- Not built (plan around it, say so in the plan, do not claim it): elements that persist or morph across cuts (every
+  scene is rendered as its own clip and joined by a transition); split / stacked / multi-image / 1:1-crop layouts
+  in one scene; full-to-crop image moves; drawn connector lines; colour grading of images to the palette (only the
+  `look` filters such as sepia); dimming an image only while text is on it; topic patterns beyond grid / dots /
+  lines (ECG lines, circuits, maps, anatomy); characters moving between scenes.
+- Until those exist: get the closest result with what is built (overlays with `at` timing to stage elements in
+  order, cutout_title / meme for character + text, cards / kinetic beside photos, varied templates, a carried-over
+  background through the theme), and list the wanted continuity moves in scene `notes` so they can be built later.
