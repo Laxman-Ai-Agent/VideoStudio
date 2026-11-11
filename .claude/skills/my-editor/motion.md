@@ -103,7 +103,9 @@ Drawn 2D graphics and 3D are not the point: use them only a little, where no pic
 - Measure the render time on the sample scenes before planning the whole video around a heavy effect.
 
 ## Craft (how it moves; Claude as motion designer, 2026-11-11)
-- Storyboard first: before writing code, one line per scene: word -> visual -> motion -> transition; show the user.
+- Storyboard first: before writing code, one line per sequence: words -> pictures -> motion -> transition. Claude decides;
+  no user approval needed for the storyboard (user, 2026-11-11). Build the video as 15-20 SEQUENCES (10-25 s, one
+  composition each, several sentences) instead of one clip per sentence: elements carry across beats (continuity).
 - Motion tokens per video (`work/motion.json` or the scene code's top): durations (small 0.25-0.4 s, cards 0.5-0.7 s,
   big moves 0.8-1.2 s), easing set (in: power3 / expo out; out: power2 in), distances, card style (radius, shadow,
   border, light sweep), transition set. Every scene uses them: consistent inside the video, new set for the next video.
