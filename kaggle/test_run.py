@@ -39,3 +39,9 @@ def test_topic_images_one_run_for_every_variation(tmp_path):
 def test_size_numbers_never_reach_the_image_model():
     import images
     assert images.clean_prompt("A lab. Vertical 9:16 portrait composition, 768x1344, subject centred. No text.") ==         "A lab. Vertical 9:16 portrait composition, subject centred. No text."
+
+
+def test_every_size_fits_a_t4():
+    """1024x1024 (1.05 MP) ran out of T4 memory; 1344x768 (1.03 MP) is the largest that worked."""
+    from images import SIZES
+    assert all(w * h <= 1344 * 768 for w, h in SIZES.values())

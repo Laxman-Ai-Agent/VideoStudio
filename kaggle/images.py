@@ -20,8 +20,9 @@ HERE = Path(__file__).resolve().parent
 KERNEL = f"{USER}/videostudio-images"
 MARKER = WORK / "images_last_push.json"
 # ~1 MP, multiples of 16 (Z-Image's native range; larger sizes cost T4 time and memory)
-SIZES = {"16:9": (1344, 768), "9:16": (768, 1344), "1:1": (1024, 1024), "4:3": (1152, 864),
-         "3:4": (864, 1152), "3:2": (1248, 832), "2:3": (832, 1248)}
+SIZES = {"16:9": (1344, 768), "9:16": (768, 1344), "1:1": (960, 960),  # 1024x1024 ran out of T4 memory (2026-11-11)
+         "4:3": (1152, 864),
+         "3:4": (864, 1152), "3:2": (1216, 832), "2:3": (832, 1216)}
 
 
 def clean_prompt(text: str) -> str:
