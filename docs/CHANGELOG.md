@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-11 - Chart template v2: a different graph look per video
+
+- `params.style`: numbers -> count (old) | gauge (ring) | meter (track with `marks`) | dots (100-dot share); bars -> bars (old) | split (one bar cut into parts). User: graphs looked the same in the last 4 videos. `max` for gauge / meter. Not yet rendered in a real scene (03_Wireless_Power uses meter / gauge / split on its next render).
+
 ## 2026-11-11 - Timeline: what is already rendered, playable in the stage
 
 - The two quality cards (1080p / 480p) say whether `output/final_<fmt>.mp4` / `preview_<fmt>.mp4` exists (real file size) and have "Play here": the rendered video plays in the player area, "Back to live preview" returns. No estimates. Frontend only (`timeline.js paintRenders / playRendered`, `timeline.css`); checked on port 8797 with 01_AI_Doctor (1080x1920, 76.7 s).

@@ -14,26 +14,82 @@
 #num { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 900;
        font-size: calc(var(--u) * 30); color: var(--accent); }
 #src { font-size: calc(var(--u) * 2.4); opacity: .6; }
+/* styles beyond the classic bars / count-up, so every video's graphs can look different (params.style) */
+#alt { flex: 1; display: none; align-items: center; justify-content: center; position: relative; }
+.big { font-weight: 900; color: var(--accent); font-size: calc(var(--u) * 16); line-height: 1; }
+.gauge { position: relative; width: calc(var(--u) * 44); height: calc(var(--u) * 44); }
+.gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge .bg { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 9; }
+.gauge .fg { fill: none; stroke: var(--accent); stroke-width: 9; stroke-linecap: round; }
+.gauge .big { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: calc(var(--u) * 11); }
+.meter { width: 86%; display: flex; flex-direction: column; gap: calc(var(--u) * 2.5); }
+.track { position: relative; height: calc(var(--u) * 3.2); border-radius: 999px; background: rgba(255,255,255,.12); }
+.track .fl { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: 999px; background: var(--accent); transform-origin: left; }
+.track .tick { position: absolute; top: -40%; width: 2px; height: 180%; background: rgba(255,255,255,.35); }
+.dots { display: grid; grid-template-columns: repeat(10, 1fr); gap: calc(var(--u) * 1.1); width: calc(var(--u) * 40); }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.14); }
+.dots i.on { background: var(--accent); }
+.dotrow { display: flex; align-items: center; gap: calc(var(--u) * 6); }
+.split { width: 88%; display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+.sbar { display: flex; height: calc(var(--u) * 9); border-radius: calc(var(--u) * 1.2); overflow: hidden; }
+.seg { transform-origin: left; display: flex; align-items: center; justify-content: center; font-weight: 900;
+       font-size: calc(var(--u) * 4.2); color: var(--bg, #000); }
+.seg:not(:first-child) { background: rgba(255,255,255,.18); color: var(--text, #fff); }
+.seg:first-child { background: var(--accent); }
+.slabs { display: flex; } .slabs div { font-size: calc(var(--u) * 3.2); opacity: .85; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
-  <div class="safe"><div class="wrap"><div id="title"></div><div id="bars"></div><div id="num"></div><div id="src"></div></div></div>
+  <div class="safe"><div class="wrap"><div id="title"></div><div id="bars"></div><div id="num"></div><div id="alt"></div><div id="src"></div></div></div>
 </div>
 <script>
   const S = window.SCENE, p = S.params || {}, tl = gsap.timeline({ paused: true });
   const n = kinetic(document.getElementById("title"), S.text, tl, 0.1);
-  const bars = document.getElementById("bars"), num = document.getElementById("num"), unit = p.unit || "";
+  const bars = document.getElementById("bars"), num = document.getElementById("num"), alt = document.getElementById("alt"), unit = p.unit || "";
   document.getElementById("src").textContent = p.source ? "Source: " + p.source : "";
-  const t0 = 0.3 + n * 0.12;
-  if (typeof p.number === "number") {
+  const t0 = 0.3 + n * 0.12, grow = Math.min(1.5, S.duration * 0.6);
+  const hasNum = typeof p.number === "number", hasBars = p.bars && p.bars.length;
+  const style = p.style || (hasNum ? "count" : "bars");
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
+  const countUp = (node, to, at) => { const o = { v: 0 }; node.textContent = "0" + unit;
+    tl.to(o, { v: to, duration: grow, ease: "power2.out", onUpdate: () => { node.textContent = Math.round(o.v) + unit; } }, at); };
+  const useAlt = () => { bars.style.display = num.style.display = "none"; alt.style.display = "flex"; };
+  if (hasNum && style === "gauge") {          // ring that fills to the share (of p.max, default 100)
+    useAlt();
+    const g = el("div", "gauge"), C = 2 * Math.PI * 40, share = Math.min(1, p.number / (p.max || 100));
+    g.innerHTML = `<svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="40"/><circle class="fg" cx="50" cy="50" r="40" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg>`;
+    const b = el("div", "big"); g.append(b); alt.append(g);
+    tl.to(g.querySelector(".fg"), { attr: { "stroke-dashoffset": C * (1 - share) }, duration: grow, ease: "power2.out" }, t0);
+    countUp(b, p.number, t0);
+  } else if (hasNum && style === "meter") {   // horizontal track; ticks mark p.marks (e.g. [1, 5, 10]) on the way
+    useAlt();
+    const m = el("div", "meter"), b = el("div", "big"), tr = el("div", "track"), f = el("div", "fl"), max = p.max || p.number;
+    (p.marks || []).forEach((v) => { const t = el("div", "tick"); t.style.left = Math.min(100, v / max * 100) + "%"; tr.append(t); });
+    tr.append(f); m.append(b, tr); alt.append(m);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: Math.min(1, p.number / max), duration: grow, ease: "power2.out" }, t0);
+    countUp(b, p.number, t0);
+  } else if (hasNum && style === "dots") {    // 100 dots, p.number of them lit (a share in %)
+    useAlt();
+    const row = el("div", "dotrow"), d = el("div", "dots"), b = el("div", "big");
+    for (let i = 0; i < 100; i++) d.append(el("i"));
+    row.append(d, b); alt.append(row);
+    const lit = Math.round(Math.min(100, p.number));
+    [...d.children].slice(0, lit).forEach((x, i) => tl.call(() => x.classList.add("on"), [], t0 + i * grow / Math.max(lit, 1)));
+    countUp(b, p.number, t0);
+  } else if (hasBars && style === "split") {  // one bar cut into its parts (shares that add up)
+    useAlt();
+    const w = el("div", "split"), sb = el("div", "sbar"), labs = el("div", "slabs"), data = p.bars.slice(0, 4);
+    const total = data.reduce((a, d) => a + d.value, 0) || 1;
+    data.forEach((d, i) => { const s = el("div", "seg", d.value + unit), l = el("div", "", d.label || "");
+      s.style.width = l.style.width = (d.value / total * 100) + "%"; sb.append(s); labs.append(l);
+      tl.fromTo(s, { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out" }, t0 + i * 0.35); });
+    w.append(sb, labs); alt.append(w);
+  } else if (hasNum) {                         // classic big count-up
     bars.style.display = "none";
-    const o = { v: 0 };
-    num.textContent = "0" + unit;
-    tl.to(o, { v: p.number, duration: Math.min(1.5, S.duration * 0.6), ease: "power2.out",
-               onUpdate: () => { num.textContent = Math.round(o.v) + unit; } }, t0);
+    countUp(num, p.number, t0);
   } else {
     num.style.display = "none";
     // no data -> decorative rising bars without labels or numbers (never invent statistics)
-    const data = (p.bars && p.bars.length) ? p.bars.slice(0, 6) : [3, 5, 4, 7, 6].map(v => ({ value: v }));
+    const data = hasBars ? p.bars.slice(0, 6) : [3, 5, 4, 7, 6].map(v => ({ value: v }));
     const max = Math.max(...data.map(d => d.value));
     data.forEach((d, i) => {
       const b = document.createElement("div"); b.className = "b";

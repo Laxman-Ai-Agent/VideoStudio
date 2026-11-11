@@ -1,5 +1,7 @@
-{"name": "chart", "version": 1, "engine": "hyperframes",
+{"name": "chart", "version": 2, "engine": "hyperframes",
  "visual_types": ["chart"],
  "params": {"bars": "[{\"label\": \"IT\", \"value\": 40}, ...] up to 6 bars", "unit": "suffix such as %",
-            "number": "one big count-up number instead of bars", "source": "citation line shown small"},
- "description": "Animated bar chart or count-up number from scene params; without params, an unlabelled decorative bar motif (never invented numbers)"}
+            "number": "one big count-up number instead of bars", "source": "citation line shown small",
+            "style": "graph look, pick a DIFFERENT one per video (user 2026-11-11: graphs must not look alike across videos): number -> count (big count-up, the old default) | gauge (ring fills to number/max) | meter (horizontal track, `marks` [1, 5] ticks) | dots (100 dots, number lit: shares in %); bars -> bars (vertical, old default) | split (one bar cut into parts that add up, e.g. 20 reached / 80 lost)",
+            "max": "gauge / meter full value (default 100 for gauge, the number itself for meter)", "marks": "meter tick values"},
+ "description": "Animated graph from scene params in one of several looks (params.style); without params, an unlabelled decorative bar motif (never invented numbers)"}
