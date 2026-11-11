@@ -54,11 +54,12 @@ def test_timed_lines_break_on_pause_and_sentence_end():
 
 def test_brief_has_narration_rules_and_contract(tmp_path):
     p = new_project("demo", tmp_path)
-    (p / "assets" / "logos" / "openai.png").write_bytes(b"x")
+    (p / "assets" / "originals").mkdir(parents=True)
+    (p / "assets" / "originals" / "openai.png").write_bytes(b"x")
     out = p / "work" / "plan_brief.md"
     write_brief(p, _transcript(), out)
     text = out.read_text("utf-8")
-    assert "AI Agents అంటే ఏమిటి?" in text and "assets/logos/openai.png" in text
+    assert "AI Agents అంటే ఏమిటి?" in text and "assets/originals/openai.png" in text
     assert "last ends at 6.00" in text and "visual_type" in text
 
 

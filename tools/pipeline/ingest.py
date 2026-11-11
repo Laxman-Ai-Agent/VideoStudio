@@ -2,9 +2,9 @@
 
 - audio  -> input/audio.<ext>     (2+ audio files -> AmbiguousInput, ask the user)
 - script -> input/script.<ext>    (.txt/.md, or a Gemini transcript *gemini*.json; 2+ -> AmbiguousInput)
-- A012.png / A012_v2.mp4 (visual-assets.json ids) -> assets/generated
-- images -> assets/logos | assets/screenshots | assets/images  (by name keyword)
-- videos -> assets/raw_footage if longer than 2 min, else assets/videos
+- images and videos (also A012.png, the upload for visual-assets.json id A012) -> assets/originals
+  (the user's own files, never deleted; the processed A012.png is written to assets/)
+- videos longer than 2 min -> assets/originals/raw_footage (cut into shots by the shots stage)
 - anything else -> drop/_unknown
 """
 import re
@@ -19,6 +19,7 @@ SCRIPT = {".txt", ".md"}
 IMAGE = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".svg"}
 VIDEO = {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"}
 RAW_FOOTAGE_SECONDS = 120
+ORIGINALS = "assets/originals"  # files the user gave by hand; never deleted
 ASSET_ID = re.compile(r"^a\d{3,4}(?:[_\-. ].*)?$")  # A012.png, A012_v2.png -> visual-assets.json upload
 
 
@@ -50,16 +51,10 @@ def classify(path: Path, duration: Callable[[Path], float] = probe_duration) -> 
     ext, name = path.suffix.lower(), path.stem.lower()
     if role(path):
         return "input"
-    if ASSET_ID.match(name) and (ext in IMAGE or ext in VIDEO or ext == ".json"):
-        return "assets/generated"  # an upload for visual-assets.json (matched by its id)
-    if ext in IMAGE:
-        if "logo" in name or ext == ".svg":
-            return "assets/logos"
-        if any(k in name for k in ("screenshot", "screen", "ss_", "capture")):
-            return "assets/screenshots"
-        return "assets/images"
+    if ext in IMAGE or (ext in VIDEO and ASSET_ID.match(name)) or (ASSET_ID.match(name) and ext == ".json"):
+        return ORIGINALS
     if ext in VIDEO:
-        return "assets/raw_footage" if duration(path) > RAW_FOOTAGE_SECONDS else "assets/videos"
+        return ORIGINALS + "/raw_footage" if duration(path) > RAW_FOOTAGE_SECONDS else ORIGINALS
     return "drop/_unknown"
 
 

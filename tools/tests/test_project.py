@@ -15,7 +15,7 @@ def test_new_project_numbers_and_layout(tmp_path):
     a = new_project("First", tmp_path)
     b = new_project("Second", tmp_path)
     assert (a.name, b.name) == ("01_First", "02_Second")
-    assert (b / "drop" / "_unknown").is_dir() and (b / "work" / "scenes").is_dir()
+    assert sorted(x.name for x in b.iterdir()) == ["drop", "input", "project.md", "work"]  # no empty sub-folders
     assert next_number(tmp_path) == 3
     assert find_project("2", tmp_path) == b
 

@@ -31,7 +31,7 @@ def _setup(tmp_path):
 
 def test_index_describes_once_and_keeps_description_on_rename(tmp_path):
     root, proj, _ = _setup(tmp_path)
-    base, f = proj / "assets", proj / "assets" / "index.json"
+    base, f = proj / "assets", assets.index_path(proj / "assets")
     idx = assets.update(base, f, **NO_PROBE)
     todo = assets.undescribed(idx)
     assert [e.file for e in todo] == ["videos/01.mp4"]  # scene_NNN files need no description
@@ -47,10 +47,10 @@ def test_index_describes_once_and_keeps_description_on_rename(tmp_path):
 
 def test_resolve_order_template_missing(tmp_path):
     root, proj, lib = _setup(tmp_path)
-    idx = assets.update(proj / "assets", proj / "assets" / "index.json", **NO_PROBE)
+    idx = assets.update(proj / "assets", assets.index_path(proj / "assets"), **NO_PROBE)
     for e in idx.assets.values():
         e.description = e.description or "corporate office employees computers"
-    assets.save(proj / "assets" / "index.json", idx)
+    assets.save(assets.index_path(proj / "assets"), idx)
 
     res = resolve(_plan(), proj, lib, root, download=None)
     got = {r.id: r for r in res.scenes}
@@ -74,12 +74,25 @@ def test_keywords():
 def test_template_scene_with_template_params_is_never_a_loose_photo(tmp_path):
     """Seen on 03: kinetic `lines` scenes got a library photo that matched their query words."""
     root, proj, lib = _setup(tmp_path)
-    idx = assets.update(proj / "assets", proj / "assets" / "index.json", **NO_PROBE)
+    idx = assets.update(proj / "assets", assets.index_path(proj / "assets"), **NO_PROBE)
     for e in idx.assets.values():
         e.description = "corporate office employees working at computers"
-    assets.save(proj / "assets" / "index.json", idx)
+    assets.save(assets.index_path(proj / "assets"), idx)
     s = lambda i, p: {"id": i, "start": i - 1, "end": i, "narration": "x", "visual_type": "motion_graphic",  # noqa: E731
                       "query": "corporate office employees working at computers", "params": p}
     plan = ScenePlan(scenes=[s(1, {"lines": [{"text": "x"}]}), s(2, {})])
     got = {r.id: r.status for r in resolve(plan, proj, lib, root, download=None).scenes}
     assert got[1] == "template" and got[2] == "project"  # without template params the local match still wins
+
+
+def test_media_files_skip_asset_files_and_thumbs_live_in_work(tmp_path):
+    base = tmp_path / "p" / "assets"
+    for rel in ("A001.png", "originals/A002_20261111.png", "originals/photo.jpg", "originals/raw_footage/big.mp4", "scene_003.png"):
+        (base / rel).parent.mkdir(parents=True, exist_ok=True)
+        (base / rel).write_bytes(b"x")
+    assert [f.relative_to(base).as_posix() for f in assets.media_files(base)] == ["originals/photo.jpg", "scene_003.png"]
+    made = []
+    idx = assets.update(base, assets.index_path(base), probe=lambda p: {}, thumb=lambda s, d: made.append(d) or True)
+    assert assets.index_path(base) == tmp_path / "p" / "work" / "assets_index.json" and assets.index_path(base).exists()
+    assert all(d.parent == tmp_path / "p" / "work" / "thumbs" for d in made)
+    assert all((base / e.thumb).resolve().parent == tmp_path / "p" / "work" / "thumbs" for e in idx.assets.values())

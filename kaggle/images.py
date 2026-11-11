@@ -1,8 +1,8 @@
 r"""kaggle\images.cmd NN [A010 A023 ...] [--out DIR] [--force]  |  kaggle\images.cmd prompts.json [--out DIR]
-Generate AI image assets of a project with Z-Image-Turbo (Apache-2.0) on Kaggle GPU -> projects/NN/drop/<id>.png,
+Generate AI image assets of a project with Z-Image-Turbo (Apache-2.0) on Kaggle GPU -> projects/NN/work/generated/<id>.png (processed into assets/, then deleted),
 so `studio.cmd assets NN` picks them up unchanged. Default ids: every asset with a prompt and method ai_generate
-that has no file yet (no `file` in visual-assets.json and nothing in drop/). --force regenerates anyway.
---out DIR writes DIR/<id>.png instead of drop/ (test runs). prompts.json = free test prompts
+that has no file yet (no `file` in visual-assets.json and nothing in work/generated/). --force regenerates anyway.
+--out DIR writes DIR/<id>.png instead of work/generated/ (test runs). prompts.json = free test prompts
 ([{"id", "prompt", "aspect_ratio"}]), images go to the folder next to it named like the file. Weights are downloaded inside the GPU run.
 A rerun with the same ids resumes the previous Kaggle run instead of starting a new GPU run.
 """
@@ -33,7 +33,7 @@ def pick(p: Path, ids: list[str], force: bool) -> list[dict]:
         pr = a.get("prompt") or {}
         if ids and a["id"] not in ids or not ids and a.get("method") != "ai_generate" or not pr.get("text"):
             continue
-        if not ids and not force and (a.get("file") or any((p / "drop").glob(a["id"] + ".*"))):
+        if not ids and not force and (a.get("file") or any((p / d).glob(a["id"] + ".*") for d in ("drop", "work/generated"))):
             print(f"  {a['id']}: has a file already, skipped (--force to regenerate)")
             continue
         w, h = SIZES.get(pr.get("aspect_ratio"), SIZES["16:9"])
@@ -81,7 +81,7 @@ def main() -> int:
     kg("kernels", "output", KERNEL, "-p", str(out))
     report = json.loads(next(out.rglob("report.json")).read_text("utf-8"))
     print("  report:", json.dumps(report))
-    dest = Path(a.out) if a.out else p / "drop"
+    dest = Path(a.out) if a.out else p / "work" / "generated"  # sync processes it, then deletes it
     dest.mkdir(parents=True, exist_ok=True)
     n = 0
     for j in jobs:

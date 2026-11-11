@@ -11,7 +11,7 @@ def _plan(url):
 
 
 def test_capture_keeps_user_files_and_follows_url(tmp_path):
-    shots = tmp_path / "assets" / "screenshots"
+    shots = tmp_path / "assets"
     shots.mkdir(parents=True)
     (shots / "scene_002.png").write_text("mine")
     calls = []

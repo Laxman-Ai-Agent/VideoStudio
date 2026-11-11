@@ -98,12 +98,13 @@ def test_upload_validates_never_overwrites_and_replaces(api):
     assert up("again.png", _png())[0] == 409                     # no silent overwrite
     st, res2 = up("better.png", _png(), "?replace=1")       # a candidate: the current file stays
     a2 = res2["asset"]
-    assert st == 200 and a2["pending_file"].startswith("assets/generated/pending/") and a2["source_file"] == first
+    assert st == 200 and a2["pending_file"].startswith("work/pending/up/") and a2["source_file"] == first
     assert a2["pending_preview"] and (root / "01_Alpha" / a2["pending_preview"]).exists()
     st, res3 = call("POST", "/api/projects/01/assets/A001/replace/confirm")
     a3 = res3["asset"]
-    assert st == 200 and a3["source_file"] == a2["pending_file"] and not a3["pending_file"] and a3["status"] == "validated"
+    assert st == 200 and a3["source_file"].startswith("assets/originals/") and not (root / "01_Alpha" / a2["pending_file"]).exists() and not a3["pending_file"] and a3["status"] == "validated"
     assert (root / "01_Alpha" / first).exists() and "replaced" in [h["action"] for h in a3["history"]]
+    assert len(list((root / "01_Alpha" / "work" / "replaced").glob("A001_*"))) == 1  # the old version moved to work/
     assert call("POST", "/api/projects/01/assets/A001/replace/cancel")[0] == 200   # nothing waiting: harmless
     res2 = res3
     assert call("POST", "/api/projects/01/assets/A003/upload", _png(), {"X-Filename": "t.png"})[0] == 400  # template

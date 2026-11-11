@@ -10,7 +10,7 @@ from .assets import probe
 from .contracts import VisualAsset
 from .ingest import IMAGE, VIDEO
 
-PROCESSED = "assets/processed"     # final files after processing
+PROCESSED = "assets"     # final files after processing: ONE file per asset (assets/A012.png)
 
 
 def is_transparent(img) -> bool:
@@ -95,7 +95,7 @@ def process(a: VisualAsset, src: Path, project: Path, remove_bg: Callable | None
             dest_dir: Path | None = None) -> tuple[Path, list[str]]:
     """Image pipeline: extract/crop -> background removal -> trim -> aspect framing (dashboard) or
     resize (Lanczos) -> format. Videos: trim + framing with FFmpeg when set, else copied. The source
-    file is never changed; the result goes to `dest_dir` (default assets/processed)."""
+    file is never changed; the result goes to `dest_dir` (default assets/)."""
     from PIL import Image
     log, out_dir = [], dest_dir or project / PROCESSED
     out_dir.mkdir(parents=True, exist_ok=True)

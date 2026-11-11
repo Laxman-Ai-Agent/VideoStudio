@@ -1,4 +1,4 @@
-"""shots stage: long videos in assets/raw_footage are cut at scene changes (FFmpeg `select=scene`)
+"""shots stage: long videos in assets/originals/raw_footage are cut at scene changes (FFmpeg `select=scene`)
 into assets/shots/<stem>_NNN.mp4. Each shot is then indexed, described (contact sheet) and matched
 like any short clip. The original file is never touched."""
 import re
@@ -62,5 +62,5 @@ def cut(video: Path, out_dir: Path) -> list[Path]:
 
 
 def raw_files(assets_dir: Path) -> list[Path]:
-    d = assets_dir / "raw_footage"
+    d = assets_dir / "originals" / "raw_footage"
     return sorted(f for f in d.iterdir() if f.is_file() and f.suffix.lower() in VIDEO) if d.is_dir() else []

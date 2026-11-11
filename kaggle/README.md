@@ -35,7 +35,7 @@ Resume: a rerun with the same files reuses the last Kaggle run (`.work/last_push
 finished -> download only; no second upload or GPU run. Failed or cancelled runs are pushed again. Test: `kaggle/test_run.py`.
 
 ## Images on Kaggle GPU (Z-Image-Turbo, test 2026-11-10)
-`kaggle\images.cmd 01 A010 A023 A024 --out kaggle\.work\zimage-test` (no `--out`: writes `projects/NN/drop/<id>.png`
+`kaggle\images.cmd 01 A010 A023 A024 --out kaggle\.work\zimage-test` (no `--out`: writes `projects/NN/work/generated/<id>.png`
 for `studio.cmd assets NN`). Model: Tongyi-MAI/Z-Image-Turbo, Apache-2.0 (commercial use OK), 9 steps, guidance 0.
 Kernel `kernels/images` downloads the weights from Hugging Face inside the GPU run (~155 s); never mount weights from
 other kernels' outputs (reading ~20 GB from mounted outputs took 25+ min). T4 has no fast bf16, and plain fp16 gives

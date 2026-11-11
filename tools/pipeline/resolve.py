@@ -170,7 +170,7 @@ def resolve(plan: ScenePlan, project: Path, library: Path, root: Path, download:
             main_assets: dict[int, Path] | None = None) -> Resolved:
     """`main_assets`: scene id -> validated main file from visual-assets.json (wins over everything)."""
     base = project / "assets"
-    proj, lib_index = assets.load(base / "index.json"), library / "index.json"
+    proj, lib_index = assets.load(assets.index_path(base)), library / "index.json"
     by_scene: dict[int, dict[bool, AssetEntry]] = {}
     for e in proj.assets.values():
         if m := assets.SCENE_FILE.match(Path(e.file).stem):

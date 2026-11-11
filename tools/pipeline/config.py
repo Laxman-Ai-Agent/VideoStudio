@@ -13,14 +13,8 @@ ENGINES = TOOLS / "engines"
 FIXTURE = TOOLS / "tests" / "fixtures" / "sample_30s"
 
 # Sub-folders every project gets (see docs/ARCHITECTURE.md, "Project layout").
-PROJECT_DIRS = [
-    "drop/_unknown",
-    "input",
-    "assets/images", "assets/videos", "assets/screenshots", "assets/logos", "assets/raw_footage",
-    "assets/generated",  # uploads for visual-assets.json (A012.png)
-    "work/scenes", "work/logs",
-    "output",
-]
+# Only the folders the user touches by hand; everything else is created when a file is written.
+PROJECT_DIRS = ["input", "drop", "work"]  # work/ is written everywhere; assets/ and output/ appear with their first file
 
 # Tools that would otherwise write big caches to C:. Child processes inherit these.
 CACHE_ENV = {

@@ -92,7 +92,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
     plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
     if not visual.path(p).exists():
         abrief = w / "assets_brief.md"
-        idx = assets.load(p / "assets" / "index.json")
+        idx = assets.load(assets.index_path(p / "assets"))
         local = [f"assets/{e.file} - {e.description}" for e in idx.assets.values() if e.description]
         formats = json.loads((BRAND / "brand.json").read_text("utf-8")).get("formats", {})
         visual.brief(p, plan, " ".join(x.text for x in transcript.words), formats,
@@ -101,7 +101,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
               f"        Write {visual.path(p)}, then run again.")
         return NEEDS_USER
 
-    # Phase 5: screenshot scenes with params.url -> assets/screenshots/scene_NNN.png (headless Chrome)
+    # Phase 5: screenshot scenes with params.url -> assets/scene_NNN.png (headless Chrome)
     from pipeline.capture import capture
     captures = w / "captures.json"
     urls = {s.id: s.params.get("url") for s in ScenePlan.model_validate_json(scenes_json.read_text("utf-8")).scenes
@@ -111,7 +111,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
                         fn=lambda: capture(ScenePlan.model_validate_json(scenes_json.read_text("utf-8")), p, captures))
         print(f"  capture: {'done' if ran else 'up to date'} ({len(urls)} url(s))")
 
-    # Phase 5: long videos (assets/raw_footage) -> shots in assets/shots, indexed like any clip
+    # Phase 5: long videos (assets/originals/raw_footage) -> shots in assets/shots, indexed like any clip
     from pipeline import shots
     for raw in shots.raw_files(p / "assets"):
         first = p / "assets" / "shots" / f"{raw.stem}_001.mp4"
@@ -123,7 +123,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
     LIBRARY.mkdir(exist_ok=True)
     todo = []
     for name, base in (("index", p / "assets"), ("library_index", LIBRARY)):
-        idx_file = base / "index.json"
+        idx_file = assets.index_path(base)
         files = assets.media_files(base)
         listing = "\n".join(f"{f.relative_to(base).as_posix()}:{f.stat().st_size}:{f.stat().st_mtime_ns}"
                              for f in files)  # cheap change check; no full read of big media
@@ -142,7 +142,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         return NEEDS_USER
 
     resolved_json, credits_txt = w / "resolved.json", p / "output" / "credits.txt"
-    lib_idx, proj_idx = LIBRARY / "index.json", p / "assets" / "index.json"
+    lib_idx, proj_idx = LIBRARY / "index.json", assets.index_path(p / "assets")
 
     # visual assets, pass 1: uploads by id, processing, exact-name logos / people (same providers as resolve)
     from pipeline.resolve import fetch_asset
@@ -277,6 +277,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         bad = [f"{c.name}: {c.detail}" for c in f.checks if c.status != "ok"]
         if f.passed or not final:
             if not dest.exists() or dest.stat().st_mtime_ns < src.stat().st_mtime_ns:
+                dest.parent.mkdir(exist_ok=True)
                 shutil.copy2(src, dest)
         qa_failed |= not f.passed
         print(f"  qa {src.name}: {'PASS' if f.passed else 'FAIL'}" + (f" ({'; '.join(bad)})" if bad else "")

@@ -27,7 +27,8 @@ from .visual_media import (ASPECTS, PROCESSED, _frame, _video, _video_seconds, c
                            crop_window, is_transparent, out_size, process)
 
 FILE = "visual-assets.json"
-GENERATED = "assets/generated"     # uploads (drop/A012.png is moved here by ingest)
+UPLOADS = "assets/originals"       # files the USER gave (drop/A012.png is moved here by ingest); never deleted
+CLAUDE_OUT = "work/generated"      # files Claude made or downloaded (Kaggle images); deleted after processing
 ID_FILE = re.compile(r"^(a\d{3,4})(?:[_\-. ].*)?$", re.I)
 DONE = {"validated"}
 FOUND = {"found_online", "found_local", "uploaded", "processed", "validated"}
@@ -186,11 +187,9 @@ def _next_id(va: VisualAssets) -> str:
 
 
 def find_upload(project: Path, aid: str) -> Path | None:
-    d = project / GENERATED
-    if not d.is_dir():
-        return None
-    hits = [f for f in sorted(d.iterdir()) if f.is_file() and (m := ID_FILE.match(f.stem)) and m[1].upper() == aid.upper()]
-    return hits[-1] if hits else None  # the newest name sorts last when re-uploaded as A012_v2
+    hits = [f for d in (UPLOADS, CLAUDE_OUT) if (project / d).is_dir() for f in (project / d).iterdir()
+            if f.is_file() and (m := ID_FILE.match(f.stem)) and m[1].upper() == aid.upper()]
+    return max(hits, key=lambda f: f.stem.lower(), default=None)  # the newest name sorts last when re-uploaded as A012_v2
 
 
 def summary(va: VisualAssets) -> dict:
@@ -288,7 +287,9 @@ def sync(va: VisualAssets, project: Path, plan: ScenePlan, root: Path, resolved:
             continue
         try:
             a.source_file = _rel(src, project)
-        except ValueError:  # e.g. _library/downloads: keep it relative to the studio root
+            claude_made = src.resolve().is_relative_to((project / CLAUDE_OUT).resolve())
+        except ValueError:
+            claude_made = False  # e.g. _library/downloads: keep it relative to the studio root
             a.source_file = "../../" + _rel(src, root)
         if credits:
             a.credits = credits
@@ -300,6 +301,9 @@ def sync(va: VisualAssets, project: Path, plan: ScenePlan, root: Path, resolved:
             a.processing.status, a.processing.log = "failed", [f"{type(e).__name__}: {e}"]
             a.status, a.validation = "failed", {"status": "fail", "checks": [f"processing failed: {e}"]}
             continue
+        if claude_made:  # only the processed file stays; a download is not the user's media
+            src.unlink(missing_ok=True)
+            a.source_file = ""
         a.validation = check(a, project / a.file, scene_len)
         a.status = "failed" if a.validation["status"] == "fail" else "validated"
     va.summary = summary(va)

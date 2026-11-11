@@ -4,9 +4,10 @@ No second database: every call reads the project's JSON from disk, changes only 
 and saves through pipeline.visual (atomic write). Media work reuses pipeline.visual.process
 (crop / background removal / aspect framing / video trim); originals are never changed.
 
-- Missing asset: Upload -> stored in assets/generated/<ID>_<time>.<ext> -> processed + validated.
-- Found asset: Replace -> the new file is a *candidate* (assets/generated/pending/) with a processed
-  preview (assets/processed/pending/); the current file stays until Confirm passes validation.
+- Missing asset: Upload -> stored in assets/originals/<ID>_<time>.<ext> -> processed into assets/<ID>.<ext> + validated.
+- Found asset: Replace -> the new file is a *candidate* (work/pending/up/) with a processed
+  preview (work/pending/out/); the current file stays until Confirm passes validation (the old
+  version goes to work/replaced/, the upload to assets/originals/).
 - Media settings (aspect, fill/fit, crop focus, zoom, video trim) re-process from the original
   upload into a new processed file. Every change is appended to the asset's `history`.
 """
@@ -31,8 +32,8 @@ IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 VIDEO_EXT = {".mp4", ".mov", ".webm"}
 MAX_IMAGE = 50 * 2**20     # 50 MB
 MAX_VIDEO = 1024 * 2**20   # 1 GB
-PENDING_UP = visual.GENERATED + "/pending"
-PENDING_OUT = visual.PROCESSED + "/pending"
+PENDING_UP = "work/pending/up"
+PENDING_OUT = "work/pending/out"
 _lock = threading.Lock()   # one writer at a time (the JSON is small, writes are rare)
 
 
@@ -276,7 +277,7 @@ def upload(pid: str, aid: str, filename: str, data: bytes, replace: bool = False
                 _log(a, "replacement_preview_failed", error=str(e))
             visual.save(p, va)
             return {"asset": view(a, p), "counts": counts(va, p)}
-        dest = _store(p / visual.GENERATED, aid, ext, data)
+        dest = _store(p / visual.UPLOADS, aid, ext, data)
         # the newest upload for this id wins in visual.find_upload; reset so sync processes it
         a.status, a.file, a.source_file = "needed", "", ""
         a.processing.status, a.processing.log = "pending", []
@@ -291,20 +292,26 @@ def upload(pid: str, aid: str, filename: str, data: bytes, replace: bool = False
 
 def _promote(a, p: Path, candidate: Path, source_rel: str, action: str) -> None:
     """Validate `candidate`; only then move it over the asset's processed file (the old one is kept
-    as <file>.v<n> next to it) and point the asset at the new source."""
+    in work/replaced/) and point the asset at the new source (a pending upload moves to assets/originals)."""
     scene_len = a.media.duration_required or max((t["end"] - t["start"] for t in a.timestamps), default=0)
     v = visual.check(a, candidate, scene_len)
     if v["status"] == "fail":
         raise Invalid("not applied, the new version fails validation: " + "; ".join(v["checks"]))
     final = p / visual.PROCESSED / f"{a.id}{candidate.suffix.lower()}"
     if a.file and (p / a.file).exists():
-        n = sum(1 for h in a.history if h.get("action") in ("replaced", "media_changed")) + 1
         old = p / a.file
-        keep = old.with_name(f"{old.stem}.v{n}{old.suffix}")
+        stamp = f"{datetime.now():%Y%m%d%H%M%S}"
+        keep = p / "work" / "replaced" / f"{old.stem}_{stamp}{old.suffix}"
+        keep.parent.mkdir(parents=True, exist_ok=True)
         if not keep.exists():
             shutil.copy2(old, keep)
     final.parent.mkdir(parents=True, exist_ok=True)
     os.replace(candidate, final)
+    if source_rel.startswith(PENDING_UP + "/") and (p / source_rel).exists():
+        kept = p / visual.UPLOADS / Path(source_rel).name
+        kept.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(p / source_rel, kept)
+        source_rel = kept.relative_to(p).as_posix()
     a.file, a.source_file = final.relative_to(p).as_posix(), source_rel
     a.status, a.validation = "validated", v
     a.processing.status = "done"
@@ -373,9 +380,9 @@ def save_media(pid: str, aid: str, settings: dict) -> dict:
         _log(a, "media_settings", **{k: getattr(m, k) for k in sorted(MEDIA_KEYS)})
         if a.pending_file and (p / a.pending_file).exists():
             _preview_candidate(a, p)
-        elif a.source_file and (p / a.source_file).exists():
+        elif (src := a.source_file or a.file) and (p / src).exists():  # a Claude-made image keeps no original
             tmp_dir = p / PENDING_OUT / "edit"
-            out, plog = visual.process(a, p / a.source_file, p, visual.rembg_remover(), dest_dir=tmp_dir)
+            out, plog = visual.process(a, p / src, p, visual.rembg_remover(), dest_dir=tmp_dir)
             a.processing.log = plog
             _promote(a, p, out, a.source_file, "media_changed")
         else:

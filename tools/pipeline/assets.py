@@ -1,6 +1,6 @@
 """Asset index: every project / library image or video is described ONCE, cached by content hash.
 
-`assets/index.json` (project) and `_library/index.json`. A new or changed file gets a thumbnail
+`work/assets_index.json` (project) and `_library/index.json`. A new or changed file gets a thumbnail
 (first frame for videos) and an empty description. All undescribed files go on ONE contact sheet;
 Claude reads that single image and fills `description` in the index (run exits 2 until done).
 Files named `scene_NNN*` were generated for a scene and need no description.
@@ -8,6 +8,7 @@ Files named `scene_NNN*` were generated for a scene and need no description.
 import hashlib
 import html
 import json
+import os
 import re
 import subprocess
 from collections.abc import Callable
@@ -15,7 +16,7 @@ from pathlib import Path
 
 from .chrome import screenshot
 from .contracts import AssetEntry, AssetIndex
-from .ingest import IMAGE, VIDEO
+from .ingest import ASSET_ID, IMAGE, VIDEO
 from .project import atomic_write
 
 THUMBS = ".thumbs"
@@ -24,11 +25,21 @@ COLS, TILE_W = 5, 340
 SHEET_MAX = 20  # tiles per contact sheet; more files = one more sheet per run
 
 
+def thumbs_dir(base: Path) -> Path:
+    """A project's thumbnails live in work/thumbs (assets/ holds only media); the library keeps its own."""
+    return base.parent / "work" / "thumbs" if base.name == "assets" else base / THUMBS
+
+
+def index_path(base: Path) -> Path:
+    return base.parent / "work" / "assets_index.json" if base.name == "assets" else base / "index.json"
+
+
 def media_files(base: Path) -> list[Path]:
     # raw_footage originals are indexed as their cut shots (assets/shots, shots stage) instead;
-    # generated/processed belong to visual-assets.json, which already describes them
+    # A012.png / A012_x.png belong to visual-assets.json, which already describes them
     return sorted(p for p in base.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE | VIDEO
-                  and not {THUMBS, "raw_footage", "generated", "processed"} & set(p.relative_to(base).parts[:-1]))
+                  and not {THUMBS, "raw_footage"} & set(p.relative_to(base).parts[:-1])
+                  and not ASSET_ID.match(p.stem.lower()))
 
 
 def file_hash(p: Path) -> str:
@@ -89,11 +100,11 @@ def update(base: Path, index_path: Path, probe: Callable[[Path], dict] = probe,
             fresh[h] = idx.assets[h].model_copy(update={"file": rel, "size": st.st_size,
                                                         "mtime_ns": st.st_mtime_ns})
             continue
-        t = base / THUMBS / f"{h}.jpg"
+        t = thumbs_dir(base) / f"{h}.jpg"
         m = SCENE_FILE.match(p.stem)
         fresh[h] = AssetEntry(file=rel, kind="video" if p.suffix.lower() in VIDEO else "image",
                               size=st.st_size, mtime_ns=st.st_mtime_ns, **probe(p),
-                              thumb=t.relative_to(base).as_posix() if thumb(p, t) else "",
+                              thumb=Path(os.path.relpath(t, base)).as_posix() if thumb(p, t) else "",
                               description=f"generated for scene {int(m[1])}" if m else "")
     idx.assets = fresh
     save(index_path, idx)
@@ -117,7 +128,7 @@ body{{margin:0;padding:16px;background:#111;color:#fff;font:18px sans-serif}}
 img{{width:{TILE_W}px;height:{TILE_W * 9 // 16}px;object-fit:contain;background:#000}}
 p{{margin:4px 0 0;font-weight:700;overflow:hidden;white-space:nowrap}}</style>
 <h2 style="margin:0 0 12px">{e(title)}: {len(entries)} file(s) to describe</h2><div class="g">{tiles}</div>"""
-    out = base / THUMBS / "contact_sheet.html"
+    out = thumbs_dir(base) / "contact_sheet.html"
     atomic_write(out, page)
     rows = -(-len(entries) // COLS)
     png = out.with_suffix(".png")

@@ -29,8 +29,8 @@ def _remove_bg(img):  # fake rembg: keep the left half, clear the rest
 
 def test_sync_rules_uploads_processing_and_fallbacks(tmp_path):
     root, proj = tmp_path, tmp_path / "projects" / "01_X"
-    _png(proj / "assets" / "images" / "found.png", (1920, 1080))
-    _png(proj / visual.GENERATED / "A002_v1.png")             # user upload, opaque
+    _png(proj / "assets" / "originals" / "found.png", (1920, 1080))
+    _png(proj / visual.UPLOADS / "A002_v1.png")             # user upload, opaque
     online = _png(root / "_library" / "downloads" / "logo.png", (600, 600))
     va = VisualAssets.model_validate({"assets": [
         {"id": "A001", "name": "OpenAI logo", "category": "logo", "scenes": [1], "role": "overlay", "method": "ai_generate"},
@@ -45,19 +45,19 @@ def test_sync_rules_uploads_processing_and_fallbacks(tmp_path):
         {"id": "A006", "name": "Title", "category": "other", "scenes": [3], "method": "template"},
     ]})
     res = Resolved.model_validate({"scenes": [
-        {"id": 1, "status": "project", "asset": "projects/01_X/assets/images/found.png"},
+        {"id": 1, "status": "project", "asset": "projects/01_X/assets/originals/found.png"},
         {"id": 2, "status": "missing"}, {"id": 3, "status": "template"}]})
     calls = []
     fetch = lambda a: calls.append(a.id) or (online, {"license": "CC0", "source_url": "u", "author": "x"})  # noqa: E731
     va = visual.sync(va, proj, _plan(), root, res, fetch=fetch, remove_bg=_remove_bg, log=lambda *_: None)
     a = {x.id: x for x in va.assets}
     assert a["A001"].method == "real_logo" and a["A001"].status == "validated" and a["A001"].credits["license"] == "CC0"
-    assert a["A002"].status == "validated" and a["A002"].file == "assets/processed/A002.png"
+    assert a["A002"].status == "validated" and a["A002"].file == "assets/A002.png"
     assert "background removed (rembg)" in a["A002"].processing.log and "trimmed to the subject" in a["A002"].processing.log
     with Image.open(proj / a["A002"].file) as im:
         assert im.mode == "RGBA" and max(im.size) == 512  # trimmed to the subject, then fitted (Lanczos)
     assert a["A003"].status == "validated" and a["A003"].processing.log[0].startswith("cropped")
-    assert a["A004"].status == "validated" and a["A004"].source_file == "assets/images/found.png"
+    assert a["A004"].status == "validated" and a["A004"].source_file == "assets/originals/found.png"
     assert calls == ["A001"]  # the scene photo came from resolve's own find, no second search
     assert a["A005"].status == "prompt_ready" and a["A006"].status == "validated"
     extra = [x for x in va.assets if x.notes.startswith("added automatically")]
@@ -71,7 +71,7 @@ def test_sync_rules_uploads_processing_and_fallbacks(tmp_path):
 
 def test_transparency_is_enforced(tmp_path):
     proj = tmp_path / "p"
-    _png(proj / visual.GENERATED / "A001.png")
+    _png(proj / visual.UPLOADS / "A001.png")
     va = VisualAssets.model_validate({"assets": [{"id": "A001", "name": "s", "category": "sticker", "scenes": [1],
                                                   "role": "overlay", "output": {"transparent": True}}]})
     va = visual.sync(va, proj, _plan(), tmp_path, None, remove_bg=None, log=lambda *_: None)
@@ -150,3 +150,17 @@ def test_cutout_treatments_reach_the_scene_and_layout_js_is_bundled(tmp_path):
     js = (tmp_path / "build" / "studio.js").read_text("utf-8")
     assert js.index("window.studioLayout = function") < js.index("window.studioLayout({ S")  # layout.js first, then studio.js
     assert json.loads((tmp_path / "build" / "scene.json").read_text("utf-8"))["overlays"][0]["backdrop"] == "rays"
+
+
+def test_claude_made_file_is_deleted_after_processing_user_upload_is_kept(tmp_path):
+    proj = tmp_path / "p"
+    _png(proj / visual.CLAUDE_OUT / "A001.png", (800, 450))   # Kaggle image
+    _png(proj / visual.UPLOADS / "A002.png", (800, 450))      # the user's own file
+    va = VisualAssets.model_validate({"assets": [
+        {"id": i, "name": i, "category": "photo", "scenes": [1], "role": "overlay"} for i in ("A001", "A002")]})
+    va = visual.sync(va, proj, _plan(), tmp_path, None, remove_bg=None, log=lambda *_: None)
+    a1, a2 = va.assets
+    assert a1.file == "assets/A001.png" and (proj / a1.file).exists()
+    assert not (proj / visual.CLAUDE_OUT / "A001.png").exists() and a1.source_file == ""
+    assert a2.file == "assets/A002.png" and (proj / visual.UPLOADS / "A002.png").exists()
+    assert a2.source_file == "assets/originals/A002.png"
