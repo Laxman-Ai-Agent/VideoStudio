@@ -21,6 +21,11 @@ def test_variation_lookup_layout_and_shared_drop(tmp_path):
         (t / "drop" / n).write_bytes(b"x")
     moved = ingest_shared(t, duration=lambda f: 0)
     assert [d.relative_to(t).as_posix() for _, d in moved] == ["assets/originals/pic.png"]
+    (t / "drop" / "01" / "Whisk Downloads").mkdir(parents=True)
+    (t / "drop" / "01" / "Whisk Downloads" / "media (1).mp4").write_bytes(b"v")
+    (t / "drop" / "_unused").mkdir()
+    (t / "drop" / "_unused" / "old.png").write_bytes(b"x")
+    assert [d.name for _, d in ingest_shared(t, duration=lambda f: 10)] == ["01_media (1).mp4"]  # nested, renamed; _unused untouched
     assert (t / "drop" / "voice.mp3").exists()                     # audio belongs to one variation: left alone
     assert "drop/pic.png" in (t / "project.md").read_text("utf-8")
 

@@ -95,15 +95,22 @@ def ingest(project: Path, duration: Callable[[Path], float] = probe_duration) ->
     return moves
 
 
+def shared_name(rel: Path) -> str:
+    """drop/01/Whisk Downloads/media (3).mp4 -> '01_media (3).mp4' (sub-folders of the drop keep their order in the name)."""
+    parts = [x for x in rel.parts[:-1] if x != "Whisk Downloads"]
+    return "_".join([*parts, rel.name])
+
+
 def ingest_shared(topic: Path, duration: Callable[[Path], float] = probe_duration) -> list[tuple[Path, Path]]:
     """A topic with variations (03_Topic/16x9, 03_Topic/9x16) has ONE drop/: its images and videos move to the
     topic's assets/originals (shared by every variation, used via `../assets/originals/...`). Audio and
     scripts stay in drop/: they belong to one variation, the user puts them in its input/."""
     d = topic / "drop"
-    files = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in IMAGE | VIDEO) if d.is_dir() else []
+    files = sorted(p for p in d.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE | VIDEO
+                   and "_unused" not in p.relative_to(d).parts) if d.is_dir() else []
     moves = []
     for src in files:
-        dest = _free_name(topic / classify(src, duration) / src.name)
+        dest = _free_name(topic / classify(src, duration) / shared_name(src.relative_to(d)))
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(src, dest)
         moves.append((src, dest))

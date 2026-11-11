@@ -1,8 +1,9 @@
 """match: pick the pictures / clips of drop/ that fit the scene plan, locally with CLIP (no Claude tokens).
 
-Every image (and the middle frame of every video) and every scene `query` (English) become vectors with
+Every image (and the first frame of every video) and every scene `query` (English) become vectors with
 CLIP (openai/clip-vit-base-patch32, ~600 MB in tools/models/huggingface, optional uv group `match`).
-For each scene the best `TOP` file(s) are listed; a file that is in nobody's list is unused and (with --apply)
+Each scene takes its best-scoring file (a file once per video, above ASSIGN_MIN; scenes with an `entity` param are
+skipped, their real photo is fetched); a file no scene took is unused and (with --apply)
 MOVED to drop/_unused/, never deleted. The report is short text: `scene 23 -> media (7).mp4 0.31`.
 Embeddings are cached by file hash in <topic>/work/clip_cache.json, so a rerun only embeds new files.
 """
@@ -12,7 +13,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from .cull import UNUSED, files, video_frame
-from .ingest import VIDEO
+from .ingest import VIDEO, shared_name
 
 MODEL = "openai/clip-vit-base-patch32"
 TOP = 1           # files kept per scene (raise to keep alternatives)
@@ -32,6 +33,22 @@ def rank(files_: dict[str, list[float]], scenes: dict[int, list[float]], top: in
         best[sid] = [(f, round(s, 3)) for s, f in scored]
         used.update(f for s, f in scored if s >= floor)
     return best, sorted(f for f in files_ if f not in used)
+
+
+ASSIGN_MIN = 0.21  # a scene takes a file only above this score (matches measured 0.21-0.33); else it gets a generated image
+
+
+def assign(scores: dict[str, dict[str, float]], floor: float = ASSIGN_MIN) -> dict[str, tuple[str, float]]:
+    """One file per scene, best score first, a file once per video: {"16x9:3": {"a.jpg": 0.3, ...}} -> {"16x9:3": ("a.jpg", 0.3)}.
+    The part of the key before ':' is the video (variation); two videos may share a file."""
+    pairs = sorted(((s, k, f) for k, d in scores.items() for f, s in d.items() if s >= floor), reverse=True)
+    out, taken = {}, set()
+    for s, k, f in pairs:
+        video = k.split(":")[0]
+        if k not in out and (video, f) not in taken:
+            out[k] = (f, round(s, 3))
+            taken.add((video, f))
+    return out
 
 
 def load_clip():
@@ -83,7 +100,7 @@ def queries(topic: Path) -> dict[str, str]:
         f = w / "work" / "scenes.json"
         if f.exists():
             for s in json.loads(f.read_text("utf-8"))["scenes"]:
-                if s.get("query") and s.get("visual_type") in ("photo", "footage", "motion_graphic", "diagram"):
+                if s.get("query") and not (s.get("params") or {}).get("entity") and s.get("visual_type") in ("photo", "footage"):
                     out[f"{w.name}:{s['id']}" if w != topic else str(s["id"])] = s["query"]
     return out
 
@@ -96,9 +113,11 @@ def match(topic: Path, apply: bool = False, clip=load_clip, log=print) -> dict:
     drop = topic / "drop"
     vecs = embed_files(drop, topic / "work" / "clip_cache.json", images)
     keys = list(qs)
-    best, unused = rank(vecs, dict(zip(keys, texts([qs[k] for k in keys]))))
+    qv = dict(zip(keys, texts([qs[k] for k in keys])))
+    chosen = assign({k: {f: dot(v, qv[k]) for f, v in vecs.items()} for k in keys})
+    unused = sorted(set(vecs) - {f for f, _ in chosen.values()})  # no scene took it
     for k in keys:
-        log(f"  scene {k}: " + ", ".join(f"{f} {s}" for f, s in best[k]) + f"   [{qs[k][:60]}]")
+        log(f"  scene {k}: " + (f"{chosen[k][0]} {chosen[k][1]}" if k in chosen else "no file fits -> generate") + f"   [{qs[k][:60]}]")
     log(f"  {len(vecs) - len(unused)} files fit a scene, {len(unused)} {'moved to' if apply else 'for'} drop/{UNUSED}/")
     for f in unused:
         log(f"  {'moved' if apply else 'unused'}: {f}")
@@ -106,4 +125,9 @@ def match(topic: Path, apply: bool = False, clip=load_clip, log=print) -> dict:
             dest = drop / UNUSED / f
             dest.parent.mkdir(parents=True, exist_ok=True)
             (drop / f).replace(dest)
-    return {"best": best, "unused": unused}
+    # work/match.json: scene -> the file name it will have after ingest (topic/assets/originals), for make_scenes.py
+    (topic / "work").mkdir(exist_ok=True)
+    (topic / "work" / "match.json").write_text(json.dumps(
+        {k: [{"file": "assets/originals/" + shared_name(Path(f)), "score": s}] for k, (f, s) in chosen.items()},
+        indent=1), "utf-8")
+    return {"best": chosen, "unused": unused}

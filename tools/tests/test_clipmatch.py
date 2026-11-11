@@ -26,7 +26,14 @@ def test_match_moves_unused_files_never_deletes_and_caches_embeddings(tmp_path):
     images = lambda imgs: calls.append(len(imgs)) or [[1.0, 0.0] if im.getpixel((0, 0))[0] > 200 else [0.0, 1.0] for im in imgs]  # noqa: E731
     texts = lambda t: [[1.0, 0.0] for _ in t]  # noqa: E731
     out = clipmatch.match(topic, apply=True, clip=lambda: (images, texts), log=lambda *_: None)
-    assert out["best"]["16x9:1"][0][0] == "laser.png" and out["unused"] == ["cat.png"]
+    assert out["best"]["16x9:1"][0] == "laser.png" and out["unused"] == ["cat.png"]
     assert (topic / "drop" / "laser.png").exists() and (topic / "drop" / "_unused" / "cat.png").exists()
     clipmatch.match(topic, clip=lambda: (images, texts), log=lambda *_: None)
     assert calls == [2]  # the second run embeds nothing: cached by file hash
+
+
+def test_assign_gives_each_scene_one_file_and_a_file_once_per_video():
+    scores = {"16x9:1": {"a": 0.30, "b": 0.25}, "16x9:2": {"a": 0.28, "b": 0.22}, "16x9:3": {"a": 0.10, "b": 0.12},
+              "9x16:1": {"a": 0.29}}
+    got = clipmatch.assign(scores)
+    assert got == {"16x9:1": ("a", 0.3), "16x9:2": ("b", 0.22), "9x16:1": ("a", 0.29)}  # 16x9:3 fits nothing
