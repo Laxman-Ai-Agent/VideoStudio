@@ -1,0 +1,4 @@
+{"name": "wl_s04_grid", "version": 1, "engine": "hyperframes", "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 03_Wireless_Power 16x9 seq 04 (35-48 s); reuse only when the user asks", "kit": "wireless_kit",
+            "images": "poles_clip, towers_clip, substation, room_tv, factory_clip, snapped (params.names; clips + _v)", "beats": "wires home factory infra cost damage danger"},
+ "description": "Poles clip opens as a 21:9 strip, Wires. Cables. rise with beams; the strip folds into a node feeding a round home card and a factory clip card; substation pillar + towers clip build the network; price tags snap on; everything turns red, the snapped line slams in, DANGER"}
