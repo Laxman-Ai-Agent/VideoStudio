@@ -110,7 +110,11 @@ def ingest_shared(topic: Path, duration: Callable[[Path], float] = probe_duratio
                    and "_unused" not in p.relative_to(d).parts) if d.is_dir() else []
     moves = []
     for src in files:
-        dest = _free_name(topic / classify(src, duration) / shared_name(src.relative_to(d)))
+        m = re.match(r"^(\d+x\d+)_(a\d{3,4}(?:[_\-. ].*)?)$", src.name, re.I)  # 16x9_A012.png: an upload for that video
+        if m and (topic / m[1]).is_dir():
+            dest = _free_name(topic / m[1] / ORIGINALS / m[2])
+        else:
+            dest = _free_name(topic / classify(src, duration) / shared_name(src.relative_to(d)))
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(src, dest)
         moves.append((src, dest))

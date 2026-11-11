@@ -23,6 +23,7 @@ from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcr
 from pipeline.ingest import AmbiguousInput, ingest, ingest_shared
 from pipeline.plan import RULES, validate, write_brief
 from pipeline.project import (atomic_write, ensure_layout, find_project, is_variation, load_state, new_project, run_stage,
+                              upload_target,
                               variations)
 
 from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
@@ -337,6 +338,9 @@ def assets_command(project: Path) -> int:
     visual-assets.json. Never renders."""
     from pipeline import visual
     from pipeline.resolve import fetch_asset
+    if is_variation(project):
+        for src, dest in ingest_shared(project.parent):
+            print(f"  ingest (shared drop): {src.name} -> {dest.relative_to(project.parent).as_posix()}")
     drop = [f for f in (project / "drop").iterdir() if f.is_file()] if (project / "drop").is_dir() else []
     if drop:
         try:
@@ -360,7 +364,8 @@ def assets_command(project: Path) -> int:
             print(f"    {a.id}  {a.category:<20} {a.status:<12} {a.name}")
         elif a.validation.get("status") == "warn":
             print(f"    {a.id}  {a.category:<20} warn         {'; '.join(a.validation.get('checks', [])[-2:])}")
-    print(f"  upload: save each file as its id (e.g. A012.png) in {project / 'drop'}, then run this again.")
+    print(f"  upload: save each file as {upload_target(project, 'A012.png').name} (its asset id) in {upload_target(project, 'x').parent}, "
+          "or upload it in the dashboard, then run this again.")
     return 0
 
 

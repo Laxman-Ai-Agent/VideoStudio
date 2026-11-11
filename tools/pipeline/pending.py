@@ -6,11 +6,13 @@ plus the steps that bring them into the timeline. The user keeps it with the pro
 """
 from pathlib import Path
 
+from .project import ref, upload_target
+
 
 def write(va, project: Path) -> Path | None:
     out = project / "output" / "images_pending.txt"
     todo = [a for a in va.assets if a.status in ("prompt_ready", "needed", "failed")]
-    num = project.name.split("_")[0]
+    num = ref(project) if "x" in project.name else project.name.split("_")[0]
     if not todo:  # keep the file (user wants the prompts to stay): list every prompt as a reference
         done = [a for a in va.assets if a.prompt.text]
         lines = [f"ALL IMAGES ARE IN: {project.name}  (nothing pending; {len(done)} prompts kept for reference/re-generation)", ""]
@@ -21,7 +23,7 @@ def write(va, project: Path) -> Path | None:
         return out
     lines = [f"PENDING IMAGES: {project.name}  ({len(todo)} of {len(va.assets)} assets have no file yet)", "",
              f"Project folder : {project}",
-             f"Put each file  : {project / 'drop'}   (name = asset id, e.g. {todo[0].id}.png)", "",
+             f"Put each file  : {upload_target(project, todo[0].id + '.png').parent}   (e.g. {upload_target(project, todo[0].id + '.png').name})", "",
              "Steps when the images exist:",
              f"  1. Kaggle (automatic): kaggle/images.cmd {num}   -> downloads them into the drop folder above",
              f"     (or generate them yourself from the prompts below and drop the files there)",
@@ -34,7 +36,7 @@ def write(va, project: Path) -> Path | None:
         o = a.output
         lines += ["", f"{a.id}  scene {', '.join(map(str, a.scenes))}  ({tm})  status: {a.status}",
                   f"  name   : {a.name}",
-                  f"  save as: {project / 'drop' / (a.id + '.' + (o.format or 'png'))}   (final size {o.width}x{o.height})",
+                  f"  save as: {upload_target(project, a.id + '.' + (o.format or 'png'))}   (final size {o.width}x{o.height})",
                   f"  tool   : {a.prompt.tool or '-'}   aspect {a.prompt.aspect_ratio or '-'}",
                   f"  prompt : {a.prompt.text or '(none yet, ask Claude to write it)'}"]
     out.parent.mkdir(parents=True, exist_ok=True)

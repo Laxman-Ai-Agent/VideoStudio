@@ -59,6 +59,12 @@ def ref(project: Path, projects_dir: Path = PROJECTS) -> str:
     return f"{project.parent.name}/{project.name}" if is_variation(project) else project.name
 
 
+def upload_target(project: Path, name: str) -> Path:
+    """Where the user drops a file for asset `name` (A012.png): the project's drop/, or for a variation the topic's
+    one drop/ with the variation in front (03_Topic/drop/16x9_A012.png), so the shared ingest knows where it goes."""
+    return project.parent / "drop" / f"{project.name}_{name}" if is_variation(project) else project / "drop" / name
+
+
 def ensure_layout(project: Path) -> None:
     for d in PROJECT_DIRS:
         if not (d == "drop" and is_variation(project)):  # one drop/ for the whole topic, in the parent

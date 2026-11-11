@@ -43,3 +43,12 @@ def test_variations_share_a_look_and_compare_with_earlier_topics(tmp_path):
         (d / "theme.json").write_text(spec, "utf-8")
     assert [n for n, _ in previous(t / "9x16")] == ["02_Old"]     # not its sibling 16x9
     assert [n for n, _ in previous(tmp_path / "04_Next")] == ["03_Topic", "02_Old"]  # a later topic sees 03's look
+
+
+def test_asset_upload_for_one_video_goes_to_that_video(tmp_path):
+    from pipeline.project import upload_target
+    t = _topic(tmp_path)
+    assert upload_target(t / "9x16", "A012.png") == t / "drop" / "9x16_A012.png"
+    (t / "drop" / "9x16_A012.png").write_bytes(b"x")
+    moved = ingest_shared(t, duration=lambda f: 0)
+    assert [d.relative_to(t).as_posix() for _, d in moved] == ["9x16/assets/originals/A012.png"]  # visual.find_upload looks there
