@@ -66,6 +66,12 @@ def test_brief_has_narration_rules_and_contract(tmp_path):
     text = out.read_text("utf-8")
     assert "AI Agents అంటే ఏమిటి?" in text and "assets/originals/openai.png" in text
     assert "last ends at 6.00" in text and "visual_type" in text
+    # sequences of written code, not stock template params (user rule 2026-11-11)
+    assert "SEQUENCES" in text and "params.code" in text and "params.beats" in text
+    assert "`rows` [{" not in text and "`meme` {" not in text
+    from pipeline.contracts import ScenePlan as SP
+    from pipeline.plan import EXAMPLE
+    assert SP.model_validate(EXAMPLE).scenes[0].params["code"]
 
 
 def test_storyboard_html_escapes_and_lists_scenes():

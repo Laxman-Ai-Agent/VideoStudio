@@ -17,9 +17,10 @@ RULES = ROOT / ".claude" / "skills" / "my-editor" / "rules.md"
 END_SLACK = 1.0  # last scene must end within this many seconds of the audio end
 
 EXAMPLE = {"schema_version": 1, "scenes": [
-    {"id": 1, "start": 0.0, "end": 3.2, "narration": "<words spoken in this scene>",
-     "visual_type": "photo", "query": "ChatGPT app open on a phone", "on_screen_text": "ChatGPT",
-     "asset": None, "notes": "slow zoom in"}]}
+    {"id": 1, "start": 0.0, "end": 14.6, "narration": "<the sentences spoken in this sequence>",
+     "visual_type": "motion_graphic", "query": "my_video_s01_hook", "on_screen_text": "", "asset": None,
+     "notes": "written sequence code", "params": {"code": "my_video_s01_hook", "kit": "my_video_kit", "transition": "cut",
+     "images": ["projects/NN/assets/originals/phone.jpg"], "beats": {"phone": 1.2, "wire": 3.4}}}]}
 
 
 def timed_lines(t: Transcript, max_words: int = 12, pause: float = 0.6) -> list[tuple[float, float, str]]:
@@ -54,14 +55,17 @@ def write_brief(project: Path, transcript: Transcript, out: Path) -> None:
 - on_screen_text: 0-4 words, ENGLISH only (highlight words; user 2026-11-10), also in `lines` / `kicker`; Telugu stays in the captions.
   Optional `params.kicker`: a small tracked label above a big title (e.g. "AI TOOLS").
   Titles mostly ONE size (whole phrase big); a small line + huge word (`lines` with m + xxl) only sometimes. `query`: concrete, searchable description of the visual (English).
-- `asset`: a path from "Assets" below when one fits, else null.
-- Cut at phrase boundaries. Aim for 2-4 s per scene.
-- One plan is rendered in every format in brand.json (16:9 and 9:16): pick visuals whose subject survives a centre crop.
-- Optional `params` (see tools/templates/*/template.json): chart `bars`/`number`/`source` (cited data only);
-  timeline `events` [{{"date", "label"}}]; map `focus` (country/state name), `pin` {{"lat", "lon", "label"}}, `from`;
-  screenshot `url` (captured automatically), `highlight` [x, y, w, h]; photo `parallax: true`; any scene `sfx`.
-  Real people / brands: `entity` (exact name, e.g. "Sam Altman", "Anthropic") fetches the photo or logo for free.
-  Template scenes: `lottie` (an emoji like "🚀") for an animated icon; `lines` (styles bold, plain, box, script, outline, `hero` = the one big word, optionally `italic`, `pill` = key phrase on a capsule; sizes s m l xl xxl; one hero word per screen), `items`, `rows` [{{"title", "items": [{{"icon": emoji, "label"}}]}}] (info card with icon tiles), `stat`, `quote` {{"text", "by", "role"}} (real quotes only), `meme` {{"lines": ["top caption", ...], "bg": "rays"|"plain"}} (sunburst + caption boxes; the person / meme overlays of the scene stand below, 1 or 2 side by side), `iso` (isometric infographic diorama: blocks, pins, flow lines, camera keys; see tools/templates/iso/template.json) for how-it-works systems, `marker`, `marks` (types circle, underline, arrow, box, tag, and `callout` {{x,y,w,h,text,side}}: circle on a thing + a label beside it), `look`.
+- `asset`: null for a written sequence (its pictures go in `params.images`).
+- Build the video as 15-20 SEQUENCES of 10-25 s (one written composition each, several sentences, elements carry
+  across beats), not one clip per sentence. Storyboard first, one line per sequence: words -> pictures -> motion -> transition.
+- STRICT (user 2026-11-11, `.claude/skills/my-editor/motion.md`): no stock templates. Each sequence gets fresh code:
+  `params.code` = a new folder `tools/templates/<video>_<sNN>_<name>/` (index.html with HTML/CSS/GSAP + template.json),
+  `params.images` = every picture / clip it shows (paths from the studio root; graded to the palette automatically),
+  `params.beats` = {{name: seconds from the sequence start}} from the word times below (visuals land on the spoken word),
+  optional `params.kit` = this video's shared motion kit folder (tokens + helpers), `params.transition: "cut"`
+  (the code makes its own transitions). Real pictures in cards of every shape, text typed on the words, heavy smooth
+  motion, little drawn 2D, no 3D. The stock templates (`lines`, `rows`, `stat`, `meme`, `iso`, ...) only when the user asks.
+- Real people / brands: `entity` (exact name) fetches the photo or logo; charts / numbers only from cited data.
 
 Example:
 ```json
@@ -88,7 +92,7 @@ QA fails a final above it). Consistent inside this video, readable always, quali
             footage/maps/data; science: diagrams/2D animation; history: archival photos/maps; mystery: atmosphere,
             dramatic light; tech: UI, diagrams, futuristic motion; never force every technique), "avoid" (what the
             earlier videos already used), "notes"}}}}.
-Then vary compositions per scene (photo `params.layout` split_text / split2 + `image2` / stack / crop, `side`, `dim`, `pan`/`zoom`, templates); no visual type 3x in a row.
+Then vary compositions per sequence (card shapes, splits, stacks, crops, chapter moves); one design system inside the video.
 Read docs/STYLE.md "Visual storytelling and motion" first: topic identity, composition per line, elements staged on
 the narration, scene-to-scene continuity (built vs not built is listed there; put wanted continuity moves in `notes`).
 
