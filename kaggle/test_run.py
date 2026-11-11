@@ -45,3 +45,8 @@ def test_every_size_fits_a_t4():
     """1024x1024 (1.05 MP) ran out of T4 memory; 1344x768 (1.03 MP) is the largest that worked."""
     from images import SIZES
     assert all(w * h <= 1344 * 768 for w, h in SIZES.values())
+
+
+def test_square_is_made_in_a_shape_that_fits_a_t4():
+    from images import SIZES
+    assert SIZES["1:1"] == SIZES["3:4"]  # 1024x1024 and 960x960 both ran out of memory; 864x1152 worked
