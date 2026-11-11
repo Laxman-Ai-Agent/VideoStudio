@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<style>
+/* written for 03_Wireless_Power hook: real pictures in cards of many shapes, text typed on the spoken words */
+#amb { position: absolute; inset: -6%; background-size: cover; background-position: center; filter: blur(calc(var(--u) * 2.4)) brightness(.35) saturate(1.2); }
+#stage { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.card { position: absolute; overflow: hidden; border-radius: calc(var(--u) * 1.6); background: #0b0f18 no-repeat;
+        box-shadow: 0 calc(var(--u) * 2.2) calc(var(--u) * 6) #000c, 0 0 0 1px #ffffff22; }
+.card.round { border-radius: 50%; }
+.card .sweep { position: absolute; inset: -40%; background: linear-gradient(105deg, transparent 40%, #ffffff40 50%, transparent 60%); transform: translateX(-120%); }
+.card .ring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 calc(var(--u) * .45) var(--accent); opacity: 0; }
+.lab { position: absolute; font: 800 calc(var(--u) * 3.1) var(--heading, sans-serif); letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
+.lab b { color: var(--accent); }
+.type { white-space: pre; }
+#kick { position: absolute; left: 7%; top: 22%; font: 700 calc(var(--u) * 3) var(--heading, sans-serif); letter-spacing: .4em; color: var(--accent); }
+#big { position: absolute; left: 7%; top: 30%; font: 900 calc(var(--u) * 14) var(--heading, sans-serif); line-height: 1; color: var(--text); overflow: hidden; padding-bottom: .08em; }
+#big span { display: inline-block; }
+#sub { position: absolute; left: 7.4%; top: 52%; font: 600 calc(var(--u) * 3.6) var(--body, sans-serif); color: var(--text2, #9fb0c8); }
+#strike { position: absolute; left: 7.2%; top: 55.2%; height: calc(var(--u) * .5); width: 0; background: var(--accent); }
+#list { position: absolute; left: 6%; bottom: 24%; font: 800 calc(var(--u) * 3.6) var(--heading, sans-serif); color: var(--text); line-height: 1.5; }
+#list div::before { content: ""; display: inline-block; width: calc(var(--u) * 1.4); height: calc(var(--u) * 1.4); margin-right: calc(var(--u) * 1.4);
+                    border-radius: 50%; background: var(--accent); vertical-align: middle; }
+#slam { position: absolute; left: 0; right: 0; top: 7%; text-align: center; font: 900 calc(var(--u) * 15) var(--heading, sans-serif); color: var(--text);
+        opacity: 0; text-shadow: 0 0 calc(var(--u) * 4) var(--accent); }
+#slam em { font-style: normal; color: var(--accent); }
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+#sci { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; }
+#scit { position: absolute; left: 7%; bottom: 26%; font: 900 calc(var(--u) * 12) var(--heading, sans-serif); color: var(--text); overflow: hidden; }
+#scit span { display: inline-block; } #scit em { font-style: normal; color: var(--accent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="amb"></div>
+  <div id="stage">
+    <div class="card" id="pres"><div class="sweep"></div></div>
+    <div id="kick" class="type"></div><div id="big"><span>No Plug?</span></div><div id="sub" class="type"></div><div id="strike"></div>
+    <div class="card" id="c-tv"><div class="sweep"></div><div class="ring"></div></div><div class="lab" id="l-tv"></div>
+    <div class="card round" id="c-fan"><div class="sweep"></div><div class="ring"></div></div><div class="lab" id="l-fan"></div>
+    <div class="card" id="c-lap"><div class="sweep"></div><div class="ring"></div></div><div class="lab" id="l-lap"></div>
+    <div id="list"></div>
+    <div id="slam">No <em>Wire</em></div>
+  </div>
+  <div id="sci"></div><div id="scit"><span>Science <em>Fiction?</em></span></div>
+  <div id="flash"></div>
+</div>
+<script>
+  const S = window.SCENE, p = S.params || {}, b = p.beats || {}, W = S.w, H = S.h, D = S.duration;
+  const tl = gsap.timeline({ paused: true }), $ = (id) => document.getElementById(id), img = S.images || [];
+  const E = { in: "power3.out", pop: "back.out(1.6)", out: "power2.in" };  // this video's motion tokens
+  const url = (i) => img[i] ? `url("${img[i]}")` : "none";
+  $("amb").style.backgroundImage = url(1); $("pres").style.backgroundImage = url(0); $("sci").style.backgroundImage = url(2);
+  $("pres").style.backgroundSize = "cover"; $("pres").style.backgroundPosition = "50% 20%";
+  const box = (el, x, y, w, h) => Object.assign(el.style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px" });
+  // a card shows one object of the room picture: focus point + zoom, cropped to the card's own shape
+  const crop = (el, [cx, cy, z], w, h, ar = 1408 / 768) => { const dw = w * z, dh = dw / ar;
+    Object.assign(el.style, { backgroundImage: url(1), backgroundSize: `${dw}px ${dh}px`,
+      backgroundPosition: `${w / 2 - cx * dw}px ${h / 2 - cy * dh}px` }); };
+  const typeOn = (el, text, at, cps = 22) => { const o = { n: 0 };
+    tl.to(o, { n: text.length, duration: text.length / cps, ease: "none", onUpdate: () => { el.textContent = text.slice(0, Math.round(o.n)); } }, at); };
+  const sweep = (sel, at) => tl.fromTo(`${sel} .sweep`, { xPercent: -120 }, { xPercent: 120, duration: 0.9, ease: "power2.inOut" }, at);
+  const cr = p.crops || {};
+
+  // ambience + a camera that never stops
+  tl.fromTo("#amb", { scale: 1.12, x: 0 }, { scale: 1.02, x: -W * 0.02, duration: D, ease: "sine.inOut" }, 0);
+  tl.fromTo("#stage", { scale: 1 }, { scale: 1.04, duration: 8.6, ease: "sine.inOut" }, 0);
+
+  // A. presenter pillar (9:16) + "No Plug?" typed on the words
+  const ph = H * 0.8, pw = ph * 0.62; box($("pres"), W * 0.6, H * 0.1, pw, ph);
+  tl.fromTo("#pres", { x: W * 0.25, rotation: 6, scale: 0.9, opacity: 0 }, { x: 0, rotation: 0, scale: 1, opacity: 1, duration: 0.9, ease: E.in }, 0.1);
+  sweep("#pres", 0.9);
+  typeOn($("kick"), "IMAGINE", 0.25, 16);
+  tl.fromTo("#big span", { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: E.in }, b.plug ?? 2.2);
+  typeOn($("sub"), "Charging. No cable.", (b.plug ?? 2.2) + 0.7, 24);
+  tl.fromTo("#strike", { width: 0 }, { width: W * 0.08, duration: 0.3, ease: E.in }, (b.plug ?? 2.2) + 1.35);
+
+  // A -> B: the text leaves upward, the presenter steps back into a small corner card (continuity, one focal point)
+  const tB = (b.tv ?? 4.0) - 0.35;
+  tl.to("#kick, #big, #sub, #strike", { y: -H * 0.08, opacity: 0, duration: 0.4, ease: E.out, stagger: 0.04 }, tB);
+  tl.to("#pres", { x: -W * 0.56, y: H * 0.5, scale: 0.34, transformOrigin: "0% 0%", duration: 0.7, ease: "power3.inOut" }, tB);
+
+  // B. TV (16:9), fan (circle), laptop (4:3): each arrives on its word, the list types under it
+  const tvw = W * 0.34, tvh = tvw * 9 / 16, fd = W * 0.2, lw = W * 0.24, lh = lw * 3 / 4, top = H * 0.2;
+  box($("c-tv"), W * 0.06, top, tvw, tvh); crop($("c-tv"), cr.tv || [0.5, 0.47, 3.2], tvw, tvh);
+  box($("c-fan"), W * 0.44, top + (tvh - fd) / 2, fd, fd); crop($("c-fan"), cr.fan || [0.53, 0.18, 2.6], fd, fd);
+  box($("c-lap"), W * 0.7, top + (tvh - lh) / 2, lw, lh); crop($("c-lap"), cr.laptop || [0.49, 0.72, 5], lw, lh);
+  [["#l-tv", W * 0.06, "TV"], ["#l-fan", W * 0.44, "Fan"], ["#l-lap", W * 0.7, "Laptop"]].forEach(([s, x, t]) => {
+    Object.assign(document.querySelector(s).style, { left: x + "px", top: (top + tvh + H * 0.03) + "px" }); document.querySelector(s).innerHTML = `<b>${t}</b>`; });
+  const arrive = (c, l, t, from) => { tl.fromTo(c, from, { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1, duration: 0.7, ease: E.pop }, t);
+    tl.fromTo(l, { y: H * 0.03, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: E.in }, t + 0.15); sweep(c, t + 0.45); };
+  arrive("#c-tv", "#l-tv", b.tv ?? 4.0, { y: H * 0.3, rotation: -4, opacity: 0 });
+  arrive("#c-fan", "#l-fan", b.fan ?? 4.8, { scale: 0.3, rotation: -90, opacity: 0 });
+  arrive("#c-lap", "#l-lap", b.laptop ?? 5.5, { x: W * 0.2, rotation: 5, opacity: 0 });
+  tl.to("#c-tv, #l-tv", { opacity: 0.55, duration: 0.4 }, (b.fan ?? 4.8) + 0.1);       // the previous card steps back
+  tl.to("#c-fan, #l-fan", { opacity: 0.55, duration: 0.4 }, (b.laptop ?? 5.5) + 0.1);
+  [["TV", b.tv ?? 4.0], ["Fan", b.fan ?? 4.8], ["Laptop", b.laptop ?? 5.5]].forEach(([t, at]) => {
+    const d = document.createElement("div"); d.className = "type"; $("list").append(d); typeOn(d, t, at + 0.1, 18); });
+
+  // C. "No Wire": every card lights up (powered through the air), the title slams in with a flash and a shake
+  const tw = (b.wire ?? 7.2) - 0.1;
+  tl.to("#c-tv, #l-tv, #c-fan, #l-fan", { opacity: 1, duration: 0.3 }, tw);
+  tl.fromTo(".ring", { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.08 }, tw);
+  tl.fromTo("#slam", { scale: 2.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.32, ease: "power4.in" }, tw);
+  tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.4, duration: 0.06, yoyo: true, repeat: 1 }, tw + 0.3);
+  tl.fromTo("#stage", { x: -6 }, { x: 6, duration: 0.05, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, tw + 0.3);
+  ["#c-tv", "#c-fan", "#c-lap"].forEach((c, i) => sweep(c, tw + 0.5 + i * 0.12));
+
+  // D. zoom-through into the sci-fi picture, its title revealed on "science fiction"
+  const tz = (b.scifi ?? 9.6) - 0.7;
+  tl.to("#stage", { scale: 2.4, opacity: 0, duration: 0.7, ease: "power3.in" }, tz);
+  tl.fromTo("#sci", { scale: 1.5, opacity: 0 }, { scale: 1.06, opacity: 1, duration: 0.9, ease: E.in }, tz + 0.25);
+  tl.to("#sci", { scale: 1, duration: D - tz - 1.1, ease: "none" }, tz + 1.15);
+  tl.fromTo("#scit span", { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: E.in }, b.scifi ?? 9.6);
+  finish(tl);
+</script></body></html>

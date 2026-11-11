@@ -1,0 +1,7 @@
+{"name": "wireless_intro", "version": 1, "engine": "hyperframes",
+ "visual_types": ["photo", "motion_graphic"],
+ "params": {"code": "wireless_intro: written for 03_Wireless_Power, scenes 1-4 hook (0-11 s); reuse only when the user asks",
+            "images": "[presenter cut-out, room picture, sci-fi picture] from the studio root",
+            "beats": "{\"plug\", \"tv\", \"fan\", \"laptop\", \"wire\", \"scifi\"} seconds from the scene start",
+            "crops": "{\"tv\": [cx, cy, zoom], \"fan\": [...], \"laptop\": [...]} focus point (0-1) and zoom inside the room picture"},
+ "description": "Hook: presenter pillar card + No Plug? type-on; TV / fan / laptop cards of different shapes cropped from one real picture arrive on their words with a growing typed list; No Wire slam; zoom-through into the sci-fi picture"}
