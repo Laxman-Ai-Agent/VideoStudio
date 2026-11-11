@@ -39,6 +39,11 @@ def test_plan_contract_rejects(scenes, msg):
         ScenePlan(scenes=scenes)
 
 
+def test_written_sequences_may_share_a_visual_type():
+    seq = [{**_scene(i, i - 1, i, "motion_graphic"), "params": {"code": f"seq{i}"}} for i in (1, 2, 3)]
+    assert len(ScenePlan(scenes=seq).scenes) == 3
+
+
 def test_validate_checks_audio_length(tmp_path):
     f = tmp_path / "scenes.json"
     f.write_text(json.dumps({"scenes": [_scene(1, 0, 3), _scene(2, 3, 6, "chart")]}), "utf-8")

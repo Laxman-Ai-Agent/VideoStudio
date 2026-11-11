@@ -87,7 +87,8 @@ class ScenePlan(BaseModel):
             if abs(b.start - a.end) > GAP:
                 raise ValueError(f"scene {b.id} must start where scene {a.id} ends ({a.end})")
         for a, b, c in zip(s, s[1:], s[2:]):
-            if a.visual_type == b.visual_type == c.visual_type:
+            written = all(x.params.get("code") for x in (a, b, c))  # each written sequence is its own design (motion.md)
+            if a.visual_type == b.visual_type == c.visual_type and not written:
                 raise ValueError(f"scenes {a.id}-{c.id}: same visual type 3 times in a row")
         return self
 
