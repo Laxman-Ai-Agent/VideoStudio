@@ -4,24 +4,24 @@
 <style>
 /* written for 03_Wireless_Power: TV, fan and laptop drawn in code; pictures on their screens; cables snap with sparks */
 #cam { position: absolute; inset: 0; transform-origin: 50% 55%; }
-#row { position: absolute; left: 6%; right: 6%; top: 16%; height: 52%; display: flex; align-items: flex-end;
+#row { position: absolute; left: 3%; right: 3%; top: 14%; height: 56%; display: flex; align-items: flex-end;
        justify-content: space-around; }
 .portrait #row { top: 12%; height: 58%; flex-direction: column; align-items: center; justify-content: space-around; }
 .dev { position: relative; display: flex; flex-direction: column; align-items: center; }
-.lab { margin-top: calc(var(--u) * 1.6); font: 800 calc(var(--u) * 3.4) var(--heading, sans-serif); color: var(--text);
+.lab { margin-top: calc(var(--u) * 1.6); font: 800 calc(var(--u) * 4.2) var(--heading, sans-serif); color: var(--text);
        letter-spacing: .08em; text-transform: uppercase; }
 .lab b { color: var(--accent); }
 /* TV */
-.tv { width: calc(var(--u) * 46); aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1.2); background: #05070c;
+.tv { width: calc(var(--u) * 66); aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1.2); background: #05070c;
       border: calc(var(--u) * .9) solid #1d2433; box-shadow: 0 0 0 2px #2d3648, 0 calc(var(--u) * 2) calc(var(--u) * 5) #0009; overflow: hidden; position: relative; }
 .stand { width: calc(var(--u) * 14); height: calc(var(--u) * 2.4); background: #1d2433; border-radius: 0 0 calc(var(--u)) calc(var(--u)); }
 .scr { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; }
 .scr::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, #fff2 0 18%, transparent 30%); }
 .glow { position: absolute; inset: -30%; background: radial-gradient(circle, var(--accent) 0, transparent 60%); opacity: 0; filter: blur(calc(var(--u) * 3)); z-index: -1; }
 /* fan */
-.fan { width: calc(var(--u) * 30); height: calc(var(--u) * 34); }
+.fan { width: calc(var(--u) * 40); height: calc(var(--u) * 46); }
 /* laptop */
-.lap { position: relative; width: calc(var(--u) * 40); perspective: calc(var(--u) * 80); }
+.lap { position: relative; width: calc(var(--u) * 58); perspective: calc(var(--u) * 80); }
 .lid { width: 100%; aspect-ratio: 16 / 10; border-radius: calc(var(--u) * 1) calc(var(--u) * 1) 0 0; background: #05070c;
        border: calc(var(--u) * .8) solid #1d2433; transform-origin: 50% 100%; overflow: hidden; position: relative; }
 .base { width: 116%; margin-left: -8%; height: calc(var(--u) * 2.2); background: linear-gradient(#2d3648, #141a26);
@@ -42,7 +42,7 @@ svg.cables { position: absolute; inset: 0; width: 100%; height: 100%; overflow: 
       <div class="dev" id="d-tv"><div class="glow"></div><div class="tv"><div class="scr" id="s-tv"></div></div><div class="stand"></div><div class="lab"><b>TV</b></div></div>
       <div class="dev" id="d-fan"><div class="glow"></div>
         <svg class="fan" viewBox="0 0 100 114"><g id="blades" style="transform-origin:50px 42px">
-          <path d="M50 42 C40 10, 62 6, 56 36Z" fill="#c8d3e6"/><path d="M50 42 C80 40, 78 66, 54 48Z" fill="#c8d3e6"/><path d="M50 42 C30 70, 12 52, 44 46Z" fill="#c8d3e6"/></g>
+          <ellipse cx="50" cy="21" rx="9" ry="19" fill="#c8d3e6"/><ellipse cx="50" cy="21" rx="9" ry="19" fill="#c8d3e6" transform="rotate(120 50 42)"/><ellipse cx="50" cy="21" rx="9" ry="19" fill="#c8d3e6" transform="rotate(240 50 42)"/></g>
           <circle cx="50" cy="42" r="38" fill="none" stroke="#3a4458" stroke-width="3"/><circle cx="50" cy="42" r="6" fill="var(--accent)"/>
           <rect x="47" y="80" width="6" height="22" fill="#2d3648"/><rect x="30" y="102" width="40" height="7" rx="3" fill="#2d3648"/></svg>
         <div class="lab"><b>Fan</b></div></div>
@@ -88,15 +88,15 @@ svg.cables { position: absolute; inset: 0; width: 100%; height: 100%; overflow: 
     // canvas sparks: deterministic (seeded) so every rendered frame is the same on a re-render
     const cv = $("fx"), cx = cv.getContext("2d"); cv.width = S.w; cv.height = S.h;
     let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    const parts = plugs.flatMap((pl) => Array.from({ length: 46 }, () => ({ x: pl.x, y: pl.y, a: rnd() * Math.PI * 2,
-      v: (0.25 + rnd()) * S.h * 0.35, life: 0.35 + rnd() * 0.5, d: pl.delay })));
+    const parts = plugs.flatMap((pl) => Array.from({ length: 90 }, () => ({ x: pl.x, y: pl.y, a: rnd() * Math.PI * 2,
+      v: (0.35 + rnd()) * S.h * 0.55, life: 0.45 + rnd() * 0.6, d: pl.delay })));
     const st = { t: 0 }, accent = getComputedStyle(document.documentElement).getPropertyValue("--accent") || "#FFB21A";
     tl.to(st, { t: 1.6, duration: 1.6, ease: "none", onUpdate: () => {
       cx.clearRect(0, 0, S.w, S.h); cx.globalCompositeOperation = "lighter";
       parts.forEach((q) => { const t = st.t - q.d; if (t < 0 || t > q.life) return; const k = 1 - t / q.life;
         const x = q.x + Math.cos(q.a) * q.v * t, y = q.y + Math.sin(q.a) * q.v * t + 900 * t * t;
-        cx.strokeStyle = `rgba(255,${180 + 60 * k | 0},${60 * k | 0},${k})`; cx.lineWidth = 2 + 2 * k;
-        cx.beginPath(); cx.moveTo(x, y); cx.lineTo(x - Math.cos(q.a) * 14 * k, y - Math.sin(q.a) * 14 * k + 6); cx.stroke(); });
+        cx.strokeStyle = `rgba(255,${180 + 60 * k | 0},${60 * k | 0},${k})`; cx.lineWidth = 3 + 4 * k;
+        cx.beginPath(); cx.moveTo(x, y); cx.lineTo(x - Math.cos(q.a) * 34 * k, y - Math.sin(q.a) * 34 * k + 8); cx.stroke(); });
       if (st.t >= 1.6) cx.clearRect(0, 0, S.w, S.h); } }, t0);
     plugs.forEach((pl) => tl.to(pl.low, { y: S.h * 0.5, rotation: 18, opacity: 0, transformOrigin: "50% 0%", duration: 0.7, ease: "power2.in" }, t0 + pl.delay + 0.05));
     tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.55, duration: 0.06, yoyo: true, repeat: 1 }, t0);
