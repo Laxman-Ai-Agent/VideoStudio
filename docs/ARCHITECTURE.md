@@ -97,16 +97,23 @@ Each asset is analysed once and its description is cached in `index.json`, keyed
 All caches are redirected to `E:\VideoStudio\tools\.cache` and `tools\models` via env vars set in `tools/pipeline/config.py` (HF_HOME, uv, pip, npm, HyperFrames cache/extract/fonts, TEMP). `studio doctor` verifies this.
 
 ## Project layout
+Simple on purpose: one file per asset, no duplicates, no empty folders (created when the first file is written).
 ```
 projects/NN_Name/
-  drop/        user puts everything here (mixed)
-  input/       audio, optional script/json (sorted by ingest)
-  assets/      images, videos, screenshots, logos, raw_footage, index.json
-  visual-assets.json   every visual the video needs, prompts, statuses (one file)
-  work/        state.json, whisper.json, transcript.json, plan_brief.md, scenes.json, storyboard.png, scenes/<format>/, logs/
-  output/      preview_16x9.mp4, preview_9x16.mp4, final_16x9.mp4, final_9x16.mp4, thumbnail.jpg, description.txt, credits.txt
-  project.md   human log
+  drop/        user puts everything here; a file used from drop LEAVES drop (moved by ingest)
+  input/       audio, script / Gemini JSON (never deleted); input/voice/ = voice.cmd outputs
+  assets/      ONE file per used asset (A001.png ...), scene_NNN.png captures, shots/ (cut clips)
+    originals/ files the USER gave by hand (dashboard upload or drop), never deleted; raw_footage/ = long videos
+  scripts/     per-project code: make_scenes.py, make_assets.py, user_images.py
+  work/        everything the pipeline makes: state / transcript / scenes / resolved json, assets_index.json,
+               thumbs/, scenes/ + preview/ (cache), logs/, replaced/ (old versions of an asset),
+               pending/ (dashboard replace candidates), generated/ (Kaggle images, deleted after processing)
+  output/      final videos, credits.txt, script.txt (final spoken words from the corrected JSON)
+  project.md, theme.json, visual-assets.json, edits.json   settings (root)
 ```
+Files Claude downloaded or generated (work/generated, web downloads) are deleted once processed; only the
+processed `assets/A012.png` stays. Existing projects: `tools\.venv\Scripts\python.exe tools\migrate_layout.py PROJECT_DIR [--apply]`
+(report first; moves files, rewrites paths in the JSON files and the scene cache keys, deletes only exact byte duplicates and empty folders).
 
 ## Testing
 1. Unit tests for pure logic (sorting, alignment, cache keys).

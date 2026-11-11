@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-11 - Simple project folder layout (no duplicate files)
+
+- New layout (see ARCHITECTURE.md "Project layout"): `assets/` holds one processed file per asset (`A001.png`), the user's own files go to `assets/originals/` (never deleted), everything the pipeline makes is in `work/` (thumbs, asset index, replaced old versions, pending replace candidates), `input/voice/` replaces `input/converted/`, per-project code in `scripts/`, `output/script.txt` = final spoken words from the corrected JSON (`pipeline/script_out.py`, written each run).
+- Code: `config.PROJECT_DIRS` (only input, drop, work), `ingest.classify` (all media -> originals), `visual.UPLOADS / CLAUDE_OUT / find_upload` (a Claude-made file in `work/generated` is deleted after processing), `visual_media.PROCESSED`, `assets.index_path / thumbs_dir / media_files`, capture -> `assets/scene_NNN.png`, shots read `assets/originals/raw_footage`, dashboard `service.py` (pending in work/pending, old version -> work/replaced, confirmed upload -> originals), `kaggle/images.py` writes to `work/generated`.
+- `tools/migrate_layout.py`: report (default) / `--apply`; moves files, rewrites paths in visual-assets / resolved / scenes / edits / asset index, rewrites cached scene keys so nothing re-renders, deletes only exact byte duplicates and empty folders. Idempotent.
+- Tests: ingest, assets index/thumbs, visual (Claude-made file deleted), dashboard replace, script_out, migration.
+
 ## 2026-11-11 - Render popup redesigned (reference image)
 
 - Timeline render popup now follows the user's reference: header with project / scene / output size, six stat cells (progress, completed, remaining, elapsed, est. time left, estimated completion clock time), donut %, bar, a still of the newest finished scene (ffmpeg frame of its rendered clip, `GET /api/projects/<pid>/frame`), pipeline stages (Prepare, Render scenes, Join video + audio, Quality check, Finalize), recent scene activity, System status (CPU, RAM, disk of this PC), Render settings, green Done state.

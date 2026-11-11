@@ -74,6 +74,8 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         print(f"  {name}: {'done' if run_stage(p, name, inputs, outputs, fn, extra=extra) else 'up to date'}")
 
     transcript = Transcript.model_validate_json(transcript_json.read_text("utf-8"))
+    from pipeline.script_out import write_script
+    write_script(p)  # output/script.txt: the final spoken words
     scenes_json, brief = w / "scenes.json", w / "plan_brief.md"
     if not scenes_json.exists():
         write_brief(p, transcript, brief)
