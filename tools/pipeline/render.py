@@ -426,6 +426,7 @@ def render_format(jobs: list[Job], fmt: str, final: bool, workers: int = 4,
         else:
             j.out.with_suffix(".key").unlink(missing_ok=True)  # a crash mid-render must not look cached
             todo.append(j)
+    log(f"    {fmt} render: {len(todo)} of {len(jobs)} scene(s) to render")  # the dashboard's progress reads this line
 
     def one(j: Job) -> SceneRender:
         r = render_one(j, final, render)

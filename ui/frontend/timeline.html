@@ -74,6 +74,17 @@
     <div class="cbtns"><button type="button" class="cbtn red" id="err-ok">OK</button></div>
   </div>
 </div>
+<div id="rpop" class="cmodal" hidden>
+  <div class="cbox rbox" role="dialog" aria-modal="true" aria-labelledby="rp-title">
+    <div class="cicon"><svg class="spin" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1-9 9"/></svg><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h3 id="rp-title">Rendering</h3>
+    <div class="rp-clock" id="rp-time">0:00</div>
+    <p id="rp-eta"></p>
+    <div class="rp-bar"><i id="rp-prog"></i></div>
+    <p class="rp-step" id="rp-step"></p>
+    <div class="cbtns"><button type="button" class="cbtn" id="rp-ok">Hide</button></div>
+  </div>
+</div>
 <div id="rconfirm" class="cmodal" hidden>
   <div class="cbox" role="alertdialog" aria-modal="true">
     <div class="cicon"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/></svg></div>

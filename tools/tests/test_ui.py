@@ -220,7 +220,7 @@ def test_prepare_runs_review_without_render_and_keeps_render_times(tmp_path, mon
     monkeypatch.setattr(service, "_renders", {})
     monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
     s = service.start_render("02", False, review=True)
-    assert seen[0][-4:] == ["02", "--review", "--format", "16:9"] and s["review"] is True and s["state"] == "done"
+    assert seen[0][-4:] == ["02_T", "--review", "--format", "16:9"] and s["review"] is True and s["state"] == "done"
     assert not service._times(proj).exists()  # a prepare run is not a render time
 
 
@@ -235,7 +235,7 @@ def test_timeline_render_passes_the_chosen_format(tmp_path, monkeypatch):
     monkeypatch.setattr(service, "_renders", {})
     monkeypatch.setattr(subprocess, "Popen", lambda cmd, **k: seen.append(cmd) or NS(poll=lambda: 0))
     service.start_render("10", True, fmt="9:16")
-    assert seen[0][-4:] == ["10", "--final", "--format", "9:16"]
+    assert seen[0][-4:] == ["10_T", "--final", "--format", "9:16"]  # the full folder name (bug 2026-11-11: '11-AI' not found)
 
 
 def test_project_list_has_duration_and_render_state(tmp_path, monkeypatch):
@@ -291,3 +291,19 @@ def test_render_status_tells_how_long_ago_it_ended(tmp_path, monkeypatch):
     monkeypatch.setattr(service, "_renders", {"03_T": {"proc": NS(poll=lambda: 1), "final": False, "review": False, "t0": time.time() - 500, "t1": time.time() - 400}})
     r = service.render_status("03")
     assert r["state"] == "failed" and 395 <= r["ago"] <= 410
+
+
+def test_render_progress_and_eta_come_from_the_log(tmp_path, monkeypatch):
+    """Render popup: scenes done / to render, and an ETA from the time per scene once 3 are done."""
+    import time
+    from types import SimpleNamespace as NS
+    proj = tmp_path / "11-AI_long"
+    (proj / "work" / "logs").mkdir(parents=True)
+    log = "  plan: ok\n    16:9 render: 10 of 83 scene(s) to render\n" + "".join(
+        f"    16:9 scene {i:>3} photo      rendered 20s\n" for i in range(1, 6))
+    (proj / "work" / "logs" / "ui_render.log").write_text(log, "utf-8")
+    monkeypatch.setattr(service, "project_dir", lambda pid: proj)
+    monkeypatch.setattr(service, "_renders", {proj.name: {"proc": NS(poll=lambda: None), "final": True, "t0": time.time() - 100, "t1": None}})
+    st = service.render_status("11-AI")
+    assert (st["done"], st["total"]) == (5, 10) and 195 <= st["eta"] <= 205
+    assert service.progress("  plan: ok\n") == (0, 0)

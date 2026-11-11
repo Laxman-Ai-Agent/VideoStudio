@@ -13,6 +13,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Where we are
 - Photo layouts built 2026-11-11 (`params.layout` split_text | split2 | stack | crop, `dim`, `text_until`; see CHANGELOG). Used in project 11 (18 scenes, `LAYOUT` in its make_scenes.py; preview QA PASS, rendered from this branch). Cross-scene continuity still not built.
+- Timeline render popup (live clock, scenes done, ETA, green tick) + `11-AI` project-name bug fixed 2026-11-11. Restart `studio.cmd ui` after merging.
 - iso template built 2026-11-11 (`params.iso`, see CHANGELOG); 12_Dam_Iso is a 10 s demo (no voice, not a studio project).
 - Next build (agreed 2026-11-11, for future videos, not 11): images inside motion graphics. Overlay placement gets `frame` 9:16 | 1:1 | circle | rounded | mask (reveal); PNG cut-outs as today; assets brief states each overlay's aspect (9:16, 1:1, transparent PNG) so Kaggle Z-Image makes that size; STYLE "can do" + plan brief updated so plans put image slots in cards / chart / stat scenes. No SCHEMA_VERSION bump (new optional key).
 - 01 final 16:9 rendered (QA PASS, output/final_16x9.mp4). User wants 16:9 only: `--format 16:9`.

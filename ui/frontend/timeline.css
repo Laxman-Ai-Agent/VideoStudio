@@ -302,3 +302,15 @@ body[data-view="timeline"] #list .sc .scedit, body[data-view="timeline"] #list .
   background:rgba(8,10,24,.55); opacity:0; transition:opacity .18s; font-size:13px; }
 body[data-view="timeline"] #list .sc:hover .scedit { opacity:1; }
 body[data-view="timeline"] #list .sc .scedit:hover { background:rgba(124,92,255,.75); }
+/* render popup: live clock, scenes done, estimate; green tick when finished */
+.rbox { border-color:var(--line); box-shadow:0 20px 60px rgba(0,0,0,.55); }
+.rbox .cicon svg { width:46px; height:46px; fill:none; stroke:var(--accent); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+.rbox .tick { display:none; } .rbox .spin { animation:rpspin 1s linear infinite; }
+@keyframes rpspin { to { transform:rotate(360deg); } }
+.rbox.done { border-color:#1f6b3d; box-shadow:0 20px 60px rgba(0,0,0,.55), 0 0 0 4px rgba(74,222,128,.12); }
+.rbox.done .spin { display:none; } .rbox.done .tick { display:inline; stroke:#4ade80; stroke-width:3; }
+.rbox.done h3 { color:#4ade80; } .rbox.done .rp-bar i { background:#4ade80; }
+.rp-clock { font-family:Consolas, monospace; font-size:44px; font-weight:700; margin:4px 0 6px; }
+.rp-bar { height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin:10px 0 8px; }
+.rp-bar i { display:block; height:100%; width:0; background:var(--accent); transition:width .5s; }
+.rp-step { font-size:12.5px !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }

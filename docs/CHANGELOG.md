@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 - Render popup and project-name fix
+
+- Bug: Timeline Render failed in 6 s with "project not found: 11-AI": the dashboard id (folder name up to the first `_`) was passed to `studio run`, which only knows full names and numbers. `start_render` now passes the full folder name (test).
+- Render popup on the Timeline: opens on Render, live elapsed clock, "Scene N / M", estimated total and time left (time per scene so far x scenes to render once 3 are done, else the last run's time), progress bar, current log line; on success it turns green with a tick, "Render complete" and the time taken. Failures keep the red error popup. `render_format` logs "<fmt> render: N of M scene(s) to render" for the count. Checked in the browser with a fake 12 s run (port 8791).
+
 ## 2026-11-11 - iso template (isometric infographic)
 
 - New template `iso`, picked by `params.iso` (also a template param in resolve): three-tone isometric blocks (`items`: box / house / wheel, rise or fill from an `in` time), drawn flow lines with moving drops or coloured wires (`flows`), leader pins with labels (`pins`), eased camera keys with log zoom and a constant slow drift (`camera`), title top-left that leaves at `title_until`, closing `card`. The ground fills the whole frame (user: no empty margins, camera always moving). Flat decals (rivers, roads) draw under standing blocks.

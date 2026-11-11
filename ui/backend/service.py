@@ -468,12 +468,20 @@ def start_render(pid: str, final: bool, review: bool = False, fmt: str = "16:9")
     log = p / "work" / "logs" / "ui_render.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     fh = open(log, "w", encoding="utf-8")
-    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name.split("_")[0]] + (["--review"] if review else ["--final"] if final else []) + ["--format", fmt]
+    cmd = [sys.executable, str(ROOT / "tools" / "studio.py"), "run", p.name] + (["--review"] if review else ["--final"] if final else []) + ["--format", fmt]
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                             env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})
     _renders[p.name] = {"proc": proc, "final": final, "review": review, "t0": time.time(), "t1": None}
     return render_status(pid)
+
+
+def progress(log: str) -> tuple[int, int]:
+    """(scenes rendered, scenes to render) from a `studio run` log; (0, 0) before the render stage."""
+    import re
+    totals = re.findall(r"render: (\d+) of \d+ scene", log)
+    done = len(re.findall(r"^\s+\S+ scene\s+\d+ \S+\s+(?:rendered|failed)\b", log, re.M))
+    return (done, int(totals[-1])) if totals else (0, 0)
 
 
 def render_status(pid: str) -> dict:
@@ -498,6 +506,10 @@ def render_status(pid: str) -> dict:
             _times(p).write_text(json.dumps(history), "utf-8")
     state = "running" if code is None else "done" if code == 0 else "waiting" if code == 2 else "failed"
     elapsed = round((cur["t1"] or time.time()) - cur["t0"])
-    return {"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
+    done, total = progress(log.read_text("utf-8", errors="replace") if log.exists() else "")
+    last = history.get("final" if cur["final"] else "preview")
+    # ponytail: rough ETA = time per scene so far x scenes to render (stages before the render count too); the last run's time until 3 scenes are done
+    eta = round(elapsed * total / done) if done >= 3 and total else last
+    return {"done": done, "total": total, "eta": eta,"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
             "last": history.get("final" if cur["final"] else "preview"),
             "ago": round(time.time() - cur["t1"]) if cur["t1"] else 0}  # seconds since it ended: the page ignores an old failure
