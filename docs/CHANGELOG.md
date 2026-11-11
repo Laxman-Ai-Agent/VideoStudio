@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-11 - Render popup redesigned (reference image)
+
+- Timeline render popup now follows the user's reference: header with project / scene / output size, six stat cells (progress, completed, remaining, elapsed, est. time left, estimated completion clock time), donut %, bar, a still of the newest finished scene (ffmpeg frame of its rendered clip, `GET /api/projects/<pid>/frame`), pipeline stages (Prepare, Render scenes, Join video + audio, Quality check, Finalize), recent scene activity, System status (CPU, RAM, disk of this PC), Render settings, green Done state.
+- Real data only (`ui/backend/render_info.py`, log + Windows API, no new library). Left out because we have no such data: GPU meter, per-worker table, Cancel render. Overall % is a weighting (scenes 0-90, join 90-96, QA 96-99, done 100), not a measurement.
+- CSS in `timeline_render.css`. Checked in the browser with a fake 28 s run on port 8795 (the user's own dashboards sit on 8790-8792).
+
 ## 2026-11-11 - Render popup: no more "stuck" after the last scene
 
 - Bug: the popup showed "Scene 83 / 83 - almost done" for minutes after the last scene, because `studio run` still joins the clips with voice and music, runs QA, and the dashboard only knew scene counts (11 final: 83 scenes ~40 min, joining + QA ~8 min). `service.phase()` reads the log (prepare / scenes / assemble / qa), `render_status` returns it, and the popup says "All scenes rendered, joining video, voice and music..." then "final quality check...". A missed status poll now retries after 5 s instead of leaving the clock on "running". Test added.

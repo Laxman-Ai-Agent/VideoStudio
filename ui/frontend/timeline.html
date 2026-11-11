@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><title>Timeline</title>
-<link rel="stylesheet" href="timeline.css"><link rel="stylesheet" href="timeline_edit.css"><link rel="stylesheet" href="motion.css"></head><body>
+<link rel="stylesheet" href="timeline.css"><link rel="stylesheet" href="timeline_edit.css"><link rel="stylesheet" href="motion.css"><link rel="stylesheet" href="timeline_render.css"></head><body>
 <nav class="pagetabs" aria-label="Pages">
   <a class="tab" href="/#view=projects">Projects</a>
   <a class="tab" id="tab-assets" href="/">Assets</a>
@@ -75,14 +75,47 @@
   </div>
 </div>
 <div id="rpop" class="cmodal" hidden>
-  <div class="cbox rbox" role="dialog" aria-modal="true" aria-labelledby="rp-title">
-    <div class="cicon"><svg class="spin" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1-9 9"/></svg><svg class="tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-    <h3 id="rp-title">Rendering</h3>
-    <div class="rp-clock" id="rp-time">0:00</div>
-    <p id="rp-eta"></p>
-    <div class="rp-bar"><i id="rp-prog"></i></div>
-    <p class="rp-step" id="rp-step"></p>
-    <div class="cbtns"><button type="button" class="cbtn" id="rp-ok">Hide</button></div>
+  <div class="rp" role="dialog" aria-modal="true" aria-labelledby="rp-title">
+    <header class="rp-head">
+      <div class="rp-ico"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 8l2-4h4l-2 4M9 8l2-4h4l-2 4M15 8l2-4h4l-2 4"/></svg></div>
+      <div class="rp-ht"><h3 id="rp-title">Video Rendering in Progress</h3><p id="rp-sub"></p></div>
+      <button type="button" class="rp-x" id="rp-x" aria-label="Close">&times;</button>
+    </header>
+    <div class="rp-stats">
+      <div><i>Progress</i><b id="rs-prog">-</b><u>Scenes</u></div>
+      <div><i>Completed</i><b id="rs-done">-</b><u id="rs-donep"></u></div>
+      <div><i>Remaining</i><b id="rs-left">-</b><u id="rs-leftp"></u></div>
+      <div><i>Elapsed time</i><b id="rs-el">0:00</b></div>
+      <div><i>Est. time left</i><b id="rs-eta">-</b></div>
+      <div><i>Estimated completion</i><b id="rs-at">-</b></div>
+    </div>
+    <div class="rp-grid">
+      <div class="rp-col">
+        <section class="rp-main">
+          <div class="rp-donut" id="rp-donut"><span><b id="rp-pct">0%</b><u id="rp-pctl">Complete</u></span></div>
+          <div class="rp-mt">
+            <h4 id="rp-what">Rendering 1080p...</h4><p id="rp-eta"></p>
+            <div class="rp-bar"><i id="rp-prog"></i></div>
+            <div class="rp-bl"><span id="rp-b1"></span><span id="rp-b2"></span><span id="rp-b3"></span></div>
+          </div>
+          <figure class="rp-fig"><img id="rp-img" alt=""><figcaption id="rp-cap">Waiting for the first scene</figcaption></figure>
+        </section>
+        <section class="rp-box"><h5>Rendering pipeline</h5><div class="rp-stages" id="rp-stages"></div></section>
+        <section class="rp-box"><h5>Recent rendering activity</h5><ul class="rp-log" id="rp-log"></ul></section>
+      </div>
+      <div class="rp-col">
+        <section class="rp-box"><h5>System status</h5>
+          <div class="rp-m"><span>CPU</span><b id="sy-cpu">-</b><div class="rp-bar s"><i id="sy-cpub"></i></div></div>
+          <div class="rp-m"><span>Memory (RAM)</span><b id="sy-ram">-</b><div class="rp-bar s"><i id="sy-ramb"></i></div></div>
+          <div class="rp-m"><span>Disk (output)</span><b id="sy-disk">-</b><div class="rp-bar s"><i id="sy-diskb"></i></div></div>
+        </section>
+        <section class="rp-box"><h5>Render settings</h5>
+          <dl class="rp-set"><dt>Quality</dt><dd id="st-q">-</dd><dt>Ratio</dt><dd id="st-r">-</dd><dt>Format</dt><dd>H.264 (MP4)</dd><dt>Workers</dt><dd>4</dd></dl>
+        </section>
+        <p class="rp-note" id="rp-note"></p>
+      </div>
+    </div>
+    <footer class="rp-foot"><button type="button" class="rp-b" id="rp-tl">View Timeline</button><button type="button" class="rp-b main" id="rp-ok">Hide</button></footer>
   </div>
 </div>
 <div id="rconfirm" class="cmodal" hidden>

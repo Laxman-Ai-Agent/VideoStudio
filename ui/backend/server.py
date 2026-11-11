@@ -98,6 +98,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ui": ui, "data": data})
             if m := re.match(r"^/api/projects/([^/]+)/render$", path):
                 return self._json(service.render_status(m[1]))
+            if m := re.match(r"^/api/projects/([^/]+)/frame$", path):
+                q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                return self._json(service.render_frame(m[1], int(q.get("scene", ["0"])[0]), q.get("final", ["0"])[0] == "1", q.get("fmt", ["16:9"])[0]))
             if m := re.match(r"^/api/projects/([^/]+)/edits$", path):
                 return self._json(service.get_edits(m[1]))
             if m := re.match(r"^/api/projects/([^/]+)/assets$", path):

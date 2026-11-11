@@ -283,7 +283,7 @@ async function startRender() {
   const d = await r.json().catch(() => ({}));
   if (!r.ok) { showError(d.error || r.status, "Render did not start"); return; }
   popRun = true;
-  $("rpop").dataset.shown = "";
+  popDone = false; popScene = 0;
   $("rpop").hidden = false;
   showRender(d);
   renderStatus();

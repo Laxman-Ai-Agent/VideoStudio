@@ -472,7 +472,7 @@ def start_render(pid: str, final: bool, review: bool = False, fmt: str = "16:9")
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=fh, stderr=subprocess.STDOUT,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                             env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"})
-    _renders[p.name] = {"proc": proc, "final": final, "review": review, "t0": time.time(), "t1": None}
+    _renders[p.name] = {"proc": proc, "final": final, "review": review, "fmt": fmt, "t0": time.time(), "t1": None}
     return render_status(pid)
 
 
@@ -491,6 +491,16 @@ def phase(log: str) -> str:
     marks = [(m.start(), k) for k, pat in (("scenes", r"render: \d+ of"), ("assemble", r"render [\d:]+: done"),
                                            ("qa", r"assemble [\d:]+: done")) for m in re.finditer(pat, log)]
     return max(marks)[1] if marks else "prepare"
+
+
+def render_frame(pid: str, scene: int, final: bool, fmt: str) -> dict:
+    """A still of one finished scene clip for the render popup: {"frame": project-relative jpg} or "" when it is not there."""
+    from pipeline import render as rnd
+    from render_info import frame
+    p = project_dir(pid)
+    clip = p / "work" / "scenes" / rnd.fmt_dir(fmt, final) / f"scene_{int(scene):03d}.mp4"
+    dest = p / "work" / "logs" / "render_frame.jpg"
+    return {"frame": dest.relative_to(p).as_posix() if clip.exists() and frame(clip, dest) else ""}
 
 
 def render_status(pid: str) -> dict:
@@ -519,6 +529,9 @@ def render_status(pid: str) -> dict:
     last = history.get("final" if cur["final"] else "preview")
     # ponytail: rough ETA = time per scene so far x scenes to render (stages before the render count too); the last run's time until 3 scenes are done
     eta = round(elapsed * total / done) if done >= 3 and total else last
-    return {"done": done, "total": total, "eta": eta, "phase": phase(log.read_text("utf-8", errors="replace") if log.exists() else ""),"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
+    from render_info import activity, last_scene, system
+    text = log.read_text("utf-8", errors="replace") if log.exists() else ""
+    return {"fmt": cur.get("fmt", "16:9"), "last_scene": last_scene(text), "activity": activity(text),
+            "system": system(p) if state == "running" else None, "done": done, "total": total, "eta": eta, "phase": phase(log.read_text("utf-8", errors="replace") if log.exists() else ""),"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
             "last": history.get("final" if cur["final"] else "preview"),
             "ago": round(time.time() - cur["t1"]) if cur["t1"] else 0}  # seconds since it ended: the page ignores an old failure

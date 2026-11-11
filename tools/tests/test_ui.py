@@ -318,3 +318,20 @@ def test_render_phase_after_the_last_scene():
     assert service.phase(head + "  render 16:9: done (2 scenes)\n  assemble 16:9: done (music: x)\n") == "qa"
     js = (Path(service.__file__).parents[1] / "frontend" / "timeline.js").read_text("utf-8")
     assert "if (!d) { renderTimer = setTimeout(renderStatus" in js  # a failed poll retries instead of freezing "running"
+
+
+def test_render_info_reads_the_log_and_this_pc(tmp_path):
+    """Render popup facts: last finished scene, recent activity (newest first), RAM / disk of this PC; a still from a clip."""
+    import subprocess
+
+    import render_info
+    log = "    16:9 scene   4 photo      rendered 40s\n    16:9 scene   5 chart      failed 12s\n  assemble 16:9: done\n"
+    assert render_info.last_scene(log) == {"id": 5, "template": "chart", "seconds": 12}
+    assert [a["id"] for a in render_info.activity(log)] == [5, 4] and render_info.activity(log)[0]["status"] == "failed"
+    assert render_info.last_scene("  plan: ok\n") is None and render_info.activity("") == []
+    s = render_info.system(tmp_path)
+    assert s["ram_total"] > 0 and 0 <= s["cpu"] <= 100 and s["disk_free"] <= s["disk_total"]
+    clip = tmp_path / "scene_001.mp4"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=c=red:s=64x36:r=30", "-frames:v", "30", "-pix_fmt", "yuv420p", str(clip)], check=True)
+    assert render_info.frame(clip, tmp_path / "logs" / "f.jpg", at=0.2) and (tmp_path / "logs" / "f.jpg").stat().st_size > 0
+    assert not render_info.frame(tmp_path / "missing.mp4", tmp_path / "x.jpg")
