@@ -9,7 +9,7 @@
 #warn { position: absolute; inset: 0; box-shadow: inset 0 0 0 calc(var(--u) * .8) #FF5A3C, inset 0 0 calc(var(--u) * 10) #FF5A3Caa; opacity: 0; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
-  <div id="shake"><div id="stage"></div><div id="redwash"></div><div id="warn"></div></div>
+  <div id="shake"><div id="stage"></div><div id="redwash"></div><div id="warn"></div><div id="top" style="position:absolute;inset:0"></div></div>
 </div>
 <script>
   const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, slam, beam, camera, circuits, sweep } = K;
@@ -18,12 +18,12 @@
   tl.fromTo(st, { scale: 1.06 }, { scale: 1, duration: 7.4, ease: E.soft }, 0);           // slow pull-back while the grid grows
 
   // A. the poles clip opens as a 21:9 strip from its centre line; TODAY typed, WIRES + CABLES on their words
-  const sw = W * 0.86, sh = sw * 9 / 21, sx = W * 0.07, sy = H * 0.1;
+  const sw = W * 0.8, sh = sw * 9 / 24, sx = W * 0.1, sy = H * 0.08;
   const strip = card({ i: "poles_clip", video: "poles_clip_v", vstart: 0, vdur: 5.2, x: sx, y: sy, w: sw, h: sh, focus: [0.5, 0.42, 1.05] });
   tl.fromTo(strip, { clipPath: "inset(50% 0% 50% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: E.io }, 0.05);
   const k1 = place(mk("div", "kt", st), sx, sy + sh + u * 2.2); k1.style.fontSize = u * 2.6 + "px"; k1.style.color = PAL.text2;
   type(k1, "TODAY'S ELECTRICITY", 0.35, 26);
-  const big = place(mk("div", "kh", st, "Wires. <em>Cables.</em>"), sx, sy + sh + u * 6); big.style.fontSize = u * 8 + "px"; big.style.opacity = 0;
+  const big = place(mk("div", "kh", st, "Wires. <em>Cables.</em>"), sx, sy + sh + u * 5.5); big.style.fontSize = u * 7 + "px"; big.style.opacity = 0;
   rise(big, at("wires", 2.4) - 0.1, 0.35);
   beam(sx, sy + sh * 0.32, sx + sw, sy + sh * 0.28, at("wires", 2.4) + 0.1, 0.9);
   beam(sx + sw, sy + sh * 0.6, sx, sy + sh * 0.66, at("wires", 2.4) + 0.5, 0.9);
@@ -45,28 +45,28 @@
 
   // C. INFRASTRUCTURE: a substation pillar (3:4) and the towers clip slot in between; the whole network reads as one big machine
   const tI = at("infra", 7.6), pw = H * 0.3 * 3 / 4, ph = H * 0.3;
-  const sub = card({ i: "substation", x: W * 0.37, y: H * 0.42, w: pw, h: ph, focus: [0.62, 0.55, 1.6] });
-  const tw = W * 0.17, th = tw * 9 / 16, tow = card({ i: "towers_clip", video: "towers_clip_v", vstart: tI, vdur: 5, x: W * 0.37 + pw + u * 1.4, y: H * 0.47, w: tw, h: th, focus: [0.5, 0.4, 1.2] });
+  const sub = card({ i: "substation", x: W * 0.33, y: H * 0.42, w: pw, h: ph, focus: [0.62, 0.55, 1.6] });
+  const tw = W * 0.15, th = tw * 9 / 16, tow = card({ i: "towers_clip", video: "towers_clip_v", vstart: tI, vdur: 5, x: W * 0.33 + pw + u * 1.4, y: H * 0.47, w: tw, h: th, focus: [0.5, 0.4, 1.2] });
   pop(sub, tI - 0.15, { y: H * 0.3, opacity: 0 }, 0.6, E.in); pop(tow, tI + 0.05, { y: H * 0.3, opacity: 0 }, 0.6, E.in);
-  const k2 = place(mk("div", "kt", st), W * 0.37, H * 0.42 + ph + u * 1.6); k2.style.fontSize = u * 3.2 + "px";
+  const k2 = place(mk("div", "kt", st), W * 0.33, H * 0.42 + ph + u * 1.6); k2.style.fontSize = u * 3.2 + "px";
   type(k2, "HUGE *INFRASTRUCTURE*", tI + 0.2, 26);
   tl.to(st, { scale: 0.94, duration: 2, ease: E.soft }, tI);
 
   // D. COST: a price tag snaps onto every card in turn (no invented number: the narration gives none)
   const tC = at("cost", 9.9);
-  [[strip, nx + nw - u * 9, ny + u], [home, W * 0.08 + hd - u * 8, H * 0.4], [sub, W * 0.37 + pw - u * 7, H * 0.42 + u], [fac, W * 0.64 + fw - u * 9, H * 0.36 + u]]
+  [[strip, nx + nw - u * 9, ny + u], [home, W * 0.08 + hd - u * 8, H * 0.4], [sub, W * 0.33 + pw - u * 7, H * 0.42 + u], [fac, W * 0.64 + fw - u * 9, H * 0.36 + u]]
     .forEach(([c, x, y], i) => { const g = place(mk("div", "tag", st, "₹₹₹"), x, y); pop(g, tC + i * 0.12, { scale: 2, opacity: 0, rotation: -20 }, 0.35, E.pop); });
-  const k3 = place(mk("div", "kh", st, "Huge <em>Cost</em>"), W * 0.37, H * 0.42 + ph + u * 6); k3.style.fontSize = u * 6 + "px"; k3.style.opacity = 0;
+  const k3 = place(mk("div", "kh", st, "Huge <em>Cost</em>"), W * 0.33, H * 0.42 + ph + u * 6); k3.style.fontSize = u * 6 + "px"; k3.style.opacity = 0;
   rise(k3, tC + 0.1, 0.12);
 
   // E. DAMAGE = DANGER: the network goes red and dim, the snapped line slams in large, the frame pulses a warning
   const tD = at("damage", 11.1), tG = at("danger", 12.3);
   tl.to(st.children, { filter: "saturate(.2) brightness(.45)", duration: 0.4, ease: E.soft }, tD - 0.2);
   tl.to("#redwash", { opacity: 1, duration: 0.5 }, tD - 0.2);
-  const snap = card({ i: "snapped", x: W * 0.2, y: H * 0.08, w: W * 0.6, h: W * 0.6 * 9 / 21, focus: [0.5, 0.72, 1.35], shape: "sharp" });
+  const snap = card({ i: "snapped", x: W * 0.2, y: H * 0.08, w: W * 0.6, h: W * 0.6 * 9 / 21, focus: [0.5, 0.72, 1.35], shape: "sharp", parent: $("top") });
   tl.fromTo(snap, { scale: 1.6, opacity: 0, rotation: -2 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.35, ease: E.slam }, tD);
   K.shake($("shake"), tD + 0.33);
-  const dz = place(mk("div", "kh", st, "<em style='color:#FF5A3C'>DANGER</em>"), 0, H * 0.08 + W * 0.6 * 9 / 21 + u * 2); dz.style.cssText += `width:${W}px;text-align:center;font-size:${u * 9}px;opacity:0`;
+  const dz = place(mk("div", "kh", $("top"), "<em style='color:#FF5A3C'>DANGER</em>"), 0, H * 0.08 + W * 0.6 * 9 / 21 + u * 2); dz.style.cssText += `width:${W}px;text-align:center;font-size:${u * 9}px;opacity:0`;
   slam(dz, tG - 0.15);
   tl.fromTo("#warn", { opacity: 0 }, { opacity: 1, duration: 0.18, yoyo: true, repeat: 3, ease: E.soft }, tD + 0.2);
   K.done();
