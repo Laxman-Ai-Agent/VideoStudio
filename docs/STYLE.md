@@ -88,14 +88,14 @@ narration, assets and scene length; never every effect on every scene. Merges wi
 ### What the pipeline can do today (checked 2026-11-11; update when a part is built)
 - Built: per-video theme (fonts, 2-3 colours, background type, pattern none|grid|dots|lines, texture
   grain|paper|smoke|particles|stars, title_style, caption style, motion text_in / camera / transitions) with the 30%
-  alike check; templates photo (full frame Ken Burns), photo_parallax, cutout_title, kinetic, cards (rows, stat),
+  alike check; templates photo (full frame Ken Burns; in-scene `params.layout` split_text | split2 | stack | crop with
+  `side`, `image2`, `crop_at`; `params.dim` darkens the picture only while the title shows, `text_until`), photo_parallax, cutout_title, kinetic, cards (rows, stat),
   chart, map, lottie, meme (1-2 characters), quote, timeline, screenshot, video_clip; overlays with placement
   (position, size, at / until, animation, outline, backdrop, depth); textzone puts photo titles in the calm area;
   per-element edits in edits.json (Timeline editor); one transition per cut from the theme set.
 - Not built (plan around it, say so in the plan, do not claim it): elements that persist or morph across cuts (every
-  scene is rendered as its own clip and joined by a transition); split / stacked / multi-image / 1:1-crop layouts
-  in one scene; full-to-crop image moves; drawn connector lines; colour grading of images to the palette (only the
-  `look` filters such as sepia); dimming an image only while text is on it; topic patterns beyond grid / dots /
+  scene is rendered as its own clip and joined by a transition); three or more images in one scene; drawn
+  connector lines; colour grading of images to the palette (only the `look` filters such as sepia); topic patterns beyond grid / dots /
   lines (ECG lines, circuits, maps, anatomy); characters moving between scenes.
 - Until those exist: get the closest result with what is built (overlays with `at` timing to stage elements in
   order, cutout_title / meme for character + text, cards / kinetic beside photos, varied templates, a carried-over

@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8">
-<script src="gsap.min.js"></script><script src="scene.js"></script>
+<script src="gsap.min.js"></script><script src="scene.js"></script><script src="layouts.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
 <style>
 .blurbg { filter: blur(calc(var(--u) * 4)) brightness(.55); transform: scale(1.15); }
@@ -8,14 +8,19 @@
 .logo-mode #img { left: 14%; top: 18%; width: 72%; height: 48%; object-fit: contain; }
 .portrait.logo-mode #img { left: 10%; top: 26%; width: 80%; height: 34%; }
 .logo-mode .shade { display: none; }
+.frame { position: absolute; inset: 0; overflow: hidden; }
+.frame > img:not(.fill) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#dim { position: absolute; inset: 0; background: #000; opacity: 0; }
+:root #t.zone-panel { color: var(--text); text-shadow: none; text-align: center; }
 .logo-grid { position: absolute; inset: 0; opacity: .06;
              background-image: linear-gradient(var(--text) 1px, transparent 1px), linear-gradient(90deg, var(--text) 1px, transparent 1px);
              background-size: calc(var(--u) * 6) calc(var(--u) * 6); }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <img id="bg" class="fill blurbg" src="{{ASSET}}">
-  <img id="img" class="fill" src="{{ASSET}}">
-  <div class="shade"></div>
+  <div id="fa" class="frame"><img id="img" class="fill" src="{{ASSET}}"></div>
+  <div id="fb" class="frame" style="display:none"><img id="img2"></div>
+  <div class="shade"></div><div id="dim"></div>
   <div class="safe"><div id="t" class="lower"></div></div>
 </div>
 <script>
@@ -43,10 +48,46 @@
     tl.fromTo("#img", CAM[0], { ...CAM[1], duration: S.duration }, 0);
     tl.fromTo("#img", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
   }
-  kinetic(document.getElementById("t"), S.text, tl, 0.3);
-  tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, 0.25);
-  // render's textzone.pick: the calmest part of the picture -> the title goes there, big and bold
-  const Z = S.zone, t = document.getElementById("t");
+  // params.layout: split_text | split2 | stack | crop (layouts.js); params.side; params.image2 (render copies it)
+  const lay = logo ? "full" : (p.layout || "full"), B = photoLayout(lay, p.side, S.w, S.h, !!S.asset2);
+  const box = (b) => ({ left: b[0] * S.w, top: b[1] * S.h, width: b[2] * S.w, height: b[3] * S.h });
+  let tIn = 0.25;  // when the title enters
+  if (lay !== "full") {
+    document.getElementById("bg").style.display = "none";
+    document.getElementById("img").classList.remove("contain");
+    document.querySelector(".shade").style.display = "none";
+    const edge = (b) => b[2] < 1 ? { x: (b[0] > 0 ? 1 : -1) * b[2] * S.w } : { y: (b[1] > 0 ? 1 : -1) * b[3] * S.h };
+    if (B.from) {  // crop: full frame first, then it shrinks to the square
+      const at = Math.min(p.crop_at || 0.8, S.duration * 0.4);
+      gsap.set("#fa", box(B.from));
+      tl.to("#fa", { ...box(B.img), duration: 0.7, ease: "power2.inOut" }, at);
+      tIn = at + 0.5;
+    } else {  // split / stack: each picture slides in from its own edge, one after the other
+      gsap.set("#fa", box(B.img));
+      tl.from("#fa", { ...edge(B.img), duration: 0.5, ease: "power3.out" }, 0);
+      tIn = 0.45;
+    }
+    if (B.img2) {
+      const fb = document.getElementById("fb");
+      fb.style.display = "";
+      document.getElementById("img2").src = S.asset2;
+      gsap.set(fb, box(B.img2));
+      tl.from(fb, { ...edge(B.img2), duration: 0.5, ease: "power3.out" }, 0.4);
+      tl.fromTo("#img2", { scale: 1.0 }, { scale: 1.08, duration: S.duration, ease: "none" }, 0);
+      tIn = 0.85;
+    }
+  }
+  const t = document.getElementById("t");
+  kinetic(t, S.text, tl, tIn + 0.05);
+  tl.fromTo("#t", { opacity: 0, x: -U * 3 }, { opacity: 1, x: 0, duration: 0.3 }, tIn);
+  // params.dim: darken the picture only while the title is on screen; params.text_until (s) ends the title early
+  const W = textWindow(p, tIn, S.duration, !!S.text);
+  if (W.until) tl.to("#t", { opacity: 0, duration: 0.3 }, W.until);
+  if (W.dim) tl.fromTo("#dim", { opacity: 0 }, { opacity: W.level, duration: 0.3 }, W.dim[0]);
+  if (W.dim && W.dim[1]) tl.to("#dim", { opacity: 0, duration: 0.4 }, W.dim[1]);
+  // render's textzone.pick: the calmest part of the picture -> the title goes there, big and bold;
+  // split_text / crop: the free half is the title's area
+  const Z = B.text ? { x: B.text[0], y: B.text[1], w: B.text[2], h: B.text[3], tone: "panel", name: "panel" } : S.zone;
   if (Z && S.text) {
     t.className = "zone zone-" + Z.tone + " zone-" + Z.name;
     document.getElementById("root").appendChild(t);

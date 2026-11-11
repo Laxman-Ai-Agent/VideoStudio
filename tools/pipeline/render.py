@@ -148,6 +148,7 @@ class Job:
     style: ThemeSpec = None  # the video's visual theme (work/theme.json), see theme.py
     overlays: list = None  # [(file, placement)] from visual-assets.json (role "overlay")
     manual_layers: dict = None  # {layer id: manual} from edits.json: moved / scaled background and text blocks
+    asset2: Path | None = None  # photo params.image2 (split2 / stack layouts), relative to the project root
 
     @property
     def duration(self) -> float:
@@ -189,6 +190,10 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         asset_hash = file_hash(asset) if asset and asset.exists() else "none"
         if layers:
             asset_hash += ":" + ":".join(file_hash(f) for f in layers)
+        a2 = root / s.params["image2"] if name == "photo" and s.params.get("image2") else None
+        a2 = a2 if a2 and a2.exists() else None
+        if a2:
+            asset_hash += ":" + file_hash(a2)
         ovl = [(f, pl) for f, pl in (overlays or {}).get(s.id, []) if f.exists()]
         ovl_key = [(file_hash(f), {k: v for k, v in pl.items() if k != "id" or "manual" in pl}) for f, pl in ovl]  # a bare id changes nothing
         caps = (caption_pages(s, words, CAPTION_WORDS["portrait" if h > w else "landscape"])
@@ -196,7 +201,7 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         key = hashlib.sha256(json.dumps([s.model_dump(mode="json"), name, tpl_hash[name], asset_hash,
                                          brand_hash, fmt, w, h, brand.fps, caps, trans[s.id], ovl_key] + ([(manual or {})[s.id]] if (manual or {}).get(s.id) else [])).encode()).hexdigest()[:16]
         jobs.append(Job(s, r, name, asset, w, h, brand.fps, frame_count(s, brand.fps),
-                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style, ovl, (manual or {}).get(s.id)))
+                        out_dir / f"scene_{s.id:03d}.mp4", key, brand, caps, layers, trans[s.id], style, ovl, (manual or {}).get(s.id), a2))
     return jobs
 
 
@@ -296,6 +301,10 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         else:
             asset_name = "asset" + job.asset.suffix.lower()
             shutil.copy2(job.asset, build_dir / asset_name)
+    asset2 = ""
+    if template == "photo" and job.asset2:
+        asset2 = "asset2" + job.asset2.suffix.lower()
+        shutil.copy2(job.asset2, build_dir / asset2)
     s, st = job.scene, job.style
     f = st.fonts
     ovl = []
@@ -306,12 +315,12 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
         ovl.append({"src": name, **pl, "w": d["asset_w"], "h": d["asset_h"], "cx": _centre_x(src)})
     scene = {"id": s.id, "w": job.w, "h": job.h, "fps": job.fps, "duration": job.duration,
              "text": s.on_screen_text, "query": s.query, "visual_type": s.visual_type, "narration": s.narration, "params": s.params,
-             "asset": asset_name, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
+             "asset": asset_name, "asset2": asset2, "fit": fit, **_dims(job.layers[0] if template == "cutout_title" else job.asset if asset_name else None),
              "colors": {**st.colors, "marker": st.colors.get("highlight") or st.colors.get("accent", "")},
              "theme": st.name, "style": {"background": st.background, "text": st.text, "motion": st.motion, "captions": st.captions},
              "fonts": {"telugu": f.get("body"), "latin": f.get("body"), "heading": f.get("heading"), "script": f.get("script"), "hero": f.get("hero")},
              "zone": textzone.pick(job.asset, job.w, job.h, fit) if template == "photo" and s.visual_type != "logo"
-             and s.on_screen_text and job.asset.suffix.lower() != ".svg" else None, "error": error,
+             and s.on_screen_text and job.asset.suffix.lower() != ".svg" and not s.params.get("layout") else None, "error": error,
              "captions": job.captions or [], "trans_in": job.trans[0], "trans_out": job.trans[1], "overlays": ovl,
              "layers": job.manual_layers or {}}
     (build_dir / "scene.js").write_text("window.SCENE = " + json.dumps(scene, ensure_ascii=False) + ";\n", "utf-8")

@@ -1,4 +1,10 @@
-{"name": "photo", "version": 1, "engine": "hyperframes",
+{"name": "photo", "version": 2, "engine": "hyperframes",
  "visual_types": ["photo", "screenshot", "logo", "map", "diagram", "motion_graphic", "chart", "footage", "text"],
- "params": {"zoom": "end scale of the Ken Burns move, default 1.12", "pan": "left | right | none, default alternates by scene id"},
- "description": "Still image with a Ken Burns pan/zoom, blurred backdrop when the aspect does not fit, lower-third text"}
+ "params": {"zoom": "end scale of the Ken Burns move, default 1.12", "pan": "left | right | none, default alternates by scene id",
+            "layout": "full (default) | split_text (picture on one half, title on the other) | split2 (two pictures left / right; top / bottom in 9:16) | stack (two pictures top / bottom) | crop (full frame shrinks to a 1:1 square on one side, title in the rest). split2 / stack without image2 fall back to split_text; logos ignore it",
+            "side": "left | right (top | bottom in 9:16): where the main picture sits in split_text / split2 / crop, default left (top)",
+            "image2": "second picture for split2 / stack, path relative to the project root (e.g. assets/processed/A012.png)",
+            "crop_at": "crop: seconds before the shrink starts, default 0.8 (at most 40% of the scene)",
+            "dim": "true or 0-1: darken the picture (default 0.5) only while the title is on screen, then restore it",
+            "text_until": "seconds: the title leaves at this time (with dim: default 65% of the scene, so the picture comes back bright)"},
+ "description": "Still image with a Ken Burns pan/zoom, blurred backdrop when the aspect does not fit, lower-third text; optional in-scene compositions (split / stack / 1:1 crop) and a dim while the title shows"}

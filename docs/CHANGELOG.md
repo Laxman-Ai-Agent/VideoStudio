@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-11 - Photo template: in-scene layouts and dim-while-title
+
+- `params.layout`: `split_text` (picture on one half, title on the other), `split2` (two pictures left / right, top / bottom in 9:16), `stack` (two pictures top / bottom), `crop` (full frame shrinks to a 1:1 square on `side`, title in the rest). `params.side`, `params.image2` (project-relative path, copied as `asset2.*`, part of the cache key), `params.crop_at`. Pictures slide in from their own edge one after the other; panel layouts skip textzone. Geometry and timing in `tools/templates/photo/layouts.js` (tested in node).
+- `params.dim` (true or 0-1): the picture darkens only while the title is on screen; `params.text_until` ends the title early (with dim: default 65% of the scene), then the picture is restored.
+- Proof: project 11 scenes 16 (split2 A016 + A017, dim: brightness 59 under the title, 122 after) and 19 (crop right) rendered at 480p into a scratch folder; project output untouched. Template version 2: photo scenes re-render on the next run. Tests: 121.
+
 ## 2026-11-10 - 9:16 projects show 9:16 tiles
 
 - Assets grid: when most assets are portrait (`out_size`), tiles are 9:16 in narrower columns (`.grid.portrait`); 16:9 projects unchanged. 30 px gap between the button rows and the gallery. Checked: project 10 tiles 175x310, project 01 landscape.
