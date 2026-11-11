@@ -307,3 +307,14 @@ def test_render_progress_and_eta_come_from_the_log(tmp_path, monkeypatch):
     st = service.render_status("11-AI")
     assert (st["done"], st["total"]) == (5, 10) and 195 <= st["eta"] <= 205
     assert service.progress("  plan: ok\n") == (0, 0)
+
+
+def test_render_phase_after_the_last_scene():
+    """Bug 2026-11-11: after 'Scene 83 / 83' the popup looked stuck for minutes while the video was joined and checked."""
+    head = "  plan: ok\n    16:9 render: 2 of 2 scene(s) to render\n    16:9 scene   1 photo      rendered 9s\n"
+    assert service.phase("  plan: ok\n") == "prepare"
+    assert service.phase(head) == "scenes"
+    assert service.phase(head + "  render 16:9: done (2 scenes, 1920x1080)\n") == "assemble"
+    assert service.phase(head + "  render 16:9: done (2 scenes)\n  assemble 16:9: done (music: x)\n") == "qa"
+    js = (Path(service.__file__).parents[1] / "frontend" / "timeline.js").read_text("utf-8")
+    assert "if (!d) { renderTimer = setTimeout(renderStatus" in js  # a failed poll retries instead of freezing "running"

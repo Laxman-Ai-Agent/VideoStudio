@@ -270,7 +270,7 @@ function showRender(d) {
 async function renderStatus() {
   clearTimeout(renderTimer);
   const d = await fetch(`/api/projects/${enc(st.pid)}/render`, { cache: "no-store" }).then((r) => r.json()).catch(() => null);
-  if (!d) return;
+  if (!d) { renderTimer = setTimeout(renderStatus, 5000); return; }  // a missed poll must not freeze the clock on "running"
   showRender(d);
   if (d.state === "running") renderTimer = setTimeout(renderStatus, 3000);
 }

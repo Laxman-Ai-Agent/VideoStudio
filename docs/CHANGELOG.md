@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 - Render popup: no more "stuck" after the last scene
+
+- Bug: the popup showed "Scene 83 / 83 - almost done" for minutes after the last scene, because `studio run` still joins the clips with voice and music, runs QA, and the dashboard only knew scene counts (11 final: 83 scenes ~40 min, joining + QA ~8 min). `service.phase()` reads the log (prepare / scenes / assemble / qa), `render_status` returns it, and the popup says "All scenes rendered, joining video, voice and music..." then "final quality check...". A missed status poll now retries after 5 s instead of leaving the clock on "running". Test added.
+- Note: the dashboard ports 8791 / 8792 are the user's own `studio.cmd ui` instances (8790 was busy); test servers must use another port.
+
 ## 2026-11-11 - Caption highlight box centred on the words
 
 - Bug: the yellow box / marker behind the spoken caption word sat low (it followed the font's line box, and `marker` covered only the lower 62%). `studio.js` `capInk` now measures the ink of each caption page (canvas `actualBoundingBox*`) and the baseline in the DOM, sets `--bh` / `--by` in em on every word, and measures again once the caption font has loaded. Box and marker both cover the whole word, centred; underline unchanged. All templates and videos use it (shared code). Checked on project 11 scene 7 at 480p; test added.

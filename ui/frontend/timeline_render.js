@@ -9,7 +9,8 @@ function paintPop(d, el_) {
   $("rp-title").textContent = done ? "Render complete" : d.state === "running" ? `Rendering ${q}...` : "Render stopped";
   $("rp-time").textContent = mmss(el_);
   const eta = d.eta || d.last, part = d.total ? `Scene ${d.done} / ${d.total}` : "Preparing";
-  $("rp-eta").textContent = done ? `${q} done in ${mmss(el_)}` : d.state !== "running" ? "" :
+  const after = { assemble: "All scenes rendered · joining video, voice and music...", qa: "Joined · final quality check..." }[d.phase];
+  $("rp-eta").textContent = done ? `${q} done in ${mmss(el_)}` : d.state !== "running" ? "" : after ||
     part + (eta ? (eta > el_ ? ` · about ${mmss(eta - el_)} left (total ~${mmss(eta)})` : " · almost done") : " · estimating...");
   $("rp-prog").style.width = done ? "100%" : d.total ? Math.round((100 * d.done) / d.total) + "%" : eta ? Math.min(95, (100 * el_) / eta) + "%" : "3%";
   $("rp-step").textContent = done ? "Saved in the project's output folder" : ((d.tail || []).filter((x) => x.trim()).slice(-1)[0] || "").trim();

@@ -484,6 +484,15 @@ def progress(log: str) -> tuple[int, int]:
     return (done, int(totals[-1])) if totals else (0, 0)
 
 
+def phase(log: str) -> str:
+    """What `studio run` is doing now: prepare (stages before the render), scenes, assemble (joining the clips with
+    the narration and music) or qa. Bug 2026-11-11: after the last scene the popup sat on "Scene 83 / 83" for minutes."""
+    import re
+    marks = [(m.start(), k) for k, pat in (("scenes", r"render: \d+ of"), ("assemble", r"render [\d:]+: done"),
+                                           ("qa", r"assemble [\d:]+: done")) for m in re.finditer(pat, log)]
+    return max(marks)[1] if marks else "prepare"
+
+
 def render_status(pid: str) -> dict:
     """State, elapsed seconds, the last run's duration of the same mode (a rough ETA) and the log tail."""
     import json
@@ -510,6 +519,6 @@ def render_status(pid: str) -> dict:
     last = history.get("final" if cur["final"] else "preview")
     # ponytail: rough ETA = time per scene so far x scenes to render (stages before the render count too); the last run's time until 3 scenes are done
     eta = round(elapsed * total / done) if done >= 3 and total else last
-    return {"done": done, "total": total, "eta": eta,"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
+    return {"done": done, "total": total, "eta": eta, "phase": phase(log.read_text("utf-8", errors="replace") if log.exists() else ""),"state": state, "code": code, "final": cur["final"], "review": cur.get("review", False), "elapsed": elapsed, "tail": tail,
             "last": history.get("final" if cur["final"] else "preview"),
             "ago": round(time.time() - cur["t1"]) if cur["t1"] else 0}  # seconds since it ended: the page ignores an old failure
