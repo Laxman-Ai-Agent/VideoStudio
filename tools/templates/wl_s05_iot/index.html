@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 05 (48-61 s): IoT -> one sensor becomes thousands -> batteries again and again -> scientists -> through the air? */
+#batt { position: absolute; border: calc(var(--u) * .6) solid var(--text); border-radius: calc(var(--u) * 1.2); }
+#batt::after { content: ""; position: absolute; right: calc(var(--u) * -2); top: 30%; width: calc(var(--u) * 1.2); height: 40%; background: var(--text); border-radius: 0 var(--u) var(--u) 0; }
+#lvl { position: absolute; left: 6%; top: 10%; bottom: 10%; width: 88%; border-radius: calc(var(--u) * .5); transform-origin: 0 50%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, beam, count, camera, circuits } = K;
+  circuits({ seed: 55, sparks: 60 });
+  const st = $("stage"); camera(st, 1.03, 0.012);
+
+  // A. "another big problem": kicker types, IoT DEVICES rises, one real sensor card lands in the middle
+  const k = place(mk("div", "kt", st), W * 0.07, H * 0.12); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`;
+  type(k, "ANOTHER BIG PROBLEM", 0.15, 26);
+  const h = place(mk("div", "kh", st, "IoT <em>Devices</em>"), W * 0.07, H * 0.18); h.style.cssText += `font-size:${u * 10}px;opacity:0`;
+  rise(h, at("iot", 1.6) - 0.15, 0.12);
+  const cs = H * 0.42, one = card({ i: "iot", x: W * 0.62, y: H * 0.12, w: cs * 3 / 4, h: cs, focus: [0.5, 0.5, 1.05] });
+  pop(one, at("iot", 1.6), { scale: 0.4, opacity: 0, rotation: 8 });
+
+  // B. "thousands of sensors, smart gadgets": the factory floor fades in behind, the card multiplies into a wall of sensors
+  const tS = at("sensors", 3.55), tG = at("gadgets", 4.6);
+  const fac = card({ i: "factory_clip", video: "factory_clip_v", vstart: tS - 0.4, vdur: 5, x: 0, y: 0, w: W, h: H, shape: "sharp" });
+  st.prepend(fac); tl.fromTo(fac, { opacity: 0 }, { opacity: 0.32, duration: 0.8 }, tS - 0.4);
+  tl.to(h, { y: -H * 0.08, scale: 0.6, transformOrigin: "0 0", duration: 0.6, ease: E.io }, tS - 0.3);
+  tl.to(k, { opacity: 0, duration: 0.3 }, tS - 0.3);
+  const pics = ["iot", "sensor_white", "sensor_hand"], cols = 8, rows = 3, gw = W * 0.86 / cols, gh = gw * 0.8, g0 = W * 0.07, gy = H * 0.24;
+  tl.to(one, { left: g0 + 3 * gw + gw * 0.06, top: gy + gh + gh * 0.06, width: gw * 0.88, height: gh * 0.88, duration: 0.6, ease: E.io }, tS - 0.2);
+  const tiles = [];
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    if (r === 1 && c === 3) continue;
+    const t = card({ i: pics[(r * cols + c) % 3], x: g0 + c * gw + gw * 0.06, y: gy + r * gh + gh * 0.06, w: gw * 0.88, h: gh * 0.88,
+                     focus: [[0.5, 0.5, 1.1], [0.42, 0.55, 2.2], [0.5, 0.5, 2.6]][(r * cols + c) % 3], shape: (r + c) % 4 ? "" : "round" });
+    tiles.push(t);
+    const d = Math.hypot(c - 3, r - 1);
+    tl.fromTo(t, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: E.pop, immediateRender: true }, tS + 0.1 + d * 0.12);
+  }
+  const n = place(mk("div", "kh", st, "1000s"), W * 0.07, H * 0.62); n.style.cssText += `font-size:${u * 9}px;color:${PAL.acc};opacity:0`;
+  rise(n, tG - 0.2);
+  const ng = place(mk("div", "kt", st), W * 0.07 + u * 34, H * 0.66); type(ng, "SENSORS + GADGETS", tG, 24);
+
+  // C. batteries: the wall dims, a battery drains and refills again and again on "change the battery"
+  const tB = at("battery", 7.0);
+  dim([...tiles, one], tB - 0.3, 0.18); tl.to([n, ng], { opacity: 0, duration: 0.3 }, tB - 0.3);
+  const bat = card({ i: "battery", x: W * 0.07, y: H * 0.16, w: H * 0.44, h: H * 0.44, focus: [0.28, 0.5, 1.8] });
+  pop(bat, tB - 0.2, { x: -W * 0.2, opacity: 0, rotation: -5 }, 0.6, E.in);
+  const bx = place(mk("div", "", st, '<div id="lvl"></div>'), W * 0.07 + H * 0.5, H * 0.26, W * 0.24, H * 0.13); bx.id = "batt";
+  pop(bx, tB, { scale: 0.5, opacity: 0 }, 0.4);
+  const lv = $("lvl");
+  for (let i = 0; i < 3; i++) {
+    const t0 = tB + 0.3 + i * 0.75;
+    tl.fromTo(lv, { scaleX: 1, background: "#3BD16F" }, { scaleX: 0.08, background: PAL.warn, duration: 0.55, ease: "power1.in", immediateRender: false }, t0);
+  }
+  const ag = place(mk("div", "kt", st), W * 0.07 + H * 0.5, H * 0.45); ag.style.fontSize = u * 3.4 + "px";
+  type(ag, "AGAIN. AGAIN. *AGAIN.*", at("hard", 8.15) - 0.2, 14);
+
+  // D. "so scientists thought": the team clip slides in, everything else leaves; the question beams to the lamp
+  const tT = at("scientists", 9.3) - 0.3;
+  tl.to([bat, bx, ag, ...tiles, one, h, fac], { opacity: 0, x: -W * 0.15, duration: 0.6, ease: E.out, stagger: 0.008 }, tT - 0.2);
+  const tw = W * 0.4, team = card({ i: "team_clip", video: "team_clip_v", vstart: tT, vdur: 5, x: W * 0.06, y: H * 0.14, w: tw, h: tw * 9 / 16, focus: [0.5, 0.45, 1.1] });
+  pop(team, tT, { x: W * 0.3, opacity: 0, rotation: 3 }, 0.7, E.in);
+  const sc = place(mk("div", "kt", st), W * 0.06, H * 0.14 + tw * 9 / 16 + u * 2); sc.style.fontSize = u * 3 + "px";
+  type(sc, "SCIENTISTS ASKED...", tT + 0.3, 24);
+  const tA = at("air", 12.0), ls = H * 0.36, lamp = card({ i: "lamp", x: W * 0.66, y: H * 0.12, w: ls, h: ls, shape: "round", focus: [0.32, 0.55, 1.6] });
+  beam(W * 0.46, H * 0.14 + tw * 9 / 32, W * 0.66, H * 0.12 + ls / 2, tA - 0.6, 0.6);
+  pop(lamp, tA - 0.1, { scale: 0.3, opacity: 0 });
+  const qa = place(mk("div", "kh", st), W * 0.5, H * 0.56); qa.style.fontSize = u * 5.6 + "px";
+  type(qa, "Power *through air?*", tA, 22);
+  K.done();
+</script></body></html>

@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 03 (27-35 s): will power really come without wires? -> watch till the end -> chapter 1 THE PROBLEM */
+#bar { position: absolute; height: calc(var(--u) * 1.2); border-radius: var(--u); background: #ffffff22; overflow: hidden; }
+#bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--accent), #fff); transform-origin: 0 50%; }
+#pres { position: absolute; background-size: contain; background-repeat: no-repeat; background-position: 50% 100%; filter: drop-shadow(0 calc(var(--u) * 2) calc(var(--u) * 3) #000c); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, type, rise, chip, camera, circuits, chapter, url } = K;
+  circuits({ seed: 33 });
+  const st = $("stage"); camera(st, 1.05, -0.01);
+
+  // A. the future city opens from a thin amber line into a cinema band; the question types over it
+  const bw = W * 0.88, bh = bw * 9 / 21, bx = W * 0.06, by = H * 0.08;
+  const line = place(mk("div", "", st), bx, by + bh / 2, bw, u * 0.4); line.style.background = PAL.acc;
+  tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E.io }, 0);
+  const city = card({ i: "city_clip", video: "city_clip_v", vstart: 0.3, vdur: 5, x: bx, y: by, w: bw, h: bh, focus: [0.5, 0.5, 1.05] });
+  tl.fromTo(city, { clipPath: "inset(50% 0 50% 0)" }, { clipPath: "inset(0% 0 0% 0)", duration: 0.8, ease: E.io }, 0.35);
+  tl.to(line, { opacity: 0, duration: 0.2 }, 0.9);
+  const k = place(mk("div", "kt", st), bx, by + bh + u * 2); k.style.cssText += `font-size:${u * 2.6}px;color:${PAL.text2}`;
+  type(k, "IN THE FUTURE...", at("future", 0.5), 24);
+  const q = place(mk("div", "kh", st), bx, by + bh + u * 6); q.style.fontSize = u * 6.6 + "px";
+  type(q, "Power *without wires?*", at("power", 2.1) - 0.2, 20);
+
+  // B. the band slides up and shrinks to a corner; the presenter steps in pointing, the promise fills a bar
+  const tC = at("clear", 4.5) - 0.4;
+  tl.to(city, { left: W * 0.06, top: H * 0.06, width: W * 0.3, height: W * 0.3 * 9 / 21, duration: 0.8, ease: E.io }, tC);
+  tl.to([k, q], { opacity: 0, y: -u * 3, duration: 0.4, ease: E.out }, tC);
+  const pr = place(mk("div", "", st), W * 0.56, H * 0.06, W * 0.4, H * 0.94); pr.id = "pres"; pr.style.backgroundImage = url("pres_point");
+  tl.fromTo(pr, { x: W * 0.3, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: E.in }, tC + 0.15);
+  tl.fromTo(pr, { scale: 1 }, { scale: 1.04, duration: 3, ease: E.soft, transformOrigin: "50% 100%" }, tC + 0.9);
+  const w1 = place(mk("div", "kh", st, "Watch till<br><em>the end</em>"), W * 0.06, H * 0.3); w1.style.cssText += `font-size:${u * 8.5}px;opacity:0`;
+  rise(w1, at("clear", 4.5) + 0.1, 0.12);
+  const bar = place(mk("div", "", st, "<i></i>"), W * 0.06, H * 0.62, W * 0.4); bar.id = "bar";
+  tl.fromTo(bar, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("end", 5.7) - 0.3);
+  tl.fromTo(bar.querySelector("i"), { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power2.inOut" }, at("end", 5.7));
+
+  // C. chapter 1: bars wipe everything away, "01 The Problem" stays for the next sequence's poles strip
+  const tP = at("problem", 7.7) - 0.75;
+  tl.to([city, pr, w1, bar], { opacity: 0, x: -W * 0.1, duration: 0.45, ease: E.out, stagger: 0.03 }, tP + 0.3);
+  chapter("01", "The <em>Problem</em>", tP);
+  K.done();
+</script></body></html>

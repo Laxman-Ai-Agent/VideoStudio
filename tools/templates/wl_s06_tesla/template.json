@@ -1,0 +1,15 @@
+{
+ "name": "wl_s06_tesla",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (61-77 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "tesla, lab, lab2_clip (params.names; clips + _v)",
+  "beats": "new years tesla dream practical finland step logic"
+ },
+ "description": "Sepia time rail, year counts 2026 -> 1900s, Tesla portrait rises with name tag, dream typed and struck, NOT PRACTICAL THEN stamp; rail runs to TODAY with the Finland lab clip, ONE STEP FORWARD chip; The Logic rises"
+}

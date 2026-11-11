@@ -1,0 +1,73 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>
+/* 03_Wireless_Power seq 06 (61-77 s): not a new idea -> 100 years ago Tesla dreamed it -> not practical then -> Finland today -> the logic */
+#rail { position: absolute; height: calc(var(--u) * .45); background: linear-gradient(90deg, #C8A46A, var(--accent)); transform-origin: 0 50%; box-shadow: 0 0 calc(var(--u) * 1.5) var(--accent); }
+.node { position: absolute; width: calc(var(--u) * 2.6); height: calc(var(--u) * 2.6); margin: calc(var(--u) * -1.3) 0 0 calc(var(--u) * -1.3); border-radius: 50%;
+        background: #0A0E17; border: calc(var(--u) * .45) solid var(--accent); }
+#year { position: absolute; font: 900 calc(var(--u) * 13) var(--font-head); color: #E9D9B8; letter-spacing: -.02em; }
+#strike { position: absolute; height: calc(var(--u) * .7); background: var(--warn); transform-origin: 0 50%; box-shadow: 0 0 var(--u) var(--warn); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, card, pop, out, dim, ring, type, rise, chip, count, camera, circuits } = K;
+  circuits({ seed: 61, color: "#C8A46A" });
+  const st = $("stage"); camera(st, 1.04, 0.02);
+  tl.fromTo("#root", { filter: "sepia(.55)" }, { filter: "sepia(0)", duration: 1.2, ease: E.soft }, at("finland", 9.8) - 0.6);  // history -> today
+
+  // A. "not a new idea": the time rail draws; the year counts back to the 1900s on "hundred years ago"
+  const ry = H * 0.6;
+  const rail = place(mk("div", "", st), W * 0.06, ry, W * 0.88); rail.id = "rail";
+  tl.fromTo(rail, { scaleX: 0 }, { scaleX: 0.42, duration: 1.2, ease: E.io }, 0.2);
+  const k = place(mk("div", "kt", st), W * 0.06, H * 0.08); k.style.cssText += `font-size:${u * 2.8}px;color:${PAL.text2}`;
+  type(k, "NOT A NEW IDEA", at("new", 1.7) - 0.4, 22);
+  const yr = place(mk("div", "", st), W * 0.06, H * 0.12); yr.id = "year"; yr.textContent = "2026";
+  tl.fromTo(yr, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("years", 2.75) - 0.5);
+  count(yr, 2026, 1900, at("years", 2.75) - 0.3, 1.2, (v) => (v < 1901 ? "1900s" : String(Math.round(v))));
+  const n1 = place(mk("div", "node", st), W * 0.12, ry + u * 0.22); pop(n1, at("years", 2.75), { scale: 0, opacity: 0 }, 0.4);
+
+  // B. Tesla's portrait (3:4) rises on the rail with a name tag; his dream types beside him
+  const tT = at("tesla", 4.1), pw = H * 0.4 * 3 / 4, ph = H * 0.4;
+  const tes = card({ i: "tesla", x: W * 0.12 - pw / 2, y: ry - ph - u * 3, w: pw, h: ph, focus: [0.5, 0.36, 1.1] });
+  tes.style.filter = "sepia(.6) contrast(1.05)";
+  pop(tes, tT - 0.2, { y: H * 0.2, opacity: 0, rotation: -4 }, 0.8, E.in);
+  const nt = place(mk("div", "kt", st), W * 0.06, ry + u * 3); nt.style.fontSize = u * 2.8 + "px";
+  type(nt, "NIKOLA *TESLA*", tT + 0.2, 20);
+  tl.to(yr, { opacity: 0.25, duration: 0.4 }, tT);
+  const dr = place(mk("div", "kh", st), W * 0.3, H * 0.28); dr.style.cssText += `font-size:${u * 5.4}px;white-space:normal;width:${W * 0.6}px`;
+  type(dr, "Dreamed of power *through the air*", at("dream", 5.15) - 0.3, 26);
+
+  // C. "not practical back then": a red strike runs through the dream, the stamp lands
+  const tP = at("practical", 7.9);
+  const sk = place(mk("div", "", st), W * 0.29, H * 0.28 + u * 3.4, W * 0.48); sk.id = "strike";
+  tl.fromTo(sk, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: E.in }, tP - 0.3);
+  tl.to(dr, { opacity: 0.45, duration: 0.3 }, tP - 0.1);
+  const np = place(mk("div", "kt", st), W * 0.3, H * 0.44); np.style.cssText += `font-size:${u * 3.4}px;color:${PAL.warn};border:${u * 0.4}px solid ${PAL.warn};padding:${u * 0.6}px ${u * 1.6}px;border-radius:${u * 0.6}px;opacity:0`;
+  np.textContent = "NOT PRACTICAL THEN";
+  tl.fromTo(np, { scale: 1.8, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.3, ease: E.slam }, tP + 0.1);
+
+  // D. the rail runs on to TODAY; the Finland lab clip rises at the far end; ONE STEP FORWARD pushes along the rail
+  const tF = at("finland", 9.8);
+  tl.to([dr, sk, np], { opacity: 0, y: -u * 4, duration: 0.45, ease: E.out }, tF - 0.6);
+  tl.to(rail, { scaleX: 1, duration: 1, ease: E.io }, tF - 0.6);
+  tl.to(st, { xPercent: -6, duration: 1.4, ease: E.io }, tF - 0.6);
+  const n2 = place(mk("div", "node", st), W * 0.86, ry + u * 0.22); pop(n2, tF + 0.2, { scale: 0, opacity: 0 }, 0.4);
+  const lw = W * 0.34, lh = lw * 9 / 16, lab = card({ i: "lab2_clip", video: "lab2_clip_v", vstart: tF, vdur: 5, x: W * 0.86 - lw / 2, y: ry - lh - u * 3, w: lw, h: lh, focus: [0.5, 0.45, 1.05] });
+  pop(lab, tF, { y: H * 0.2, opacity: 0, rotation: 3 }, 0.8, E.in);
+  const td = place(mk("div", "kt", st), W * 0.86 - lw / 2, ry + u * 3); td.style.fontSize = u * 2.8 + "px";
+  type(td, "TODAY · *FINLAND*", tF + 0.3, 20);
+  const yr2 = place(mk("div", "kh", st, "2026"), W * 0.55, H * 0.12); yr2.style.cssText += `font-size:${u * 13}px;color:${PAL.text};opacity:0`;
+  rise(yr2, tF + 0.1);
+  const tS = at("step", 12.6), arrow = place(mk("div", "kchip", st, "ONE STEP FORWARD →"), W * 0.2, ry - u * 2.2);
+  tl.fromTo(arrow, { x: 0, opacity: 0 }, { x: W * 0.36, opacity: 1, duration: 1.3, ease: E.io }, tS - 0.5);
+
+  // E. "understand this logic": the timeline folds away, THE LOGIC rises in the centre (it becomes the next scene's source of light)
+  const tL = at("logic", 15.1) - 0.7;
+  tl.to(st.children, { opacity: 0, scale: 0.9, duration: 0.5, ease: E.out, stagger: 0.01 }, tL);
+  const lg = place(mk("div", "kh", $("root"), "The <em>Logic</em>"), 0, H * 0.36); lg.style.cssText += `width:${W}px;text-align:center;font-size:${u * 10}px;opacity:0`;
+  rise(lg, tL + 0.35, 0.12);
+  K.done();
+</script></body></html>

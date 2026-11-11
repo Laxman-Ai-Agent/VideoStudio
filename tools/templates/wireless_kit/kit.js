@@ -133,6 +133,45 @@
     const o = { t: 0 }; tl.fromTo(o, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: () => draw(o.t) }, 0); draw(0);
     return cv;
   }
-  window.K = { ix, url, S, P, W, H, D, u, PAL, tl, E, T, IMG, at, $, mk, place, rnd, card, sweep, ring, pop, out, dim, lit, type, rise, chip, slam, flash,
+  // chapter / method title (one design for the whole video): amber bars wipe across, a big index, the title rises
+  function chapter(num, title, t, parent) {
+    const g = mk("div", "", parent || $("stage")); g.style.cssText = `position:absolute;inset:0`;
+    [0, 1, 2].forEach((i) => { const b = place(mk("div", "", g), 0, H * (0.3 + i * 0.07), W, H * 0.05);
+      b.style.background = i === 1 ? PAL.acc : PAL.pri + "55";
+      tl.fromTo(b, { xPercent: -101 }, { xPercent: 0, duration: 0.45, ease: E.io }, t + i * 0.06);
+      tl.to(b, { xPercent: 101, duration: 0.45, ease: E.io }, t + 0.55 + i * 0.06); });
+    const n = place(mk("div", "kh", g, num), W * 0.07, H * 0.2); n.style.cssText += `font-size:${u * 20}px;color:transparent;-webkit-text-stroke:${u * 0.25}px ${PAL.acc};opacity:0`;
+    const h = place(mk("div", "kh", g, title), W * 0.07, H * 0.46); h.style.cssText += `font-size:${u * 8.5}px;opacity:0`;
+    tl.fromTo(n, { opacity: 0, x: -u * 6 }, { opacity: 1, x: 0, duration: 0.6, ease: E.in }, t + 0.5);
+    rise(h, t + 0.6, 0.1, 0.7);
+    return g;
+  }
+  // a red X drawn over an element (two strokes)
+  function xmark(e, t) {
+    const x = mk("div", "", e.parentNode), s = e.style;
+    x.style.cssText = `position:absolute;left:${s.left};top:${s.top};width:${s.width};height:${s.height};pointer-events:none`;
+    [45, -45].forEach((a, i) => { const l = mk("div", "", x); l.style.cssText = `position:absolute;left:-5%;top:50%;width:110%;height:${u * 1.1}px;margin-top:${-u * 0.55}px;
+      background:${PAL.warn};box-shadow:0 0 ${u * 2}px ${PAL.warn};border-radius:${u}px;transform:rotate(${a}deg);transform-origin:50% 50%`;
+      tl.fromTo(l, { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: E.in }, t + i * 0.14); });
+    return x;
+  }
+  // a social-media post card (the same design wherever the video quotes a viral claim)
+  function post(x, y, w, text, t, likes = "1.3M") {
+    const p = place(mk("div", "kpost", $("stage"), `<div class="pw"><div class="av"></div>TechNews Today • <span>2m</span></div>
+      <div class="pt"></div><div class="pm"><span>♥ <i>0</i></span><span>↻ 48K</span></div>`), x, y, w);
+    pop(p, t, { x: u * 10, opacity: 0, rotation: 2 }, 0.7, E.in);
+    type(p.querySelector(".pt"), text, t + 0.35, 30);
+    count(p.querySelector(".pm i"), 0, parseFloat(likes), t + 0.4, 2, (v) => v.toFixed(1) + likes.replace(/[\d.]/g, ""));
+    return p;
+  }
+  css.textContent += `
+  .kpost { position: absolute; border-radius: ${u * 1.6}px; background: #F4F7FF; color: #0A0E17; padding: ${u * 2.2}px; box-shadow: 0 ${u * 2}px ${u * 6}px #000c; }
+  .kpost > div { position: relative; }
+  .kpost .pw { display: flex; align-items: center; gap: ${u * 1.2}px; font: 800 ${u * 2.1}px var(--font-head); }
+  .kpost .pw span { color: #5B6B85; } .kpost .av { width: ${u * 4.4}px; height: ${u * 4.4}px; border-radius: 50%; background: linear-gradient(135deg, ${PAL.acc}, #FF5A3C); }
+  .kpost .pt { margin-top: ${u * 1.6}px; font: 800 ${u * 3.6}px var(--font-head); line-height: 1.15; min-height: 2.4em; white-space: normal; }
+  .kpost .pt b { color: #E8590C; } .kpost .pm { margin-top: ${u * 1.4}px; display: flex; gap: ${u * 3}px; color: #5B6B85; font: 700 ${u * 2}px var(--font-head); }
+  .kpost .pm span:first-child { color: #E03131; } .kpost .pm i { font-style: normal; }`;
+  window.K = { chapter, xmark, post, ix, url, S, P, W, H, D, u, PAL, tl, E, T, IMG, at, $, mk, place, rnd, card, sweep, ring, pop, out, dim, lit, type, rise, chip, slam, flash,
                shake, beam, count, camera, circuits, done: () => finish(tl), X: (f) => f * W, Y: (f) => f * H };
 })();

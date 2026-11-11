@@ -1,0 +1,15 @@
+{
+ "name": "wl_s03_question",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 03_Wireless_Power 16x9 (27-35 s); reuse only when the user asks",
+  "kit": "wireless_kit",
+  "images": "city_clip, pres_point, poles_clip (params.names; clips + _v)",
+  "beats": "future power clear end problem"
+ },
+ "description": "Future city opens from an amber line into a cinema band, Power without wires? typed; band shrinks to a corner, presenter cut-out points, Watch till the end + progress bar; chapter 01 The Problem"
+}
