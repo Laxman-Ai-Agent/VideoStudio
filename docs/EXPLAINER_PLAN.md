@@ -4,7 +4,7 @@ Source: the user's reference clip (Git & GitHub class 2, 9 s, 6 screens; analysi
 rules already in `.claude/skills/my-editor/rules.md` (full-frame composition, never crop images).
 
 ## 0. Decisions needed from the user
-- D1. Explainer mode for which videos: tutorials / classes only, or AI news (like 04) too? (rules below assume "per project, chosen in theme.json")
+- D1. DECIDED (user, 2026-11-13): explainer mode for tutorials AND AI news videos (like 04); still a per-project `style` field, default explainer.
 - D2. Bring 04_Fable_Mythos up to the two new rules now (no-crop cards + full-frame), before its 1080p final?
 - D3. Captions in explainer mode: off (heading carries the meaning) or very small?
 
