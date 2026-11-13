@@ -18,6 +18,7 @@
   .kc { position: absolute; overflow: hidden; border-radius: ${u * 0.8}px; background: #16151A no-repeat;
         box-shadow: 0 ${u * 1.6}px ${u * 4.5}px #000c, 0 0 0 1px ${PAL.text}33; filter: saturate(.8) contrast(1.06); }
   .kc.round { border-radius: 50%; }
+  .kc.cut { background-color: transparent; box-shadow: none; border-radius: 0; filter: drop-shadow(0 ${u}px ${u * 2.5}px #000c) saturate(.9); }
   .kc .sw { position: absolute; inset: -40%; background: linear-gradient(105deg, transparent 44%, #ffffff30 50%, transparent 56%); transform: translateX(-130%); }
   .kc .miss { position: absolute; inset: ${u * 0.8}px; border: 2px dashed ${PAL.mute}; display: flex; align-items: center; justify-content: center;
               color: ${PAL.mute}; font: 700 ${u * 1.8}px var(--font-script); letter-spacing: .1em; text-align: center; }
@@ -63,12 +64,12 @@
   function card(o) {
     const i = ix(o.i), c = place(mk("div", "kc " + (o.shape || ""), o.parent), o.x, o.y, o.w, o.h);
     const ar = AR[i] || 16 / 9, [cx, cy, z] = o.focus || [0.5, 0.5, 1];
-    const dw = Math.max(o.w, o.h * ar) * z, dh = dw / ar;
-    const px = Math.min(0, Math.max(o.w - dw, o.w / 2 - cx * dw)), py = Math.min(0, Math.max(o.h - dh, o.h / 2 - cy * dh));
+    const cut = o.shape === "cut", dw = (cut ? Math.min(o.w, o.h * ar) : Math.max(o.w, o.h * ar)) * z, dh = dw / ar;
+    const px = cut ? (o.w - dw) / 2 : Math.min(0, Math.max(o.w - dw, o.w / 2 - cx * dw)), py = cut ? o.h - dh : Math.min(0, Math.max(o.h - dh, o.h / 2 - cy * dh));
     if (i >= 0 && IMG[i]) Object.assign(c.style, { backgroundImage: `url("${IMG[i]}")`, backgroundSize: `${dw}px ${dh}px`, backgroundPosition: `${px}px ${py}px` });
     else mk("div", "miss", c, "MISSING<br>" + String(o.i).toUpperCase());
     if (o.tag) mk("div", "tag", c, o.tag);
-    mk("div", "sw", c);
+    if (!cut) mk("div", "sw", c);
     return c;
   }
   const sweep = (c, t) => { const s = c.querySelector && c.querySelector(".sw"); if (s) tl.fromTo(s, { xPercent: -130 }, { xPercent: 130, duration: 0.9, ease: E.io }, t); };
