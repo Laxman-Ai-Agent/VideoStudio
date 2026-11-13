@@ -24,15 +24,15 @@
               color: ${PAL.mute}; font: 700 ${u * 1.8}px var(--font-script); letter-spacing: .1em; text-align: center; }
   .kc .tag { position: absolute; left: ${u}px; bottom: ${u}px; padding: ${u * 0.4}px ${u}px; background: ${PAL.ink}d0; color: ${PAL.text};
              font: 700 ${u * 1.7}px var(--font-script); letter-spacing: .12em; text-transform: uppercase; }
-  .kh { position: absolute; color: ${PAL.text}; font: 800 ${u * 9}px var(--font-head); line-height: 1; text-transform: uppercase; white-space: nowrap; letter-spacing: .01em; opacity: 0; }
-  .kh em { font-style: normal; color: ${PAL.fab}; } .kh b { font-weight: 800; color: ${PAL.myt}; } .kh s { text-decoration: none; color: ${PAL.warn}; }
+  .kh { position: absolute; color: ${PAL.text}; font: 400 ${u * 9}px var(--font-head); line-height: 1; text-transform: uppercase; white-space: nowrap; letter-spacing: .01em; opacity: 0; }
+  .kh em { font-style: normal; color: ${PAL.fab}; } .kh b { font-weight: 400; color: ${PAL.myt}; } .kh s { text-decoration: none; color: ${PAL.warn}; }
   .kk { position: absolute; color: ${PAL.mute}; font: 700 ${u * 2}px var(--font-script); letter-spacing: .22em; text-transform: uppercase; white-space: nowrap; }
   .rd { position: relative; display: inline-block; } .rd > .rt { opacity: 0; }
   .rd > .rb { position: absolute; left: -2%; right: -2%; top: 6%; bottom: 2%; background: ${PAL.ink}; box-shadow: 0 0 0 1px #ffffff18; transform: scaleX(0); transform-origin: 0 50%; }
   .vc { position: absolute; border-radius: ${u * 1.4}px; overflow: hidden; background: linear-gradient(160deg, #ffffff16, #ffffff05 45%, #00000040);
         box-shadow: 0 ${u * 2}px ${u * 6}px #000d; }
   .vc .bd { position: absolute; inset: 0; border-radius: inherit; border: ${u * 0.25}px solid var(--c); box-shadow: inset 0 0 ${u * 4}px var(--c4), 0 0 ${u * 3}px var(--c4); }
-  .vc .nm { position: absolute; left: 9%; bottom: 20%; font: 800 calc(var(--s) * 12) var(--font-head); color: ${PAL.text}; letter-spacing: .02em; }
+  .vc .nm { position: absolute; left: 9%; bottom: 20%; font: 400 calc(var(--s) * 12) var(--font-head); color: ${PAL.text}; letter-spacing: .02em; }
   .vc .ver { position: absolute; left: 9%; bottom: 8%; font: 700 calc(var(--s) * 8) var(--font-script); color: var(--c); }
   .vc .lb { position: absolute; left: 9%; top: 7%; font: 700 calc(var(--s) * 4.6) var(--font-script); color: ${PAL.mute}; letter-spacing: .2em; }
   .vc .core { position: absolute; left: 50%; top: 40%; width: 34%; aspect-ratio: 1; margin: -17% 0 0 -17%; border-radius: 50%;
@@ -43,7 +43,7 @@
           letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
   .chip::before { content: ""; width: ${u * 0.8}px; height: ${u * 0.8}px; background: var(--c, ${PAL.fab}); }
   .stamp { position: absolute; padding: ${u * 0.8}px ${u * 2}px; border: ${u * 0.5}px solid var(--c); color: var(--c); border-radius: ${u * 0.6}px;
-           font: 800 ${u * 4}px var(--font-head); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; background: ${PAL.ink}88; }
+           font: 400 ${u * 4}px var(--font-head); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; background: ${PAL.ink}88; }
   .logo { position: absolute; background: ${PAL.text}; -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain; }
   .badge { position: absolute; border-radius: ${u * 1}px; background: #ffffff0d; border: 1px solid ${PAL.text}30; box-shadow: 0 ${u}px ${u * 3}px #000a; }
   .ico { fill: none; stroke: var(--c); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -83,7 +83,7 @@
 
   /* this video's heading look: a black redaction bar covers the slot, then slides off and leaves the word */
   function head(html, x, y, size = 9, parent) {
-    const e = place(mk("div", "kh", parent), x, y); e.style.fontSize = u * size + "px";
+    const e = place(mk("div", "kh", parent), x, y); e.style.fontSize = u * size * 1.35 + "px";  // Anton is condensed: 1.35x keeps the old visual weight
     e.innerHTML = `<span class="rd"><span class="rt">${html}</span><i class="rb"></i></span>`; return e;
   }
   function redact(e, t, d = 0.32) {
