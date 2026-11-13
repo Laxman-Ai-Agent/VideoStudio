@@ -41,3 +41,9 @@ Explainer mode only (`theme.json` -> `"style": "explainer"`):
 2. `card()` no-crop + full-frame helper + empty-side QA; re-render 04 changed scenes if D2 = yes; frame QA.
 3. `explainer_kit` + theme preset + grade; 2 sample screens (e.g. the reference's "git commit vs git push" idea) at 480p -> user checks the look.
 4. Image style suffix + cut-outs; first real explainer video on the user's next topic.
+
+## 4. Decision 2026-11-13 (late): "light-documentary" (user)
+Name: **light-documentary** = explainer LOOK (pastel sections, Plus Jakarta Sans + Noto Sans Telugu, white cards, light 3D images, flat icons, captions off) + documentary STYLE (visual on every spoken word, 3-4 beats per sequence, no 5-element cap, different composition per sequence, something new every 1-2 s, moving camera, presenter shock shots, chapter transitions, numbers as objects).
+- Effects are SMOOTH only: no shake / glitch / flash / hard slam; use zoom-punch with easing, bounce, light sweep, stagger, eased camera push.
+- `theme.json` gets two settings: `look` (explainer | dark) and `style` (documentary | explainer); names for the old looks: dark+documentary = "documentary", light+explainer = "explainer", light+documentary = "light-documentary" (default from now).
+- Next: update rules/STYLE, add the documentary parts to explainer_kit (stamps, pillars, torn tag, swarm, count-ups), rewrite 04's fx_* sequences denser, re-render previews; 1080p only on the user's word.
