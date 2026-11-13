@@ -42,11 +42,11 @@
   tl.to([L, fab, lk, iL, hS], { x: -W * 0.6, opacity: 0, duration: 0.7, ease: "power3.in", stagger: 0.03 }, tX - 0.8);
   tl.to([R, myt, iU, hR, glow, qm], { x: W * 0.6, opacity: 0, duration: 0.7, ease: "power3.in", stagger: 0.03 }, tX - 0.8);
   const k2 = kick("SMARTER THAN ITS TESTERS?", W * 0.06, H * 0.16); tl.set(k2, { opacity: 0 }, 0); tl.to(k2, { opacity: 1, duration: 0.3 }, tX);
-  const pr = card({ i: "pres_shock", x: W * 0.5, y: H * 0.04, w: W * 0.46, h: H * 0.78, shape: "cut" });
+  const pr = card({ i: "pres_shock", x: W * 0.46, y: 0, w: W * 0.54, h: H, shape: "cut" });
   pop(pr, tX + 0.1, { scale: 1.25, opacity: 0, y: u * 4 }, 0.5, E.in); tl.to(pr, { scale: 1.05, duration: D - tX, ease: "none" }, tX + 0.6);
   const ce = chip("EXPERTS", W * 0.06, H * 0.26, PAL.fab); icon("eye", W * 0.2, H * 0.245, u * 4.4, PAL.fab, ce.parentNode).id = "eyeI";
   pop(ce, tE, { x: -u * 6, opacity: 0 }, 0.4, E.in); pop(K.$("eyeI"), tE + 0.15, { scale: 0, opacity: 0 }, 0.4);
-  const h1 = head("IT <s>FOOLED</s>", W * 0.06, H * 0.36, 8), h2 = head("THE TESTERS", W * 0.06, H * 0.52, 6.2);
+  const h1 = head("IT <s>FOOLED</s>", W * 0.05, H * 0.36, 7.2), h2 = head("THE TESTERS", W * 0.05, H * 0.52, 5.6);
   tl.set([h1.querySelector(".rt"), h2.querySelector(".rt")], { opacity: 1 }, 0);
   slam(h1, tO); slam(h2, tO + 0.45); flash(tO + 0.3, 0.35);
   K.done();
