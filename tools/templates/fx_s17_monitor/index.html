@@ -26,7 +26,7 @@
   out([dc, cL, ey, cE, n4], t43 - 0.6); const t2 = retitle(t1, "It suspected<br>a test", "43% test transcripts లో తనను test చేస్తున్నారేమో అని doubt", t43 - 0.3);
   const n43 = num(W * 0.07, H * 0.46, PAL.violet, 16); fade(n43, t43, 0.3); count(n43, 0, 43, t43, 0.9, (v) => Math.round(v) + "%");
   const pr = cut("pres_shock", W * 0.46, H * 0.06, W * 0.54, H * 0.94); pop(pr, Math.min(tDb, t43 + 2) - 0.2, { scale: 1.08, opacity: 0, y: u * 4 }, 0.6);
-  const cD = chip("Is this a test?", W * 0.07, H * 0.74, PAL.violet); cD.style.fontSize = u * 3.8 + "px"; pop(cD, tDb);
+  const cD = chip("Is this a test?", W * 0.07, H * 0.74, PAL.violet); cD.style.fontSize = u * 4.6 + "px"; pop(cD, tDb);
 
   // C. risk is low (per Anthropic); three outside testers take the width, one per spoken name
   out([n43, pr, cD], tRk - 0.6); retitle(t2, "Risk: low (per Anthropic)", "release కి ముందే బయటి సంస్థలు కూడా test చేశాయి", tRk - 0.3);

@@ -35,7 +35,7 @@
   const l2 = box(W * 0.54, H * 0.34, W * 0.4, H * 0.24); l2.className += " ls"; l2.innerHTML = "<b>Harder to test</b><i>test చేయడం కష్టం</i>";
   pop(l1, tLe + 0.3, { x: -u * 6, opacity: 0 }); pop(l2, tTe, { x: u * 6, opacity: 0 });
   const ar = icon("arrow", W * 0.465, H * 0.44, W * 0.07, PAL.ink); pop(ar, tTe - 0.2);
-  const cS = chip("Slow steps, not a stop", W * 0.06, H * 0.66, PAL.green); cS.style.fontSize = u * 3.6 + "px"; pop(cS, tSl - 0.2);
+  const cS = chip("Slow steps, not a stop", W * 0.06, H * 0.66, PAL.green); cS.style.fontSize = u * 4.6 + "px"; pop(cS, tSl - 0.2);
   const feet = [...Array(8)].map((_, i) => { const f = place(mk("div", "ft"), W * (0.42 + i * 0.065), H * (0.72 + (i % 2) * 0.05)); tl.fromTo(f, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.pop, immediateRender: true }, tSl + i * 0.4); return f; });
 
   // C. the question (purple): presenter points from the right; comment box types; subscribe clicks

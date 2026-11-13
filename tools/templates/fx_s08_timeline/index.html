@@ -34,7 +34,7 @@
   // B. who can use Fable 5.2 (tiers type in on the left) and where (cloud logos on the right)
   out(all, tP[0] - 0.7); retitle(t1, "Who can use Fable 5.2?", "Pro, Max, Team, Enterprise users, developers అందరూ", tP[0] - 0.4);
   ["Pro", "Max", "Team", "Enterprise", "Developers"].forEach((t, i) => {
-    const c = chip(t, W * (0.06 + (i % 2) * 0.2), H * (0.36 + Math.floor(i / 2) * 0.15), PAL.blue); c.style.fontSize = u * 3.8 + "px"; pop(c, tP[i]); });
+    const c = chip(t, W * (0.06 + (i % 2) * 0.2), H * (0.36 + Math.floor(i / 2) * 0.15), PAL.blue); c.style.fontSize = u * 4.6 + "px"; pop(c, tP[i]); });
   const s = H * 0.24;
   [["aws", "Amazon"], ["gcloud", "Google Cloud"], ["msft", "Microsoft"]].forEach(([k, nm], i) => {
     const b = logo(k, W * (0.5 + i * 0.16), H * 0.42, s, nm); pop(b, tLg[i], { y: u * 5, opacity: 0, scale: 0.9 }); });

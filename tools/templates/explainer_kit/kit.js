@@ -35,10 +35,10 @@
         box-shadow: 0 ${u * 1.2}px ${u * 3.5}px #1B214022, 0 ${u * 0.2}px ${u * 0.6}px #1B214014; }
   .xc .miss { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: ${PAL.mute};
               font: 700 ${u * 1.8}px var(--font-head); border: 2px dashed #C9CCD8; border-radius: inherit; }
-  .xl { position: absolute; transform: translateX(-50%); white-space: nowrap; font: 700 ${u * (V ? 3.6 : 3)}px var(--font-head); color: ${PAL.ink}; text-align: center; }
+  .xl { position: absolute; transform: translateX(-50%); white-space: nowrap; font: 700 ${u * (V ? 4.6 : 3.8)}px var(--font-head); color: ${PAL.ink}; text-align: center; }
   .xp { position: absolute; display: flex; align-items: center; gap: ${u * 0.9}px; padding: ${u * 0.8}px ${u * 1.6}px; border-radius: ${u * 0.9}px;
-        background: #fff; color: ${PAL.ink}; font: 700 ${u * (V ? 3.6 : 3)}px var(--font-head); white-space: nowrap; box-shadow: 0 ${u * 0.6}px ${u * 1.8}px #1B214020; }
-  .xp::before { content: ""; width: ${u * 0.5}px; height: ${u * (V ? 3.6 : 3)}px; border-radius: 9px; background: var(--c, ${PAL.coral}); }
+        background: #fff; color: ${PAL.ink}; font: 700 ${u * (V ? 4.8 : 4.2)}px var(--font-head); white-space: nowrap; box-shadow: 0 ${u * 0.6}px ${u * 1.8}px #1B214020; }
+  .xp::before { content: ""; width: ${u * 0.5}px; height: ${u * (V ? 4.8 : 4.2)}px; border-radius: 9px; background: var(--c, ${PAL.coral}); }
   .xb { position: absolute; border-radius: ${u * 1.8}px; background: #ffffffe8; box-shadow: 0 ${u * 1}px ${u * 3}px #1B21401c; }
   .xterm { position: absolute; padding: ${u * 1.2}px ${u * 1.8}px; border-radius: ${u * 1}px; background: ${PAL.navy}; color: ${PAL.term};
            font: 700 ${u * (V ? 4 : 3.2)}px var(--font-script); white-space: nowrap; min-height: 1.3em; box-shadow: 0 ${u}px ${u * 3}px #1B214033; }

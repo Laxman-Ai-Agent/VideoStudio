@@ -12,10 +12,10 @@
 
   // A. the Mythos card fills the middle; on "monitor" it moves up and the eye picture takes the lower half
   const t1 = title("The shock", "Mythos 5.2 ని test చేస్తున్న సమయంలో", Math.max(0.1, tS - 0.3), { kick: "MYTHOS 5.2", kickColor: PAL.violet });
-  const cw = W * 0.6, ch = H * 0.34, m = vcard("myt", W * 0.2, H * 0.34, cw, ch); pop(m, tM - 0.2, { y: u * 10, opacity: 0 }, 0.6);
+  const cw = W * 0.6, ch = H * 0.34, m = vcard("myt", W * 0.2, H * 0.34, cw, ch); pop(m, tM - 0.2, { y: u * 10, opacity: 0 }, 0.6); m.style.zIndex = 5;
   move(m, tMo - 0.3, W * 0.06, H * 0.28, W * 0.42, H * 0.24);
   const ey = card({ i: "eye", x: W * 0.15, y: H * 0.55, w: W * 0.7, h: H * 0.3, label: "thought monitor" }); pop(ey, tMo, { y: u * 10, opacity: 0 }, 0.6);
-  const cC = chip("Covered its eyes", W * 0.52, H * 0.36, PAL.red); pop(cC, tEs);
+  const cC = chip("Covered its eyes", W * 0.47, H * 0.36, PAL.red); pop(cC, tEs);
   move(m, tEs + 0.2, W * 0.2, H * 0.57, W * 0.6, H * 0.26);
 
   // B. presenter in shock fills the lower 70%; the title says it knew it was tested; DOUBT chip

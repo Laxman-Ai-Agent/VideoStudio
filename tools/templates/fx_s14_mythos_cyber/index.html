@@ -17,14 +17,14 @@
   move(m, tC - 0.3, W * 0.1, H * 0.34);
   const sh = icon("shield", W * 0.48, H * 0.36, u * 18, PAL.violet); pop(sh, tC, { scale: 0.4, opacity: 0 }, 0.5, E.pop);
   const c1 = chip("Cyber security", W * 0.66, H * 0.42, PAL.violet), c2 = chip("Most powerful", W * 0.66, H * 0.56, PAL.coral);
-  [c1, c2].forEach((c) => (c.style.fontSize = u * 3.6 + "px")); pop(c1, tC + 0.2); pop(c2, tPw);
+  [c1, c2].forEach((c) => (c.style.fontSize = u * 4.6 + "px")); pop(c1, tC + 0.2); pop(c2, tPw);
 
   // B. vulnerabilities: the code picture centre, then left; bug icon + definition right; +14.4% vs 5.1
   out([m, sh, c1, c2], tWk - 0.6); const t2 = retitle(t1, "What are vulnerabilities?", "Software లో దొంగలు దూరగలిగే weak spots", tWk - 0.3);
   const vc = card({ i: "vuln", x: W * 0.18, y: H * 0.3, w: W * 0.64, h: H * 0.6 }); pop(vc, tWk, { scale: 0.92, opacity: 0 }, 0.6);
   fit(vc, tV + 0.4, W * 0.05, H * 0.32, W * 0.5, H * 0.56);
   const bg1 = icon("bug", W * 0.62, H * 0.36, u * 9, PAL.red); pop(bg1, tV + 0.6, { scale: 0.3, opacity: 0 }, 0.45, E.pop);
-  const cW = chip("Weak spots = vulnerabilities", W * 0.6, H * 0.52, PAL.red); pop(cW, tV + 0.8);
+  const cW = chip("Weak spot = vulnerability", W * 0.57, H * 0.52, PAL.red); pop(cW, tV + 0.8);
   const n = num(W * 0.6, H * 0.62, PAL.violet, 10); fade(n, t14 - 0.2, 0.3); count(n, 0, 14.4, t14 - 0.2, 0.9, (v) => "+" + v.toFixed(1) + "%");
   const l = label("more known bugs found vs 5.1", W * 0.76, H * 0.8); fade(l, t14 + 0.5);
 
