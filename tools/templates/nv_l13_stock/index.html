@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L13 (198.4-223.6 s): share chart dives -13% then recovers some; analyst 1 (Raymond James): three points build;
+   analyst 2 (Saxo): NOT A FINANCING CRISIS, Wall Street re-prices AI risk */
+.panel { position: absolute; box-sizing: border-box; background: #fff; box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F22; }
+.who { position: absolute; box-sizing: border-box; padding: calc(var(--u) * 2) calc(var(--u) * 2.4); background: #14171F; color: #fff; }
+.who .n { font: 400 calc(var(--u) * 4) var(--font-head); text-transform: uppercase; line-height: 1.05; }
+.who .f { margin-top: calc(var(--u) * 1); font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #76B900; }
+.pt { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.4); font: 400 calc(var(--u) * 3.3) var(--font-head); color: #14171F; text-transform: uppercase; white-space: nowrap; }
+.pt b { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); border-radius: 50%; background: #14171F; color: #fff; display: flex; align-items: center; justify-content: center; font: 400 calc(var(--u) * 2.4) var(--font-head); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, logo, head, rehead, chip, num, count, stamp, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("scandal");
+  const tN = at("news", 1.1), tS = at("share", 2.4), tP = at("p13", 3.2), tD = at("drop", 4.6), tR = at("recover", 6.1), tRj = at("rj", 7.1),
+        tRv = at("review", 11.3), tRt = at("return", 13.4), tM = at("money", 15.0), tSx = at("saxo", 17.1), tC = at("crisis", 19.7), tWs = at("wall", 21.9);
+  cam(0, 7, 1.05);
+
+  // A. the chart: a calm line, then the dive to -13% (red) and a partial recovery (green)
+  const h1 = head("NVDA <em>dives</em>", "Resignation news రాగానే share drop", tN - 0.6, { x: W * 0.05, y: H * 0.07, w: W * 0.5, size: 5.6, mk: "#F6B4B4" });
+  const px = place(mk("div", "panel"), W * 0.05, H * 0.28, W * 0.9, H * 0.62); pop(px, tN - 0.3, { y: u * 6, opacity: 0 }, 0.6);
+  const X0 = W * 0.08, Y0 = H * 0.42, CW = W * 0.84, CH = H * 0.4;
+  line([[X0, Y0 + CH * 0.12], [X0 + CW * 0.12, Y0 + CH * 0.06], [X0 + CW * 0.24, Y0 + CH * 0.1], [X0 + CW * 0.34, Y0]], tS - 0.3, 0.9, PAL.ink, u * 0.5);
+  line([[X0 + CW * 0.34, Y0], [X0 + CW * 0.46, Y0 + CH * 0.6], [X0 + CW * 0.56, Y0 + CH * 0.92]], tP - 0.1, 1.0, PAL.red, u * 0.6);
+  line([[X0 + CW * 0.56, Y0 + CH * 0.92], [X0 + CW * 0.7, Y0 + CH * 0.62], [X0 + CW * 0.84, Y0 + CH * 0.7], [X0 + CW * 0.98, Y0 + CH * 0.5]], tR - 0.2, 1.1, PAL.green, u * 0.6);
+  const n = num(W * 0.62, H * 0.32, PAL.red, 11); count(n, 0, 13, tP, 1.2, (v) => "-" + Math.round(v) + "%"); n.style.opacity = 0; tl.to(n, { opacity: 1, duration: 0.3 }, tP - 0.1);
+  const c1 = chip("MORE THAN 13% AT ONE STAGE", W * 0.6, H * 0.52, PAL.red); pop(c1, tD);
+  const c2 = chip("THEN SOME RECOVERY", W * 0.66, H * 0.74, PAL.green); pop(c2, tR + 0.2);
+
+  // B. analyst 1: three points, one by one
+  X.bg("money", tRj - 0.6);
+  [px, n, c1, c2].forEach((e) => out(e, Math.max(tRj - 0.7, tR + 0.9), { y: u * 4 }));
+  tl.to(X.$("stage").querySelectorAll("svg"), { opacity: 0, duration: 0.4 }, tRj - 0.7);
+  const h2 = rehead(h1, "What analysts <em>say</em>", "", tRj - 0.4, { x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 5.6 });
+  const w1 = place(mk("div", "who", undefined, `<div class="n">Sunaina Sinha<br>Haldea</div><div class="f">RAYMOND JAMES</div>`), W * 0.05, H * 0.3, W * 0.34);
+  pop(w1, tRj, { x: -u * 8, opacity: 0 }, 0.6);
+  const P0 = [["Terms may be reviewed", tRv], ["Higher return for uncertainty", tRt], ["Money is not walking away", tM]];
+  const pts = P0.map(([t, t0], i) => { const e = place(mk("div", "pt", undefined, `<b>${i + 1}</b>${t}`), W * 0.44, H * (0.34 + i * 0.15)); pop(e, t0 - 0.2, { x: u * 6, opacity: 0 }, 0.5); return e; });
+
+  // C. analyst 2: Saxo: not a financing crisis; Wall Street re-prices AI risk
+  [w1, ...pts].forEach((e) => out(e, tSx - 0.7, { x: -u * 6 }));
+  const sx = logo("saxo", W * 0.06, H * 0.32, H * 0.2); pop(sx, tSx - 0.3, { scale: 0.85, opacity: 0 }, 0.5);
+  const w2 = place(mk("div", "who", undefined, `<div class="n">Charu Chanana</div><div class="f">SAXO</div>`), W * 0.06, H * 0.58, W * 0.3);
+  pop(w2, tSx, { y: u * 6, opacity: 0 }, 0.6);
+  stamp("NOT A FINANCING CRISIS", W * 0.42, H * 0.36, tC - 0.2, { rot: -4, size: 4.6, color: PAL.dgreen });
+  const c3 = chip("WALL STREET RE-PRICES AI RISK", W * 0.44, H * 0.62, PAL.ink); pop(c3, tWs);
+  cam(tRj, D - tRj, 1.0);
+  X.done();
+</script></body></html>

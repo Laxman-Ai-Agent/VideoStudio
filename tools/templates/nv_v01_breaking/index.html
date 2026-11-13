@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 V01 9:16 (0-11.1 s): BREAKING; Huang card top, 33 YEARS -> RESIGNED; Kress card rises below, INTERIM CEO */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, head, chip, num, count, stamp, breaking, cam } = X;
+  X.bg("company");
+  const tY = at("y33", 1.5), tJ = at("jensen", 4.1), tR = at("resign", 5.6), tS = at("shock", 6.2), tC = at("cfo", 7.7), tK = at("kress", 8.2), tI = at("interim", 9.2);
+  cam(0, D, 1.04);
+  breaking("NVIDIA CEO RESIGNS", H * 0.04, 0.1);
+  const h = head("Shock <em>exit</em>", "NVIDIA CEO Jensen Huang రాజీనామా", 0.4, { x: W * 0.07, y: H * 0.1, w: W * 0.86, size: 11 });
+  const hc = card({ i: "huang", x: W * 0.1, y: H * 0.26, h: H * 0.34, rot: -2, tape: true });
+  pop(hc, tY - 0.4, { y: u * 10, opacity: 0, rotation: -6 }, 0.7);
+  const n = num(W * 0.6, H * 0.3, PAL.ink, 16); count(n, 1, 33, tY, 1.2); pop(n, tY - 0.1, { opacity: 0 }, 0.3);
+  const yl = chip("YEARS AS CEO", W * 0.6, H * 0.4, PAL.green); pop(yl, tY + 0.6);
+  const c1 = chip("JENSEN HUANG", W * 0.1, H * 0.605, PAL.ink); pop(c1, tJ);
+  stamp("RESIGNED", W * 0.16, H * 0.42, tR - 0.1, { rot: -9, size: 11 });
+  tl.to(hc, { filter: "grayscale(0.8)", duration: 0.8, ease: E.soft }, tS);
+  const kc = card({ i: "kress", x: W * 0.52, y: H * 0.7, w: W * 0.44, h: H * 0.22, rot: 2, tape: true });
+  pop(kc, tC - 0.2, { y: u * 14, opacity: 0, rotation: 6 }, 0.7);
+  const c2 = chip("COLETTE KRESS", W * 0.05, H * 0.74, PAL.ink); pop(c2, tK);
+  const c3 = chip("INTERIM CEO", W * 0.05, H * 0.81, PAL.green); pop(c3, tI);
+  X.done();
+</script></body></html>

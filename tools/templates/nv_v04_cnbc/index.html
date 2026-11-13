@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 V04 9:16 (36.8-45.3 s): the shock: CNBC live page, TWO AFFAIRS claim, faceless red card "suspected Chinese spy" (per U.S. intelligence), ALLEGATIONS note */
+.sil { position: absolute; box-sizing: border-box; background: #fff; box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F2a; }
+.sil .hd { position: absolute; left: 50%; top: 36%; width: 22%; aspect-ratio: 1; border-radius: 50%; background: #E0393E; opacity: .85; transform: translateX(-50%); }
+.sil .bd { position: absolute; left: 50%; top: 60%; width: 46%; height: 32%; border-radius: 50% 50% 8% 8%; background: #E0393E; opacity: .85; transform: translateX(-50%); }
+.sil .tx { position: absolute; left: 6%; right: 6%; top: 5%; text-align: center; font: 400 calc(var(--u) * 6) var(--font-head); color: #14171F; text-transform: uppercase; line-height: 1.05; }
+.sil .tx small { display: block; margin-top: calc(var(--u) * 1.4); font: 700 calc(var(--u) * 3) var(--font-script); letter-spacing: .1em; color: #5B6472; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, shot, mark, quote, head, chip, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("scandal");
+  const tS = at("shock", 0.2), tT = at("two", 1.7), tW = at("woman", 3.5), tI = at("intel", 4.4), tSp = at("spy", 5.5), tC = at("cnbc", 6.9);
+  cam(0, D, 1.05);
+  head("The <em>shock</em>", "", tS - 0.2, { x: W * 0.07, y: H * 0.05, w: W * 0.86, size: 11, mk: "#F6B4B4" });
+  const cn = shot({ i: "cnbc_live", x: W * 0.06, y: H * 0.15, w: W * 0.88, url: "cnbc.com" }); pop(cn, tS, { y: u * 10, opacity: 0 }, 0.6);
+  mark(cn, tS + 0.6, [0.22, 0.445, 0.27, 0.028]);
+  const q = quote("Huang had <span style='color:#E0393E'>two affairs</span>", "CNBC report", W * 0.06, H * 0.42, W * 0.88, PAL.red);
+  pop(q, tT - 0.2, { y: u * 8, opacity: 0 }, 0.6);
+  const sv = place(mk("div", "sil", undefined, `<i class="hd"></i><i class="bd"></i><div class="tx">Suspected<br>Chinese spy<small>ONE WOMAN &middot; PER U.S. INTELLIGENCE</small></div>`), W * 0.16, H * 0.56, W * 0.68, H * 0.34);
+  pop(sv, tW - 0.2, { y: u * 12, opacity: 0, rotation: 4 }, 0.7);
+  tl.to(sv, { scale: 1.04, duration: 0.6, ease: E.io }, tSp);
+  stamp("ALLEGATIONS", W * 0.16, H * 0.85, tC - 0.2, { rot: -5, size: 8.4, color: PAL.ink });
+  X.done();
+</script></body></html>

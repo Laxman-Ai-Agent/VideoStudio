@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L08 (96.1-111.3 s): story speeds up: NOV 11 board accepts -> NOV 12 announced (release page); three role badges peel off Huang's card; EFFECTIVE IMMEDIATELY */
+.role { position: absolute; box-sizing: border-box; padding: calc(var(--u) * 1) calc(var(--u) * 1.8); background: #14171F; color: #fff; font: 400 calc(var(--u) * 3.2) var(--font-head); text-transform: uppercase; white-space: nowrap; box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.6) #0003; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, shot, mark, head, rehead, cal, flip, chip, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("scandal");
+  const tF = at("fast", 1.0), t11 = at("nov11", 2.4), tA = at("accept", 4.8), t12 = at("nov12", 6.5), tAn = at("announce", 8.7),
+        tP = at("president", 9.7), tC = at("ceo", 10.4), tB = at("board", 11.9), tI = at("immediate", 13.7);
+  cam(0, 8, 1.04);
+  const h1 = head("Then it moved <em>fast</em>", "ఇక్కడి నుంచి story fast గా change అయింది", tF - 0.6, { x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 5.6, mk: "#F6B4B4" });
+
+  // A. calendar NOV 11: board accepts; flips to NOV 12: announced, the release page slides in beside it
+  const c = cal("NOV", "11", "BOARD ACCEPTS", W * 0.1, H * 0.32, W * 0.24); pop(c, t11 - 0.2, { y: u * 6, opacity: 0, rotation: -4 }, 0.6);
+  const s1 = stamp("ACCEPTED", W * 0.12, H * 0.74, tA, { rot: -6, size: 4.2, color: PAL.ink });
+  out(s1, t12 - 0.3);
+  flip(c, t12 - 0.1, "NOV", "12", "ANNOUNCED", PAL.green);
+  const pr = shot({ i: "release", x: W * 0.4, y: H * 0.3, w: W * 0.55, url: "nvidianews.nvidia.com" });
+  pop(pr, tAn - 0.4, { x: u * 10, opacity: 0 }, 0.7);
+  mark(pr, tAn + 0.2, [0.172, 0.21, 0.28, 0.045]);
+
+  // B. Huang's card with his three roles; each badge peels off as it is named
+  X.bg("paper", tP - 0.7);
+  out(c, tP - 0.8); out(pr, tP - 0.8, { x: u * 10 });
+  const h2 = rehead(h1, "He quit <em>all three</em>", "President, CEO, board member: అన్నింటి నుంచి", tP - 0.6, { x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 5.6 });
+  const hc = card({ i: "huang", x: W * 0.62, y: H * 0.18, h: H * 0.62, rot: 2 }); pop(hc, tP - 0.6, { y: u * 6, opacity: 0, rotation: 6 }, 0.7);
+  const R = [["President", tP], ["CEO", tC], ["Board member", tB]];
+  R.forEach(([t, at0], i) => {
+    const r = place(mk("div", "role", undefined, t), W * 0.12, H * (0.36 + i * 0.14)); pop(r, tP - 0.4 + i * 0.12, { x: -u * 6, opacity: 0 }, 0.5);
+    tl.to(r, { y: u * 26, rotation: i % 2 ? 14 : -12, opacity: 0, duration: 0.9, ease: "power2.in" }, at0 + 0.5);
+  });
+  tl.to(hc, { filter: "grayscale(1)", duration: 1, ease: E.soft }, tB + 0.6);
+  stamp("EFFECTIVE IMMEDIATELY", W * 0.1, H * 0.56, tI - 0.2, { rot: -5, size: 4.6 });
+  cam(8, D - 8, 1.0);
+  X.done();
+</script></body></html>

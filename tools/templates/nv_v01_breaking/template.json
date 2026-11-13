@@ -1,0 +1,8 @@
+{
+ "name": "nv_v01_breaking",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 9x16; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 V01 9:16 (0-11.1 s): BREAKING; Huang card top, 33 YEARS -> RESIGNED; Kress card rises below, INTERIM CEO "
+}

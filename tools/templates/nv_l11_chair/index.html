@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L11 (157.5-168.9 s): Harvey C. Jones name card (no photo found, no fake face): board since 1993 -> FIRST-EVER BOARD CHAIR;
+   his quote in the release: full confidence in Colette and the team */
+.ncard { position: absolute; box-sizing: border-box; background: #14171F; color: #fff; padding: calc(var(--u) * 3); box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F44; }
+.ncard .k { font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .18em; color: #76B900; }
+.ncard .n { margin-top: calc(var(--u) * 1.4); font: 400 calc(var(--u) * 6.4) var(--font-head); line-height: 1; text-transform: uppercase; }
+.ncard .r { margin-top: calc(var(--u) * 2); font: 600 calc(var(--u) * 2.4) var(--font-script); letter-spacing: .1em; color: #C9CCD2; }
+.ncard .bar { position: absolute; left: 0; bottom: 0; height: calc(var(--u) * .9); width: 100%; background: #76B900; transform-origin: 0 50%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, shot, mark, zoom, quote, chip, stamp, head, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("next");
+  const tY = at("y1993", 0.6), tH = at("harvey", 2.8), tF = at("first", 5.2), tCh = at("chair", 5.8), tC = at("colette", 7.1), tCf = at("confidence", 9.6);
+  cam(0, D, 1.05);
+  const c0 = chip("ON NVIDIA'S BOARD SINCE 1993", W * 0.08, H * 0.16, PAL.ink); pop(c0, tY);
+  const nc = place(mk("div", "ncard", undefined, `<div class="k">NVIDIA BOARD</div><div class="n">Harvey C.<br>Jones</div><div class="r">ENTREPRENEUR &middot; FORMER SYNOPSYS CEO</div><i class="bar"></i>`), W * 0.08, H * 0.28, W * 0.4, H * 0.42);
+  pop(nc, tH - 0.4, { x: -u * 8, opacity: 0 }, 0.7);
+  tl.fromTo(nc.querySelector(".bar"), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: E.io, immediateRender: true }, tH);
+  stamp("FIRST-EVER BOARD CHAIR", W * 0.1, H * 0.76, tF, { rot: -4, size: 4.4, color: PAL.dgreen });
+
+  // the release page on the right, push into his quote, marker on "full confidence in Colette"
+  const pr = shot({ i: "release", x: W * 0.52, y: H * 0.14, w: W * 0.44, url: "nvidianews.nvidia.com" });
+  pop(pr, tC - 0.8, { x: u * 10, opacity: 0 }, 0.7);
+  zoom(pr, tC - 0.2, [0.3, 0.78, 0.3, 0.09], 2.6, 1.2);
+  mark(pr, tCf - 0.3, [0.3, 0.823, 0.3, 0.026]);
+  const q = quote("Full confidence in Colette", "Harvey Jones, NVIDIA chair", W * 0.54, H * 0.66, W * 0.4);
+  pop(q, tCf, { y: u * 5, opacity: 0 }, 0.6);
+  X.done();
+</script></body></html>

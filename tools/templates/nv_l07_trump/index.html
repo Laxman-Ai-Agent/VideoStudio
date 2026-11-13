@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L07 (88.2-96.1 s): Trump portrait + "honorable man" quote, "should continue"; NVDA mini chart dips red */
+.chartbox { position: absolute; box-sizing: border-box; background: #fff; box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F26; padding: calc(var(--u) * 1.6); }
+.chartbox .lb { font: 400 calc(var(--u) * 3) var(--font-head); color: #14171F; }
+.chartbox .dn { position: absolute; right: calc(var(--u) * 1.6); top: calc(var(--u) * 1.4); font: 400 calc(var(--u) * 3) var(--font-head); color: #E0393E; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, card, quote, chip, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("paper");
+  const tT = at("trump", 0.6), tH = at("honorable", 2.0), tC = at("continue", 3.3), tS = at("share", 6.3), tD = at("drop", 7.2);
+  cam(0, D, 1.05, u * 2, 0);
+  const tc = card({ i: "trump", x: W * 0.06, y: H * 0.1, h: H * 0.72, rot: -2, tape: true, cap: "DONALD TRUMP<small>U.S. PRESIDENT</small>" });
+  pop(tc, tT - 0.3, { x: -u * 8, opacity: 0, rotation: -6 }, 0.7);
+  const q = quote("An <span style='color:#4E7D00'>honorable</span> man", "Trump on Huang (as reported)", W * 0.44, H * 0.14, W * 0.48);
+  pop(q, tH - 0.2, { y: u * 5, opacity: 0 }, 0.6);
+  const c = chip("HE SHOULD CONTINUE", W * 0.46, H * 0.44, PAL.green); pop(c, tC);
+
+  // the same day the share price slips: a small chart draws in and dips red
+  const bx = place(mk("div", "chartbox", undefined, `<div class="lb">NVDA</div><div class="dn">&darr; DROP</div>`), W * 0.46, H * 0.56, W * 0.46, H * 0.32);
+  pop(bx, tS - 0.4, { y: u * 6, opacity: 0 }, 0.6);
+  const x0 = W * 0.48, y0 = H * 0.66, cw = W * 0.42;
+  line([[x0, y0 + u * 6], [x0 + cw * 0.2, y0 + u * 3], [x0 + cw * 0.4, y0 + u * 4], [x0 + cw * 0.6, y0 + u * 1]], tS - 0.1, 0.8, PAL.ink, u * 0.45);
+  line([[x0 + cw * 0.6, y0 + u * 1], [x0 + cw * 0.75, y0 + u * 9], [x0 + cw * 0.95, y0 + u * 12]], tD - 0.2, 0.7, PAL.red, u * 0.55);
+  X.done();
+</script></body></html>

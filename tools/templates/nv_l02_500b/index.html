@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L02 (17.1-24.8 s): one person in the centre, $500B+ counts up, AI plan cards hang on lines around him and sway loose on "shake" */
+.plan { position: absolute; box-sizing: border-box; padding: calc(var(--u) * 1.2) calc(var(--u) * 1.6); background: #fff; border-top: calc(var(--u) * .6) solid #76B900;
+        box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F22; font: 400 calc(var(--u) * 2.8) var(--font-head); text-transform: uppercase; color: #14171F; white-space: nowrap; }
+.plan small { display: block; font: 700 calc(var(--u) * 1.6) var(--font-script); letter-spacing: .12em; color: #5B6472; margin-top: calc(var(--u) * .4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, card, head, num, count, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("money");
+  const tP = at("person", 1.0), tB = at("b500", 1.8), tPl = at("plans", 5.1), tS = at("shake", 5.9);
+  cam(0, D, 1.05);
+  const hc = card({ i: "huang_key", x: W * 0.31, y: H * 0.27, w: W * 0.38, h: H * 0.46, cap: "ONE PERSON" });
+  pop(hc, tP - 0.3, { scale: 0.8, opacity: 0 }, 0.7);
+  const n = num(W * 0.5, H * 0.06, PAL.dgreen, 12); n.style.transform = "translateX(-50%)";
+  count(n, 0, 500, tB, 1.6, (v) => "$" + Math.round(v) + "B+"); pop(n, tB - 0.1, { opacity: 0, y: u * 3 }, 0.4);
+  const hd = head("AI plans <em>shake</em>", "ఒక్క person వెళ్ళిపోతే AI plans ఎందుకు shake అవుతున్నాయి?", tS - 0.4, { x: W * 0.05, y: H * 0.8, w: W * 0.9, size: 4.6, align: "center" });
+  hd.querySelector(".te").style.fontSize = u * 2.6 + "px";
+  const P0 = [[0.07, 0.24, "Data centers", "AI BUILD-OUT"], [0.71, 0.22, "Chip factories", "SUPPLY"], [0.05, 0.56, "$500B financing", "AUG 2026 DEALS"], [0.73, 0.56, "AI growth", "WALL STREET"]];
+  const cx = W * 0.5, cy = H * 0.5;
+  P0.forEach(([x, y, t, s], i) => {
+    const e = place(mk("div", "plan", undefined, `${t}<small>${s}</small>`), W * x, H * y);
+    const ex = W * x + (x < 0.5 ? u * 24 : 0), ey = H * y + u * 4;
+    line([[cx + (x < 0.5 ? -W * 0.14 : W * 0.14), cy], [ex, ey]], tPl - 0.6 + i * 0.12, 0.6, "#14171F55", u * 0.25);
+    pop(e, tPl - 0.5 + i * 0.12, { y: u * 3, opacity: 0 }, 0.5);
+    tl.to(e, { rotation: (i % 2 ? 7 : -7), x: (x < 0.5 ? -u * 3 : u * 3), y: u * 2, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, tS + i * 0.08);
+  });
+  tl.to(hc, { scale: 1.04, duration: 1.2, ease: E.soft }, tS);
+  X.done();
+</script></body></html>

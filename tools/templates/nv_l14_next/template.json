@@ -1,0 +1,8 @@
+{
+ "name": "nv_l14_next",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 16x9; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 L14 (223.6-end): chapter WHAT NEXT: NOV 17 Q3 results spotlight, first without Huang; balance COMPANY vs ONE PERSON;"
+}

@@ -1,0 +1,8 @@
+{
+ "name": "nv_l05_investigation",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 16x9; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 L05 (60.1-72.2 s): world-famous Huang on stage; then the story turns: calendar NOV 8-9, BOARD INVESTIGATION folder "
+}

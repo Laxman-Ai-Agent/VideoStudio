@@ -1,0 +1,8 @@
+{
+ "name": "nv_v03_drop",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 9x16; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 V03 9:16 (31.4-36.8 s): share price dives: chart in a tall panel, -13% counts down in red "
+}

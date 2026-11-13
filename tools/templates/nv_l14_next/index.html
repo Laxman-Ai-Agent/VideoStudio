@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L14 (223.6-end): chapter WHAT NEXT: NOV 17 Q3 results spotlight, first without Huang; balance COMPANY vs ONE PERSON;
+   WHY HE LEFT: no official answer yet; CTA comment box + subscribe */
+.spot { position: absolute; border-radius: 50%; background: radial-gradient(circle, #FFF6C8 0%, #FFF6C800 68%); }
+.beam { position: absolute; height: calc(var(--u) * 1.1); background: #14171F; border-radius: 9px; transform-origin: 50% 50%; }
+.pan { position: absolute; box-sizing: border-box; padding: calc(var(--u) * 1.2) calc(var(--u) * 2); background: #fff; border-bottom: calc(var(--u) * .8) solid var(--c);
+       font: 400 calc(var(--u) * 3.4) var(--font-head); color: #14171F; text-transform: uppercase; white-space: nowrap; box-shadow: 0 var(--u) calc(var(--u) * 2.4) #14171F22; transform: translateX(-50%); }
+.post { position: absolute; width: calc(var(--u) * 1.1); background: #14171F; }
+.cbox { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.2); padding: calc(var(--u) * 2); box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F26; }
+.cbox .lb { font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #5B6472; }
+.cbox .tx { margin-top: calc(var(--u) * 1.2); font: 600 calc(var(--u) * 3.4) var(--font); color: #14171F; min-height: 1.4em; }
+.cbox .bt { position: absolute; right: calc(var(--u) * 2); bottom: calc(var(--u) * 1.6); padding: calc(var(--u) * .6) calc(var(--u) * 1.6); background: #76B900; color: #fff; font: 400 calc(var(--u) * 2.4) var(--font-head); border-radius: 99px; }
+.sub { position: absolute; padding: calc(var(--u) * 1) calc(var(--u) * 2.2); background: #E0393E; color: #fff; font: 400 calc(var(--u) * 3.2) var(--font-head); border-radius: calc(var(--u) * .6); white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, head, rehead, chip, cal, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("next");
+  const tE = at("eyes", 0.6), t17 = at("nov17", 1.0), tQ = at("q3", 4.0), tW = at("without", 6.1), tSt = at("strong", 9.1), tP = at("person", 11.1),
+        tDp = at("depend", 12.0), tQs = at("question", 14.8), tA = at("answer", 18.6), tO = at("opinion", 19.7), tSp = at("speed", 22.3), tC = at("comment", 23.8);
+  cam(0, 6, 1.05);
+
+  // A. all eyes on NOV 17: calendar under a spotlight; first results without Huang
+  const h1 = head("All eyes on <em>Nov 17</em>", "అందరి eyes November 17th మీదే", tE - 0.6, { kick: "WHAT NEXT", x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 5.6, mk: "#C9E88F" });
+  const sp = place(mk("div", "spot"), W * 0.28, H * 0.12, H * 0.9, H * 0.9); pop(sp, t17 - 0.3, { opacity: 0, scale: 0.6 }, 0.8);
+  const c = cal("NOV", "17", "Q3 RESULTS", W * 0.39, H * 0.3, W * 0.22, PAL.green); pop(c, t17, { y: u * 8, opacity: 0, rotation: -4 }, 0.7);
+  const hc = card({ i: "huang", x: W * 0.72, y: H * 0.3, h: H * 0.44, rot: 3 }); pop(hc, tW - 0.4, { x: u * 8, opacity: 0, rotation: 6 }, 0.6);
+  tl.to(hc, { filter: "grayscale(1)", opacity: 0.55, duration: 0.8, ease: E.soft }, tW + 0.3);
+  const c1 = chip("FIRST RESULTS WITHOUT HUANG", W * 0.3, H * 0.82, PAL.ink); pop(c1, tW + 0.6);
+
+  // B. the balance: the company vs one person; it tips as the line goes on
+  X.bg("paper", tSt - 0.6);
+  [sp, c, hc, c1].forEach((e) => out(e, tSt - 0.7, { y: u * 4 }));
+  const h2 = rehead(h1, "Company or <em>one person</em>?", "AI boom one person మీద ఎంత depend అయి ఉంది?", tSt - 0.4, { x: W * 0.05, y: H * 0.07, w: W * 0.8, size: 5.6 });
+  const po = place(mk("div", "post"), W * 0.5 - u * 0.55, H * 0.5, null, H * 0.36); pop(po, tSt, { scaleY: 0, opacity: 0 }, 0.5);
+  const bm = place(mk("div", "beam"), W * 0.2, H * 0.5, W * 0.6); pop(bm, tSt + 0.1, { scaleX: 0, opacity: 0 }, 0.6);
+  const p1 = place(mk("div", "pan", undefined, "The company"), W * 0.24, H * 0.36); p1.style.setProperty("--c", PAL.green); pop(p1, tSt + 0.3, { y: -u * 4, opacity: 0 }, 0.5);
+  const p2 = place(mk("div", "pan", undefined, "One person"), W * 0.76, H * 0.36); p2.style.setProperty("--c", PAL.red); pop(p2, tP - 0.2, { y: -u * 4, opacity: 0 }, 0.5);
+  tl.to(bm, { rotation: 6, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, tDp);
+  tl.to(p1, { y: -u * 3, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, tDp); tl.to(p2, { y: u * 3, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, tDp);
+
+  // C. why did he leave? no official answer yet
+  X.bg("scandal", tQs - 0.6);
+  [po, bm, p1, p2].forEach((e) => out(e, tQs - 0.7));
+  const h3 = rehead(h2, "Why did he <em>leave</em>?", "కంపెనీ నుంచి ఇంకా official answer లేదు", tQs - 0.4, { x: W * 0.1, y: H * 0.3, w: W * 0.8, size: 7.4, align: "center", mk: "#F6B4B4" });
+  const s1 = stamp("NO OFFICIAL ANSWER YET", W * 0.28, H * 0.66, tA - 0.3, { rot: -4, size: 4.6 });
+
+  // D. CTA: your opinion in the comments
+  X.bg("next", tO - 0.5);
+  out(h3, tO - 0.6); out(s1, tO - 0.6);
+  const h4 = head("Your <em>opinion</em>?", "Jensen Huang లేని NVIDIA ఇదే speed తో ముందుకు వెళ్తుందా?", tO - 0.3, { x: W * 0.05, y: H * 0.07, w: W * 0.9, size: 5.6, mk: "#C9E88F" });
+  const cb = place(mk("div", "cbox", undefined, `<div class="lb">ADD A COMMENT</div><div class="tx"></div><div class="bt">POST</div>`), W * 0.2, H * 0.4, W * 0.6, H * 0.26);
+  pop(cb, tSp - 0.8, { y: u * 6, opacity: 0 }, 0.6);
+  const tx = cb.querySelector(".tx"), msg = "NVIDIA without Jensen...";
+  const o = { n: 0 }; tl.to(o, { n: msg.length, duration: 1.4, ease: "none", onUpdate: () => { tx.textContent = msg.slice(0, Math.round(o.n)); } }, tSp - 0.2);
+  const sb = place(mk("div", "sub", undefined, "SUBSCRIBE &middot; THE DARK WORLD"), W * 0.33, H * 0.76); pop(sb, tC - 0.2, { y: u * 4, opacity: 0, scale: 0.9 }, 0.5, E.pop);
+  cam(tO, Math.max(1, D - tO), 1.03);
+  X.done();
+</script></body></html>

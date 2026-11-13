@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L10 (137.4-157.5 s): chapter WHO LEADS NOW: Kress card, CFO since 2013, finance chief; INTERIM CEO + CFO badges; NOT PERMANENT;
+   a magnifier sweeps INSIDE / OUTSIDE for the new CEO */
+.badge { position: absolute; box-sizing: border-box; padding: calc(var(--u) * .9) calc(var(--u) * 1.8); color: #fff; font: 400 calc(var(--u) * 3.6) var(--font-head); white-space: nowrap; box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.6) #0003; }
+.side { position: absolute; box-sizing: border-box; background: #fff; box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F22; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        font: 400 calc(var(--u) * 4) var(--font-head); color: #14171F; }
+.side small { font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .14em; color: #5B6472; margin-top: calc(var(--u) * 1); }
+.mag { position: absolute; width: calc(var(--u) * 14); height: calc(var(--u) * 14); border-radius: 50%; border: calc(var(--u) * 1.4) solid #14171F; background: #ffffff55; }
+.mag::after { content: ""; position: absolute; right: calc(var(--u) * -6); bottom: calc(var(--u) * -4); width: calc(var(--u) * 7); height: calc(var(--u) * 1.8); background: #14171F; border-radius: 9px; transform: rotate(40deg); }
+.nq2 { position: absolute; font: 400 calc(var(--u) * 8) var(--font-head); color: #E0393E; transform: translateX(-50%); white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, head, rehead, chip, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("next");
+  const tK = at("kress", 2.4), tY = at("y2013", 3.1), tC = at("cfo", 5.4), tF = at("finance", 7.0), tI = at("interim", 10.0), tC2 = at("cfo2", 11.6),
+        tP = at("perm", 14.3), tIn = at("inside", 15.7), tO = at("outside", 16.7), tS = at("search", 19.1);
+  cam(0, 10, 1.04);
+  const h1 = head("Who leads <em>now</em>?", "ఇప్పుడు NVIDIA ని ఎవరు lead చేస్తారు?", 0.1, { kick: "CHAPTER 3", x: W * 0.05, y: H * 0.07, w: W * 0.5, size: 5.6, mk: "#C9E88F" });
+
+  // A. Kress card lands big in the centre, then steps right as her facts build on the left
+  const kc = card({ i: "kress", x: W * 0.25, y: H * 0.3, w: W * 0.5, h: H * 0.58, tape: true });
+  pop(kc, tK - 0.3, { y: u * 8, opacity: 0, scale: 0.94 }, 0.7);
+  fit(kc, tY - 0.1, W * 0.5, H * 0.24, W * 0.44, H * 0.56, 0.9, { rotation: 2 });
+  const c1 = chip("COLETTE KRESS", W * 0.06, H * 0.36, PAL.ink); pop(c1, tK + 0.2);
+  const c2 = chip("NVIDIA CFO SINCE 2013", W * 0.06, H * 0.48, PAL.green); pop(c2, tC - 0.3);
+  const c3 = chip("RUNS ALL COMPANY FINANCE", W * 0.06, H * 0.6, PAL.green); pop(c3, tF);
+
+  // B. two hats now: INTERIM CEO + still CFO; interim = NOT PERMANENT
+  [c1, c2, c3].forEach((c, i) => out(c, tI - 0.5 + i * 0.05, { x: -u * 4 }));
+  const h2 = rehead(h1, "Two jobs, <em>for now</em>", "Interim CEO మరియు CFO, రెండూ ఆమే", tI - 0.3, { x: W * 0.05, y: H * 0.07, w: W * 0.5, size: 5.6, mk: "#C9E88F" });
+  const b1 = place(mk("div", "badge", undefined, "INTERIM CEO"), W * 0.08, H * 0.4); b1.style.background = PAL.green; pop(b1, tI, { x: -u * 6, opacity: 0 }, 0.5);
+  const b2 = place(mk("div", "badge", undefined, "+ CFO"), W * 0.08, H * 0.54); b2.style.background = PAL.ink; pop(b2, tC2, { x: -u * 6, opacity: 0 }, 0.5);
+  const st = stamp("NOT PERMANENT", W * 0.06, H * 0.7, tP - 0.1, { rot: -5, size: 4.6 });
+
+  // C. the search: Kress steps aside, two doors INSIDE / OUTSIDE, a magnifier sweeps between them
+  X.bg("paper", tIn - 0.6);
+  [b1, b2, st].forEach((e) => out(e, tIn - 0.7));
+  fit(kc, tIn - 0.7, W * 0.04, H * 0.3, W * 0.2, H * 0.4, 0.8, { rotation: -3 });
+  const h3 = rehead(h2, "Search for a <em>new CEO</em>", "Company inside నుంచి గానీ outside నుంచి గానీ", tIn - 0.4, { x: W * 0.05, y: H * 0.07, w: W * 0.7, size: 5.6 });
+  const s1 = place(mk("div", "side", undefined, "INSIDE<small>NVIDIA PEOPLE</small>"), W * 0.32, H * 0.34, W * 0.26, H * 0.36); pop(s1, tIn, { y: u * 6, opacity: 0 }, 0.6);
+  const s2 = place(mk("div", "side", undefined, "OUTSIDE<small>NEW FACE</small>"), W * 0.66, H * 0.34, W * 0.26, H * 0.36); pop(s2, tO, { y: u * 6, opacity: 0 }, 0.6);
+  const mg = place(mk("div", "mag"), W * 0.38, H * 0.4); pop(mg, tS - 1.2, { scale: 0.5, opacity: 0 }, 0.5);
+  tl.to(mg, { left: W * 0.72, duration: 1.4, ease: E.io, yoyo: true, repeat: 1 }, tS - 0.8);
+  const q = place(mk("div", "nq2", undefined, "NEW CEO ?"), W * 0.62, H * 0.76); pop(q, tS, { y: u * 4, opacity: 0 }, 0.5);
+  cam(10, D - 10, 1.0);
+  X.done();
+</script></body></html>

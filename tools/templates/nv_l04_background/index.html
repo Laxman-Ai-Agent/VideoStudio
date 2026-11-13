@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L04 (40.2-60.1 s): chapter BACKGROUND; 1993 -> today timeline with HQ + Huang; ChatGPT -> NVIDIA chips flow; ENGINE OF THE AI BOOM */
+.yr { position: absolute; font: 400 calc(var(--u) * 3.4) var(--font-head); color: #14171F; transform: translateX(-50%); }
+.dot { position: absolute; width: calc(var(--u) * 2.2); height: calc(var(--u) * 2.2); border-radius: 50%; background: #76B900; border: calc(var(--u) * .5) solid #fff; box-shadow: 0 0 0 1px #14171F33; transform: translate(-50%, -50%); }
+.arw { position: absolute; font: 400 calc(var(--u) * 6) var(--font-head); color: #76B900; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, logo, head, rehead, chip, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("company");
+  const tB = at("bg", 0.8), tJ = at("jensen", 2.0), tY = at("y1993", 2.7), tF = at("founders", 5.2), tFc = at("face", 8.2), tC = at("chatgpt", 10.1),
+        tCh = at("chips", 12.4), tN = at("nvidia", 13.8), tBm = at("boom", 16.8), tE = at("engine", 17.9);
+  cam(0, 9, 1.04, 0, -u);
+
+  // A. chapter card, then a timeline 1993 -> 2026 along the bottom with HQ and Huang above it
+  const h1 = head("Background", "ముందుగా కొంచెం background", 0.1, { kick: "CHAPTER 1", x: W * 0.05, y: H * 0.07, w: W * 0.5, size: 6 });
+  const ly = H * 0.84;
+  line([[W * 0.1, ly], [W * 0.9, ly]], tY - 0.2, 1.4, PAL.ink, u * 0.35);
+  const d1 = place(mk("div", "dot"), W * 0.1, ly), y1 = place(mk("div", "yr", undefined, "1993"), W * 0.1, ly + u * 2);
+  pop(d1, tY, { scale: 0, opacity: 0 }, 0.4, E.pop); pop(y1, tY, { opacity: 0, y: u * 2 }, 0.4);
+  const d2 = place(mk("div", "dot"), W * 0.9, ly), y2 = place(mk("div", "yr", undefined, "2026"), W * 0.9, ly + u * 2);
+  pop(d2, tY + 1.2, { scale: 0, opacity: 0 }, 0.4, E.pop); pop(y2, tY + 1.2, { opacity: 0, y: u * 2 }, 0.4);
+  const hc = card({ i: "huang", x: W * 0.06, y: H * 0.3, h: H * 0.46, rot: -2, tape: true });
+  pop(hc, tJ - 0.2, { y: u * 6, opacity: 0, rotation: -6 }, 0.7);
+  const hq = card({ i: "nvidia_hq", x: W * 0.36, y: H * 0.3, h: H * 0.44, rot: 1.5 });
+  pop(hq, tY + 0.4, { y: u * 6, opacity: 0, rotation: 5 }, 0.7);
+  const c1 = chip("CO-FOUNDER", W * 0.06, H * 0.24, PAL.green); pop(c1, tF);
+  const c2 = chip("NVIDIA HQ &middot; SANTA CLARA", W * 0.6, H * 0.22, PAL.ink); pop(c2, tF + 0.4);
+  out(c1, tFc - 0.4); const c3 = chip("THE FACE OF NVIDIA", W * 0.06, H * 0.24, PAL.red); pop(c3, tFc);
+  tl.to(hc, { scale: 1.06, duration: 0.8, ease: E.io }, tFc);
+
+  // B. what we use today: ChatGPT -> runs on -> NVIDIA chips
+  X.bg("paper", tC - 0.5);
+  [h1, hq, c1, c2, c3, d1, d2, y1, y2].forEach((e) => out(e, tC - 0.6));
+  out(hc, tC - 0.6, { scale: 0.9 });
+  tl.to(X.$("stage").querySelectorAll("svg"), { opacity: 0, duration: 0.4 }, tC - 0.6);
+  const h2 = head("Behind today's <em>AI</em>", "మనం use చేసే AI tools వెనక NVIDIA chips", tC - 0.3, { x: W * 0.05, y: H * 0.07, w: W * 0.7, size: 5.4 });
+  const og = logo("openai", W * 0.07, H * 0.36, H * 0.3); pop(og, tC, { scale: 0.85, opacity: 0 }, 0.6);
+  const ol = chip("CHATGPT", W * 0.08, H * 0.7, PAL.ink); pop(ol, tC + 0.3);
+  const a1 = place(mk("div", "arw", undefined, "&rarr;"), W * 0.3, H * 0.42); pop(a1, tCh - 0.5, { x: -u * 4, opacity: 0 }, 0.5);
+  const bw = card({ i: "blackwell", x: W * 0.38, y: H * 0.28, h: H * 0.48 }); pop(bw, tCh, { y: u * 6, opacity: 0 }, 0.7);
+  const bl = chip("NVIDIA CHIPS", W * 0.42, H * 0.8, PAL.green); pop(bl, tCh + 0.3);
+  const a2 = place(mk("div", "arw", undefined, "&rarr;"), W * 0.71, H * 0.42); pop(a2, tN - 0.3, { x: -u * 4, opacity: 0 }, 0.5);
+  const nl = logo("nvidia", W * 0.78, H * 0.36, H * 0.3); pop(nl, tN, { scale: 0.85, opacity: 0 }, 0.6);
+  cam(tC, 7, 1.05, 0, 0);
+
+  // C. ENGINE OF THE AI BOOM: everything slides up, the headline lands big with the marker
+  [og, ol, a1, a2, bl].forEach((e) => out(e, tBm - 0.6, { y: -u * 3 }));
+  fit(bw, tBm - 0.6, W * 0.56, H * 0.22, W * 0.38, H * 0.56, 0.9);
+  fit(nl, tBm - 0.6, W * 0.06, H * 0.12, H * 0.18, H * 0.18, 0.9);
+  rehead(h2, "The engine of<br>the <em>AI boom</em>", "AI boom మొత్తానికి engine prepare చేసే company", tBm - 0.2, { x: W * 0.06, y: H * 0.38, w: W * 0.48, size: 6.4, mk: "#C9E88F" });
+  tl.to(bw, { scale: 1.05, duration: 1.5, ease: E.soft }, tE);
+  X.done();
+</script></body></html>

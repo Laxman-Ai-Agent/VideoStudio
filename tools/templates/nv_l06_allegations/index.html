@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L06 (72.2-88.2 s): chapter THE ALLEGATIONS: claim card 1 (China intel target?), claim card 2 (affair admitted, per reports);
+   board's answer: company secrets / national security, no sign of damage */
+.claim { position: absolute; box-sizing: border-box; background: #fff; padding: calc(var(--u) * 2) calc(var(--u) * 2.4); box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F26; }
+.claim .tg { display: inline-block; font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .16em; color: #fff; background: #E0393E; padding: calc(var(--u) * .3) calc(var(--u) * .8); }
+.claim .t { margin-top: calc(var(--u) * 1.2); font: 400 calc(var(--u) * 3.6) var(--font-head); text-transform: uppercase; line-height: 1.12; color: #14171F; }
+.row { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.6); font: 400 calc(var(--u) * 3.6) var(--font-head); color: #14171F; text-transform: uppercase; white-space: nowrap; }
+.row b { width: calc(var(--u) * 5); height: calc(var(--u) * 5); border-radius: 50%; background: #76B900; color: #fff; display: flex; align-items: center; justify-content: center; font: 400 calc(var(--u) * 3) var(--font-head); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, tilt, card, shot, head, rehead, chip, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("scandal");
+  const tC = at("china", 0.1), tT = at("target", 1.6), tA = at("alleg", 2.8), tAf = at("affair", 6.5), tAd = at("admit", 7.1), tR = at("reports", 7.9),
+        tS = at("secrets", 9.9), tSe = at("security", 11.1), tNo = at("noreason", 13.4), tB = at("board", 14.5);
+  cam(0, 9, 1.04);
+  const h1 = head("The <em>allegations</em>", "", 0, { kick: "CHAPTER 2", x: W * 0.05, y: H * 0.06, w: W * 0.6, size: 5.6, mk: "#F6B4B4" });
+  const cl = (tag, txt, x, y, w) => place(mk("div", "claim", undefined, `<div class="tg">${tag}</div><div class="t">${txt}</div>`), x, y, w);
+
+  // A. claim 1 next to the live news page
+  const tv = shot({ i: "tv18", x: W * 0.05, y: H * 0.3, w: W * 0.46, url: "cnbctv18.com" }); tilt(tv, -1.5);
+  pop(tv, tC, { y: u * 8, opacity: 0, rotation: -5 }, 0.7);
+  const k1 = cl("ALLEGATION", "Did Chinese intelligence<br><span style='color:#E0393E'>target</span> Huang?", W * 0.55, H * 0.3, W * 0.4);
+  pop(k1, tT - 0.3, { x: u * 8, opacity: 0 }, 0.6);
+  const e1 = chip("BOARD ENQUIRY ON THIS", W * 0.56, H * 0.62, PAL.ink); pop(e1, tA + 0.4);
+
+  // B. claim 2 stacks over it: an affair, admitted (per reports)
+  move(k1, tAf - 0.5, W * 0.55, H * 0.22, null, null, 0.7); tl.to(k1, { opacity: 0.45, scale: 0.92, duration: 0.7, ease: E.io }, tAf - 0.5);
+  out(e1, tAf - 0.5);
+  const k2 = cl("REPORTS", "Huang admitted<br>an <span style='color:#E0393E'>affair</span>", W * 0.57, H * 0.48, W * 0.38); tilt(k2, 1.5);
+  pop(k2, tAf - 0.2, { y: u * 8, opacity: 0, rotation: 5 }, 0.6);
+
+  // C. the board's answer: two checks, no sign of damage
+  X.bg("company", tS - 0.6);
+  [tv, k1, k2].forEach((e) => out(e, tS - 0.7, { y: u * 4 }));
+  const h2 = rehead(h1, "Board: no sign of <em>damage</em>", "secrets కి గానీ national security కి గానీ damage జరిగిందని doubt కి reason లేదు", tS - 0.4, { x: W * 0.05, y: H * 0.07, w: W * 0.86, size: 5.2, mk: "#C9E88F" });
+  const r1 = place(mk("div", "row", undefined, "<b>&#10003;</b>Company secrets"), W * 0.14, H * 0.46); pop(r1, tS, { x: -u * 6, opacity: 0 }, 0.5);
+  const r2 = place(mk("div", "row", undefined, "<b>&#10003;</b>National security"), W * 0.14, H * 0.62); pop(r2, tSe, { x: -u * 6, opacity: 0 }, 0.5);
+  const hq = card({ i: "nvidia_hq", x: W * 0.58, y: H * 0.4, w: W * 0.36, h: H * 0.42, rot: 2 }); pop(hq, tS + 0.3, { x: u * 8, opacity: 0, rotation: 6 }, 0.7);
+  const c2 = chip("NVIDIA BOARD", W * 0.6, H * 0.85, PAL.green); pop(c2, tB);
+  cam(tS, D - tS, 1.0);
+  X.done();
+</script></body></html>

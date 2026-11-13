@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L05 (60.1-72.2 s): world-famous Huang on stage; then the story turns: calendar NOV 8-9, BOARD INVESTIGATION folder */
+.folder { position: absolute; box-sizing: border-box; background: #E9D9B4; border-radius: calc(var(--u) * .8); box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F2e; padding: 7% 8%; }
+.folder::before { content: ""; position: absolute; left: 6%; top: calc(var(--u) * -2.4); width: 34%; height: calc(var(--u) * 3); background: #E9D9B4; border-radius: calc(var(--u) * .8) calc(var(--u) * .8) 0 0; }
+.folder .t { font: 400 calc(var(--u) * 4) var(--font-head); color: #14171F; text-transform: uppercase; line-height: 1.05; }
+.folder .s { margin-top: calc(var(--u) * 1.2); font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .14em; color: #6b5a33; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, logo, head, rehead, chip, cal, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("company");
+  const tH = at("huang", 1.8), tM = at("month", 4.7), tC = at("change", 6.1), tN = at("nov", 7.5), tB = at("board", 9.9), tI = at("invest", 10.4);
+
+  // A. Huang on stage, full frame, slow push: a name everyone knows
+  const kc = card({ i: "huang_key", x: W * 0.08, y: H * 0.08, w: W * 0.84, h: H * 0.72 });
+  pop(kc, 0, { scale: 1.06, opacity: 0 }, 0.8);
+  tl.fromTo(kc, { scale: 1 }, { scale: 1.06, duration: 6, ease: E.soft }, 0.1);
+  const h1 = head("A name <em>everyone</em> knows", "Huang name దాదాపు అందరికీ తెలుసు", tH - 0.3, { x: W * 0.06, y: H * 0.82, w: W * 0.88, size: 4.4 });
+  h1.querySelector(".te").style.display = "none";
+
+  // B. the story turns this month: the photo shrinks to the left, tint shifts, calendar NOV 8-9
+  X.bg("scandal", tC - 0.4);
+  out(h1, tM - 0.4);
+  fit(kc, tM - 0.2, W * 0.05, H * 0.2, W * 0.36, H * 0.5, 1.0, { rotation: -2 });
+  tl.to(kc, { filter: "grayscale(0.7)", duration: 1.2, ease: E.soft }, tC);
+  const h2 = head("The story <em>turns</em>", "ఈ month starting లోనే story change", tM + 0.2, { x: W * 0.46, y: H * 0.08, w: W * 0.5, size: 5.4, mk: "#F6B4B4" });
+  const c = cal("NOV", "8&ndash;9", "2026", W * 0.48, H * 0.4, W * 0.17); pop(c, tN - 0.2, { y: u * 6, opacity: 0, rotation: -4 }, 0.6);
+
+  // C. the board opens an investigation: a case folder slides in with a stamp
+  const fd = place(mk("div", "folder", undefined, `<div class="t">NVIDIA Board<br>enquiry</div><div class="s">CASE FILE &middot; NOV 2026</div>`), W * 0.7, H * 0.42, W * 0.25, H * 0.34);
+  pop(fd, tB - 0.2, { x: u * 10, opacity: 0, rotation: 6 }, 0.7);
+  stamp("INVESTIGATION", W * 0.6, H * 0.76, tI, { rot: -6, size: 4.6 });
+  X.cam(tB, D - tB, 1.04);
+  X.done();
+</script></body></html>

@@ -66,7 +66,10 @@
   const ix = (k) => (typeof k === "string" ? (P.names || []).indexOf(k) : k);
   const fade = (e, t, d = 0.45) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: d, ease: E.soft, immediateRender: true }, t);
   function pop(e, t, from = { y: u * 3, opacity: 0, scale: 0.95 }, d = 0.6, ease = E.in) {
-    const to = { x: 0, y: 0, scale: 1, opacity: 1, duration: d, ease, immediateRender: true }; if ("rotation" in from) to.rotation = e._rot || 0;
+    // only the keys that animate go back to rest: setting x:0 for every pop wiped CSS translateX(-50%) centring
+    const to = { opacity: 1, duration: d, ease, immediateRender: true };
+    for (const k of ["x", "y", "scale", "scaleX", "scaleY"]) if (k in from) to[k] = k.startsWith("scale") ? 1 : 0;
+    if ("rotation" in from) to.rotation = e._rot || 0;
     tl.fromTo(e, from, to, t);
   }
   const out = (e, t, to = {}) => tl.to(e, { opacity: 0, duration: 0.4, ease: E.out, ...to }, t);

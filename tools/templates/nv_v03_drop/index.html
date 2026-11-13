@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 V03 9:16 (31.4-36.8 s): share price dives: chart in a tall panel, -13% counts down in red */
+.panel { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 3); box-shadow: 0 var(--u) calc(var(--u) * 4) #14171F2a; }
+.panel .lb { position: absolute; left: 7%; top: 5%; font: 400 calc(var(--u) * 7) var(--font-head); color: #14171F; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, head, chip, num, count, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("scandal");
+  const tN = at("news", 0.5), tS = at("share", 1.9), tP = at("p13", 3.0), tD = at("drop", 4.4);
+  cam(0, D, 1.06);
+  head("Share <em>dives</em>", "News రాగానే NVIDIA share drop", 0.1, { x: W * 0.07, y: H * 0.06, w: W * 0.86, size: 11, mk: "#F6B4B4" });
+  const p = place(mk("div", "panel", undefined, `<div class="lb">NVDA</div>`), W * 0.06, H * 0.24, W * 0.88, H * 0.56); pop(p, tN - 0.2, { y: u * 10, opacity: 0 }, 0.6);
+  const X0 = W * 0.12, Y0 = H * 0.36, CW = W * 0.76, CH = H * 0.36;
+  line([[X0, Y0 + CH * 0.1], [X0 + CW * 0.2, Y0 + CH * 0.04], [X0 + CW * 0.4, Y0]], tS - 0.4, 0.7, PAL.ink, u * 1);
+  line([[X0 + CW * 0.4, Y0], [X0 + CW * 0.6, Y0 + CH * 0.6], [X0 + CW * 0.8, Y0 + CH * 0.95]], tP - 0.2, 0.9, PAL.red, u * 1.2);
+  line([[X0 + CW * 0.8, Y0 + CH * 0.95], [X0 + CW, Y0 + CH * 0.7]], tD + 0.2, 0.5, PAL.green, u * 1.2);
+  const n = num(W * 0.5, H * 0.82, PAL.red, 26); n.style.transform = "translateX(-50%)"; count(n, 0, 13, tP, 1.1, (v) => "-" + Math.round(v) + "%");
+  pop(n, tP - 0.1, { opacity: 0, y: u * 4 }, 0.3);
+  X.done();
+</script></body></html>

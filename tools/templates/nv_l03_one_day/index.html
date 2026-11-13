@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L03 (24.8-40.2 s): 33 YEARS -> 1 DAY; the official announcement with no reason; calendar NOV 12 -> NOV 17 (5 days to results); step by step */
+.dots { position: absolute; display: flex; gap: calc(var(--u) * 6); }
+.dots i { width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: 50%; background: #14171F; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, shot, mark, ring, head, rehead, num, count, cal, flip, chip, stamp, line, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("company");
+  const tY = at("y33", 0.1), tD = at("oneday", 3.4), tO = at("official", 5.8), tR = at("reason", 6.8), tF = at("five", 8.8), tRe = at("results", 9.5),
+        tSg = at("signal", 11.9), tSt = at("step", 14.1);
+  cam(0, 5, 1.04);
+
+  // A. 33 years count up beside his photo, then the number turns into 1 DAY
+  const hc = card({ i: "huang_seat", x: W * 0.6, y: H * 0.1, h: H * 0.72, rot: 2, tape: true });
+  pop(hc, tY, { x: u * 8, opacity: 0, rotation: 6 }, 0.7);
+  const n = num(W * 0.06, H * 0.22, PAL.ink, 22); count(n, 1, 33, tY + 0.2, 1.4); pop(n, tY, { opacity: 0, y: u * 4 }, 0.4);
+  const l1 = head("Years running<br><em>NVIDIA</em>", "33 years గా NVIDIA ని run చేసిన మనిషి", tY + 0.8, { x: W * 0.06, y: H * 0.5, w: W * 0.48, size: 5 });
+  tl.to(n, { opacity: 0, y: -u * 4, duration: 0.3 }, tD - 0.3);
+  const n2 = num(W * 0.06, H * 0.22, PAL.red, 22); n2.textContent = "1 DAY"; pop(n2, tD, { opacity: 0, y: u * 4, scale: 0.9 }, 0.5);
+  const l2 = rehead(l1, "Gone in<br><em>one day</em>", "one day లో resign", tD + 0.1, { x: W * 0.06, y: H * 0.5, w: W * 0.48, size: 5, mk: "#F6B4B4" });
+
+  // B. the official announcement: no reason in it
+  out(n2, tO - 0.5); out(l2, tO - 0.5);
+  fit(hc, tO - 0.6, W * 0.78, H * 0.08, W * 0.18, H * 0.34, 0.8, { rotation: 4 });
+  const pr = shot({ i: "release", x: W * 0.05, y: H * 0.12, w: W * 0.66, url: "nvidianews.nvidia.com" });
+  pop(pr, tO - 0.4, { y: u * 8, opacity: 0 }, 0.7);
+  mark(pr, tO + 0.4, [0.172, 0.21, 0.28, 0.045]);
+  const ch = chip("REASON: NOT GIVEN", W * 0.73, H * 0.52, PAL.red); pop(ch, tR);
+
+  // C. calendar NOV 12 -> NOV 17: five days to the results
+  X.bg("paper", tF - 0.5);
+  out(pr, tF - 0.6, { x: -u * 10 }); out(ch, tF - 0.6); out(hc, tF - 0.6);
+  const c = cal("NOV", "12", "RESIGNATION", W * 0.12, H * 0.16, W * 0.22); pop(c, tF - 0.3, { y: u * 6, opacity: 0 }, 0.6);
+  const ln = line([[W * 0.36, H * 0.42], [W * 0.62, H * 0.42]], tF + 0.1, 0.9, PAL.ink, u * 0.4);
+  const n5 = num(W * 0.43, H * 0.24, PAL.ink, 7); n5.textContent = "5 DAYS"; pop(n5, tF + 0.3, { opacity: 0, y: u * 3 }, 0.5);
+  const c2 = cal("NOV", "17", "Q3 RESULTS", W * 0.65, H * 0.16, W * 0.22, PAL.green); pop(c2, tRe, { y: u * 6, opacity: 0 }, 0.6);
+  const q = head("What does it <em>signal</em>?", "results కి 5 రోజుల ముందు ఇది దేనికి signal?", tSg - 0.6, { x: W * 0.1, y: H * 0.68, w: W * 0.8, size: 5, align: "center" });
+
+  // D. step by step: the two dates become the first two points of a path
+  out(q, tSt - 0.4);
+  [c, c2, n5].forEach((e) => tl.to(e, { scale: 0.7, y: -u * 6, duration: 0.7, ease: E.io }, tSt - 0.4));
+  const ds = place(mk("div", "dots", undefined, "<i></i><i></i><i></i><i></i>"), W * 0.36, H * 0.7);
+  tl.fromTo(ds.children, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, stagger: 0.18, ease: E.pop, immediateRender: true }, tSt);
+  const sb = head("Step by <em>step</em>", "", tSt + 0.3, { x: W * 0.2, y: H * 0.78, w: W * 0.6, size: 4.6, align: "center" });
+  cam(5, D - 5, 1.0);
+  X.done();
+</script></body></html>

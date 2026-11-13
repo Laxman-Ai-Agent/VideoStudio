@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 L12 (168.9-198.4 s): chapter THE $500B DEALS: investor wall builds name by name around NVIDIA; $500B+; data centers + chip factories;
+   loan analogy house / gold = NVIDIA chips as guarantee; NON-BINDING, not signed */
+.tile { position: absolute; box-sizing: border-box; background: #fff no-repeat center / 72%; box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) #14171F22;
+        display: flex; align-items: center; justify-content: center; font: 400 calc(var(--u) * 3.2) var(--font-head); color: #14171F; text-transform: uppercase; letter-spacing: .02em; }
+.eq { position: absolute; font: 400 calc(var(--u) * 10) var(--font-head); color: #14171F; }
+.sign { position: absolute; border-bottom: calc(var(--u) * .4) dashed #14171F; font: 700 calc(var(--u) * 2) var(--font-script); letter-spacing: .14em; color: #5B6472; padding-bottom: calc(var(--u) * .6); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, card, logo, head, rehead, chip, num, count, stamp, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("money");
+  const tT = at("tension", 0.9), tA = at("aug", 2.8), tB5 = at("b500", 10.1), tDl = at("deals", 13.6), tDc = at("dc", 15.5), tFb = at("fab", 16.4),
+        tCh = at("chips", 19.1), tG = at("guarantee", 19.5), tHo = at("house", 22.5), tGo = at("gold", 23.2), tNb = at("nonbind", 26.9), tSg = at("sign", 28.6);
+  const names = [["apollo", 4.1, "Apollo"], ["blackrock", 4.7, null], ["blackstone", 5.4, "Blackstone"], ["brookfield", 6.2, "Brookfield"], ["goldman", 7.0, null], ["kkr", 7.9, "KKR"]];
+  cam(0, 12, 1.04);
+  const h1 = head("The real <em>tension</em>", "అసలు tension ఇక్కడుంది", tT - 0.5, { kick: "CHAPTER 4", x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 5.6 });
+  const c0 = chip("AUGUST 2026", W * 0.66, H * 0.1, PAL.ink); pop(c0, tA);
+
+  // A. the investor wall: NVIDIA in the middle, six firms join on their names (real logos where free ones exist, names otherwise)
+  const nl = logo("nvidia", W * 0.43, H * 0.4, H * 0.24); pop(nl, tA, { scale: 0.85, opacity: 0 }, 0.6);
+  const pos = [[0.1, 0.32], [0.1, 0.52], [0.1, 0.72], [0.72, 0.32], [0.72, 0.52], [0.72, 0.72]];
+  const tiles = names.map(([k, t, txt], i) => {
+    const e = place(mk("div", "tile", undefined, txt || ""), W * pos[i][0], H * pos[i][1], W * 0.18, H * 0.14);
+    if (!txt) { const j = X.ix(k); if (j >= 0) e.style.backgroundImage = `url("${X.S.images[j]}")`; }
+    pop(e, at(k, t) - 0.2, { x: pos[i][0] < 0.5 ? -u * 6 : u * 6, opacity: 0 }, 0.5);
+    return e;
+  });
+  const n = num(W * 0.5, H * 0.18, PAL.dgreen, 9); n.style.transform = "translateX(-50%)"; n.style.opacity = 0;
+  tl.to(n, { opacity: 1, duration: 0.3 }, tB5 - 0.2); count(n, 0, 500, tB5, 1.4, (v) => "$" + Math.round(v) + "B+");
+  const c1 = chip("TO RAISE MONEY", W * 0.42, H * 0.7, PAL.green); pop(c1, tDl - 0.5);
+
+  // B. what the money builds: data centers + chip factories (real photos)
+  out(c0, tDc - 0.8); out(c1, tDc - 0.8); tiles.forEach((e, i) => out(e, tDc - 0.8 + i * 0.04, { scale: 0.9 }));
+  fit(nl, tDc - 0.8, W * 0.05, H * 0.24, H * 0.12, H * 0.12, 0.7); move(n, tDc - 0.8, W * 0.2, H * 0.24, null, null, 0.7, { scale: 0.6 });
+  const dc = card({ i: "datacenter", x: W * 0.05, y: H * 0.42, w: W * 0.42, h: H * 0.44, rot: -1.5, cap: "DATA CENTERS" }); pop(dc, tDc - 0.3, { y: u * 8, opacity: 0 }, 0.7);
+  const fb = card({ i: "fab", x: W * 0.53, y: H * 0.42, w: W * 0.42, h: H * 0.44, rot: 1.5, cap: "CHIP FACTORIES" }); pop(fb, tFb - 0.2, { y: u * 8, opacity: 0 }, 0.7);
+
+  // C. the guarantee: NVIDIA chips; like a house or gold for a big loan
+  X.bg("paper", tCh - 0.6);
+  [dc, fb, nl, n].forEach((e) => out(e, tCh - 0.7, { y: -u * 4 }));
+  const h2 = rehead(h1, "Chips as <em>guarantee</em>", "Big loan కి house / gold guarantee పెట్టినట్టు", tCh - 0.4, { x: W * 0.05, y: H * 0.07, w: W * 0.7, size: 5.6 });
+  const bw = card({ i: "blackwell", x: W * 0.6, y: H * 0.3, w: W * 0.34, h: H * 0.48, cap: "NVIDIA CHIPS" }); pop(bw, tCh - 0.2, { x: u * 8, opacity: 0 }, 0.7);
+  const ho = card({ i: "house", x: W * 0.05, y: H * 0.3, w: W * 0.24, h: H * 0.22, rot: -2, cap: "HOUSE" }); pop(ho, tHo - 0.2, { x: -u * 8, opacity: 0, rotation: -6 }, 0.6);
+  const go = card({ i: "gold", x: W * 0.07, y: H * 0.6, w: W * 0.22, h: H * 0.22, rot: 2, cap: "GOLD" }); pop(go, tGo - 0.2, { x: -u * 8, opacity: 0, rotation: 6 }, 0.6);
+  const eq = place(mk("div", "eq", undefined, "="), W * 0.41, H * 0.42); pop(eq, tGo + 0.4, { scale: 0.4, opacity: 0 }, 0.5, E.pop);
+
+  // D. but the deals are NON-BINDING: an empty signature line
+  const sg = place(mk("div", "sign", undefined, "SIGNATURE"), W * 0.36, H * 0.84, W * 0.28); pop(sg, tNb - 0.6, { opacity: 0 }, 0.4);
+  stamp("NON-BINDING", W * 0.33, H * 0.62, tNb, { rot: -7, size: 6 });
+  const c2 = chip("NOT SIGNED YET", W * 0.39, H * 0.9, PAL.red); pop(c2, tSg);
+  cam(tCh, D - tCh, 1.0);
+  X.done();
+</script></body></html>

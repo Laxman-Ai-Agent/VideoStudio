@@ -1,0 +1,8 @@
+{
+ "name": "nv_l02_500b",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 16x9; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 L02 (17.1-24.8 s): one person in the centre, $500B+ counts up, AI plan cards hang on lines around him and sway loose on shake "
+}

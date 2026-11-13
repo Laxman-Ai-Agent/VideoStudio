@@ -1,0 +1,8 @@
+{
+ "name": "nv_l13_stock",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 05_Nvidia_CEO_Exit 16x9; reuse only when the user asks", "kit": "news_kit"},
+ "description": "05 L13 (198.4-223.6 s): share chart dives -13% then recovers some; analyst 1 (Raymond James): three points build;"
+}

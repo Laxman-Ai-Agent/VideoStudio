@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05 V05 9:16 (45.3-end): three question cards stack (slower under Kress? / deal terms? / Nov 17 Q3?); CTA comment box types NVIDIA -> full video link */
+.qc { position: absolute; box-sizing: border-box; background: #fff; padding: calc(var(--u) * 4) calc(var(--u) * 5); box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F26; border-left: calc(var(--u) * 2) solid var(--c); }
+.qc .n { font: 700 calc(var(--u) * 3.4) var(--font-script); letter-spacing: .14em; color: #5B6472; }
+.qc .t { margin-top: calc(var(--u) * 1.2); font: 400 calc(var(--u) * 7.4) var(--font-head); text-transform: uppercase; line-height: 1.05; color: #14171F; }
+.cbox { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 3); padding: calc(var(--u) * 4); box-shadow: 0 var(--u) calc(var(--u) * 4) #14171F2a; }
+.cbox .lb { display: block; line-height: 1.3; font: 700 calc(var(--u) * 3.4) var(--font-script); letter-spacing: .14em; color: #5B6472; }
+.cbox .tx { line-height: 1.1; margin-top: calc(var(--u) * 3); font: 400 calc(var(--u) * 10) var(--font-head); color: #14171F; min-height: 1.1em; }
+.arrow { position: absolute; font: 400 calc(var(--u) * 16) var(--font-head); color: #76B900; transform: translateX(-50%); }
+.lk { position: absolute; padding: calc(var(--u) * 2.4) calc(var(--u) * 5); background: #E0393E; color: #fff; font: 400 calc(var(--u) * 6.4) var(--font-head); border-radius: calc(var(--u) * 1.6); white-space: nowrap; transform: translateX(-50%); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, card, head, rehead, cam } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  X.bg("next");
+  const tK = at("kress", 2.9), tSp = at("speed", 4.7), tB = at("b500", 5.4), tT = at("terms", 7.7), tN = at("nov", 9.2), tSt = at("strong", 12.7),
+        tC = at("comment", 16.4), tNv = at("nvidia", 17.2), tL = at("link", 19.9);
+  cam(0, 13, 1.04);
+  const h1 = head("What <em>next</em>?", "", 0.1, { x: W * 0.07, y: H * 0.06, w: W * 0.86, size: 12, mk: "#C9E88F" });
+  const kc = card({ i: "kress", x: W * 0.56, y: H * 0.04, w: W * 0.36, h: H * 0.12, rot: 3 }); pop(kc, tK - 0.3, { x: u * 10, opacity: 0, rotation: 8 }, 0.6);
+  const Q = [["Q1", "Slower under<br>Kress?", tSp - 0.6, PAL.green], ["Q2", "$500B deal<br>terms change?", tT - 0.8, PAL.red], ["Q3", "Nov 17 results:<br>how strong?", tN - 0.4, PAL.ink]];
+  const qs = Q.map(([n, t, t0, c], i) => { const e = place(mk("div", "qc", undefined, `<div class="n">${n}</div><div class="t">${t}</div>`), W * 0.07, H * (0.2 + i * 0.24), W * 0.86);
+    e.style.setProperty("--c", c); pop(e, t0, { x: u * 14, opacity: 0 }, 0.6); return e; });
+  tl.to(qs[2], { scale: 1.03, duration: 0.8, ease: E.io }, tSt);
+
+  // CTA: comment NVIDIA -> full video link
+  X.bg("paper", tC - 0.7);
+  [h1, kc, ...qs].forEach((e, i) => out(e, tC - 0.8 + i * 0.04, { y: -u * 6 }));
+  head("Want the <em>full story</em>?", "కింద comment లో NVIDIA అని type చేయండి", tC - 0.5, { x: W * 0.07, y: H * 0.1, w: W * 0.86, size: 10, mk: "#C9E88F" });
+  const cb = place(mk("div", "cbox", undefined, `<div class="tx"></div>`), W * 0.07, H * 0.36, W * 0.86); pop(cb, tC - 0.2, { y: u * 10, opacity: 0 }, 0.6);
+  const tx = cb.querySelector(".tx"), msg = "NVIDIA", o = { n: 0 };
+  tl.to(o, { n: msg.length, duration: 0.8, ease: "none", onUpdate: () => { tx.textContent = msg.slice(0, Math.round(o.n)); } }, tNv);
+  const ar = place(mk("div", "arrow", undefined, "&darr;"), W * 0.5, H * 0.56); pop(ar, tL - 1.6, { y: -u * 6, opacity: 0 }, 0.5);
+  tl.to(ar, { y: u * 3, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 3 }, tL - 1.1);
+  const lk = place(mk("div", "lk", undefined, "FULL VIDEO LINK"), W * 0.5, H * 0.72); pop(lk, tL - 0.8, { scale: 0.85, opacity: 0 }, 0.5, E.pop);
+  X.done();
+</script></body></html>
