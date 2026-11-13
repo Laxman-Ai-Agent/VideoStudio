@@ -1,0 +1,14 @@
+{
+ "name": "fx_s09_speed_price",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "eight fast forty pieces speed thirty tokens twenty"
+ },
+ "description": "explainer seq 09: speed bars 30% faster; price -20%; tokens; $8 / $40"
+}

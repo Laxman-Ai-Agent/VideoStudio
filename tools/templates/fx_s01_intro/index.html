@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 01 (0-16 s): Anthropic logo centre -> title; two version cards (Fable, Mythos); why two versions? */
+.vc { position: absolute; border-radius: calc(var(--u) * 2); background: #fff; box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #1B214022; overflow: hidden; }
+.vc .top { height: 34%; background: var(--c); display: flex; align-items: center; justify-content: center; }
+.vc .nm { margin: 9% 9% 0; font: 800 calc(var(--u) * 5) var(--font-head); color: #1B2140; letter-spacing: -.01em; line-height: 1.05; }
+.vc .sub { margin: 3% 9% 0; font: 600 calc(var(--u) * 2.2) var(--font-head); color: #5B6178; }
+.vc .nw { position: absolute; right: 7%; bottom: 8%; padding: calc(var(--u) * .5) calc(var(--u) * 1.2); border-radius: 99px; background: var(--c); color: #fff;
+          font: 800 calc(var(--u) * 2) var(--font-head); }
+.q { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #F0623E; color: #fff;
+     font: 800 calc(var(--u) * 10) var(--font-head); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #F0623E55; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, bg, title, retitle, logo, chip, icon } = X;
+  bg("purple");
+
+  // A. the Anthropic logo starts big in the centre, then moves right while the title arrives (full frame both times)
+  const tA = at("anthropic", 0.1), tF = at("fable", 5.0), tM = at("mythos", 6.9), tW = at("why", 11.2), tT = at("two", 13.7);
+  const s0 = H * 0.42, lg = logo("anthropic", W / 2 - s0 / 2, H / 2 - s0 / 2, s0);
+  pop(lg, tA, { scale: 0.85, opacity: 0 }, 0.7);
+  move(lg, tA + 1.3, W * 0.66, H * 0.3, s0, s0);
+  const t1 = title("Claude Fable 5.2<br>&amp; Mythos 5.2", "Anthropic నుండి రెండు కొత్త AI versions", tA + 1.5, { kick: "AI NEWS · ANTHROPIC", color: "#fff", kickColor: "#FFC9B8", size: 9 });
+
+  // B. new section (peach): the Fable card lands centre; on "Mythos" it slides left and the Mythos card fills the right half
+  bg("peach", tF - 0.5);
+  out(lg, tF - 0.6, { scale: 0.9 }); out(t1, tF - 0.6);
+  const t2 = title("Two new versions", "Claude Fable 5.2 మరియు Claude Mythos 5.2", tF - 0.3);
+  const cw = W * 0.3, ch = H * 0.5, cy = H * 0.36;
+  const vc = (nm, c, ic) => { const e = place(mk("div", "vc", undefined, `<div class="top"></div><div class="nm">${nm}</div><div class="sub">by Anthropic</div><div class="nw">NEW 5.2</div>`), W / 2 - cw / 2, cy, cw, ch);
+    e.style.setProperty("--c", c); icon(ic, 0, 0, ch * 0.22, "#fff", e.querySelector(".top")).style.position = "relative"; return e; };
+  const f = vc("Claude<br>Fable 5.2", PAL.fab, "shield"); pop(f, tF, { y: u * 6, opacity: 0, scale: 0.92 }, 0.6);
+  move(f, tM - 0.2, W * 0.14, cy);
+  const m = vc("Claude<br>Mythos 5.2", PAL.myt, "bug"); place(m, W * 0.56, cy); pop(m, tM, { x: u * 8, opacity: 0, scale: 0.92 }, 0.6);
+
+  // C. new section (lavender): why a new 5.2, why two? -- the cards shrink to the sides, a big question mark lands between them
+  bg("lavender", tW - 0.5);
+  out(t2, tW - 0.6);
+  title("Why two versions?", "ఒకే AI ని రెండు versions గా ఎందుకు ఇస్తున్నారు?", tW - 0.3);
+  move(f, tW - 0.2, W * 0.08, H * 0.4, W * 0.24, H * 0.42); move(m, tW - 0.2, W * 0.68, H * 0.4, W * 0.24, H * 0.42);
+  const q = place(mk("div", "q", undefined, "?"), W / 2 - H * 0.11, H * 0.36, H * 0.22, H * 0.22); pop(q, tW, { scale: 0.4, opacity: 0, rotation: -20 }, 0.6, E.pop);
+  const c1 = chip("Why a new 5.2?", W * 0.37, H * 0.64, PAL.coral), c2 = chip("Why two versions?", W * 0.355, H * 0.76, PAL.violet);
+  pop(c1, tW + 0.6, { y: u * 3, opacity: 0 }); pop(c2, tT, { y: u * 3, opacity: 0 });
+  X.done();
+</script></body></html>

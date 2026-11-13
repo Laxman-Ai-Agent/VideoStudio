@@ -1,0 +1,14 @@
+{
+ "name": "fx_s01_intro",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "anthropic fable mythos two why"
+ },
+ "description": "explainer seq 01: Anthropic logo -> title; Fable / Mythos cards; why two versions?"
+}
