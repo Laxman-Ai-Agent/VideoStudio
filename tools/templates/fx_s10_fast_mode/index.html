@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 10 (148-159.4 s): fast mode toggle -> 2.5x speed, price x2 -> books card + 555,000 words memory */
+.tg { position: absolute; border-radius: 999px; background: #D5D9E5; box-shadow: inset 0 calc(var(--u) * .4) calc(var(--u) * 1) #1B214022; }
+.tg i { position: absolute; top: 8%; left: 4%; height: 84%; aspect-ratio: 1; border-radius: 50%; background: #fff; box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #1B214033; }
+.tgl { position: absolute; transform: translateX(-50%); font: 800 calc(var(--u) * 3.6) var(--font-head); color: #1B2140; white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, bg, title, retitle, card, label, icon, num, count } = X;
+  bg("lavender");
+  const tMo = at("mode", 1.55), t25 = at("x25", 1.9), tDb = at("double", 4.75), tW = at("words", 7.5), tR = at("remember", 9.9);
+
+  // A. a big toggle in the centre switches on, then slides left; 2.5x SPEED and PRICE x2 fill the right
+  const t1 = title("Fast mode", "2.5 రెట్లు వేగం, కానీ price double", 0.1);
+  const tw = W * 0.3, th = tw * 0.42, tg = place(mk("div", "tg", undefined, "<i></i>"), W / 2 - tw / 2, H * 0.44, tw, th); pop(tg, 0.3);
+  const lb = place(mk("div", "tgl", undefined, "FAST MODE"), tw / 2, th + u * 2.5); tg.append(lb);
+  tl.to(tg, { backgroundColor: PAL.green, duration: 0.3 }, tMo); tl.to(tg.firstChild, { left: "54%", duration: 0.35, ease: E.io }, tMo);
+  move(tg, t25 + 0.2, W * 0.07, H * 0.44);
+  const b = icon("bolt", W * 0.5, H * 0.32, u * 7, PAL.green); pop(b, t25 + 0.4, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+  const n1 = num(W * 0.56, H * 0.31, PAL.green, 10); fade(n1, t25 + 0.4, 0.3); count(n1, 1, 2.5, t25 + 0.4, 0.8, (v) => v.toFixed(1) + "× speed");
+  const tg2 = icon("tag", W * 0.5, H * 0.6, u * 8, PAL.coral); pop(tg2, tDb, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+  const n2 = num(W * 0.56, H * 0.57, PAL.coral, 10); n2.textContent = "price ×2"; pop(n2, tDb, { x: u * 5, opacity: 0 });
+
+  // B. memory: a tall book stack (real picture) left, 555,000 WORDS counts up right
+  out([tg, b, n1, tg2, n2], tW - 0.6); retitle(t1, "Huge memory", "ఒకేసారి దాదాపు 5,55,000 పదాల text గుర్తుపెట్టుకుంటుంది", tW - 0.3);
+  const bk = card({ i: "books", x: W * 0.3, y: H * 0.3, w: W * 0.4, h: H * 0.62 }); pop(bk, tW - 0.3, { y: u * 6, opacity: 0 }, 0.6);
+  X.fit(bk, tW + 0.5, W * 0.07, H * 0.3, W * 0.3, H * 0.62);
+  const n3 = num(W * 0.44, H * 0.4, PAL.violet, 12); fade(n3, tW + 0.6, 0.3); count(n3, 0, 555000, tW + 0.6, 1.4, (v) => Math.round(v).toLocaleString("en-IN"));
+  const l3 = label("words in one go", W * 0.6, H * 0.6); fade(l3, tR - 0.2);
+  X.done();
+</script></body></html>

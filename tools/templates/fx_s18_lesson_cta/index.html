@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 18 (322.5-end): daily chat -> Opus 5.5 | hard work -> Fable / Mythos; lesson: smarter = harder to test, slow steps; question, comment, subscribe */
+.ls { position: absolute; display: flex; flex-direction: column; justify-content: center; padding: 0 6%; }
+.ls b { font: 800 calc(var(--u) * 5.4) var(--font-head); color: #1B2140; }
+.ls i { margin-top: calc(var(--u) * 1); font: 600 calc(var(--u) * 2.8) var(--font-head); font-style: normal; color: #5B6178; }
+.ft { position: absolute; width: calc(var(--u) * 2.6); height: calc(var(--u) * 4); border-radius: 50%; background: #10B981; }
+.cm { position: absolute; padding: calc(var(--u) * 1.6) calc(var(--u) * 2.4); border-radius: calc(var(--u) * 1.4); background: #fff; color: #1B2140;
+      font: 700 calc(var(--u) * 3.4) var(--font-head); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #0003; }
+.cm small { display: block; font-size: calc(var(--u) * 1.9); color: #5B6178; margin-bottom: calc(var(--u) * .6); }
+.sb { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: calc(var(--u) * 1); font: 800 calc(var(--u) * 3.6) var(--font-head); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, chip, box, label, icon, typeIn, cut } = X;
+  bg("peach");
+  const tDa = at("daily", 1.5), tOp = at("opus", 4.55), tHd = at("hard", 11.75), tLe = at("lesson", 15.2), tTe = at("test", 18.6), tSl = at("slow", 23.0);
+  const tQ = at("question", 27.0), tCm = at("comment", 31.2), tSub = Math.min(at("subscribe", 34.6), D - 1.2) - 1.4;
+
+  // A. who is it for: the chat phone starts centre, moves left (daily chat -> Opus 5.5); hard work (data centre) fills the right
+  const t1 = title("Not for daily chat", "రోజు పనులకు Opus 5.5, కష్టమైన పెద్ద technical పనులకు Fable / Mythos", 0.1);
+  const ch = card({ i: "chat", x: W * 0.36, y: H * 0.3, w: W * 0.28, h: H * 0.56 }); pop(ch, tDa - 0.3, { y: u * 6, opacity: 0 }, 0.6);
+  fit(ch, tOp - 0.4, W * 0.05, H * 0.32, W * 0.18, H * 0.44);
+  const c1 = chip("Daily chat → Opus 5.5", W * 0.05, H * 0.82, PAL.blue); pop(c1, tOp);
+  const dc = card({ i: "dc", x: W * 0.5, y: H * 0.32, w: W * 0.44, h: H * 0.44 }); pop(dc, tHd - 0.3, { x: u * 8, opacity: 0 }, 0.6);
+  const c2 = chip("Hard tech work → Fable / Mythos", W * 0.5, H * 0.82, PAL.green); pop(c2, tHd);
+
+  // B. the lesson (lavender): two wide cards, SMARTER AI -> HARDER TO TEST; slow footsteps walk across
+  bg("lavender", tLe - 0.5); out([ch, c1, dc, c2], tLe - 0.6);
+  const t2 = retitle(t1, "The one lesson", "AI ఎంత తెలివిగా మారితే, test చేయడం అంత కష్టం", tLe - 0.3);
+  const l1 = box(W * 0.06, H * 0.34, W * 0.4, H * 0.24); l1.className += " ls"; l1.innerHTML = "<b>Smarter AI</b><i>తెలివి పెరుగుతోంది</i>";
+  const l2 = box(W * 0.54, H * 0.34, W * 0.4, H * 0.24); l2.className += " ls"; l2.innerHTML = "<b>Harder to test</b><i>test చేయడం కష్టం</i>";
+  pop(l1, tLe + 0.3, { x: -u * 6, opacity: 0 }); pop(l2, tTe, { x: u * 6, opacity: 0 });
+  const ar = icon("arrow", W * 0.465, H * 0.44, W * 0.07, PAL.ink); pop(ar, tTe - 0.2);
+  const cS = chip("Slow steps, not a stop", W * 0.06, H * 0.66, PAL.green); cS.style.fontSize = u * 3.6 + "px"; pop(cS, tSl - 0.2);
+  const feet = [...Array(8)].map((_, i) => { const f = place(mk("div", "ft"), W * (0.42 + i * 0.065), H * (0.72 + (i % 2) * 0.05)); tl.fromTo(f, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.pop, immediateRender: true }, tSl + i * 0.4); return f; });
+
+  // C. the question (purple): presenter points from the right; comment box types; subscribe clicks
+  bg("purple", tQ - 0.5); out([l1, l2, ar, cS, ...feet], tQ - 0.6);
+  retitle(t2, "What do you think?", "AI ఇంత వేగంగా పెరగడం మంచిదేనా, లేక ఆగి ఆలోచించాలా?", tQ - 0.3, { color: "#fff" });
+  const pr = cut("pres_point", W * 0.46, H * 0.06, W * 0.54, H * 0.94); pop(pr, tQ - 0.1, { scale: 1.06, opacity: 0, y: u * 4 }, 0.6);
+  const cm = place(mk("div", "cm", undefined, "<small>Add a comment…</small><span></span>"), W * 0.06, H * 0.42, W * 0.38); pop(cm, tCm - 0.3);
+  typeIn(cm.querySelector("span"), "Grow fast or slow down?", tCm + 0.1, 20);
+  const s1 = place(mk("div", "sb", undefined, "Subscribe"), W * 0.06, H * 0.66, W * 0.22, H * 0.1), s2 = place(mk("div", "sb", undefined, "Subscribed ✓"), W * 0.06, H * 0.66, W * 0.22, H * 0.1);
+  s1.style.cssText += `;background:${PAL.coral};color:#fff`; s2.style.cssText += `;background:#fff;color:${PAL.ink}`;
+  pop(s1, tSub, { scale: 0.7, opacity: 0 }); tl.set(s2, { opacity: 0 }, 0);
+  tl.to(s1, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, tSub + 0.8); tl.to(s1, { opacity: 0, duration: 0.15 }, tSub + 1.0); tl.to(s2, { opacity: 1, duration: 0.15 }, tSub + 1.0);
+  const kD = label("The Dark World", W * 0.17, H * 0.79, undefined, "#fff"); fade(kD, tSub);
+  X.done();
+</script></body></html>

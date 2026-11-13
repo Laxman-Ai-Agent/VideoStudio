@@ -1,0 +1,14 @@
+{
+ "name": "fx_s04_nov9",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "fable mythos new nov one why"
+ },
+ "description": "explainer seq 04 (49.5-61.9 s): November 9 calendar -> Fable + Mythos cards -> what's new / why two / one by one"
+}

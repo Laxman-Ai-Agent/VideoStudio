@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer 9x16 seq 05 (63.4-76.4 s): 5.1 -> 5.2, three question cards: how fast / how cheap / how powerful */
+.qc { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 5); padding: 0 calc(var(--u) * 6); border-radius: calc(var(--u) * 3);
+      background: #fff; box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 4) #1B21401f; font: 800 calc(var(--u) * 8) var(--font-head); color: #1B2140; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, bg, title, icon, num } = X;
+  bg("lavender");
+  const tF = at("fast", 4.1), tP = at("price", 5.15), tM = at("mythos", 6.6), tPw = at("powerful", 11.7);
+
+  // A. 5.1 -> 5.2 fills the middle first, then moves up as the questions build
+  title("Three questions", "పాత versions తో పోలిస్తే 5.2 ఎంత మారింది?", 0.1);
+  const n = num(W * 0.16, H * 0.42, PAL.ink, 18); n.textContent = "5.1 → 5.2"; pop(n, 0.4, { scale: 0.85, opacity: 0 });
+  move(n, tF - 0.6, W * 0.08, H * 0.27); tl.to(n, { fontSize: u * 10, duration: 0.6, ease: E.io }, tF - 0.6);
+
+  // B. three question cards stack in, each on its spoken word; the Mythos one shows its text on "powerful"
+  [["bolt", PAL.green, "How fast?", tF], ["tag", PAL.coral, "How cheap?", tP], ["bug", PAL.violet, "How powerful?", tM]].forEach(([ic, c, q, t], i) => {
+    const e = place(mk("div", "qc", undefined, `<span>${q}</span>`), W * 0.06, H * (0.4 + i * 0.17), W * 0.88, H * 0.13);
+    const ico = icon(ic, 0, 0, W * 0.12, c, e); ico.style.position = "relative"; e.prepend(ico);
+    pop(e, t - 0.2, { x: i % 2 ? -W * 0.5 : W * 0.5, opacity: 0 }, 0.6);
+    if (i === 2) { const sp = e.querySelector("span"); tl.set(sp, { opacity: 0 }, 0); fade(sp, tPw - 0.2, 0.4); }
+  });
+  X.done();
+</script></body></html>

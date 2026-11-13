@@ -45,6 +45,11 @@
   .xterm .car { display: inline-block; width: ${u * 0.25}px; height: 1.05em; vertical-align: -.18em; margin-left: 2px; background: ${PAL.term}; }
   .xn { position: absolute; font: 800 ${u * 13}px var(--font-head); line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
   .xi { position: absolute; }
+  .xv { position: absolute; border-radius: ${u * 2}px; background: #fff; box-shadow: 0 ${u * 1.4}px ${u * 4}px #1B214022; overflow: hidden; }
+  .xv .top { height: 34%; background: var(--c); display: flex; align-items: center; justify-content: center; }
+  .xv .nm { margin: 8% 9% 0; font: 800 calc(var(--s) * 13) var(--font-head); color: ${PAL.ink}; letter-spacing: -.01em; line-height: 1.05; }
+  .xv .sub { margin: 3% 9% 0; font: 600 calc(var(--s) * 5.6) var(--font-head); color: ${PAL.mute}; }
+  .xcut { position: absolute; background: no-repeat center bottom / contain; filter: drop-shadow(0 ${u}px ${u * 2}px #1B214033); }
   .xi svg { width: 100%; height: 100%; display: block; overflow: visible; }`;
   document.head.append(css);
 
@@ -62,6 +67,11 @@
   // move / resize an element to a new box (the full-frame rule: the old visual makes room, the new one fills it)
   const move = (e, t, x, y, w, h, d = 0.8) => tl.to(e, { left: x, top: y, ...(w != null ? { width: w } : {}), ...(h != null ? { height: h } : {}), duration: d, ease: E.io }, t);
 
+  // move into a max box keeping the element's own aspect (cards, logos, icons): centred inside the box, never cropped
+  function fit(e, t, x, y, mw, mh, d = 0.8) {
+    const ar = parseFloat(e.style.width) / parseFloat(e.style.height), w = Math.min(mw, mh * ar), h = w / ar;
+    return move(e, t, x + (mw - w) / 2, y + (mh - h) / 2, w, h, d);
+  }
   /* background of one section; setSection crossfades to another section's colours at time t */
   function bg(name = "peach", t = 0) {
     const c = SEC[name], L = document.createElement("div"); L.className = "xbg";
@@ -148,6 +158,16 @@
     tl.fromTo(e, { left: x1, top: y1, opacity: 0 }, { left: x2, top: y2, opacity: 1, duration: d, ease: E.io, immediateRender: true }, t);
     tl.to(e, { opacity: 0, duration: 0.2 }, t + d);
   }
-  window.X = { S, P, W, H, D, V, u, PAL, SEC, tl, E, at, $, mk, place, ix, fade, pop, out, move, bg, setSection, title, retitle, card, logo, chip, box, label,
-               term, typeIn, typeTerm, count, num, icon, travel, done: () => finish(tl), X: (f) => f * W, Y: (f) => f * H };
+  /* Fable / Mythos version card ('fab' | 'myt'); --s scales the text with the card width */
+  function vcard(kind, x, y, w, h, sub) {
+    const c = kind === "fab" ? PAL.fab : PAL.myt, nm = kind === "fab" ? "Claude<br>Fable 5.2" : "Claude<br>Mythos 5.2";
+    const e = place(mk("div", "xv", undefined, `<div class="top"></div><div class="nm">${nm}</div><div class="sub">${sub || "by Anthropic"}</div>`), x, y, w, h);
+    e.style.setProperty("--c", c); e.style.setProperty("--s", w / 100 + "px");
+    icon(kind === "fab" ? "shield" : "bug", 0, 0, h * 0.2, "#fff", e.querySelector(".top")).style.position = "relative";
+    return e;
+  }
+  // presenter cut-out: whole picture, bottom-anchored, never cropped
+  function cut(k, x, y, w, h) { const e = place(mk("div", "xcut"), x, y, w, h); const i = ix(k); if (i >= 0 && IMG[i]) e.style.backgroundImage = `url("${IMG[i]}")`; return e; }
+  window.X = { S, P, W, H, D, V, u, PAL, SEC, tl, E, at, $, mk, place, ix, fade, pop, out, move, fit, bg, setSection, title, retitle, card, logo, chip, box, label,
+               term, typeIn, typeTerm, count, num, icon, travel, vcard, cut, done: () => finish(tl), X: (f) => f * W, Y: (f) => f * H };
 })();

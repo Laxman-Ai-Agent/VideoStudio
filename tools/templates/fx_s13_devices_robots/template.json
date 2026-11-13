@@ -1,0 +1,14 @@
+{
+ "name": "fx_s13_devices_robots",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "black devices hub new old open own pet prompt robots usb"
+ },
+ "description": "explainer seq 13 (209.5-235.3 s): black hole, 2 open problems -> one prompt, three devices -> RoboDojo 27.6 -> 64.9 -> Anthropic's own tests"
+}

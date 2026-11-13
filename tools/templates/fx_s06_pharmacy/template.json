@@ -1,0 +1,14 @@
+{
+ "name": "fx_s06_pharmacy",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "danger everyone locks medicine prescription safeguards"
+ },
+ "description": "explainer seq 06 (73.1-85.4 s): safeguards = locks against dangerous tasks -> medicine: one shop for everyone, one needs a prescription"
+}

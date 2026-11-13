@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer 9x16 seq 03 (27.4-50.5 s): 350 years -> Fermat -> 30 hours; laptop OS in 8 days; one prompt -> 3 devices */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, chip, label, icon, num, count, term, typeTerm } = X;
+  bg("cream");
+  const tP = at("power", 0.4), tY = at("years", 1.7), tH = at("hours", 8.4), tE = at("engineer", 10.4), tD = at("days", 11.65), tL = at("laptop", 12.8), tO = at("os", 14.5), tPr = at("prompt", 17.45), tDv = at("devices", 19.8);
+
+  // A. 350 YEARS in the middle, the Fermat portrait comes in under it, then 30 HOURS lands green
+  const t1 = title("How powerful?", "350 ఏళ్ల లెక్క, కేవలం 30 గంటల్లో", 0.1);
+  const n = num(W * 0.08, H * 0.27, PAL.ink, 18); fade(n, tY - 0.1, 0.3); count(n, 0, 350, tY - 0.1, 1.2, (v) => Math.round(v) + " yrs");
+  const fm = card({ i: "fermat", x: W * 0.1, y: H * 0.4, w: W * 0.8, h: H * 0.36, label: "Fermat's Last Theorem" }); pop(fm, tY + 1.2, { y: u * 10, opacity: 0 }, 0.6);
+  const h30 = num(W * 0.08, H * 0.82, PAL.green, 13); h30.textContent = "30 hours"; pop(h30, tH, { scale: 0.85, opacity: 0 });
+
+  // B. the laptop picture fills the middle: 1 engineer, 8 days, a new OS boots
+  out([n, fm, h30], tE - 0.5); const t2 = retitle(t1, "An OS in 8 days", "ఒక engineer, Fable 5.2 సాయంతో", tE - 0.3);
+  const lp = card({ i: "laptop", x: W * 0.08, y: H * 0.28, w: W * 0.84, h: H * 0.36 }); pop(lp, tE, { y: u * 10, opacity: 0 }, 0.6);
+  const c1 = chip("1 engineer", W * 0.08, H * 0.68, PAL.ink); pop(c1, tE + 0.4);
+  const n8 = num(W * 0.08, H * 0.74, PAL.coral, 15); n8.textContent = "8 days"; pop(n8, tD, { scale: 0.85, opacity: 0 });
+  const cO = chip("New OS boots", W * 0.52, H * 0.9, PAL.green); pop(cO, tO); const ck = icon("check", W * 0.4, H * 0.895, W * 0.09, PAL.green); pop(ck, tO);
+
+  // C. one prompt types, three device cards drop into a 2 + 1 grid
+  out([lp, c1, n8, cO, ck], tPr - 0.5); retitle(t2, "1 prompt → 3 devices", "ఒక్క paragraph prompt తో", tPr - 0.3);
+  const tm = term(W * 0.08, H * 0.27, W * 0.84); fade(tm, tPr - 0.1); typeTerm(tm, "design 3 devices…", tPr);
+  [["hub", "Voice hub", W * 0.08, H * 0.38], ["speaker", "Speakerphone", W * 0.52, H * 0.38], ["pet", "Virtual pet", W * 0.3, H * 0.64]].forEach(([k, nm, x, y], i) => {
+    const c = card({ i: k, x, y, w: W * 0.4, h: H * 0.2, label: nm }); pop(c, tDv - 0.4 + i * 0.35, { y: u * 10, opacity: 0 }, 0.6); });
+  X.done();
+</script></body></html>

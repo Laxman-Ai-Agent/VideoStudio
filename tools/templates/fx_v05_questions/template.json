@@ -1,0 +1,14 @@
+{
+ "name": "fx_v05_questions",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "fast mythos powerful price"
+ },
+ "description": "explainer 9x16 seq 05 (63.4-76.4 s): 5.1 -> 5.2, three question cards: how fast / how cheap / how powerful"
+}

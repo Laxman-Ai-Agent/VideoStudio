@@ -1,0 +1,14 @@
+{
+ "name": "fx_s18_lesson_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "comment daily hard lesson opus question slow subscribe test"
+ },
+ "description": "explainer seq 18 (322.5-end): daily chat -> Opus 5.5 | hard work -> Fable / Mythos; lesson: smarter = harder to test, slow steps; question, comment, subscribe"
+}

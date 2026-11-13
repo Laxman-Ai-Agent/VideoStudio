@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 08 (99.9-128 s): timeline April Mythos (limited) -> Fable -> Sept 5.1 -> Nov 5.2; who can use it + cloud platforms */
+.ln { position: absolute; height: calc(var(--u) * .7); border-radius: 9px; background: #1B2140; transform-origin: 0 50%; }
+.nd { position: absolute; width: calc(var(--u) * 4); height: calc(var(--u) * 4); margin: calc(var(--u) * -2) 0 0 calc(var(--u) * -2); border-radius: 50%;
+      background: #fff; border: calc(var(--u) * .9) solid var(--c); }
+.mo { position: absolute; transform: translateX(-50%); font: 800 calc(var(--u) * 3.6) var(--font-head); color: #1B2140; white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, bg, title, retitle, chip, icon, logo } = X;
+  bg("sky");
+  const T = { a: at("april", 1.2), h: at("hacking", 4.5), mo: at("months", 8.4), f: at("fable", 11.6), s: at("sept", 12.8), n: at("v52", 15.5) };
+  const tP = [at("pro", 20.1), at("max", 20.7), at("team", 21.2), at("ent", 21.7), at("dev", 22.8)], tLg = [at("amazon", 24.6), at("google", 25.3), at("microsoft", 26.0)];
+
+  // A. the timeline draws across the full width; each stop arrives on its month, a chip under it says what happened
+  const t1 = title("How we got here", "ఈ కథ ఈ ఏడాది April లో మొదలైంది", 0.1);
+  const y = H * 0.52, ln = place(mk("div", "ln"), W * 0.06, y - u * 0.35, W * 0.88);
+  tl.fromTo(ln, { scaleX: 0 }, { scaleX: 1, duration: T.n - T.a + 0.4, ease: "power1.inOut", immediateRender: true }, T.a - 0.3);
+  const stops = [[0.14, "April", "Mythos: limited", PAL.myt, T.a, T.h], [0.39, "+2 months", "Fable for everyone", PAL.fab, T.mo, T.f],
+                 [0.64, "September", "Version 5.1", PAL.mute, T.s, T.s + 0.4], [0.88, "November", "Version 5.2", PAL.coral, T.n, T.n + 0.4]];
+  const all = [ln];
+  stops.forEach(([fx, mo, txt, c, t, tc], i) => {
+    const n = place(mk("div", "nd"), W * fx, y); n.style.setProperty("--c", c); pop(n, t, { scale: 0, opacity: 0 }, 0.45, E.pop);
+    const m = place(mk("div", "mo", undefined, mo), W * fx, y - u * 11); pop(m, t, { y: u * 2, opacity: 0 });
+    const ch = chip(txt, W * fx - u * 12, y + u * 6, c); pop(ch, tc);
+    all.push(n, m, ch);
+  });
+  const lk = icon("lock", W * 0.14 - u * 2.5, y + u * 14, u * 5, PAL.myt); pop(lk, T.h + 0.3, { scale: 0.3, opacity: 0 }, 0.4, E.pop); all.push(lk);
+
+  // B. who can use Fable 5.2 (tiers type in on the left) and where (cloud logos on the right)
+  out(all, tP[0] - 0.7); retitle(t1, "Who can use Fable 5.2?", "Pro, Max, Team, Enterprise users, developers అందరూ", tP[0] - 0.4);
+  ["Pro", "Max", "Team", "Enterprise", "Developers"].forEach((t, i) => {
+    const c = chip(t, W * (0.06 + (i % 2) * 0.2), H * (0.36 + Math.floor(i / 2) * 0.15), PAL.blue); c.style.fontSize = u * 3.8 + "px"; pop(c, tP[i]); });
+  const s = H * 0.24;
+  [["aws", "Amazon"], ["gcloud", "Google Cloud"], ["msft", "Microsoft"]].forEach(([k, nm], i) => {
+    const b = logo(k, W * (0.5 + i * 0.16), H * 0.42, s, nm); pop(b, tLg[i], { y: u * 5, opacity: 0, scale: 0.9 }); });
+  X.done();
+</script></body></html>

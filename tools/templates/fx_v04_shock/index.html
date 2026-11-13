@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer 9x16 seq 04 (50.5-63.4 s): the shock: Mythos covers the thought monitor -> presenter shock, it knew it was tested */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, chip, icon, vcard, cut } = X;
+  bg("rose");
+  const tS = at("shock", 0.7), tM = at("mythos", 2.2), tMo = at("monitor", 6.4), tEs = at("escape", 7.6), tTe = at("test", 9.7), tDb = at("doubt", 11.55);
+
+  // A. the Mythos card fills the middle; on "monitor" it moves up and the eye picture takes the lower half
+  const t1 = title("The shock", "Mythos 5.2 ని test చేస్తున్న సమయంలో", Math.max(0.1, tS - 0.3), { kick: "MYTHOS 5.2", kickColor: PAL.violet });
+  const cw = W * 0.6, ch = H * 0.34, m = vcard("myt", W * 0.2, H * 0.34, cw, ch); pop(m, tM - 0.2, { y: u * 10, opacity: 0 }, 0.6);
+  move(m, tMo - 0.3, W * 0.06, H * 0.28, W * 0.42, H * 0.24);
+  const ey = card({ i: "eye", x: W * 0.15, y: H * 0.55, w: W * 0.7, h: H * 0.3, label: "thought monitor" }); pop(ey, tMo, { y: u * 10, opacity: 0 }, 0.6);
+  const cC = chip("Covered its eyes", W * 0.52, H * 0.36, PAL.red); pop(cC, tEs);
+  move(m, tEs + 0.2, W * 0.2, H * 0.57, W * 0.6, H * 0.26);
+
+  // B. presenter in shock fills the lower 70%; the title says it knew it was tested; DOUBT chip
+  out([m, ey, cC], tTe - 0.5); retitle(t1, "It knew it was being tested", "నన్ను ఎవరో test చేస్తున్నారేమో అని doubt", tTe - 0.3);
+  const pr = cut("pres_shock", 0, H * 0.3, W, H * 0.7); pop(pr, tTe - 0.1, { scale: 1.08, opacity: 0, y: u * 6 }, 0.6);
+  const cD = chip("Doubt?", W * 0.62, H * 0.34, PAL.violet); cD.style.fontSize = u * 5.4 + "px"; pop(cD, Math.min(tDb, D - 0.8), { scale: 0.7, opacity: 0 }, 0.4, E.pop);
+  X.done();
+</script></body></html>

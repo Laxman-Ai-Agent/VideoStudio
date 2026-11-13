@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer 9x16 seq 01 (0-16.2 s): Anthropic logo -> two version cards stacked -> not two AIs, one model -> prescription medicine */
+.one { position: absolute; border-radius: calc(var(--u) * 3); background: #fff; box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 5) #1B214022; overflow: hidden; }
+.one .top { height: 24%; background: linear-gradient(90deg, #10B981, #7C4DFF); }
+.one b { display: block; margin: 8% 8% 0; font: 800 calc(var(--u) * 10) var(--font-head); color: #1B2140; }
+.one i { display: block; margin: 2% 8%; font: 600 calc(var(--u) * 4) var(--font-head); font-style: normal; color: #5B6178; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, bg, title, retitle, card, logo, chip, vcard } = X;
+  bg("purple");
+  const tA = at("anthropic", 0.1), tF = at("fable", 2.2), tM = at("mythos", 4.5), tNo = at("not", 10.7), tOne = at("one", 11.4), tMd = at("medical", 13.05), tRx = at("prescription", 13.8);
+
+  // A. the Anthropic logo fills the middle, the title arrives on top
+  const s0 = W * 0.56, lg = logo("anthropic", W / 2 - s0 / 2, H * 0.36, s0); pop(lg, tA, { scale: 0.85, opacity: 0 }, 0.7);
+  const t1 = title("Claude Fable 5.2 &amp; Mythos 5.2", "Anthropic నుండి రెండు కొత్త AI versions", tA + 0.8, { kick: "AI NEWS", color: "#fff", kickColor: "#FFC9B8" });
+
+  // B. peach: Fable card lands in the middle, then moves up; Mythos fills the lower half
+  bg("peach", tF - 0.4); out([lg, t1], tF - 0.5);
+  const t2 = title("Two versions?", "Claude Fable 5.2 మరియు Claude Mythos 5.2", tF - 0.3);
+  const cw = W * 0.6, ch = H * 0.3;
+  const f = vcard("fab", W * 0.2, H * 0.4, cw, ch); pop(f, tF, { y: u * 8, opacity: 0 }, 0.6);
+  move(f, tM - 0.3, W * 0.2, H * 0.27);
+  const m = vcard("myt", W * 0.2, H * 0.61, cw, ch); pop(m, tM, { y: u * 8, opacity: 0 }, 0.6);
+
+  // C. "not two": both cards slide into one ONE MODEL card
+  retitle(t2, "Not two AIs", "నిజానికి ఇవి రెండూ ఒకే model", tNo - 0.2);
+  move(f, tNo, W * 0.2, H * 0.42); move(m, tNo, W * 0.2, H * 0.46); out([f, m], tOne - 0.2, { scale: 0.92 });
+  const one = place(mk("div", "one", undefined, "<div class='top'></div><b>One model</b><i>two safety levels</i>"), W * 0.1, H * 0.4, W * 0.8, H * 0.26);
+  pop(one, tOne - 0.1, { scale: 0.85, opacity: 0 }, 0.6, E.pop);
+
+  // D. like prescription medicine: the box comes up, the chip lands under it
+  out(one, tMd - 0.4);
+  const md = card({ i: "medicine", x: W * 0.1, y: H * 0.36, w: W * 0.8, h: H * 0.38 }); pop(md, tMd - 0.2, { y: u * 10, opacity: 0 }, 0.6);
+  const cR = chip("Prescription only", W * 0.22, H * 0.8, PAL.coral); cR.style.fontSize = u * 5 + "px"; pop(cR, tRx);
+  X.done();
+</script></body></html>

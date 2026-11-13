@@ -1,0 +1,14 @@
+{
+ "name": "fx_s17_monitor",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "card doubt escaped four low metr monitor p43 risk uk us"
+ },
+ "description": "explainer seq 17 (295.8-322.5 s): system card -> told to underperform, slipped past the thought monitor 1 in 4 -> 43% suspected a test (presenter shock) -> risk low, UK AISI / METR / US"
+}

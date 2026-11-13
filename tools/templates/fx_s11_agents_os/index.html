@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 11 (159.4-180.6 s): code screen + 90% dot grid (with human guidance) -> engineer + 1,000 agents -> laptop, prototype OS in 8 days */
+.dt { position: absolute; width: calc(var(--u) * 2.4); height: calc(var(--u) * 2.4); border-radius: 50%; background: #D5D9E5; }
+.ag { position: absolute; width: calc(var(--u) * 1.1); height: calc(var(--u) * 1.1); border-radius: 50%; background: #7C4DFF; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, chip, label, icon, num, count } = X;
+  bg("peach");
+  const tSm = at("smart", 1.8), tC = at("code", 5.1), t90 = at("ninety", 6.5), tHu = at("human", 9.95), tEn = at("engineer", 11.6), tAg = at("agents", 15.6), tD = at("days", 16.3), tL = at("laptop", 17.7), tOs = at("os", 19.5);
+
+  // A. the code screen fills the middle, then moves left; a 10 x 10 dot grid lights 90 dots green on the right
+  const t1 = title("How smart is it?", "Anthropic సొంత code లో 90% పైగా Claude నే రాస్తోంది", Math.max(0.1, tSm - 1.2));
+  const cd = card({ i: "code", x: W * 0.2, y: H * 0.3, w: W * 0.6, h: H * 0.6 }); pop(cd, tC - 0.3, { y: u * 6, opacity: 0 }, 0.6);
+  fit(cd, t90 - 0.4, W * 0.05, H * 0.32, W * 0.46, H * 0.56);
+  const dots = [], gx = W * 0.56, gy = H * 0.33, st = u * 3.6;
+  for (let i = 0; i < 100; i++) { const d = place(mk("div", "dt"), gx + (i % 10) * st, gy + Math.floor(i / 10) * st); dots.push(d); }
+  fade(dots, t90 - 0.4, 0.3);
+  tl.to(dots.slice(0, 90), { backgroundColor: PAL.green, duration: 0.2, stagger: 0.012 }, t90);
+  const n = num(W * 0.8, H * 0.38, PAL.green, 10); n.textContent = "90%+"; pop(n, t90 + 0.6, { scale: 0.8, opacity: 0 });
+  const cH = chip("with human guidance", W * 0.79, H * 0.6, PAL.ink); pop(cH, tHu);
+  const hu = icon("user", W * 0.75, H * 0.6, u * 4, PAL.ink); pop(hu, tHu, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+
+  // B. one engineer -> a swarm of agent dots flows into the laptop picture -> prototype OS boots in 8 days
+  out([cd, ...dots, n, cH, hu], tEn - 0.6); retitle(t1, "1 engineer + 1,000 agents", "8 రోజుల్లో laptop లో boot అయ్యే OS", tEn - 0.3);
+  const en = card({ i: "engineer", x: W * 0.28, y: H * 0.3, w: W * 0.44, h: H * 0.6, label: "1 engineer" }); pop(en, tEn, { y: u * 6, opacity: 0 }, 0.6);
+  fit(en, tAg - 0.5, W * 0.05, H * 0.34, W * 0.28, H * 0.44);
+  const lp = card({ i: "laptop", x: W * 0.64, y: H * 0.3, w: W * 0.31, h: H * 0.5, label: "laptop" }); pop(lp, tL - 0.3, { x: u * 8, opacity: 0 }, 0.6);
+  const r = X.tl && ((s) => () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646)(11);
+  for (let i = 0; i < 60; i++) {
+    const a = place(mk("div", "ag"), W * 0.35, H * 0.55); const y0 = H * (0.36 + r() * 0.4), t0 = tAg + r() * 1.6;
+    tl.fromTo(a, { left: W * 0.34, top: y0, opacity: 0 }, { left: W * (0.62 + r() * 0.05), top: H * (0.42 + r() * 0.2), opacity: 1, duration: 1.4, ease: E.io, immediateRender: true }, t0);
+    tl.to(a, { opacity: 0, duration: 0.3 }, t0 + 1.4);
+  }
+  const cA = chip("1,000+ agents", W * 0.4, H * 0.32, PAL.violet); pop(cA, tAg);
+  const cD = chip("8 days", W * 0.43, H * 0.76, PAL.coral); pop(cD, tD); const ck = icon("clock", W * 0.39, H * 0.755, u * 4.4, PAL.coral); pop(ck, tD);
+  const cO = chip("Prototype OS boots", W * 0.64, H * 0.88, PAL.green); pop(cO, tOs);
+  X.done();
+</script></body></html>

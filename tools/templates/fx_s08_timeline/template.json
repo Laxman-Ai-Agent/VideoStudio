@@ -1,0 +1,14 @@
+{
+ "name": "fx_s08_timeline",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "amazon april dev ent fable google hacking max microsoft months pro sept team v52"
+ },
+ "description": "explainer seq 08 (99.9-128 s): timeline April Mythos (limited) -> Fable -> Sept 5.1 -> Nov 5.2; who can use it + cloud platforms"
+}

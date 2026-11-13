@@ -1,0 +1,14 @@
+{
+ "name": "fx_s03_fermat",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "computer days fable fermat hours math years"
+ },
+ "description": "explainer seq 03 (31-49.5 s): 350 years -> Fermat card; proof -> computer check; 11 days vs 30 hours"
+}

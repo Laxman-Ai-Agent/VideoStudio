@@ -1,0 +1,14 @@
+{
+ "name": "fx_v01_one_model",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "anthropic fable medical mythos not one prescription"
+ },
+ "description": "explainer 9x16 seq 01 (0-16.2 s): Anthropic logo -> two version cards stacked -> not two AIs, one model -> prescription medicine"
+}

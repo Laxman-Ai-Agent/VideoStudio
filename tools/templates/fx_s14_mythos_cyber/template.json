@@ -1,0 +1,14 @@
+{
+ "name": "fx_s14_mythos_cyber",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "company cyber mythos none p144 powerful six vuln weak"
+ },
+ "description": "explainer seq 14 (235.3-262 s): Mythos best at cyber -> vulnerabilities = weak spots, +14.4% -> 1 in 6 bugs no other AI found"
+}

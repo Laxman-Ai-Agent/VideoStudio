@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 12 (180.6-209.5 s): Python -> Rust 26x faster start; SWE v2 pillars 69.9 vs 62.3; Fermat: 100% in 30 h vs 26% in 18 h */
+.pl { position: absolute; border-radius: calc(var(--u) * 1.4) calc(var(--u) * 1.4) 0 0; transform-origin: 50% 100%; }
+.tr { position: absolute; height: calc(var(--u) * 3.4); border-radius: 99px; background: #EEF0F6; overflow: hidden; }
+.tr div { height: 100%; border-radius: 99px; transform-origin: 0 50%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, logo, chip, label, icon, num, count } = X;
+  bg("sky");
+  const tPy = at("python", 1.0), tRu = at("rust", 3.0), t26 = at("x26", 6.1), tSw = at("swe", 8.9), tFa = at("fable", 12.5), tOp = at("opus", 14.4);
+  const tSc = at("science", 16.75), tFe = at("fermat", 19.6), tTh = at("thousand", 20.6), tO18 = at("opus18", 25.0), tP26 = at("p26", 26.65);
+
+  // A. the Python badge starts centre, slides left; a flow arrow runs to Rust; 26x faster start lands under the arrow
+  const t1 = title("Python → Rust", "agents ఒక service ని Rust లోకి మార్చారు", 0.1);
+  const s = H * 0.34, py = logo("python", W / 2 - s / 2, H * 0.34, s, "Python"); pop(py, tPy - 0.2, { scale: 0.85, opacity: 0 }, 0.6);
+  move(py, tRu - 0.4, W * 0.1, H * 0.34);
+  const ar = icon("arrow", W * 0.34, H * 0.48, W * 0.3, PAL.ink); pop(ar, tRu - 0.2, { x: -u * 6, opacity: 0 });
+  const ru = logo("rust", W * 0.72, H * 0.34, s, "Rust"); pop(ru, tRu, { x: u * 8, opacity: 0 }, 0.6);
+  const n = num(W * 0.36, H * 0.62, PAL.green, 9); fade(n, t26 - 0.2, 0.3); count(n, 1, 26, t26 - 0.2, 1, (v) => Math.round(v) + "× faster start");
+
+  // B. coding test SWE v2: two pillars rise side by side, numbers on top
+  out([py, ar, ru, n], tSw - 0.6); const t2 = retitle(t1, "Coding test: SWE v2", "Fable 5.2 vs Opus 5.5", tSw - 0.3);
+  const base = H * 0.88, mh = H * 0.5;
+  [["Fable 5.2", 69.9, PAL.green, tFa, 0.24], ["Opus 5.5", 62.3, PAL.mute, tOp, 0.58]].forEach(([nm, v, c, t, fx]) => {
+    const h = mh * v / 70, p = place(mk("div", "pl"), W * fx, base - h, W * 0.18, h); p.style.background = c;
+    tl.fromTo(p, { scaleY: 0 }, { scaleY: 1, duration: 0.9, ease: E.in, immediateRender: true }, t - 0.2);
+    const nv = num(W * fx, base - h - u * 10, c, 7.5); fade(nv, t, 0.3); count(nv, 0, v, t, 0.9, (x) => x.toFixed(1) + "%");
+    const l = label(nm, W * (fx + 0.09), base + u * 1.2); fade(l, t - 0.2);
+  });
+
+  // C. science: the Fermat card returns left; two progress rows on the right: Fable 100% in 30 h, Opus 26% in 18 h
+  out(document.querySelectorAll(".pl, .xn, .xl"), tSc - 0.6); retitle(t2, "Science: the Fermat proof", "1,000 agents కలిసి 30 గంటల్లో పూర్తి చేశాయి", tSc - 0.3);
+  const fm = card({ i: "fermat", x: W * 0.06, y: H * 0.32, w: W * 0.3, h: H * 0.56, label: "Fermat proof" }); pop(fm, tFe - 0.3, { x: -u * 8, opacity: 0 }, 0.6);
+  [["Fable 5.2 · 1,000 agents · 30 h", PAL.green, 1, tTh, H * 0.44, "100%"], ["Opus 5.5 · 18 h", PAL.mute, 0.26, tO18, H * 0.68, "26%"]].forEach(([t, c, f, t0, y, v]) => {
+    const l = label(t, W * 0.42, y - u * 5.5); l.style.transform = "none"; fade(l, t0 - 0.2);
+    const r = place(mk("div", "tr"), W * 0.42, y, W * 0.5); r.innerHTML = `<div style="background:${c}"></div>`; fade(r, t0 - 0.2);
+    tl.fromTo(r.firstChild, { scaleX: 0 }, { scaleX: f, duration: 1, ease: E.io, immediateRender: true }, t0);
+    const nv = label(v, W * 0.42 + W * 0.5 * f + u * 5, y - u * 0.4, undefined, c); fade(nv, (v === "26%" ? tP26 : t0 + 0.8));
+  });
+  X.done();
+</script></body></html>

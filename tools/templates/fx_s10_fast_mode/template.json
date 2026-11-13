@@ -1,0 +1,14 @@
+{
+ "name": "fx_s10_fast_mode",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "double mode remember words x25"
+ },
+ "description": "explainer seq 10 (148-159.4 s): fast mode toggle -> 2.5x speed, price x2 -> books card + 555,000 words memory"
+}

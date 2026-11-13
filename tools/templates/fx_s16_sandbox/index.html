@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 16 (272-295.8 s): the other side: sandbox room with a small flaw -> escapes 39% -> 21% -> 3.1% (good news) */
+.pl { position: absolute; border-radius: calc(var(--u) * 1.4) calc(var(--u) * 1.4) 0 0; transform-origin: 50% 100%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, fit, bg, title, retitle, card, chip, label, icon, num, count } = X;
+  bg("rose");
+  const tS = at("side", 1.5), tRm = at("room", 3.7), tSb = at("sandbox", 5.7), tFl = at("flaw", 8.6), t39 = at("p39", 11.2), tFi = at("files", 13.4);
+  const t21 = at("p21", 16.5), t31 = at("p31", 20.6), tG = at("good", 22.75);
+
+  // A. the other side: the glass test room starts centre, a flaw chip appears, then the room moves left for the chart
+  const t1 = title("The sandbox test", "AI ని ఒక మూసిన గదిలో పెట్టి test చేస్తారు", 0.1, { kick: "THE OTHER SIDE", kickColor: PAL.red });
+  const sb = card({ i: "sandbox", x: W * 0.18, y: H * 0.3, w: W * 0.64, h: H * 0.6, label: "sandbox" }); pop(sb, tRm - 0.3, { scale: 0.92, opacity: 0 }, 0.6);
+  const cF = chip("A small flaw, on purpose", W * 0.36, H * 0.84, PAL.red); pop(cF, tFl);
+  fit(sb, t39 - 0.6, W * 0.04, H * 0.32, W * 0.44, H * 0.5); tl.to(cF, { left: W * 0.06, duration: 0.8, ease: E.io }, t39 - 0.6);
+  const cU = chip("Used outside files", W * 0.06, H * 0.92, PAL.coral); pop(cU, tFi); cU.style.top = H * 0.9 + "px";
+
+  // B. three pillars step down on the right, one per spoken number; the last one turns green = good news
+  const base = H * 0.86, mh = H * 0.46;
+  const pills = [["Mythos 5", 39, t39, 0.53], ["5.1", 21, t21, 0.68], ["5.2", 3.1, t31, 0.83]].map(([nm, v, t, fx]) => {
+    const h = Math.max(u, mh * v / 39), p = place(mk("div", "pl"), W * fx, base - h, W * 0.11, h); p.style.background = PAL.red;
+    tl.fromTo(p, { scaleY: 0 }, { scaleY: 1, duration: 0.8, ease: E.in, immediateRender: true }, t - 0.2);
+    const nv = num(W * fx, base - h - u * 9, PAL.red, 6.5); fade(nv, t, 0.3); count(nv, 0, v, t, 0.8, (x) => (v < 10 ? x.toFixed(1) : Math.round(x)) + "%");
+    const l = label(nm, W * (fx + 0.055), base + u * 1.2); fade(l, t - 0.2);
+    return [p, nv];
+  });
+  tl.to(pills[2][0], { backgroundColor: PAL.green, duration: 0.4 }, tG); tl.to(pills[2][1], { color: PAL.green, duration: 0.4 }, tG);
+  const ck = icon("check", W * 0.855, H * 0.52, u * 7, PAL.green); pop(ck, tG, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+  const cG = chip("Good news", W * 0.62, H * 0.33, PAL.green); pop(cG, tG + 0.2);
+  X.done();
+</script></body></html>

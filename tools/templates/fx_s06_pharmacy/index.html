@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 06 (73.1-85.4 s): safeguards = locks against dangerous tasks -> medicine: one shop for everyone, one needs a prescription */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, bg, title, retitle, card, chip, icon } = X;
+  bg("mint");
+  const tS = at("safeguards", 0.05), tD = at("danger", 2.6), tL = at("locks", 4.9), tMd = at("medicine", 7.1), tEv = at("everyone", 8.4), tRx = at("prescription", 10.7);
+
+  // A. the lock picture starts big in the centre; on "dangerous" it moves left and the blocked task fills the right
+  const t1 = title("What are safeguards?", "AI ప్రమాదకరమైన పనుల్లో సాయం చేయకుండా పెట్టే తాళాలు", 0.1);
+  const lk = card({ i: "lock", x: W * 0.32, y: H * 0.3, w: W * 0.36, h: H * 0.6 }); pop(lk, tS + 0.2, { scale: 0.9, opacity: 0 }, 0.6);
+  fit(lk, tD - 0.3, W * 0.07, H * 0.32, W * 0.36, H * 0.56);
+  const x1 = icon("cross", W * 0.56, H * 0.4, u * 10); pop(x1, tD, { scale: 0.3, opacity: 0 }, 0.45, E.pop);
+  const cD = chip("Dangerous tasks", W * 0.56 + u * 13, H * 0.42, PAL.red); pop(cD, tD + 0.2);
+  const cL = chip("Safeguards = locks", W * 0.56, H * 0.6, PAL.green); cL.style.fontSize = u * 3.6 + "px"; pop(cL, tL);
+
+  // B. same medicine, two shops: the medicine box first, then shop 1 (for everyone) left and shop 2 (prescription) right
+  out([lk, x1, cD, cL], tMd - 0.5); retitle(t1, "Like a medicine shop", "ఒకే medicine, రెండు రకాల shops", tMd - 0.2);
+  const md = card({ i: "medicine", x: W * 0.35, y: H * 0.3, w: W * 0.3, h: H * 0.5 }); pop(md, tMd, { y: u * 6, opacity: 0 }, 0.6);
+  out(md, tEv - 0.2, { scale: 0.9 });
+  const s1 = card({ i: "ph_open", x: W * 0.05, y: H * 0.31, w: W * 0.43, h: H * 0.48 }); pop(s1, tEv, { x: -u * 8, opacity: 0 }, 0.6);
+  const s2 = card({ i: "ph_rx", x: W * 0.52, y: H * 0.31, w: W * 0.43, h: H * 0.48 }); pop(s2, tRx - 0.2, { x: u * 8, opacity: 0 }, 0.6);
+  const c1 = chip("For everyone", W * 0.18, H * 0.84, PAL.green); pop(c1, tEv + 0.3);
+  const k1 = icon("check", W * 0.12, H * 0.835, u * 5, PAL.green); pop(k1, tEv + 0.4, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+  const c2 = chip("Prescription only", W * 0.65, H * 0.84, PAL.coral); pop(c2, tRx + 0.1);
+  const k2 = icon("lock", W * 0.6, H * 0.825, u * 4.4, PAL.coral); pop(k2, tRx + 0.2, { scale: 0.3, opacity: 0 }, 0.4, E.pop);
+  X.done();
+</script></body></html>

@@ -1,0 +1,14 @@
+{
+ "name": "fx_s11_agents_os",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "agents code days engineer human laptop ninety os smart"
+ },
+ "description": "explainer seq 11 (159.4-180.6 s): code screen + 90% dot grid (with human guidance) -> engineer + 1,000 agents -> laptop, prototype OS in 8 days"
+}

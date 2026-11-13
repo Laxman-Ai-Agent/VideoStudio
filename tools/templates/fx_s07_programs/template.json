@@ -1,0 +1,14 @@
+{
+ "name": "fx_s07_programs",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "biology cvp cyber fable life loose mythos verify"
+ },
+ "description": "explainer seq 07 (85.4-99.9 s): Fable for everyone | Mythos looser in cyber + biology -> only verified companies: two programs"
+}

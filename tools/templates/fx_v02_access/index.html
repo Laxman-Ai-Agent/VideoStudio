@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer 9x16 seq 02 (16.2-27.4 s): top half Fable for everyone | bottom half Mythos (cyber, biology) for selected companies */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, move, bg, title, chip, box, icon, vcard } = X;
+  bg("mint");
+  const tF = Math.max(0.05, at("fable", 0)), tEv = at("everyone", 1.4), tC = at("cyber", 3.1), tB = at("biology", 4.3), tM = at("mythos", 6.3), tSe = at("selected", 8.9);
+
+  // A. top half: Fable card + people + EVERYONE
+  title("Who gets which?", "Fable అందరికీ, Mythos selected companies కి మాత్రమే", 0.05);
+  const cw = W * 0.38, ch = H * 0.24;
+  const f = vcard("fab", W * 0.06, H * 0.27, cw, ch); pop(f, tF + 0.1, { x: -u * 10, opacity: 0 }, 0.6);
+  [0, 1, 2].forEach((i) => { const p = icon("user", W * (0.52 + i * 0.14), H * 0.3, W * 0.1, PAL.fab); pop(p, tEv + i * 0.1, { y: u * 4, opacity: 0 }); });
+  const cE = chip("Everyone", W * 0.52, H * 0.42, PAL.fab); pop(cE, tEv + 0.4);
+
+  // B. bottom half: cyber + biology chips first, then the Mythos card, then the lock + SELECTED COMPANIES
+  const div = box(W * 0.06, H * 0.545, W * 0.88, u * 0.5, "#1B214022"); fade(div, tC - 0.3);
+  const c1 = chip("Cyber security", W * 0.5, H * 0.6, PAL.myt), c2 = chip("Biology", W * 0.5, H * 0.68, PAL.myt);
+  pop(c1, tC); pop(c2, tB);
+  const m = vcard("myt", W * 0.06, H * 0.58, cw, ch); pop(m, tM, { x: -u * 10, opacity: 0 }, 0.6);
+  const lk = icon("lock", W * 0.5, H * 0.76, W * 0.12, PAL.myt); pop(lk, tSe - 0.1, { scale: 0.3, opacity: 0 }, 0.45, E.pop);
+  const cS = chip("Selected companies", W * 0.06, H * 0.88, PAL.myt); cS.style.fontSize = u * 5 + "px"; pop(cS, tSe);
+  X.done();
+</script></body></html>

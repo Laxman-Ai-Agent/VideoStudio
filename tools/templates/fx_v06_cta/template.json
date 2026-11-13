@@ -1,0 +1,14 @@
+{
+ "name": "fx_v06_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "comment fable link"
+ },
+ "description": "explainer 9x16 seq 06 (76.4-end): CTA: presenter points (lower 68%), comment box types FABLE, full video link"
+}

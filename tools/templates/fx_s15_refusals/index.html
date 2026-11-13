@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos explainer seq 15 (262-272 s): Fable: harmless questions no longer blocked -> -55% refusals */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, u, PAL, tl, E, at, mk, place, fade, pop, out, fit, bg, title, card, chip, icon, num, count, label } = X;
+  bg("mint");
+  const tF = at("fable", 0.75), tHm = at("harmless", 5.0), tSt = at("stop", 6.2), t55 = at("p55", 7.2);
+
+  // A. the chat phone starts centre, moves left; harmless questions arrive blocked on the right
+  title("Fewer wrong refusals", "Fable 5.2: హానీ లేని ప్రశ్నలను ఆపడం దాదాపు 55% తగ్గింది", 0.1, { kick: "FABLE 5.2", kickColor: PAL.fab });
+  const ph = card({ i: "chat", x: W * 0.32, y: H * 0.3, w: W * 0.36, h: H * 0.62 }); pop(ph, tF - 0.4, { y: u * 6, opacity: 0 }, 0.6);
+  fit(ph, Math.min(tHm - 1.6, 3), W * 0.06, H * 0.31, W * 0.28, H * 0.6);
+  ["How do vaccines work?", "Best lock for my door?", "What is a computer virus?"].forEach((q, i) => {
+    const y = H * (0.36 + i * 0.13), c = chip(q, W * 0.44, y, PAL.ink); c.style.fontSize = u * 3.2 + "px"; pop(c, Math.min(tHm - 1.2, 3.4) + i * 0.3, { x: u * 6, opacity: 0 });
+    const xi = icon("cross", W * 0.38, y + u * 0.3, u * 4.6); pop(xi, Math.min(tHm - 1.2, 3.4) + i * 0.3 + 0.2, { scale: 0.3, opacity: 0 }, 0.35, E.pop);
+    if (i === 1) return;
+    out(xi, tSt + i * 0.1, { scale: 0.4 });
+    const ok = icon("check", W * 0.38, y + u * 0.3, u * 4.6); pop(ok, tSt + 0.2 + i * 0.1, { scale: 0.3, opacity: 0 }, 0.35, E.pop);
+  });
+  const n = num(W * 0.44, H * 0.74, PAL.green, 11); fade(n, t55 - 0.2, 0.3); count(n, 0, 55, t55 - 0.2, 0.9, (v) => "-" + Math.round(v) + "%");
+  const l = label("refusals (early testing)", W * 0.76, H * 0.8); fade(l, t55 + 0.5);
+  X.done();
+</script></body></html>

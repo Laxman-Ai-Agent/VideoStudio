@@ -1,0 +1,14 @@
+{
+ "name": "fx_v02_access",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16 explainer; reuse only when the user asks",
+  "kit": "explainer_kit",
+  "beats": "biology cyber everyone fable mythos selected"
+ },
+ "description": "explainer 9x16 seq 02 (16.2-27.4 s): top half Fable for everyone | bottom half Mythos (cyber, biology) for selected companies"
+}
