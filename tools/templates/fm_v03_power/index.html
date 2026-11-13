@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos 9x16 seq 03 (27.4-50.5 s): how powerful: Fermat 350 years -> 30 hours ribbons -> laptop, new OS in 8 days -> one prompt, three devices */
+.big { position: absolute; font: 800 calc(var(--u) * 14) var(--font-head); line-height: 1; white-space: nowrap; }
+.rib { position: absolute; height: calc(var(--u) * 3); border-radius: 99px; transform-origin: 0 50%; }
+.rl { position: absolute; font: 700 calc(var(--u) * 2.8) var(--font-script); letter-spacing: .12em; white-space: nowrap; }
+.pr { position: absolute; padding: calc(var(--u) * 1.8) calc(var(--u) * 2.6); border: 1px solid #6EF0B5; border-radius: calc(var(--u) * .8); background: #050506d8;
+      color: var(--text); font: 700 calc(var(--u) * 3.6) var(--font-script); white-space: nowrap; min-width: calc(var(--u) * 60); min-height: calc(var(--u) * 4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, head, redact, kick, scramble, type, count, chip, line, camera, bg } = K;
+  bg({ seed: 103 });
+  const st = K.$("stage"); camera(st, 1.05, 0.012);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. HOW POWERFUL? -> the real Fermat portrait, 350 YEARS counts up
+  const tP = at("power", 0.4), tY = at("years", 1.7), tH = at("hours", 8.4);
+  const h0 = head("HOW <em>POWERFUL</em>?", W * 0.07, H * 0.05, 8); redact(h0, Math.max(0.1, tP - 0.2));
+  const fm = card({ i: "fermat", x: W * 0.07, y: H * 0.14, w: W * 0.4, h: W * 0.533, focus: [0.5, 0.35, 1.1], tag: "FERMAT" });
+  pop(fm, tY - 0.3, { x: -u * 10, rotation: -5, opacity: 0 }, 0.7, E.in);
+  const n3 = place(mk("div", "big", st), W * 0.52, H * 0.17); n3.style.color = PAL.text; fade(n3, tY - 0.1); count(n3, 0, 350, tY - 0.1, 1.2);
+  const kY = kick("YEARS UNSOLVED", W * 0.53, H * 0.17 + u * 15); kY.style.fontSize = u * 2.8 + "px"; fade(kY, tY + 0.6);
+
+  // B. time ribbons: 350 years runs the full width, Fable's 30 hours is a tiny mint stub that wins
+  const r1 = place(mk("div", "rib", st), W * 0.07, H * 0.51, W * 0.86), l1 = place(mk("div", "rl", st, "350 YEARS / HUMANS"), W * 0.07, H * 0.48);
+  r1.style.background = `linear-gradient(90deg, ${PAL.mute}, ${PAL.mute}55)`; l1.style.color = PAL.mute;
+  tl.fromTo(r1, { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: "power2.inOut", immediateRender: true }, tY + 1.2); fade(l1, tY + 1.2);
+  const r2 = place(mk("div", "rib", st), W * 0.07, H * 0.58, W * 0.1), l2 = place(mk("div", "rl", st, "30 HOURS / FABLE 5.2"), W * 0.07, H * 0.55);
+  r2.style.background = PAL.fab; r2.style.boxShadow = `0 0 ${u * 3}px ${PAL.fab}`; l2.style.color = PAL.fab;
+  tl.fromTo(r2, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: E.in, immediateRender: true }, tH - 0.2); fade(l2, tH - 0.2);
+  const hH = head("<em>30</em> HOURS", W * 0.07, H * 0.63, 10); redact(hH, tH + 0.1);
+
+  // C. one engineer + the laptop card: a new OS booted in 8 days
+  const tE = at("engineer", 10.4), tD = at("days", 11.65), tL = at("laptop", 12.8), tO = at("os", 14.5);
+  tl.to([h0, fm, n3, kY, r1, l1, r2, l2, hH], { opacity: 0, x: -u * 8, duration: 0.45, ease: E.out, stagger: 0.02 }, tE - 0.6);
+  const lp = card({ i: "laptop", x: W * 0.07, y: H * 0.1, w: W * 0.86, h: W * 0.64 }); pop(lp, tE - 0.2, { y: H * 0.1, opacity: 0, scale: 0.9 }, 0.7, E.in);
+  const cE = chip("1 ENGINEER", W * 0.1, H * 0.08, PAL.fab); cE.style.fontSize = u * 3.2 + "px"; pop(cE, tE + 0.1, { x: -u * 6, opacity: 0 }, 0.4, E.in);
+  K.sweep(lp, tL);
+  const n8 = place(mk("div", "big", st, "0"), W * 0.07, H * 0.48); n8.style.color = PAL.fab; fade(n8, tD - 0.1); count(n8, 0, 8, tD - 0.1, 0.6);
+  const kD = kick("DAYS", W * 0.07 + u * 13, H * 0.48 + u * 7.5); kD.style.fontSize = u * 4 + "px"; fade(kD, tD + 0.3);
+  const kO = kick("A NEW", W * 0.07, H * 0.6); kO.style.fontSize = u * 2.8 + "px"; fade(kO, tO - 0.2);
+  const hO = place(mk("div", "kh", st), W * 0.07, H * 0.63); hO.style.fontSize = u * 6.4 + "px"; scramble(hO, "OPERATING SYSTEM", tO, 0.8);
+
+  // D. one paragraph prompt -> three real device cards stack in
+  const tPr = at("prompt", 17.45), tDv = at("devices", 19.8);
+  tl.to([lp, cE, n8, kD, kO, hO], { opacity: 0, y: -u * 6, duration: 0.45, ease: E.out, stagger: 0.02 }, tPr - 0.6);
+  const pr = place(mk("div", "pr", st), W * 0.07, H * 0.1); fade(pr, tPr - 0.25); type(pr, "> ONE PARAGRAPH PROMPT", tPr - 0.1, 28);
+  const cs = W * 0.27;
+  [["hub", "HUB"], ["speaker", "SPEAKER"], ["pet", "PET"]].forEach(([k, tag], i) => {
+    const x = W * (0.07 + i * 0.295), t = tDv - 0.4 + i * 0.35;
+    line(W * 0.5, H * 0.16, x + cs / 2, H * 0.27, t - 0.3, PAL.fab, 0.4, u * 0.35);
+    const c = card({ i: k, x, y: H * 0.27, w: cs, h: cs, tag }); pop(c, t, { y: u * 12, opacity: 0, rotation: (i - 1) * 6 }, 0.6, E.in);
+  });
+  const hDv = head("3 <em>DEVICES</em>", W * 0.07, H * 0.46, 10); redact(hDv, tDv + 0.6);
+  K.done();
+</script></body></html>

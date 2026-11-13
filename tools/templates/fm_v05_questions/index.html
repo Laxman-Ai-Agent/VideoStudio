@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos 9x16 seq 05 (63.4-76.4 s): 5.1 -> 5.2, three question cards build one by one: HOW FAST? / HOW CHEAP? / HOW POWERFUL? */
+.qm { position: absolute; font: 800 calc(var(--u) * 90) var(--font-head); line-height: 1; color: #ffffff08; }
+.qc { position: absolute; border-radius: calc(var(--u) * 1.4); background: linear-gradient(100deg, #ffffff14, #ffffff05); border: 1px solid #ffffff22;
+      border-left: calc(var(--u) * 1) solid var(--c); box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 5) #000c; overflow: hidden; }
+.qc .q { position: absolute; left: 30%; top: 50%; transform: translateY(-50%); font: 800 calc(var(--u) * 5.4) var(--font-head); color: var(--text); white-space: nowrap; }
+.qc .k { position: absolute; left: 30%; top: 12%; font: 700 calc(var(--u) * 2.4) var(--font-script); letter-spacing: .14em; color: var(--c); white-space: nowrap; }
+.qc .n { position: absolute; left: 7%; top: 50%; transform: translateY(-50%); font: 800 calc(var(--u) * 9) var(--font-head); color: var(--c); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, head, redact, kick, camera, bg } = K;
+  bg({ seed: 105 });
+  const st = K.$("stage"); camera(st, 1.05, -0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. a giant ghost "?" turns slowly behind everything; OLD vs NEW: 5.1 -> 5.2
+  const qm = place(mk("div", "qm", st, "?"), W * 0.25, H * 0.12); tl.fromTo(qm, { rotation: -8, opacity: 0 }, { rotation: 6, opacity: 1, duration: D, ease: E.soft, immediateRender: true }, 0);
+  const kO = kick("FABLE / OLD VS NEW", W * 0.07, H * 0.06); kO.style.fontSize = u * 3 + "px"; fade(kO, 0.3);
+  const h0 = head("5.1 <em>&rarr;</em> 5.2", W * 0.07, H * 0.09, 11); redact(h0, 0.6);
+
+  // B. the question cards build, each on its spoken word; the third (violet) arrives on "Mythos", its text on "powerful"
+  const tF = at("fast", 4.1), tP = at("price", 5.15), tM = at("mythos", 6.6), tPw = at("powerful", 11.7);
+  const Q = [["01", "SPEED", "HOW <span style='color:#6EF0B5'>FAST</span>?", PAL.fab, tF], ["02", "PRICE", "HOW <span style='color:#6EF0B5'>CHEAP</span>?", PAL.fab, tP],
+             ["03", "MYTHOS / NEW VULNERABILITIES", "HOW <span style='color:#A47CFF'>POWERFUL</span>?", PAL.myt, tM]];
+  const cards = Q.map(([n, k, q, c, t], i) => {
+    const e = place(mk("div", "qc", st, `<div class="n">${n}</div><div class="k">${k}</div><div class="q">${q}</div>`), W * 0.07, H * (0.24 + i * 0.165), W * 0.86, H * 0.13);
+    e.style.setProperty("--c", c);
+    pop(e, t - 0.2, { x: i % 2 ? -W * 0.6 : W * 0.6, opacity: 0, rotation: i % 2 ? -3 : 3 }, 0.6, E.in);
+    return e;
+  });
+  const q3 = cards[2].querySelector(".q"); tl.set(q3, { opacity: 0 }, 0);
+  tl.fromTo(q3, { opacity: 0, x: u * 6 }, { opacity: 1, x: 0, duration: 0.4, ease: E.in, immediateRender: true }, tPw - 0.2);
+  tl.to(cards, { scale: 1.03, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out", stagger: 0.1 }, Math.min(tPw + 0.4, D - 0.8));
+  K.done();
+</script></body></html>

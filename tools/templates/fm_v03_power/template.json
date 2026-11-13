@@ -1,0 +1,14 @@
+{
+ "name": "fm_v03_power",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "days devices engineer hours laptop os power prompt years"
+ },
+ "description": "9x16 seq 03 (27.4-50.5 s): how powerful: Fermat 350 years -> 30 hours ribbons -> laptop, new OS in 8 days -> one prompt, three devices"
+}

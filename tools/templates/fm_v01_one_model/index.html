@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos 9x16 seq 01 (0-16.2 s): Anthropic logo -> Fable / Mythos cards stacked -> not two AIs, ONE MODEL (merge) -> medicine card, PRESCRIPTION ONLY */
+.glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, #ffffff 0 4%, #6EF0B5 14%, #A47CFF55 40%, transparent 68%); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, head, redact, kick, vcard, logo, stamp, flash, camera, bg } = K;
+  bg({ seed: 101 });
+  const st = K.$("stage"); camera(st, 1.05, 0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. Anthropic logo stamps in at the top, NEW RELEASE
+  const tA = at("anthropic", 0.1), tF = at("fable", 2.2), tM = at("mythos", 4.5);
+  const lg = logo("anthropic", W * 0.3, H * 0.05, W * 0.4, H * 0.05); pop(lg, Math.max(0, tA - 0.05), { scale: 1.6, opacity: 0 }, 0.4, E.in);
+  const kN = kick("NEW RELEASE / 2 VERSIONS", W * 0.2, H * 0.115); fade(kN, tA + 0.6);
+
+  // B. the two version cards stack diagonally, each on its name
+  const cw = W * 0.4, ch = cw * 1.38;
+  const f = vcard("fab", W * 0.1, H * 0.16, cw, ch), m = vcard("myt", W * 0.5, H * 0.34, cw, ch);
+  pop(f, tF - 0.2, { x: -u * 20, rotation: -10, opacity: 0 }, 0.7, E.in); pop(m, tM - 0.2, { x: u * 20, rotation: 10, opacity: 0 }, 0.7, E.in);
+  tl.to(f, { rotation: -4, duration: 2, ease: E.soft }, tF + 0.6); tl.to(m, { rotation: 4, duration: 2, ease: E.soft }, tM + 0.6);
+  const h2 = head("TWO <em>NEW</em> AIS?", W * 0.08, H * 0.67, 9); redact(h2, tM + 1.4);
+
+  // C. "not two": the cards slide into one another and merge into one glowing core, ONE MODEL
+  const tNo = at("not", 10.7), tOne = at("one", 11.4);
+  tl.to(h2, { opacity: 0, y: -u * 4, duration: 0.35, ease: E.out }, tNo - 0.3);
+  tl.to(f, { x: W * 0.2, y: H * 0.09, rotation: 0, duration: 0.7, ease: E.io }, tNo);
+  tl.to(m, { x: -W * 0.2, y: -H * 0.09, rotation: 0, duration: 0.7, ease: E.io }, tNo);
+  tl.to([f, m], { opacity: 0, scale: 0.8, duration: 0.3, ease: E.out }, tNo + 0.65);
+  const gl = place(mk("div", "glow", st), W * 0.15, H * 0.17, W * 0.7, W * 0.7);
+  tl.fromTo(gl, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: E.pop, immediateRender: true }, tNo + 0.7); flash(tNo + 0.7, 0.3);
+  const h1 = head("ONE <em>MODEL</em>", W * 0.08, H * 0.6, 12); redact(h1, Math.max(tOne, tNo + 0.8));
+
+  // D. the medicine box slides up; PRESCRIPTION ONLY stamps over it
+  const tMd = at("medical", 13.05), tRx = at("prescription", 13.8);
+  tl.to([gl, h1, lg, kN], { opacity: 0, y: -H * 0.08, duration: 0.5, ease: E.out, stagger: 0.03 }, tMd - 0.5);
+  const md = card({ i: "medicine", x: W * 0.14, y: H * 0.14, w: W * 0.72, h: W * 0.72, tag: "MEDICAL SHOP" });
+  pop(md, tMd - 0.1, { y: H * 0.3, opacity: 0, rotation: 4 }, 0.7, E.in);
+  stamp("PRESCRIPTION ONLY", W * 0.12, H * 0.52, PAL.myt, tRx + 0.2, -7);
+  K.done();
+</script></body></html>

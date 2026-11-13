@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 14 (235.3-262 s): chapter MYTHOS (violet glitch) -> code wall weak spots = VULNERABILITIES -> +14.4% -> 1 in 6 bugs */
+.big { position: absolute; font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1; white-space: nowrap; }
+.spot { position: absolute; width: calc(var(--u) * 5); height: calc(var(--u) * 5); margin: calc(var(--u) * -2.5) 0 0 calc(var(--u) * -2.5); border-radius: 50%;
+        border: 2px solid #A47CFF; box-shadow: 0 0 calc(var(--u) * 3) #A47CFF, inset 0 0 calc(var(--u) * 2) #A47CFF; }
+.ring { position: absolute; border-radius: 50%; border: 2px solid #A47CFF; box-shadow: 0 0 calc(var(--u) * 3) #A47CFF88; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, head, redact, kick, scramble, count, vcard, chip, icon, glitch, camera, bg } = K;
+  bg({ seed: 41, tint: PAL.myt });
+  const st = K.$("stage"); camera(st, 1.05, -0.012);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. chapter cut in violet: MYTHOS 5.2 unredacts, the Mythos card slides in, CYBER SECURITY + MOST POWERFUL
+  glitch(0.05, PAL.myt);
+  const tM = at("mythos", 0.4), tC = at("cyber", 2.5), tPw = at("powerful", 5.1);
+  const kc = kick("CHAPTER 02 / THE CYBER VERSION", W * 0.06, H * 0.14); fade(kc, 0.2);
+  const hM = head("<b>MYTHOS</b> 5.2", W * 0.06, H * 0.2, 10); redact(hM, Math.max(0.25, tM - 0.1));
+  const mv = vcard("myt", W * 0.7, H * 0.08, W * 0.2, W * 0.276); pop(mv, tM, { x: u * 12, rotation: 8, opacity: 0 }, 0.7, E.in);
+  const cC = chip("CYBER SECURITY", W * 0.06, H * 0.38, PAL.myt); pop(cC, tC, { x: -u * 5, opacity: 0 }, 0.4, E.in);
+  const ish = icon("shield", W * 0.06, H * 0.47, u * 5.4, PAL.myt); pop(ish, tPw - 0.1, { scale: 0, opacity: 0 }, 0.4);
+  const hP = head("MOST <b>POWERFUL</b>", W * 0.06 + u * 7.5, H * 0.47, 5); redact(hP, tPw);
+
+  // B. the code wall picture; weak spots light up one by one; VULNERABILITIES scrambles in
+  const tWk = at("weak", 8.2), tV = at("vuln", 9.0), t14 = at("p144", 16.0);
+  tl.to([kc, hM, mv, cC, ish, hP], { opacity: 0, x: -u * 8, duration: 0.5, ease: E.out, stagger: 0.03 }, tWk - 0.8);
+  const vc = card({ i: "vuln", x: W * 0.06, y: H * 0.08, w: W * 0.52, h: H * 0.64 });
+  pop(vc, tWk - 0.4, { scale: 1.1, opacity: 0 }, 0.7, E.in);
+  const r = K.rnd(7);
+  for (let i = 0; i < 5; i++) {
+    const s = place(mk("div", "spot", vc), W * 0.52 * (0.15 + r() * 0.7), H * 0.64 * (0.15 + r() * 0.7));
+    tl.fromTo(s, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: E.pop, immediateRender: true }, tWk + 0.1 + i * 0.18);
+    tl.to(s, { scale: 1.35, opacity: 0.6, duration: 0.6, yoyo: true, repeat: 5, ease: E.soft }, tWk + 0.5 + i * 0.18);
+  }
+  const kW = kick("WEAK SPOTS IN SOFTWARE", W * 0.62, H * 0.14); fade(kW, tWk);
+  const hV = place(mk("div", "kh", st), W * 0.62, H * 0.19); hV.style.fontSize = u * 4.2 + "px"; hV.style.color = PAL.myt; scramble(hV, "VULNERABILITIES", tV, 0.8);
+
+  // C. +14.4% counter: known bugs found again, 5.2 vs 5.1
+  const kK = kick("KNOWN BUGS FOUND / VS 5.1", W * 0.62, H * 0.36); fade(kK, t14 - 0.4);
+  const n14 = place(mk("div", "big", st), W * 0.62, H * 0.41); n14.style.color = PAL.myt; fade(n14, t14 - 0.2);
+  count(n14, 0, 14.4, t14 - 0.2, 0.9, (v) => "+" + v.toFixed(1) + "%");
+
+  // D. a security company's report: six bug icons, one glows violet = 1 IN 6, no other AI caught it
+  const tCo = at("company", 19.3), t6 = at("six", 22.4), tN = at("none", 25.6);
+  tl.to([vc, kW, hV, kK, n14], { opacity: 0, y: -u * 5, duration: 0.5, ease: E.out, stagger: 0.03 }, tCo - 0.6);
+  const cCo = chip("SECURITY COMPANY REPORT", W * 0.06, H * 0.1, PAL.myt); pop(cCo, tCo, { x: -u * 5, opacity: 0 }, 0.4, E.in);
+  const bs = u * 11, gap = u * 4, bx = W / 2 - (6 * bs + 5 * gap) / 2;
+  const bugs = [...Array(6)].map((_, i) => { const b = icon("bug", bx + i * (bs + gap), H * 0.28, bs, i === 3 ? PAL.myt : PAL.text);
+    tl.fromTo(b, { opacity: 0, y: u * 4 }, { opacity: 1, y: 0, duration: 0.35, ease: E.in, immediateRender: true }, tCo + 0.6 + i * 0.12); return b; });
+  const ring = place(mk("div", "ring", st), bx + 3 * (bs + gap) - u * 2.5, H * 0.28 - u * 2.5, bs + u * 5, bs + u * 5);
+  tl.fromTo(ring, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: E.pop, immediateRender: true }, t6);
+  tl.to(bugs[3], { scale: 1.3, duration: 0.4, ease: E.pop }, t6);
+  tl.to(bugs.filter((_, i) => i !== 3), { opacity: 0.22, duration: 0.4 }, t6 + 0.3);
+  const h6 = head("1 IN <b>6</b>", W / 2 - u * 18, H * 0.48, 9); redact(h6, t6 + 0.2);
+  const kN = kick("NO OTHER AI CAUGHT IT", W / 2 - u * 17, H * 0.62); fade(kN, tN - 0.2);
+  K.done();
+</script></body></html>

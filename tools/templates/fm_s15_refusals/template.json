@@ -1,0 +1,14 @@
+{
+ "name": "fm_s15_refusals",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "fable harmless p55 stop"
+ },
+ "description": "seq 15 (262-272 s): back to Fable (mint): harmless questions lose their BLOCKED stamps -> -55% refusals"
+}

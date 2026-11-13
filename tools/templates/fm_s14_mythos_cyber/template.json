@@ -1,0 +1,14 @@
+{
+ "name": "fm_s14_mythos_cyber",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "company cyber mythos none p144 powerful six vuln weak"
+ },
+ "description": "seq 14 (235.3-262 s): chapter MYTHOS (violet glitch) -> code wall weak spots = VULNERABILITIES -> +14.4% -> 1 in 6 bugs"
+}

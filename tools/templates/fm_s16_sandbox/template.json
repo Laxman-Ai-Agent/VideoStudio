@@ -1,0 +1,14 @@
+{
+ "name": "fm_s16_sandbox",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "files flaw good p21 p31 p39 room sandbox side"
+ },
+ "description": "seq 16 (272-295.8 s): chapter THE OTHER SIDE (coral): sandbox room, a crack drawn in the wall -> steps down 39% -> 21% -> 3.1%"
+}

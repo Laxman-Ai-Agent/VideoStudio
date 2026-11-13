@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 17 (295.8-322.5 s): system card -> monitor eye, Mythos slips out of the beam -> 1 in 4 ring, 43% bar -> presenter shock -> risk low, UK AISI / METR / US */
+.beam { position: absolute; background: linear-gradient(90deg, #EDE6DA55, #EDE6DA00); clip-path: polygon(0 40%, 100% 0, 100% 100%, 0 60%); transform-origin: 0 50%; }
+.bar { position: absolute; background: #050506; box-shadow: 0 0 0 1px #ffffff18; transform-origin: 0 50%; }
+.ov { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; background: linear-gradient(180deg, #050506aa, #050506f2); padding: 6%; }
+.ov b { display: block; font: 800 calc(var(--u) * 6) var(--font-head); color: #A47CFF; line-height: 1; }
+.ov i { display: block; margin: 4% 0; font: 700 calc(var(--u) * 1.5) var(--font-script); font-style: normal; color: var(--text); letter-spacing: .12em; }
+.ov .tr { height: calc(var(--u) * 1.2); border-radius: 99px; background: #ffffff18; overflow: hidden; }
+.ov .tr div { height: 100%; width: 43%; background: #A47CFF; transform-origin: 0 50%; }
+.rt { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text);
+      font: 800 calc(var(--u) * 6) var(--font-head); line-height: 1; white-space: nowrap; }
+.rt small { font: 700 calc(var(--u) * 1.7) var(--font-script); letter-spacing: .14em; color: #8C877F; margin-top: calc(var(--u) * 1); }
+.bt { position: absolute; display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 3) var(--font-head); color: var(--text); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, head, redact, kick, count, vcard, chip, icon, logo, slam, camera, bg } = K;
+  K.$("root").style.background = "radial-gradient(120% 90% at 50% 40%, #131012, #050505)";
+  bg({ seed: 71, tint: PAL.warn, bars: 8 });
+  const st = K.$("stage"); camera(st, 1.05, 0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. the system card document rises; TOLD TO UNDERPERFORM
+  const tCd = at("card", 0.9), tLo = at("low", 3.4), tMo = at("monitor", 6.3), tEs = at("escaped", 7.35), t4 = at("four", 9.8), t43 = at("p43", 11.8);
+  const dc = card({ i: "doc", x: W * 0.06, y: H * 0.08, w: W * 0.24, h: H * 0.64 });
+  pop(dc, Math.max(0, tCd - 0.5), { y: H * 0.2, opacity: 0, rotation: -5 }, 0.8, E.in);
+  const kD = kick("FROM THE SYSTEM CARD", W * 0.34, H * 0.1); fade(kD, tCd);
+  const hD = head("SYSTEM <b>CARD</b>", W * 0.34, H * 0.15, 6); redact(hD, tCd + 0.1);
+  const cL = chip("TOLD TO UNDERPERFORM", W * 0.34, H * 0.26, PAL.warn); pop(cL, tLo, { x: -u * 5, opacity: 0 }, 0.4, E.in);
+
+  // B. the thought monitor (eye card) casts a beam; the Mythos card slides behind a redaction bar, out of the beam
+  tl.to(cL, { opacity: 0, duration: 0.3 }, tMo - 0.3);
+  const ex = W * 0.36, ey = H * 0.34, es = W * 0.17;
+  const kM = kick("THOUGHT MONITOR", ex, H * 0.27); fade(kM, tMo);
+  const eyeC = card({ i: "eye", x: ex, y: ey, w: es, h: es, shape: "round" }); pop(eyeC, tMo - 0.2, { scale: 0.5, opacity: 0 }, 0.6);
+  const bm = place(mk("div", "beam", st), ex + es * 0.9, ey + es * 0.1, W * 0.26, es * 0.8);
+  tl.fromTo(bm, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.5, ease: E.in, immediateRender: true }, tMo + 0.3);
+  const mv = vcard("myt", W * 0.72, H * 0.3, W * 0.12, W * 0.166); pop(mv, tMo + 0.2, { x: u * 8, opacity: 0 }, 0.5, E.in);
+  const rbar = place(mk("div", "bar", st), W * 0.69, H * 0.27, W * 0.18, W * 0.2);
+  tl.fromTo(rbar, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: E.io, immediateRender: true }, tEs);
+  tl.to(mv, { y: H * 0.18, opacity: 0, duration: 0.5, ease: E.out }, tEs + 0.3);
+  tl.to(bm, { opacity: 0.25, duration: 0.3 }, tEs + 0.5);
+  const kE = kick("FIRST MODEL TO SLIP PAST IT", W * 0.56, H * 0.7); kE.style.color = PAL.warn; fade(kE, tEs + 0.4);
+
+  // C. 1 IN 4 quarter ring; 43% bar fills inside the document card
+  tl.to([kM, eyeC, bm, rbar, kE], { opacity: 0, scale: 0.9, duration: 0.45, ease: E.out, stagger: 0.03 }, t4 - 0.5);
+  const rs = H * 0.38, rx = W * 0.44, ry = H * 0.27, rg = place(mk("div", "", st), rx, ry, rs, rs); rg.style.position = "absolute";
+  rg.innerHTML = `<svg viewBox="0 0 100 100" width="${rs}" height="${rs}"><circle cx="50" cy="50" r="44" fill="none" stroke="#ffffff1c" stroke-width="5"/>
+    <circle cx="50" cy="50" r="44" fill="none" stroke="${PAL.myt}" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 50 50)"/></svg>`;
+  fade(rg, t4 - 0.2);
+  tl.fromTo(rg.querySelectorAll("circle")[1], { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0.75 }, duration: 0.8, ease: E.in, immediateRender: true }, t4);
+  const rt = place(mk("div", "rt", st, "1 IN 4<small>TIMES</small>"), rx, ry, rs, rs); fade(rt, t4 + 0.2);
+  const ov = mk("div", "ov", dc, "<b>0%</b><i>SUSPECTED A TEST</i><div class='tr'><div></div></div>");
+  fade(ov, t43 - 0.3); count(ov.querySelector("b"), 0, 43, t43 - 0.1, 0.8, (v) => Math.round(v) + "%");
+  tl.fromTo(ov.querySelector(".tr div"), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out", immediateRender: true }, t43 - 0.1);
+
+  // D. presenter shock + IS THIS A TEST? slam
+  const tDb = at("doubt", 16.1), tRk = at("risk", 18.0), tUk = at("uk", 20.9), tMe = at("metr", 22.8), tUs = at("us", 23.8);
+  tl.to([dc, kD, hD, rg, rt], { opacity: 0, x: -u * 8, duration: 0.45, ease: E.out, stagger: 0.03 }, tDb - 0.6);
+  const pr = card({ i: "pres_shock", x: W * 0.5, y: H * 0.04, w: W * 0.46, h: H * 0.74, shape: "cut" });
+  pop(pr, tDb - 0.2, { scale: 1.25, opacity: 0, y: u * 4 }, 0.5, E.in);
+  const s1 = head("IS THIS", W * 0.06, H * 0.26, 8), s2 = head("<b>A TEST?</b>", W * 0.06, H * 0.41, 8);
+  tl.set([s1.querySelector(".rt"), s2.querySelector(".rt")], { opacity: 1 }, 0);
+  slam(s1, tDb); slam(s2, tDb + 0.4);
+
+  // E. risk low (per Anthropic); outside testers pop in as badges, one per spoken name
+  tl.to(pr, { x: W * 0.5, opacity: 0, duration: 0.5, ease: "power3.in" }, tRk - 0.5);
+  tl.to([s1, s2], { opacity: 0, y: -u * 4, duration: 0.4, ease: E.out }, tRk - 0.5);
+  const kRk = kick("MISALIGNMENT RISK / PER ANTHROPIC", W * 0.06, H * 0.14); fade(kRk, tRk);
+  const hRk = head("<s>RISK</s> = <em>LOW</em>", W * 0.06, H * 0.19, 8); redact(hRk, tRk + 0.1);
+  const bs = u * 11, bx = W * 0.56;
+  const b1 = logo("aisi", bx, H * 0.12, bs, bs, { badge: true }), c1 = chip("UK AI SECURITY INSTITUTE", bx + bs + u * 2, H * 0.12 + bs / 2 - u * 2);
+  const b2 = place(mk("div", "badge bt", st, "METR"), bx, H * 0.12 + bs + u * 3, bs, bs), c2 = chip("INDEPENDENT EVALUATOR",bx + bs + u * 2, H * 0.12 + bs * 1.5 + u * 1);
+  const b3 = place(mk("div", "badge", st), bx, H * 0.12 + (bs + u * 3) * 2, bs, bs); icon("shield", bs * 0.22, bs * 0.22, bs * 0.56, PAL.fab, b3);
+  const c3 = chip("US GOVERNMENT", bx + bs + u * 2, H * 0.12 + (bs + u * 3) * 2 + bs / 2 - u * 2);
+  [[b1, c1, tUk], [b2, c2, tMe], [b3, c3, tUs]].forEach(([b, c, t]) => { pop(b, t - 0.15, { scale: 0.4, opacity: 0 }, 0.45); pop(c, t, { x: -u * 4, opacity: 0 }, 0.4, E.in); });
+  const kT = kick("TESTED BEFORE RELEASE", W * 0.06, H * 0.34); kT.style.color = PAL.fab; fade(kT, tUs + 0.3);
+  K.done();
+</script></body></html>

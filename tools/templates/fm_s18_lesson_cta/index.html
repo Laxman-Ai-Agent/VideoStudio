@@ -1,0 +1,73 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 18 (322.5-end): daily chat -> Opus 5.5 | hard work -> Fable / Mythos -> lesson SMARTER = HARDER TO TEST, slow steps -> question, comment, subscribe */
+.half { position: absolute; top: 0; height: 100%; }
+.ft { position: absolute; width: calc(var(--u) * 2.2); height: calc(var(--u) * 3.6); border-radius: 50%; background: #6EF0B5; box-shadow: 0 0 calc(var(--u) * 2) #6EF0B566; }
+.cb { position: absolute; padding: calc(var(--u) * 1.6) calc(var(--u) * 2.2); border-radius: calc(var(--u) * 1); background: #ffffff0e; border: 1px solid #ffffff33;
+      color: var(--text); font: 700 calc(var(--u) * 2.4) var(--font-script); white-space: nowrap; }
+.cb small { display: block; font-size: calc(var(--u) * 1.5); color: #8C877F; letter-spacing: .14em; margin-bottom: calc(var(--u) * .8); }
+.car { display: inline-block; width: calc(var(--u) * .3); height: 1em; margin-left: 2px; vertical-align: -.15em; background: #6EF0B5; }
+.sub { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: calc(var(--u) * .8);
+       font: 800 calc(var(--u) * 2.6) var(--font-head); letter-spacing: .06em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, head, redact, kick, type, vcard, chip, icon, line, camera, bg } = K;
+  bg({ seed: 81 });
+  const st = K.$("stage"); camera(st, 1.04, -0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. use-case split: daily chat -> Opus 5.5 (left) | hard technical work -> Fable / Mythos (right)
+  const tDa = at("daily", 1.5), tOp = at("opus", 4.55), tHd = at("hard", 11.75);
+  const kN = kick("NOT FOR DAILY CHAT", W * 0.06, H * 0.08); fade(kN, Math.max(0.2, tDa - 0.6));
+  const L = place(mk("div", "half"), 0, 0, W / 2), R = place(mk("div", "half"), W / 2, 0, W / 2);
+  L.style.background = `linear-gradient(90deg, #ffffff08, #ffffff12)`; R.style.background = `linear-gradient(90deg, ${PAL.fab}14, ${PAL.myt}1c)`;
+  tl.fromTo(L, { xPercent: -100 }, { xPercent: 0, duration: 0.6, ease: E.io, immediateRender: true }, Math.max(0, tDa - 0.4));
+  const cs = W * 0.16, ch = card({ i: "chat", x: W * 0.06, y: H * 0.16, w: cs, h: cs, tag: "EVERY DAY" });
+  pop(ch, tDa, { x: -u * 8, opacity: 0, rotation: -4 }, 0.6, E.in);
+  const hL = head("DAILY <em>CHAT</em>", W * 0.06, H * 0.5, 5); redact(hL, tDa + 0.3);
+  const ar1 = line(W * 0.235, H * 0.3, W * 0.29, H * 0.3, tOp - 0.4, PAL.text, 0.4, u * 0.3);
+  const cO = chip("USE OPUS 5.5", W * 0.3, H * 0.28, PAL.text); pop(cO, tOp, { scale: 0.6, opacity: 0 }, 0.45);
+  tl.fromTo(R, { xPercent: 100 }, { xPercent: 0, duration: 0.6, ease: E.io, immediateRender: true }, tHd - 0.6);
+  const dc = card({ i: "dc", x: W * 0.54, y: H * 0.16, w: cs, h: cs, tag: "HARD TECH WORK" }); pop(dc, tHd - 0.2, { x: u * 8, opacity: 0, rotation: 4 }, 0.6, E.in);
+  const vw = W * 0.085, f = vcard("fab", W * 0.73, H * 0.14, vw, vw * 1.38), m = vcard("myt", W * 0.83, H * 0.14, vw, vw * 1.38);
+  pop(f, tHd + 0.2, { y: u * 8, opacity: 0, rotation: -6 }, 0.6, E.in); pop(m, tHd + 0.35, { y: u * 8, opacity: 0, rotation: 6 }, 0.6, E.in);
+  const hR = head("HARD <em>WORK</em>", W * 0.54, H * 0.5, 5); redact(hR, tHd + 0.3);
+
+  // B. the lesson: SMARTER AI = HARDER TO TEST; then slow footsteps (not a stop)
+  const tLe = at("lesson", 15.2), tTe = at("test", 18.6), tSl = at("slow", 23.0);
+  tl.to([kN, L, R, ch, hL, ar1, cO, dc, f, m, hR], { opacity: 0, y: -u * 4, duration: 0.5, ease: E.out, stagger: 0.02 }, tLe - 0.7);
+  const kL = kick("THE ONE LESSON", W * 0.06, H * 0.12); fade(kL, tLe);
+  const h1 = head("SMARTER <em>AI</em>", W * 0.06, H * 0.18, 8); redact(h1, tLe + 0.2);
+  const h2 = head("= <s>HARDER</s> TO TEST", W * 0.06, H * 0.32, 8); redact(h2, tTe);
+  const kS = kick("NOT A STOP / SLOW STEPS", W * 0.06, H * 0.52); fade(kS, tSl - 0.2);
+  for (let i = 0; i < 8; i++) {
+    const s = place(mk("div", "ft", st), W * (0.08 + i * 0.105), H * 0.6 + (i % 2 ? u * 3 : 0));
+    tl.fromTo(s, { opacity: 0, scale: 0.4, rotation: 80 }, { opacity: 1, scale: 1, rotation: 90, duration: 0.3, ease: E.pop, immediateRender: true }, tSl + i * 0.42);
+  }
+
+  // C. the question, presenter points down to the comments; comment box types; subscribe clicks
+  const tQ = at("question", 27.0), tCm = at("comment", 31.2), tSub = Math.min(at("subscribe", 34.6), D - 1.2) - 1.4;
+  tl.to(st.querySelectorAll(".ft"), { opacity: 0, duration: 0.4 }, tQ - 0.6);
+  tl.to([kL, h1, h2, kS], { opacity: 0, x: -u * 6, duration: 0.45, ease: E.out, stagger: 0.03 }, tQ - 0.6);
+  const pr = card({ i: "pres_point", x: W * 0.54, y: H * 0.04, w: W * 0.42, h: H * 0.74, shape: "cut" });
+  pop(pr, tQ - 0.3, { scale: 1.2, opacity: 0, y: u * 4 }, 0.6, E.in);
+  const q1 = chip("GROW THIS FAST?", W * 0.06, H * 0.14, PAL.fab), q2 = chip("OR PAUSE AND THINK?", W * 0.06, H * 0.23, PAL.myt);
+  pop(q1, tQ, { x: -u * 6, opacity: 0 }, 0.45, E.in); pop(q2, tQ + 1.4, { x: -u * 6, opacity: 0 }, 0.45, E.in);
+  q1.style.fontSize = q2.style.fontSize = u * 2.6 + "px";
+  const cb = place(mk("div", "cb", st, "<small>ADD A COMMENT</small><span></span><i class='car'></i>"), W * 0.06, H * 0.36, W * 0.4);
+  pop(cb, tCm - 0.3, { y: u * 6, opacity: 0 }, 0.5, E.in);
+  const sp = cb.querySelector("span"), o = { n: 0 }, txt = "MY OPINION:";
+  tl.to(o, { n: txt.length, duration: 0.8, ease: "none", onUpdate: () => { sp.textContent = txt.slice(0, Math.round(o.n)); } }, tCm + 0.2);
+  tl.fromTo(cb.querySelector(".car"), { opacity: 1 }, { opacity: 0, duration: 0.4, repeat: 7, yoyo: true, ease: "steps(1)", immediateRender: false }, tCm);
+  const kDW = kick("THE DARK WORLD", W * 0.06, H * 0.55); fade(kDW, tSub - 0.3);
+  const s1 = place(mk("div", "sub", st, "SUBSCRIBE"), W * 0.06, H * 0.6, W * 0.2, H * 0.09), s2 = place(mk("div", "sub", st, "SUBSCRIBED"), W * 0.06, H * 0.6, W * 0.2, H * 0.09);
+  s1.style.cssText += `;background:${PAL.text};color:${PAL.ink}`; s2.style.cssText += `;background:#ffffff14;color:${PAL.fab};border:1px solid ${PAL.fab}`;
+  pop(s1, tSub, { scale: 0.6, opacity: 0 }, 0.45); tl.set(s2, { opacity: 0 }, 0);
+  tl.to(s1, { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1, ease: "power2.out" }, tSub + 0.8);
+  tl.to(s1, { opacity: 0, duration: 0.15 }, tSub + 1.0); tl.to(s2, { opacity: 1, duration: 0.15 }, tSub + 1.0);
+  K.done();
+</script></body></html>

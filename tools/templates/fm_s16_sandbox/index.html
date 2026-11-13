@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 16 (272-295.8 s): chapter THE OTHER SIDE (coral): sandbox room, a crack drawn in the wall -> steps down 39% -> 21% -> 3.1% */
+.stp { position: absolute; border-top: 3px solid #FF6A4D; background: linear-gradient(180deg, #FF6A4D88, #FF6A4D10); }
+.sl { position: absolute; font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #8C877F; white-space: nowrap; }
+.sv { position: absolute; font: 800 calc(var(--u) * 5.4) var(--font-head); color: #FF6A4D; white-space: nowrap; line-height: 1; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, head, redact, kick, scramble, count, chip, icon, shake, glitch, camera, bg } = K;
+  K.$("root").style.background = "radial-gradient(120% 90% at 50% 40%, #151011, #050505)";
+  bg({ seed: 61, tint: PAL.warn, bars: 9 });
+  const st = K.$("stage"); camera(st, 1.05, 0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. coral chapter cut: THE OTHER SIDE
+  glitch(0.05, PAL.warn);
+  const tS = at("side", 1.5), tRm = at("room", 3.7), tSb = at("sandbox", 5.7), tFl = at("flaw", 8.6);
+  const kS = kick("CHAPTER 03", W * 0.06, H * 0.3); fade(kS, 0.2);
+  const hS = head("THE OTHER <s>SIDE</s>", W * 0.06, H * 0.36, 10); redact(hS, Math.max(0.3, tS - 0.2));
+
+  // B. the closed glass room picture; SANDBOX scrambles; a crack draws itself into the wall on "flaw"
+  tl.to([kS, hS], { opacity: 0, y: -u * 5, duration: 0.45, ease: E.out }, tRm - 0.5);
+  const cw = W * 0.46, chh = H * 0.62, sb = card({ i: "sandbox", x: W * 0.06, y: H * 0.08, w: cw, h: chh });
+  pop(sb, tRm - 0.2, { scale: 1.15, opacity: 0 }, 0.8, E.in);
+  const kR = kick("A CLOSED TEST ROOM", W * 0.56, H * 0.12); fade(kR, tRm + 0.2);
+  const hB = place(mk("div", "kh", st), W * 0.56, H * 0.17); hB.style.fontSize = u * 7 + "px"; scramble(hB, "SANDBOX", tSb, 0.7);
+  const sv = mk("div", "", sb); sv.style.cssText = "position:absolute;inset:0";
+  sv.innerHTML = `<svg width="${cw}" height="${chh}" viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0">
+    <polyline points="63,6 58,20 65,29 57,43 62,52 55,68 59,80" fill="none" stroke="${PAL.warn}" vector-effect="non-scaling-stroke"
+      style="stroke-width:${u * 0.45}px;filter:drop-shadow(0 0 ${u}px ${PAL.warn})" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`;
+  tl.fromTo(sv.querySelector("polyline"), { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.7, ease: "power2.inOut", immediateRender: true }, tFl);
+  shake(sb, tFl + 0.1, u * 0.4);
+  const kFl = kick("A FLAW, LEFT ON PURPOSE", W * 0.56, H * 0.28); kFl.style.color = PAL.warn; fade(kFl, tFl + 0.2);
+
+  // C. escapes fall down three steps, each on its spoken number
+  const t39 = at("p39", 11.2), tFi = at("files", 13.4), t21 = at("p21", 16.5), t31 = at("p31", 20.6), tG = at("good", 22.75);
+  tl.to([kR, hB, kFl], { opacity: 0, y: -u * 4, duration: 0.4, ease: E.out }, t39 - 0.6);
+  const cF = chip("USED FILES OUTSIDE", W * 0.08, H * 0.6, PAL.warn); pop(cF, tFi, { x: -u * 5, opacity: 0 }, 0.4, E.in);
+  const base = H * 0.7, maxh = H * 0.42, sw = W * 0.1, sx = W * 0.57;
+  const steps = [["MYTHOS 5", 39, t39], ["5.1", 21, t21], ["5.2", 3.1, t31]].map(([nm, v, t], i) => {
+    const x = sx + i * (sw + W * 0.025), h = Math.max(u * 0.8, (maxh * v) / 39);
+    const blk = place(mk("div", "stp", st), x, base - h, sw, h);
+    tl.fromTo(blk, { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.7, ease: E.in, immediateRender: true }, t - 0.2);
+    const lb = place(mk("div", "sl", st, nm), x, base + u); fade(lb, t - 0.2);
+    const nv = place(mk("div", "sv", st), x, base - h - u * 7); fade(nv, t - 0.1);
+    count(nv, 0, v, t - 0.1, 0.7, (x) => (v < 10 ? x.toFixed(1) : Math.round(x)) + "%");
+    return nv;
+  });
+  tl.to(sb, { opacity: 0.5, duration: 0.6 }, t21);
+
+  // D. good news: the last step turns mint with a tick
+  tl.to(steps[2], { color: PAL.fab, duration: 0.4 }, tG);
+  const ck = icon("check", sx + 2 * (sw + W * 0.025) + sw * 0.25, base - u * 22, u * 6, PAL.fab); pop(ck, tG, { scale: 0, opacity: 0 }, 0.4);
+  const hG = head("<em>GOOD</em> NEWS", W * 0.57, H * 0.1, 5); redact(hG, tG + 0.1);
+  K.done();
+</script></body></html>

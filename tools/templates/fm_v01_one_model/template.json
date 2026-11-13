@@ -1,0 +1,14 @@
+{
+ "name": "fm_v01_one_model",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "anthropic fable medical mythos not one prescription"
+ },
+ "description": "9x16 seq 01 (0-16.2 s): Anthropic logo -> Fable / Mythos cards stacked -> not two AIs, ONE MODEL (merge) -> medicine card, PRESCRIPTION ONLY"
+}

@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 15 (262-272 s): back to Fable (mint): harmless questions lose their BLOCKED stamps -> -55% refusals */
+.big { position: absolute; font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1; white-space: nowrap; }
+.bub { position: absolute; padding: calc(var(--u) * 1.2) calc(var(--u) * 2); border-radius: calc(var(--u) * 1.6) calc(var(--u) * 1.6) calc(var(--u) * 1.6) 0;
+       background: #ffffff10; border: 1px solid #ffffff2a; color: var(--text); font: 700 calc(var(--u) * 2.2) var(--font-script); white-space: nowrap; }
+.no { position: absolute; right: calc(var(--u) * -4); top: calc(var(--u) * -2); padding: calc(var(--u) * .3) calc(var(--u) * .9); border: 2px solid #8C877F;
+      color: #8C877F; font: 800 calc(var(--u) * 1.6) var(--font-head); letter-spacing: .08em; transform: rotate(-8deg); background: #050506cc; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, head, redact, kick, count, icon, glitch, camera, bg } = K;
+  bg({ seed: 51 });
+  const st = K.$("stage"); camera(st, 1.04, -0.01);
+  const fade = (e, t) => tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: true }, t);
+
+  // A. mint again: the chat phone card swings in, FABLE 5.2 unredacts
+  glitch(0.05, PAL.fab);
+  const tF = at("fable", 0.75), tHm = at("harmless", 5.0), tSt = at("stop", 6.2), t55 = at("p55", 7.2);
+  const ph = card({ i: "chat", x: W * 0.06, y: H * 0.08, w: W * 0.24, h: H * 0.64 });
+  pop(ph, 0.1, { x: -u * 10, opacity: 0, rotation: -4 }, 0.7, E.in);
+  const kF = kick("ONE GOOD CHANGE", W * 0.36, H * 0.1); fade(kF, tF);
+  const hF = head("<em>FABLE</em> 5.2", W * 0.36, H * 0.15, 6.5); redact(hF, tF + 0.1);
+
+  // B. harmless questions arrive already BLOCKED; on "stop" two of the three stamps fly off and get a mint tick
+  const Q = ["HOW DO VACCINES WORK?", "BEST LOCK FOR MY DOOR?", "WHAT IS A COMPUTER VIRUS?"];
+  Q.forEach((q, i) => {
+    const x = W * 0.36 + i * u * 4, y = H * (0.32 + i * 0.11);
+    const b = place(mk("div", "bub", st, q + '<div class="no">BLOCKED</div>'), x, y);
+    pop(b, Math.min(tHm - 1.6, 2.8) + i * 0.4, { x: u * 6, opacity: 0 }, 0.5, E.in);
+    if (i === 1) return;
+    tl.to(b.querySelector(".no"), { opacity: 0, scale: 1.7, rotation: 12, duration: 0.4, ease: E.out }, tSt + i * 0.12);
+    const ck = icon("check", x - u * 5, y + u * 0.6, u * 3.6, PAL.fab); pop(ck, tSt + 0.25 + i * 0.12, { scale: 0, opacity: 0 }, 0.35);
+  });
+
+  // C. -55% counts up, FEWER REFUSALS
+  const n = place(mk("div", "big", st), W * 0.68, H * 0.32); n.style.color = PAL.fab; fade(n, t55 - 0.2);
+  count(n, 0, 55, t55 - 0.2, 0.9, (v) => "-" + Math.round(v) + "%");
+  const kR = kick("FEWER REFUSALS", W * 0.685, H * 0.32 + u * 12); fade(kR, t55 + 0.4);
+  const kE = kick("EARLY TESTING", W * 0.685, H * 0.32 + u * 15); fade(kE, t55 + 0.7); kE.style.fontSize = u * 1.6 + "px";
+  K.done();
+</script></body></html>

@@ -1,0 +1,14 @@
+{
+ "name": "fm_v04_shock",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "doubt escape monitor mythos shock test"
+ },
+ "description": "9x16 seq 04 (50.5-63.4 s): the shock: Mythos card covers the monitor eye -> presenter shock big, IT KNEW IT WAS TESTED, DOUBT stamp"
+}

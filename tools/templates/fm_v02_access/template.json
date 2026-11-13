@@ -1,0 +1,14 @@
+{
+ "name": "fm_v02_access",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "biology cyber everyone fable mythos selected"
+ },
+ "description": "9x16 seq 02 (16.2-27.4 s): top half Fable FOR EVERYONE (mint, people) | bottom half Mythos (violet): cyber security, biology, lock, SELECTED ONLY"
+}

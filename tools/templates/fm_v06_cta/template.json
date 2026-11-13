@@ -1,0 +1,14 @@
+{
+ "name": "fm_v06_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 9x16; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "comment fable link"
+ },
+ "description": "9x16 seq 06 (76.4-end): CTA: presenter points, comment box types FABLE, arrow down, FULL VIDEO card"
+}
