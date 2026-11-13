@@ -250,3 +250,13 @@ def test_stat_card_draws_no_invented_trend():
     html = (rnd.TEMPLATES / "cards" / "index.html").read_text("utf-8")
     assert "<path/></svg>" not in html and "L98" not in html          # no trend-line shape
     assert "if (trend) ar.innerHTML" in html                          # the arrow needs an explicit trend
+
+
+def test_theme_captions_off_drops_captions(tmp_path):
+    from pipeline.contracts import ThemeSpec, Word
+    brand = BRAND.model_copy(update={"captions": True})
+    words = [Word(text="hi", start=0.1, end=0.4)]
+    on = rnd.plan_jobs(_plan(), RESOLVED, brand, "16:9", tmp_path, tmp_path / "o", False, words)[0]
+    off = rnd.plan_jobs(_plan(), RESOLVED, brand, "16:9", tmp_path, tmp_path / "o", False, words,
+                        theme=ThemeSpec(name="t", colors={}, fonts={}, captions={"style": "off"}))[0]
+    assert on.captions and off.captions is None

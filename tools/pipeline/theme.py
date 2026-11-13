@@ -45,7 +45,7 @@ TEXT_IN = {"pop", "rise", "blur", "slide", "mask", "type", "fade"}
 CAMERA = {"drift", "push", "pull", "tilt", "still"}
 TRANSITIONS = {"blur", "wipe", "zoom", "circle", "slide", "dip", "flash", "cut"}
 TITLE_STYLES = {"plain", "split", "italic", "shadow", "outline", "caps"}  # big titles, like type-specimen cards
-CAPTION_STYLES = {"box", "marker", "underline", "pop"}  # spoken-word look; no card behind captions (2026-11-10)
+CAPTION_STYLES = {"box", "marker", "underline", "pop", "off"}  # off = no captions for this video  # spoken-word look; no card behind captions (2026-11-10)
 CAPTION_DEFAULT = {"style": "box", "font": "body"}
 MOTION_DEFAULT = {"text_in": "pop", "camera": "drift", "transitions": []}  # [] = brand.json list
 SYSTEM_FONT_DIRS = [Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts",
