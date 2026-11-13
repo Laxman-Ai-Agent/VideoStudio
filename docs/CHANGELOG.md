@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-13
+- 04_Fable_Mythos: paired project from the user's workflow prompt (merge, 3 speeds, Gemini JSON align), theme, 20 Kaggle images, kit fable_kit, sequences fm_s01-fm_s12.
+- grade.graded returns SVG files unchanged (logos are CSS masks; PIL cannot open SVG). Test: test_svg_is_not_graded.
+
 ## 2026-11-11 - 03_Wireless_Power previews checked
 
 - Both previews re-rendered (pool paths: spark / phone_float) and QA'd one frame per beat. Fixed overlaps: seq 02 TRUE / HYPE / 50% all sat at top 0 (`place()` y overrides CSS top), seq 05 "1000s" over its label, seq 08 kicker over the hollow 3, seq 12 "Shocking Update" over the counters and "20%" over its label, seq 19 title at the right edge; 9x16 v01 FAN label over the laptop card and "No Wire" too wide, v02 labels past the edge, v03 arrow over the description line. Only those sequences re-rendered. Tests 149 pass.

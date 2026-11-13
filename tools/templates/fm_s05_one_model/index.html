@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 05 (61.9-73.1 s): two names, two AIs? -> the cards merge into ONE MODEL -> SAFEGUARDS ring */
+#core { position: absolute; border-radius: 50%; background: radial-gradient(circle, #fff 0 6%, var(--primary) 18%, var(--secondary) 38%, transparent 68%); }
+#ring { position: absolute; overflow: visible; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, head, redact, kick, vcard, chip, icon, camera, bg, flash } = K;
+  bg({ seed: 15 });
+  const st = K.$("stage"); camera(st, 1.06, 0);
+
+  // A. two names: the cards stand far apart, "2 AIs?" hangs between them
+  const tN = at("names", 0.3), tT = at("two", 1.6), tR = at("real", 3.4), cw = W * 0.17, ch = cw * 1.38, cy = H * 0.1;
+  const fab = vcard("fab", W * 0.1, cy, cw, ch), myt = vcard("myt", W * 0.73, cy, cw, ch);
+  pop(fab, tN, { x: -u * 10, opacity: 0, rotation: -6 }, 0.6, E.in); pop(myt, tN + 0.15, { x: u * 10, opacity: 0, rotation: 6 }, 0.6, E.in);
+  const q = chip("2 DIFFERENT AIs ?", W / 2 - u * 11, H * 0.3, PAL.text); pop(q, tT, { scale: 0.4, opacity: 0 }, 0.45);
+  const k1 = kick("BUT HERE IS THE REAL STORY", W / 2 - u * 21, H * 0.42); tl.set(k1, { opacity: 0 }, 0);
+  tl.to(q, { rotationX: 90, opacity: 0, duration: 0.3, ease: E.out }, tR); tl.to(k1, { opacity: 1, duration: 0.3 }, tR + 0.2);
+
+  // B. they slide together, overlap and dissolve into one glowing core
+  const tF = at("fable", 5.4), tO = at("one", 7.5), mx = W / 2 - cw / 2;
+  out(k1, tF - 0.4);
+  tl.to(fab, { left: mx - u * 3, rotation: -4, duration: 0.9, ease: E.io }, tF - 0.3);
+  tl.to(myt, { left: mx + u * 3, rotation: 4, duration: 0.9, ease: E.io }, tF - 0.3);
+  tl.to([fab, myt], { left: mx, rotation: 0, scale: 0.9, duration: 0.5, ease: "power4.in" }, tO - 0.5);
+  tl.to([fab, myt], { opacity: 0, scale: 0.4, duration: 0.4, ease: E.out }, tO);
+  const cs = H * 0.42, core = place(mk("div", "", st), W / 2 - cs / 2, H * 0.08, cs, cs); core.id = "core";
+  tl.fromTo(core, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(2)", immediateRender: true }, tO); flash(tO + 0.05, 0.3);
+  tl.to(core, { scale: 1.06, duration: 0.9, ease: E.soft, yoyo: true, repeat: 3 }, tO + 0.7);
+  const h = head("<em>ONE</em> <b>MODEL</b>", 0, H * 0.56, 8); h.style.width = W + "px"; h.style.textAlign = "center"; redact(h, tO + 0.3);
+
+  // C. SAFEGUARDS: a ring draws around the core, four locks ride the ring; the difference is only here
+  const tS = at("safeguards", 9.6), rs = cs * 1.45, rx = W / 2 - rs / 2, ry = H * 0.08 + cs / 2 - rs / 2;
+  const svg = place(mk("div", "", st), rx, ry, rs, rs); svg.id = "ring";
+  svg.innerHTML = `<svg width="${rs}" height="${rs}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="${PAL.text}" stroke-width=".6"
+    stroke-dasharray="4 2" pathLength="100"/></svg>`;
+  const c = svg.querySelector("circle");
+  tl.fromTo(c, { strokeDashoffset: 100, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.9, ease: E.io, immediateRender: true }, tS - 0.3);
+  const orbit = place(mk("div", "", svg), 0, 0, rs, rs); orbit.style.position = "absolute";
+  [0, 90, 180, 270].forEach((a, i) => { const r = rs * 0.47, ic = icon("lock", rs / 2 + Math.cos(a / 57.3) * r - u * 2, rs / 2 + Math.sin(a / 57.3) * r - u * 2, u * 4, i % 2 ? PAL.myt : PAL.fab, orbit);
+    pop(ic, tS + 0.2 + i * 0.1, { scale: 0, opacity: 0 }, 0.4); });
+  tl.fromTo(orbit, { rotation: 0 }, { rotation: 40, duration: Math.max(0.5, D - tS), ease: "none" }, tS);
+  const cS = chip("THE ONLY DIFFERENCE: SAFEGUARDS", W / 2 - u * 18, H * 0.64, PAL.fab); pop(cS, tS + 0.5, { y: u * 3, opacity: 0 }, 0.45, E.in);
+  tl.to(h, { opacity: 0, duration: 0.3 }, tS + 0.3);
+  K.done();
+</script></body></html>

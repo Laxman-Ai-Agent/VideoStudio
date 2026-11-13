@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 08 (99.9-128 s): timeline April Mythos -> Fable -> Sept 5.1 -> Nov 5.2; who can use it; clouds */
+.node { position: absolute; width: calc(var(--u) * 2.4); height: calc(var(--u) * 2.4); margin: calc(var(--u) * -1.2) 0 0 calc(var(--u) * -1.2);
+        border-radius: 50%; background: var(--c); box-shadow: 0 0 0 calc(var(--u) * .6) #0D0D10, 0 0 calc(var(--u) * 3) var(--c); }
+.mo { position: absolute; font: 800 calc(var(--u) * 3.6) var(--font-head); color: var(--text); white-space: nowrap; }
+.mo small { display: block; font: 700 calc(var(--u) * 1.8) var(--font-script); color: var(--c); letter-spacing: .16em; }
+.tier { position: absolute; padding: calc(var(--u) * 1) calc(var(--u) * 1.8); border-radius: calc(var(--u) * .5); background: var(--primary);
+        color: #0D0D10; font: 800 calc(var(--u) * 2.6) var(--font-head); white-space: nowrap; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"><div id="track" style="position:absolute;inset:0"></div></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, dim, head, redact, kick, chip, icon, logo, line, camera, bg } = K;
+  bg({ seed: 18 });
+  const st = K.$("stage"), tr = K.$("track"); camera(st, 1.03, 0);
+
+  // A. the timeline draws; the track itself is wider than the frame and slides left as the story moves on
+  const tA = at("april", 0.6), y = H * 0.36, TW = W * 1.5;
+  const k1 = kick("THE STORY SO FAR", W * 0.06, H * 0.08); tl.fromTo(k1, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+  line(W * 0.06, y, W * 0.06 + TW, y, 0.2, PAL.text + "66", 1.6, u * 0.25, tr);
+  const ev = [  // [x on track, month, sub, colour, beat]
+    [0.1, "APRIL", "MYTHOS ARRIVES", PAL.myt, tA], [0.42, "+2 MONTHS", "FABLE FOR ALL", PAL.fab, at("fable", 7.6)],
+    [0.74, "SEPTEMBER", "VERSION 5.1", PAL.text, at("sept", 12.8)], [1.06, "NOVEMBER", "VERSION 5.2", PAL.fab, at("v52", 14.6)]];
+  ev.forEach(([fx, m, sub, c, t], i) => {
+    const x = W * 0.06 + fx * W, n = place(mk("div", "node", tr), x, y); n.style.setProperty("--c", c);
+    pop(n, t - 0.1, { scale: 0, opacity: 0 }, 0.4, "back.out(3)");
+    const mo = place(mk("div", "mo", tr, `<small>${sub}</small>${m}`), x - u * 1, y + u * 3); mo.style.setProperty("--c", c);
+    tl.fromTo(mo, { opacity: 0, y: u * 3 }, { opacity: 1, y: 0, duration: 0.45, ease: E.in, immediateRender: true }, t);
+    if (i) tl.to(tr, { x: -Math.max(0, fx - 0.55) * W, duration: 1.1, ease: E.io }, t - 0.6);
+  });
+  // April detail: hacking skills -> limited to a few organisations (lock)
+  const tHk = at("hacking", 3.3), ax = W * 0.16;
+  const cH = chip("HACKING SKILLS", ax - u * 2, y - u * 12, PAL.myt, tr); pop(cH, tHk, { y: -u * 3, opacity: 0 }, 0.4, E.in);
+  const lk = icon("lock", ax + u * 22, y - u * 12.5, u * 4.4, PAL.myt, tr); pop(lk, tHk + 0.8, { scale: 2.2, opacity: 0 }, 0.3, "power4.in");
+  const cS = chip("+ MORE SAFEGUARDS", W * 0.06 + 0.42 * W - u * 2, y - u * 12, PAL.fab, tr); pop(cS, at("months", 5.6) + 0.8, { y: -u * 3, opacity: 0 }, 0.4, E.in);
+  const n52 = tr.querySelectorAll(".node")[3]; tl.to(n52, { scale: 1.8, duration: 0.3, yoyo: true, repeat: 3, ease: E.soft }, ev[3][4] + 0.4);
+  const h52 = head("<em>MANY</em> CHANGES", W * 0.06 + 1.06 * W - u * 1, y - u * 13, 4.4, tr); redact(h52, ev[3][4] + 0.6);
+
+  // B. who can use Fable 5.2: the track lifts and dims, user tiers stamp in a row on their words
+  const tP = at("pro", 17.6);
+  tl.to(tr, { y: -H * 0.2, opacity: 0.35, duration: 0.8, ease: E.io }, tP - 0.9);
+  const k2 = kick("FABLE 5.2 IS FOR", W * 0.06, H * 0.36); tl.fromTo(k2, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tP - 0.5);
+  let x = W * 0.06;
+  [["PRO", "pro", 17.6], ["MAX", "max", 18.1], ["TEAM", "team", 18.6], ["ENTERPRISE", "ent", 19.4], ["DEVELOPERS", "dev", 20.6]].forEach(([n, k, d], i) => {
+    const t = place(mk("div", "tier", st, n), x, H * 0.42); x += (n.length * 2.05 + 5.2) * u;
+    if (i > 3) t.style.background = PAL.text;
+    pop(t, at(k, d) - 0.05, { y: u * 5, scale: 0.6, opacity: 0, rotation: i % 2 ? 4 : -4 }, 0.4);
+  });
+
+  // C. also on the big clouds: three logo badges slide up
+  [["aws", "amazon", 23.0], ["gcloud", "google", 24.0], ["msft", "microsoft", 25.0]].forEach(([k, b, d], i) => {
+    const bd = logo(k, W * (0.06 + i * 0.16), H * 0.56, u * 13, u * 9, { badge: true }); pop(bd, at(b, d) - 0.1, { y: H * 0.2, opacity: 0 }, 0.55, E.in);
+  });
+  const cl = kick("+ CLOUD PLATFORMS", W * 0.56, H * 0.62); tl.fromTo(cl, { opacity: 0 }, { opacity: 1, duration: 0.3 }, at("amazon", 23) + 0.3);
+  K.done();
+</script></body></html>

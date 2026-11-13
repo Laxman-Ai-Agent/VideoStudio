@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 07 (85.4-99.9 s): shops become Fable / Mythos -> cyber + biology locks looser -> verified programs */
+.prog { position: absolute; padding: calc(var(--u) * 1.6) calc(var(--u) * 2.2); border-radius: calc(var(--u) * 1); background: #ffffff0e;
+        border: 1px solid var(--secondary); box-shadow: 0 calc(var(--u)) calc(var(--u) * 4) #000b; color: var(--text); }
+.prog b { display: block; font: 800 calc(var(--u) * 3) var(--font-head); line-height: 1.05; }
+.prog i { font: 700 calc(var(--u) * 1.7) var(--font-script); font-style: normal; color: var(--secondary); letter-spacing: .2em; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, lit, head, redact, kick, vcard, chip, icon, logo, line, camera, bg } = K;
+  bg({ seed: 17 });
+  const st = K.$("stage"); camera(st, 1.04, -0.01);
+
+  // A. the two shops from seq 06 shrink to the top corners; the version cards slide over them
+  const tF = at("fable", 0.2), tM = at("mythos", 2.4), sw = W * 0.3, sh = sw * 0.75;
+  const s1 = card({ i: "ph_open", x: W * 0.05, y: H * 0.3, w: sw, h: sh }), s2 = card({ i: "ph_rx", x: W * 0.65, y: H * 0.3, w: sw, h: sh });
+  tl.to(s1, { left: W * 0.04, top: H * 0.05, width: sw * 0.55, height: sh * 0.55, opacity: 0.55, duration: 0.8, ease: E.io }, Math.max(0, tF - 0.2));
+  tl.to(s2, { left: W * 0.79, top: H * 0.05, width: sw * 0.55, height: sh * 0.55, opacity: 0.55, duration: 0.8, ease: E.io }, Math.max(0, tF - 0.2));
+  const cw = W * 0.15, ch = cw * 1.38;
+  const fab = vcard("fab", W * 0.08, H * 0.2, cw, ch), myt = vcard("myt", W * 0.62, H * 0.2, cw, ch);
+  pop(fab, tF + 0.2, { y: H * 0.4, opacity: 0, rotation: -6 }, 0.7, E.in);
+  const cE = chip("AVAILABLE TO ALL", W * 0.08, H * 0.2 + ch + u * 1.5, PAL.fab); pop(cE, tF + 0.8, { y: u * 3, opacity: 0 }, 0.4, E.in);
+  pop(myt, tM, { y: H * 0.4, opacity: 0, rotation: 6 }, 0.7, E.in);
+
+  // B. cyber security + biology: two chips with icons beside Mythos; the locks there loosen (open icons wobble)
+  const tC = at("cyber", 4.0), tB = at("biology", 5.0), tLo = at("loose", 6.6), bx = W * 0.8;
+  const c1 = chip("CYBER SECURITY", bx - u * 2, H * 0.26, PAL.myt), c2 = chip("BIOLOGY", bx - u * 2, H * 0.38, PAL.myt);
+  pop(c1, tC, { x: u * 6, opacity: 0 }, 0.4, E.in); pop(c2, tB, { x: u * 6, opacity: 0 }, 0.4, E.in);
+  tl.to([c1, c2], { left: W * 0.36, duration: 0.01 }, 0);
+  const i1 = icon("unlock", W * 0.52, H * 0.25, u * 4.4, PAL.myt), i2 = icon("unlock", W * 0.52, H * 0.37, u * 4.4, PAL.myt);
+  [i1, i2].forEach((ic, i) => { pop(ic, tLo + i * 0.15, { scale: 0, opacity: 0 }, 0.35);
+    tl.to(ic, { rotation: -16, duration: 0.18, yoyo: true, repeat: 3, ease: E.soft }, tLo + 0.4 + i * 0.1); });
+  const hL = head("LOCKS <b>LOOSER</b>", W * 0.36, H * 0.5, 4.6); redact(hL, tLo + 0.2);
+
+  // C. verified access: Anthropic badge checks companies, two program cards rise and link to Mythos
+  const tV = at("verify", 9.0), tP1 = at("cvp", 10.4), tP2 = at("life", 12.0);
+  tl.to([fab, cE, s1, c1, c2, i1, i2, hL], { opacity: 0.2, duration: 0.5, ease: E.soft }, tV - 0.5);
+  const an = logo("anthropic", W * 0.37, H * 0.08, u * 12, u * 12, { badge: true }); pop(an, tV - 0.2, { scale: 0.4, opacity: 0 }, 0.45);
+  const ck = icon("check", W * 0.37 + u * 9.5, H * 0.08 + u * 9, u * 4.6, PAL.fab); pop(ck, tV + 0.4, { scale: 2.5, opacity: 0 }, 0.3, "power4.in");
+  const vk = kick("VERIFIED COMPANIES ONLY", W * 0.37, H * 0.08 + u * 14); tl.fromTo(vk, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tV + 0.5);
+  [["CYBER VERIFICATION", "PROGRAM 01", tP1], ["LIFE SCIENCES", "PROGRAM 02", tP2]].forEach(([n, k, t], i) => {
+    const p = place(mk("div", "prog", st, `<i>${k}</i><b>${n}</b>`), W * (0.24 + i * 0.2), H * 0.42);
+    pop(p, t - 0.2, { y: H * 0.25, opacity: 0, rotation: i ? 3 : -3 }, 0.6, E.in);
+    line(W * (0.33 + i * 0.2), H * 0.42, W * 0.62 + cw * 0.3, H * 0.2 + ch, t + 0.3, PAL.myt, 0.5, u * 0.2);
+  });
+  K.done();
+</script></body></html>

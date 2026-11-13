@@ -1,0 +1,14 @@
+{
+ "name": "fm_s06_pharmacy",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "danger everyone locks medicine prescription safeguards"
+ },
+ "description": "seq 06 (73.1-85.4 s): safeguards = locks on dangerous tasks -> same medicine, two shops"
+}

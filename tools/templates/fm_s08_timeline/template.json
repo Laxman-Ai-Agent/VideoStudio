@@ -1,0 +1,14 @@
+{
+ "name": "fm_s08_timeline",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "amazon april fable hacking months pro sept v52"
+ },
+ "description": "seq 08 (99.9-128 s): timeline April Mythos -> Fable -> Sept 5.1 -> Nov 5.2; who can use it; clouds"
+}

@@ -41,3 +41,11 @@ def test_clip_is_graded_and_cached(tmp_path, monkeypatch):
     out = grade.graded(src, PAL)
     assert out.suffix == ".mp4" and out.stat().st_size > 0
     assert grade.graded(src, PAL) == out and len(list((tmp_path / "cache").iterdir())) == 1
+
+
+def test_svg_is_not_graded(tmp_path):
+    """SVG logos (CSS masks in written scenes) cannot be opened by PIL: graded() returns them unchanged."""
+    from pipeline import grade
+    svg = tmp_path / "logo.svg"
+    svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>', "utf-8")
+    assert grade.graded(svg, {"primary": "#6EF0B5"}) == svg

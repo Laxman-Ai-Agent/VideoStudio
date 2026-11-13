@@ -1,0 +1,14 @@
+{
+ "name": "fm_s11_agents_os",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "agents code days engineer human laptop ninety os smart"
+ },
+ "description": "seq 11 (159.4-180.6 s): 90%+ of merged code by Claude (dot grid) -> 1,000 agents swarm into a laptop OS in 8 days"
+}

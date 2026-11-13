@@ -1,0 +1,14 @@
+{
+ "name": "fm_s02_strict_free",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "experts fable fooled freedom mythos smart strict"
+ },
+ "description": "seq 02 (16-31 s): Fable strict | Mythos free split -> it fooled the testers (presenter shock)"
+}

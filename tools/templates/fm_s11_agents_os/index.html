@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 11 (159.4-180.6 s): 90%+ of merged code by Claude (dot grid) -> 1,000 agents swarm into a laptop OS in 8 days */
+.dot { position: absolute; border-radius: 2px; background: #ffffff1c; }
+.big { position: absolute; font: 800 calc(var(--u) * 9) var(--font-head); line-height: 1; white-space: nowrap; color: var(--primary); }
+#sw { position: absolute; inset: 0; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, head, redact, kick, scramble, count, chip, icon, camera, bg, rnd } = K;
+  bg({ seed: 21 });
+  const st = K.$("stage"); camera(st, 1.04, 0.01);
+
+  // A. HOW SMART? code screen card + a 10x10 grid where 90 cells light up mint: 90%+ of merged code
+  const tS = at("smart", 0.5), tC = at("code", 4.5), t90 = at("ninety", 6.4), tHu = at("human", 9.8);
+  const h1 = head("HOW <em>SMART</em>?", W * 0.06, H * 0.07, 5.5); redact(h1, tS);
+  const cd = card({ i: "code", x: W * 0.06, y: H * 0.24, w: W * 0.38, h: W * 0.38 * 9 / 16, tag: "Anthropic's own code" });
+  pop(cd, tC - 0.3, { x: -W * 0.2, opacity: 0, rotation: -3 }, 0.7, E.in);
+  const gs = H * 0.042, gx = W * 0.52, gy = H * 0.2, cells = [];
+  for (let i = 0; i < 100; i++) cells.push(place(mk("div", "dot"), gx + (i % 10) * gs * 1.25, gy + Math.floor(i / 10) * gs * 1.25, gs, gs));
+  tl.fromTo(cells, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.006, ease: E.in, immediateRender: true }, tC);
+  const order = cells.map((c, i) => [rnd(i + 7)(), c]).sort((a, b) => a[0] - b[0]).map((x) => x[1]).slice(0, 90);
+  tl.to(order, { backgroundColor: PAL.fab, boxShadow: `0 0 ${u}px ${PAL.fab}`, duration: 0.15, stagger: 0.012, ease: "none" }, t90 - 0.4);
+  const n = place(mk("div", "big"), gx + gs * 13.2, gy); tl.set(n, { opacity: 0 }, 0); tl.to(n, { opacity: 1, duration: 0.1 }, t90 - 0.4);
+  count(n, 0, 90, t90 - 0.4, 1.1, (v) => Math.round(v) + "%+");
+  const k1 = kick("MERGED CODE", gx + gs * 13.4, gy + u * 10.5), k2 = kick("WRITTEN BY CLAUDE", gx + gs * 13.4, gy + u * 13.5);
+  tl.fromTo([k1, k2], { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.25 }, t90 + 0.6);
+  const cH = chip("WITH HUMAN GUIDANCE", gx, gy + gs * 13, PAL.text); pop(cH, tHu, { y: u * 3, opacity: 0 }, 0.4, E.in);
+
+  // B. one engineer + 1,000 agents: the grid scatters into a swarm of dots that flies into the laptop card
+  const tEn = at("engineer", 11.6), tAg = at("agents", 13.6), tDy = at("days", 15.4), tLp = at("laptop", 17.0), tOs = at("os", 18.0);
+  tl.to([h1, cd, n, k1, k2, cH], { opacity: 0, y: -u * 4, duration: 0.45, ease: E.out, stagger: 0.02 }, tEn - 0.7);
+  tl.to(cells, { opacity: 0, duration: 0.3, stagger: 0.003 }, tAg - 0.4);
+  const ew = W * 0.24, en = card({ i: "engineer", x: W * 0.05, y: H * 0.1, w: ew, h: ew * 0.75, tag: "1 engineer" });
+  pop(en, tEn - 0.2, { x: -W * 0.2, opacity: 0 }, 0.6, E.in);
+  const lx = W * 0.5, ly = H * 0.1, lw = W * 0.42, lh = lw * 0.75;
+  const cv = document.createElement("canvas"); cv.id = "sw"; cv.width = W; cv.height = H; st.append(cv);
+  const g = cv.getContext("2d"), r = rnd(31), N = 1000, pts = [];
+  for (let i = 0; i < N; i++) pts.push([W * 0.17 + (r() - 0.5) * W * 0.2, H * 0.3 + (r() - 0.5) * H * 0.3, lx + r() * lw, ly + r() * lh, r()]);
+  const sw = { p: 0, a: 0 }, draw = () => { g.clearRect(0, 0, W, H); if (!sw.a) return; g.globalAlpha = sw.a;
+    pts.forEach(([x0, y0, x1, y1, d]) => { const p = Math.min(1, Math.max(0, (sw.p - d * 0.4) / 0.6)), e = 1 - Math.pow(1 - p, 3);
+      g.fillStyle = d > 0.5 ? PAL.fab : PAL.myt; g.fillRect(x0 + (x1 - x0) * e + Math.sin(d * 40 + sw.p * 6) * u * (1 - e), y0 + (y1 - y0) * e, u * 0.35, u * 0.35); }); };
+  tl.fromTo(sw, { p: 0, a: 0 }, { a: 1, duration: 0.4, onUpdate: draw, immediateRender: true }, tAg - 0.2);
+  tl.to(sw, { p: 1, duration: Math.max(1.5, tLp - tAg), ease: "power1.inOut", onUpdate: draw }, tAg);
+  const nA = place(mk("div", "big"), W * 0.05, H * 0.52); nA.style.fontSize = u * 7 + "px"; tl.set(nA, { opacity: 0 }, 0);
+  tl.to(nA, { opacity: 1, duration: 0.1 }, tAg); count(nA, 0, 1000, tAg, 1.2, (v) => (v >= 1000 ? "1,000+" : Math.round(v)) + "");
+  const kA = kick("AI AGENTS AT WORK", W * 0.055, H * 0.52 + u * 8); tl.fromTo(kA, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tAg + 0.5);
+  const dy = chip("8 DAYS", W * 0.05, H * 0.66, PAL.myt); icon("clock", W * 0.05 + u * 13, H * 0.655, u * 4, PAL.myt).id = "ck";
+  pop(dy, tDy, { x: -u * 4, opacity: 0 }, 0.4, E.in); pop(K.$("ck"), tDy + 0.15, { rotation: -180, opacity: 0 }, 0.6, E.in);
+  const lp = card({ i: "laptop", x: lx, y: ly, w: lw, h: lh, focus: [0.5, 0.5, 1] });
+  tl.fromTo(lp, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: E.soft, immediateRender: true }, tLp - 0.2);
+  tl.to(sw, { a: 0, duration: 0.6, onUpdate: draw }, tLp + 0.2);
+  const os = place(mk("div", "big"), lx, ly + lh + u * 2); os.style.fontSize = u * 5 + "px"; os.style.color = PAL.text; tl.set(os, { opacity: 0 }, 0);
+  scramble(os, "PROTOTYPE OS", tOs, 0.7);
+  K.done();
+</script></body></html>

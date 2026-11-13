@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 12 (180.6-209.5 s): Python -> Rust 26x -> SWE v2 pillars 69.9 vs 62.3 -> Fermat: 100% in 30 h vs 26% in 18 h */
+.big { position: absolute; font: 800 calc(var(--u) * 9) var(--font-head); line-height: 1; white-space: nowrap; color: var(--text); }
+.pil { position: absolute; bottom: 0; border-radius: calc(var(--u) * 1) calc(var(--u) * 1) 0 0; transform-origin: 50% 100%; }
+.pv { position: absolute; font: 800 calc(var(--u) * 5) var(--font-head); white-space: nowrap; }
+.pn { position: absolute; font: 700 calc(var(--u) * 2) var(--font-script); letter-spacing: .14em; color: var(--text); white-space: nowrap; }
+.bar { position: absolute; height: calc(var(--u) * 3.2); border-radius: calc(var(--u) * .5); background: #ffffff12; overflow: hidden; }
+.bar i { position: absolute; inset: 0; transform-origin: 0 50%; background: var(--c); }
+.pt { position: absolute; width: calc(var(--u) * 1); height: calc(var(--u) * 1); margin: calc(var(--u) * -.5); border-radius: 50%; background: var(--primary); box-shadow: 0 0 calc(var(--u) * 2) var(--primary); }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, head, redact, kick, count, chip, icon, logo, line, camera, bg } = K;
+  bg({ seed: 22 });
+  const st = K.$("stage"); camera(st, 1.04, 0);
+
+  // A. Python service rewritten in Rust by agents: two logo badges, a flow line with travelling dots, 26x faster start
+  const tP = at("python", 0.5), tR = at("rust", 3.0), t26 = at("x26", 6.4), bs = u * 15, by = H * 0.12;
+  const py = logo("python", W * 0.08, by, bs, bs, { badge: true }), rs = logo("rust", W * 0.08 + bs + W * 0.3, by, bs, bs, { badge: true, color: PAL.fab });
+  pop(py, tP - 0.2, { x: -u * 8, opacity: 0 }, 0.5, E.in); pop(rs, tR - 0.2, { x: u * 8, opacity: 0 }, 0.5, E.in);
+  const x1 = W * 0.08 + bs + u, x2 = W * 0.08 + bs + W * 0.3 - u, ly = by + bs / 2;
+  line(x1, ly, x2, ly, tP + 0.6, PAL.text + "66", 1.4, u * 0.2);
+  for (let i = 0; i < 5; i++) { const d = place(mk("div", "pt"), x1, ly); tl.fromTo(d, { left: x1, opacity: 0 }, { left: x2, opacity: 1, duration: 1.1, ease: "power1.in", repeat: 2, immediateRender: true }, tR + i * 0.22); tl.to(d, { opacity: 0, duration: 0.2 }, tR + 3.6); }
+  const kA = kick("REWRITTEN BY AGENTS", x1 + u * 4, ly - u * 6); tl.fromTo(kA, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tR + 0.4);
+  const n26 = place(mk("div", "big"), W * 0.08, H * 0.44); n26.style.color = PAL.fab; tl.set(n26, { opacity: 0 }, 0);
+  tl.to(n26, { opacity: 1, duration: 0.1 }, t26 - 0.2); count(n26, 1, 26, t26 - 0.2, 0.9, (v) => Math.round(v) + "x");
+  const k26 = kick("FASTER START-UP", W * 0.08 + u * 22, H * 0.44 + u * 4); tl.fromTo(k26, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t26 + 0.5);
+
+  // B. SWE v2: two pillars rise from a baseline on the right (heights = scores), values count up on their words
+  const tSw = at("swe", 9.0), tFb = at("fable", 11.0), tOp = at("opus", 13.6), base = H * 0.74, ph = H * 0.6;
+  const k3 = kick("SWE V2 CODING TEST", W * 0.6, H * 0.06); tl.fromTo(k3, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tSw);
+  line(W * 0.58, base, W * 0.95, base, tSw, PAL.text + "88", 0.5, u * 0.2);
+  const box = place(mk("div", "", st), 0, 0, W, base); box.style.cssText += ";position:absolute;pointer-events:none";
+  [["FABLE 5.2", 69.9, PAL.fab, tFb, 0.61], ["OPUS 5.5", 62.3, PAL.mute, tOp, 0.79]].forEach(([nm, v, c, t, fx]) => {
+    const p = place(mk("div", "pil", box), W * fx, null, W * 0.13, ph * v / 100); p.style.background = `linear-gradient(0deg, ${c}33, ${c})`;
+    tl.fromTo(p, { scaleY: 0 }, { scaleY: 1, duration: 0.9, ease: "power3.out", immediateRender: true }, t - 0.2);
+    const vv = place(mk("div", "pv", st), W * fx, base - ph * v / 100 - u * 6.5); vv.style.color = c; tl.set(vv, { opacity: 0 }, 0);
+    tl.to(vv, { opacity: 1, duration: 0.1 }, t - 0.2); count(vv, 0, v, t - 0.2, 0.9, (x) => x.toFixed(1) + "%");
+    const pn = place(mk("div", "pn", st, nm), W * fx, base + u * 1.2); tl.fromTo(pn, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+  });
+
+  // C. science: the Fermat card comes back (from seq 03); two progress rows - Fable 1,000 agents done in 30 h, Opus 26% in 18 h
+  const tSc = at("science", 16.7), tFe = at("fermat", 19.0), tTh = at("thousand", 20.4), tO18 = at("opus18", 24.0), t26p = at("p26", 25.6);
+  tl.to([py, rs, kA, n26, k26, ...st.querySelectorAll(".pt")], { opacity: 0, x: -u * 6, duration: 0.5, ease: E.out }, tSc - 0.6);
+  tl.to([box, k3, ...st.querySelectorAll(".pv,.pn")], { opacity: 0, x: u * 6, duration: 0.5, ease: E.out }, tSc - 0.6);
+  const hS = head("SCIENCE <em>TOO</em>", W * 0.06, H * 0.06, 5); redact(hS, tSc);
+  const fw = W * 0.16, fm = card({ i: "fermat", x: W * 0.06, y: H * 0.22, w: fw, h: fw * 1.3, focus: [0.48, 0.42, 1.9], tag: "Fermat proof" });
+  pop(fm, tFe - 0.3, { x: -W * 0.2, opacity: 0, rotation: -4 }, 0.6, E.in);
+  [["FABLE 5.2 + 1,000 AGENTS", "30 HRS", 1, PAL.fab, tTh, "DONE"], ["OPUS 5.5", "18 HRS", 0.26, PAL.mute, tO18, "26%"]].forEach(([nm, hr, f, c, t, res], i) => {
+    const y = H * (0.26 + i * 0.2), bx = W * 0.3, bw = W * 0.46;
+    const pn = place(mk("div", "pn", st, nm), bx, y - u * 3.5); tl.fromTo(pn, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t - 0.2);
+    const b = place(mk("div", "bar", st), bx, y, bw); const bi = mk("i", "", b); b.style.setProperty("--c", c);
+    tl.fromTo(b, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t - 0.2);
+    tl.fromTo(bi, { scaleX: 0 }, { scaleX: f, duration: 1.0, ease: "power2.out", immediateRender: true }, i ? t26p - 0.6 : t);
+    const ch = chip(hr, bx + bw + u * 2, y - u * 0.3, c); pop(ch, t + 0.2, { x: u * 4, opacity: 0 }, 0.4, E.in);
+    const rv = place(mk("div", "pv", st, res), bx + u * 1.2, y + u * 4); rv.style.color = c; rv.style.fontSize = u * 3.6 + "px";
+    tl.fromTo(rv, { opacity: 0 }, { opacity: 1, duration: 0.3 }, (i ? t26p : t + 1.0));
+  });
+  K.done();
+</script></body></html>

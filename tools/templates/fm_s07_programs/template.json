@@ -1,0 +1,14 @@
+{
+ "name": "fm_s07_programs",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "biology cvp cyber fable life loose mythos verify"
+ },
+ "description": "seq 07 (85.4-99.9 s): shops become Fable / Mythos -> cyber + biology locks looser -> verified programs"
+}

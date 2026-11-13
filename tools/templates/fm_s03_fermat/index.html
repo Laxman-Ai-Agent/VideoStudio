@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 03 (31-49.5 s): 350 years -> Fermat's Last Theorem -> proof race 11 days vs 30 hours */
+.num { position: absolute; font: 800 calc(var(--u) * 22) var(--font-head); color: var(--text); line-height: 1; }
+.rib { position: absolute; height: calc(var(--u) * 5.2); border-radius: calc(var(--u) * 0.6); transform-origin: 0 50%; }
+.rl { position: absolute; font: 700 calc(var(--u) * 2.2) var(--font-script); letter-spacing: .14em; color: var(--text); white-space: nowrap; }
+.rv { position: absolute; font: 800 calc(var(--u) * 4.6) var(--font-head); white-space: nowrap; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, head, redact, kick, chip, count, line, camera, bg } = K;
+  bg({ seed: 13 });
+  const st = K.$("stage"); camera(st, 1.05, 0.012);
+
+  // A. 350 YEARS: the number rolls up beside the real Fermat portrait; mathematicians tagged
+  const tY = at("years", 0.4), tMa = at("math", 1.3), tFe = at("fermat", 4.6);
+  const pw = W * 0.22, ph = pw * 1.3;
+  const fm = card({ i: "fermat", x: W * 0.07, y: H * 0.08, w: pw, h: ph, focus: [0.48, 0.42, 1.9], tag: "Pierre de Fermat" });
+  pop(fm, tY, { y: H * 0.3, rotation: -4, opacity: 0 }, 0.8, E.in);
+  const n = place(mk("div", "num"), W * 0.38, H * 0.08); count(n, 0, 350, tY + 0.2, 1.4);
+  tl.fromTo(n, { opacity: 0 }, { opacity: 1, duration: 0.2 }, tY + 0.2);
+  const k1 = kick("YEARS UNSOLVED", W * 0.39, H * 0.08 + u * 23); tl.fromTo(k1, { opacity: 0, x: -u * 3 }, { opacity: 1, x: 0, duration: 0.4, ease: E.in, immediateRender: true }, tY + 1.2);
+  const cM = chip("MATHEMATICIANS STUCK", W * 0.39, H * 0.08 + u * 28, PAL.myt); pop(cM, tMa + 0.3, { x: -u * 4, opacity: 0 }, 0.4, E.in);
+  const h1 = head("FERMAT'S <em>LAST</em> THEOREM", W * 0.38, H * 0.52, 4.6); redact(h1, tFe);
+
+  // B. a computer has to check every step: the portrait shrinks into a corner, a data-centre strip opens
+  const tC = at("computer", 7.4);
+  tl.to(fm, { left: W * 0.04, top: H * 0.04, width: pw * 0.45, height: ph * 0.45, duration: 0.8, ease: E.io }, tC - 0.6);
+  tl.to(fm.querySelector(".tag"), { opacity: 0, duration: 0.2 }, tC - 0.6);
+  out([n, k1, cM], tC - 0.6); tl.to(h1, { top: H * 0.06, left: W * 0.18, fontSize: u * 3.2, duration: 0.8, ease: E.io }, tC - 0.6);
+  const dc = card({ i: "dc", x: W * 0.06, y: H * 0.24, w: W * 0.88, h: H * 0.2, focus: [0.5, 0.5, 1] });
+  tl.fromTo(dc, { clipPath: "inset(0 50% 0 50%)", opacity: 1 }, { clipPath: "inset(0 0% 0 0%)", duration: 0.8, ease: E.io, immediateRender: true }, tC - 0.2);
+  const cC = chip("EVERY STEP COMPUTER-CHECKED", W * 0.08, H * 0.24 + u * 1.5, PAL.text); pop(cC, tC + 0.4, { x: -u * 4, opacity: 0 }, 0.4, E.in);
+
+  // C. the race: BEFORE ribbon crawls for 11 days, Fable's ribbon shoots to the finish line in 30 hours
+  const tD = at("days", 10.0), tFb = at("fable", 12.4), tH = at("hours", 14.2), x0 = W * 0.22, x1 = W * 0.82, y1 = H * 0.52, y2 = H * 0.64;
+  const fin = line(x1, H * 0.48, x1, H * 0.74, tD - 0.4, PAL.text, 0.4, u * 0.3);
+  const fl = place(mk("div", "rl", st, "FINISH: PROOF DONE"), x1 - u * 22, H * 0.45); tl.fromTo(fl, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tD);
+  const lb1 = place(mk("div", "rl", st, "BEFORE"), W * 0.06, y1 + u * 1.4), lb2 = place(mk("div", "rl", st, "FABLE 5.2"), W * 0.06, y2 + u * 1.4);
+  lb2.style.color = PAL.fab; tl.fromTo([lb1, lb2], { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.2 }, tD - 0.2);
+  const r1 = place(mk("div", "rib", st), x0, y1, x1 - x0), r2 = place(mk("div", "rib", st), x0, y2, x1 - x0);
+  r1.style.background = `linear-gradient(90deg, ${PAL.mute}55, ${PAL.mute})`; r2.style.background = `linear-gradient(90deg, ${PAL.fab}44, ${PAL.fab})`;
+  r2.style.boxShadow = `0 0 ${u * 3}px ${PAL.fab}88`;
+  tl.fromTo(r1, { scaleX: 0 }, { scaleX: 1, duration: Math.max(2, tH - tD + 1.2), ease: "power1.inOut", immediateRender: true }, tD);
+  tl.fromTo(r2, { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "expo.inOut", immediateRender: true }, tH - 0.4);
+  const v1 = place(mk("div", "rv", st), x1 + u * 1.5, y1 - u * 0.3); v1.style.color = PAL.mute; count(v1, 0, 11, tD, Math.max(2, tH - tD + 1.2), (v) => Math.round(v) + " DAYS");
+  const v2 = place(mk("div", "rv", st), x1 + u * 1.5, y2 - u * 0.3); v2.style.color = PAL.fab; tl.set(v2, { opacity: 0 }, 0);
+  tl.to(v2, { opacity: 1, duration: 0.1 }, tH + 0.2); count(v2, 0, 30, tH + 0.2, 0.6, (v) => Math.round(v) + " HRS");
+  tl.fromTo(v1, { opacity: 0 }, { opacity: 1, duration: 0.2 }, tD);
+  const win = chip("FABLE WINS", x1 - u * 15, y2 + u * 7, PAL.fab); pop(win, tH + 0.9, { scale: 0.5, opacity: 0 }, 0.45);
+  K.done();
+</script></body></html>

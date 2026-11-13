@@ -1,0 +1,14 @@
+{
+ "name": "fm_s05_one_model",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "fable names one real safeguards two"
+ },
+ "description": "seq 05 (61.9-73.1 s): two names, two AIs? -> the cards merge into ONE MODEL -> SAFEGUARDS ring"
+}

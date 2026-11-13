@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 06 (73.1-85.4 s): safeguards = locks on dangerous tasks -> same medicine, two shops */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, lit, head, redact, kick, chip, stamp, icon, line, camera, bg } = K;
+  bg({ seed: 16 });
+  const st = K.$("stage"); camera(st, 1.04, 0.01);
+
+  // A. SAFEGUARDS = LOCKS: the word unredacts, danger tasks get struck, the padlock card snaps in on "locks"
+  const tS = at("safeguards", 0.2), tD = at("danger", 2.2), tL = at("locks", 4.6);
+  const h1 = head("SAFEGUARDS", W * 0.06, H * 0.1, 7.5); redact(h1, tS);
+  const k1 = kick("SIMPLY PUT =", W * 0.06, H * 0.06); tl.fromTo(k1, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tS);
+  const tasks = ["DANGEROUS TASKS", "HARMFUL HELP"];
+  tasks.forEach((t, i) => { const c = chip(t, W * 0.06, H * (0.32 + i * 0.1), PAL.warn); pop(c, tD + i * 0.35, { x: -u * 5, opacity: 0 }, 0.4, E.in);
+    const ix = icon("x", W * 0.06 + u * 30, H * (0.315 + i * 0.1), u * 4.2, PAL.warn); pop(ix, tD + 0.3 + i * 0.35, { scale: 2, opacity: 0 }, 0.3, "power4.in"); });
+  const ls = H * 0.5, lk = card({ i: "lock", x: W * 0.58, y: H * 0.08, w: ls, h: ls, focus: [0.5, 0.5, 1.05] });
+  pop(lk, tL - 0.25, { scale: 1.4, opacity: 0, rotation: 8 }, 0.45, "power4.in"); K.shake(st, tL + 0.2, u * 0.4);
+  const h2 = head("= <em>LOCKS</em>", W * 0.58, H * 0.62, 5.5); redact(h2, tL + 0.1);
+
+  // B. same medicine: the lock exits, the medicine card lands in the middle as the shared "model"
+  const tM = at("medicine", 6.6);
+  tl.to([h1, k1, ...st.querySelectorAll(".chip"), ...st.querySelectorAll(".ico")].concat([lk, h2]).filter(Boolean), { opacity: 0, y: -u * 4, duration: 0.45, ease: E.out, stagger: 0.02 }, tM - 0.6);
+  const ms = H * 0.32, med = card({ i: "medicine", x: W / 2 - ms / 2, y: H * 0.06, w: ms, h: ms, focus: [0.5, 0.5, 1.1] });
+  pop(med, tM - 0.2, { y: -H * 0.4, opacity: 0, rotation: -10 }, 0.7, E.in);
+  const cm = chip("SAME MEDICINE", W / 2 - u * 8.5, H * 0.06 + ms + u * 1.5, PAL.text); pop(cm, tM + 0.4, { y: u * 3, opacity: 0 }, 0.4, E.in);
+
+  // C. two shops: open counter (everyone) on the left, prescription window on the right, a line from the medicine to each
+  const tE = at("everyone", 8.4), tP = at("prescription", 10.4), sw = W * 0.3, sh = sw * 0.75, sy = H * 0.3;
+  const sh1 = card({ i: "ph_open", x: W * 0.05, y: sy, w: sw, h: sh, focus: [0.5, 0.5, 1] }), sh2 = card({ i: "ph_rx", x: W * 0.65, y: sy, w: sw, h: sh, focus: [0.5, 0.45, 1] });
+  pop(sh1, tE - 0.3, { x: -W * 0.3, opacity: 0, rotation: -4 }, 0.7, E.in);
+  line(W / 2 - ms / 2, H * 0.06 + ms / 2, W * 0.05 + sw * 0.8, sy, tE - 0.1, PAL.fab, 0.5, u * 0.25);
+  const c1 = chip("FOR EVERYONE", W * 0.05, sy + sh + u * 1.5, PAL.fab); pop(c1, tE + 0.3, { y: u * 3, opacity: 0 }, 0.4, E.in);
+  pop(sh2, tP - 0.3, { x: W * 0.3, opacity: 0, rotation: 4 }, 0.7, E.in);
+  line(W / 2 + ms / 2, H * 0.06 + ms / 2, W * 0.65 + sw * 0.2, sy, tP - 0.1, PAL.myt, 0.5, u * 0.25);
+  stamp("PRESCRIPTION ONLY", W * 0.62, sy + sh * 0.35, PAL.myt, tP + 0.3, -9);
+  K.done();
+</script></body></html>

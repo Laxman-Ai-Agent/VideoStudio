@@ -1,0 +1,14 @@
+{
+ "name": "fm_s09_speed_price",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "eight fast forty pieces speed thirty tokens twenty"
+ },
+ "description": "seq 09 (128-148 s): race strip 30% faster -> price tag tears -20% -> text breaks into tokens -> $8 / $40"
+}

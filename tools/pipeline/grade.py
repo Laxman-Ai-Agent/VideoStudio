@@ -80,7 +80,9 @@ def grade_clip(src: Path, dst: Path, colors: dict) -> Path:
 
 
 def graded(src: Path, colors: dict) -> Path:
-    """Cached graded copy of src (image or clip) for this palette."""
+    """Cached graded copy of src (image or clip) for this palette. SVG (logos, drawn as masks) is returned as is."""
+    if src.suffix.lower() == ".svg":
+        return src
     key = hashlib.sha256(src.read_bytes() + repr(sorted(colors.items())).encode() + str(GRADE_VERSION).encode()).hexdigest()[:16]
     ext = ".mp4" if src.suffix.lower() in VIDEO else (".png" if src.suffix.lower() in (".png", ".webp") else ".jpg")
     dst = CACHE_DIR / f"{src.stem[:40]}_{key}{ext}"

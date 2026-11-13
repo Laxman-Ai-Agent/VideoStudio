@@ -1,0 +1,14 @@
+{
+ "name": "fm_s12_benchmarks",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 04_Fable_Mythos 16x9; reuse only when the user asks",
+  "kit": "fable_kit",
+  "beats": "fable fermat opus opus18 p26 python rust science swe thousand x26"
+ },
+ "description": "seq 12 (180.6-209.5 s): Python -> Rust 26x -> SWE v2 pillars 69.9 vs 62.3 -> Fermat: 100% in 30 h vs 26% in 18 h"
+}

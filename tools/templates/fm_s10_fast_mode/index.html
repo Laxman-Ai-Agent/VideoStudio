@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 10 (148-159.4 s): fast-mode toggle 2.5x speed / price x2 -> book stack meter 5,55,000 words */
+#sw { position: absolute; border-radius: 999px; background: #ffffff14; border: 1px solid #ffffff30; }
+#fill { position: absolute; inset: 0; border-radius: inherit; background: var(--primary); transform-origin: 0 50%; }
+#knob { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 2) #000a; }
+.big { position: absolute; font: 800 calc(var(--u) * 9) var(--font-head); line-height: 1; white-space: nowrap; color: var(--text); }
+.big small { font-size: .42em; color: var(--text2); margin-left: .2em; }
+#meter { position: absolute; width: calc(var(--u) * 1.6); border-radius: 999px; background: #ffffff14; overflow: hidden; }
+#meter i { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; background: linear-gradient(0deg, var(--primary), var(--secondary)); transform-origin: 50% 100%; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, head, redact, kick, scramble, count, chip, camera, bg, flash } = K;
+  bg({ seed: 20 });
+  const st = K.$("stage"); camera(st, 1.05, -0.01);
+
+  // A. FAST MODE: a big toggle switches on (knob slides, track fills mint), the label scrambles in
+  const tM = at("mode", 0.8), tw = W * 0.24, th = tw * 0.42, sx = W * 0.06, sy = H * 0.12;
+  const sw = place(mk("div", ""), sx, sy, tw, th); sw.id = "sw";
+  const fill = mk("div", "", sw); fill.id = "fill"; const kb = place(mk("div", "", sw), th * 0.1, th * 0.1, th * 0.8, th * 0.8); kb.id = "knob";
+  pop(sw, Math.max(0, tM - 0.7), { scale: 0.6, opacity: 0 }, 0.45);
+  tl.fromTo(fill, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: E.io, immediateRender: true }, tM);
+  tl.fromTo(kb, { left: th * 0.1 }, { left: tw - th * 0.9, duration: 0.35, ease: "back.out(2)", immediateRender: true }, tM);
+  flash(tM + 0.3, 0.15);
+  const lb = place(mk("div", "big"), sx + tw + u * 3, sy + th * 0.1); lb.style.fontSize = u * 6 + "px"; tl.set(lb, { opacity: 0 }, 0); scramble(lb, "FAST MODE", tM, 0.6);
+
+  // B. 2.5x speed, but the price doubles (two stats, left aligned under the switch)
+  const t25 = at("x25", 2.4), tDb = at("double", 4.0);
+  const s1 = place(mk("div", "big"), sx, H * 0.4); s1.style.color = PAL.fab; tl.set(s1, { opacity: 0 }, 0);
+  tl.to(s1, { opacity: 1, duration: 0.1 }, t25 - 0.1); count(s1, 1, 2.5, t25 - 0.1, 0.7, (v) => v.toFixed(1) + "x");
+  const k1 = kick("SPEED", sx + u * 22, H * 0.4 + u * 4); tl.fromTo(k1, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t25 + 0.4);
+  const s2 = place(mk("div", "big", st, "x2"), sx + u * 40, H * 0.4); s2.style.color = PAL.myt; pop(s2, tDb - 0.1, { scale: 1.8, opacity: 0 }, 0.3, "power4.in");
+  const k2 = kick("PRICE", sx + u * 57, H * 0.4 + u * 4); tl.fromTo(k2, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tDb + 0.3);
+
+  // C. memory: everything on the left steps back; a tall book stack and a meter fill to 5,55,000 words
+  const tWd = at("words", 7.6), tR = at("remember", 9.0), bw = H * 0.5, bh = H * 0.66, bx = W * 0.58;
+  tl.to([sw, lb, s1, k1, s2, k2], { opacity: 0.25, scale: 0.92, transformOrigin: "0 0", duration: 0.6, ease: E.io }, tWd - 1.3);
+  const bk = card({ i: "books", x: bx, y: H * 0.06, w: bw, h: bh, focus: [0.5, 0.5, 1] });
+  tl.fromTo(bk, { clipPath: "inset(100% 0 0 0)", opacity: 1 }, { clipPath: "inset(0% 0 0 0)", duration: 1.2, ease: E.io, immediateRender: true }, tWd - 1.1);
+  const mt = place(mk("div", "", st), bx - u * 4, H * 0.06, null, bh); mt.id = "meter"; const mi = mk("i", "", mt);
+  tl.fromTo(mi, { scaleY: 0 }, { scaleY: 1, duration: 1.4, ease: "power2.out", immediateRender: true }, tWd - 0.5);
+  const n = place(mk("div", "big"), W * 0.06, H * 0.58); n.style.fontSize = u * 7.5 + "px"; tl.set(n, { opacity: 0 }, 0);
+  tl.to(n, { opacity: 1, duration: 0.1 }, tWd - 0.5);
+  count(n, 0, 555000, tWd - 0.5, 1.4, (v) => { const s = String(Math.round(v)); return s.length > 5 ? s.slice(0, -5) + "," + s.slice(-5, -3) + "," + s.slice(-3) : s.replace(/\B(?=(\d{3})+$)/, ","); });
+  const kW = kick("WORDS REMEMBERED AT ONCE", W * 0.065, H * 0.58 + u * 8.5); tl.fromTo(kW, { opacity: 0 }, { opacity: 1, duration: 0.3 }, tR);
+  K.done();
+</script></body></html>

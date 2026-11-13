@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 04 (49.5-61.9 s): NOV 9 release date -> both versions -> what's new / why two / one by one */
+.date { position: absolute; font: 800 calc(var(--u) * 10) var(--font-head); color: var(--text); text-align: center; line-height: .95;
+        text-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 2) #000; }
+.date small { display: block; font: 700 calc(var(--u) * 2.2) var(--font-script); letter-spacing: .3em; color: var(--accent); }
+.li { position: absolute; font: 800 calc(var(--u) * 4.4) var(--font-head); color: var(--text); white-space: nowrap; opacity: 0; }
+.li i { font: 700 calc(var(--u) * 2.2) var(--font-script); font-style: normal; color: var(--accent); margin-right: calc(var(--u) * 1.5); vertical-align: middle; }</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, card, pop, out, dim, lit, kick, vcard, chip, camera, bg } = K;
+  bg({ seed: 14 });
+  const st = K.$("stage"); camera(st, 1.05, 0.015);
+
+  // A. NOV 9: the calendar card drops in and its date flips over (rotateX), a release kicker types
+  const tN = at("nov", 0.2), s = H * 0.56, cx = W * 0.08, cy = H * 0.1;
+  const cal = card({ i: "cal", x: cx, y: cy, w: s, h: s, focus: [0.5, 0.5, 1.1] });
+  pop(cal, tN, { y: -H * 0.6, rotation: -8, opacity: 0 }, 0.8, "bounce.out");
+  const dt = place(mk("div", "date", st, "<small>RELEASED</small>NOV 9"), cx, cy + s * 0.3, s);
+  tl.fromTo(dt, { rotationX: -90, opacity: 0, transformPerspective: 600 }, { rotationX: 0, opacity: 1, duration: 0.7, ease: "back.out(1.6)", immediateRender: true }, tN + 0.6);
+
+  // B. both versions fan out beside the date: Fable first, Mythos slides in behind and settles at an angle
+  const tF = at("fable", 1.9), tM = at("mythos", 3.6), cw = W * 0.16, ch = cw * 1.38, fx = W * 0.5;
+  const myt = vcard("myt", fx + cw * 0.55, cy + u * 2, cw, ch), fab = vcard("fab", fx, cy, cw, ch);
+  pop(fab, tF - 0.2, { x: W * 0.4, rotation: 10, opacity: 0 }, 0.7, E.in);
+  pop(myt, tM - 0.2, { x: W * 0.3, rotation: 14, opacity: 0 }, 0.7, E.in); tl.to(myt, { rotation: 8, duration: 0.5, ease: E.soft }, tM + 0.5);
+  const up = chip("UPDATED VERSION", fx, cy + ch + u * 2.5, PAL.myt); pop(up, tM + 0.5, { y: u * 3, opacity: 0 }, 0.4, E.in);
+
+  // C. the questions build as a list: the calendar steps back, items type in on their words, the camera slides left
+  const tQ = at("new", 6.4), tW = at("why", 8.0), tO = at("one", 10.0);
+  tl.to([cal, dt], { scale: 0.62, left: "-=" + W * 0.02, top: "-=" + H * 0.06, opacity: 0.35, duration: 0.7, ease: E.io }, tQ - 0.6);
+  tl.to([fab, myt, up], { x: -W * 0.22, scale: 0.8, duration: 0.8, ease: E.io }, tQ - 0.6);
+  const items = [["01", "WHAT'S <span style='color:" + PAL.fab + "'>NEW?</span>", tQ], ["02", "WHY <span style='color:" + PAL.myt + "'>TWO?</span>", tW],
+                 ["03", "ONE BY ONE &rarr;", tO]];
+  items.forEach(([n, txt, t], i) => {
+    const li = place(mk("div", "li", st, `<i>${n}</i>${txt}`), W * 0.56, H * (0.16 + i * 0.15));
+    tl.fromTo(li, { opacity: 0, x: u * 6, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.55, ease: E.in, immediateRender: true }, t);
+    if (i) tl.to(st.querySelectorAll(".li")[i - 1], { opacity: 0.45, duration: 0.3 }, t);
+  });
+  tl.to(st, { xPercent: -6, duration: 1.2, ease: E.io }, tO + 0.4);
+  K.done();
+</script></body></html>

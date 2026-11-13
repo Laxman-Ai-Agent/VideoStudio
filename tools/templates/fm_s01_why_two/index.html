@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 04_Fable_Mythos seq 01 (0-16 s): Anthropic file opens -> FABLE and MYTHOS cards -> WHY TWO? */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, dim, lit, head, redact, kick, type, vcard, chip, logo, line, camera, bg, flash } = K;
+  bg({ seed: 11 });
+  const st = K.$("stage"); camera(st, 1.05, 0.01);
+
+  // A. the file opens: kicker types, the Anthropic mark stamps in the middle, TWO NEW VERSIONS is unredacted
+  const tA = Math.max(0.1, at("anthropic", 0.1));
+  const k1 = kick("", W * 0.06, H * 0.07); type(k1, "FILE 05.2 // ANTHROPIC RELEASE", tA, 30);
+  const lg = logo("anthropic", W / 2 - u * 9, H * 0.2, u * 18, u * 18, { badge: true });
+  tl.fromTo(lg, { scale: 1.8, opacity: 0, rotation: -10 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "power4.in", immediateRender: true }, tA + 0.2);
+  flash(tA + 0.63, 0.2);
+  const h1 = head("TWO NEW <em>VERSIONS</em>", 0, H * 0.52, 7.4); h1.style.width = W + "px"; h1.style.textAlign = "center";
+  redact(h1, tA + 1.1);
+
+  // B. FABLE (mint) slides in from the left on its word, MYTHOS (violet) from the right; the logo rises to a corner
+  const tF = at("fable", 4.4), tM = at("mythos", 6.1), cw = W * 0.2, ch = cw * 1.38, cy = H * 0.12;
+  tl.to(lg, { top: -u * 2, scale: 0.42, duration: 0.7, ease: E.io }, tF - 0.6);
+  out(h1, tF - 0.5);
+  const fab = vcard("fab", W * 0.27, cy, cw, ch), myt = vcard("myt", W * 0.53, cy, cw, ch);
+  pop(fab, tF - 0.2, { x: -W * 0.4, rotation: -14, opacity: 0 }, 0.8, E.in);
+  pop(myt, tM - 0.2, { x: W * 0.4, rotation: 14, opacity: 0 }, 0.8, E.in);
+  const cF = chip("FOR EVERYONE?", W * 0.27, cy + ch + u * 2, PAL.fab), cM = chip("LIMITED?", W * 0.53, cy + ch + u * 2, PAL.myt);
+  tl.set([cF, cM], { opacity: 0 }, 0);
+
+  // C. WHY? the cards push to the edges and tilt away; a link line between them asks "same AI?"; WHY TWO? lands
+  const tW = at("why", 9.0), tT = at("two", 11.6);
+  tl.to(fab, { left: W * 0.07, rotation: -7, duration: 0.9, ease: E.io }, tW - 0.5);
+  tl.to(myt, { left: W * 0.73, rotation: 7, duration: 0.9, ease: E.io }, tW - 0.5);
+  const h2 = head("WHY <em>TW</em><b>O</b>?", 0, H * 0.28, 12); h2.style.width = W + "px"; h2.style.textAlign = "center";
+  redact(h2, tW, 0.36);
+  const ln = line(W * 0.29, cy + ch / 2, W * 0.71, cy + ch / 2, tT - 0.1, PAL.text + "88", 0.7, u * 0.25);
+  st.prepend(ln);
+  const same = chip("SAME AI ?", W / 2 - u * 8, H * 0.56, PAL.text);
+  pop(same, tT + 0.4, { scale: 0.5, opacity: 0 }, 0.45);
+  pop(cF, tT + 1.0, { y: u * 3, opacity: 0 }, 0.4, E.in); pop(cM, tT + 1.2, { y: u * 3, opacity: 0 }, 0.4, E.in);
+  // both cards breathe while the question hangs
+  tl.to([fab, myt], { y: -u * 1.2, duration: 1.4, ease: E.soft, yoyo: true, repeat: 2 }, tT + 1.4);
+  K.done();
+</script></body></html>
