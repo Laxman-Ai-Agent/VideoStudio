@@ -47,3 +47,6 @@ Name: **light-documentary** = explainer LOOK (pastel sections, Plus Jakarta Sans
 - Effects are SMOOTH only: no shake / glitch / flash / hard slam; use zoom-punch with easing, bounce, light sweep, stagger, eased camera push.
 - `theme.json` gets two settings: `look` (explainer | dark) and `style` (documentary | explainer); names for the old looks: dark+documentary = "documentary", light+explainer = "explainer", light+documentary = "light-documentary" (default from now).
 - Next: update rules/STYLE, add the documentary parts to explainer_kit (stamps, pillars, torn tag, swarm, count-ups), rewrite 04's fx_* sequences denser, re-render previews; 1080p only on the user's word.
+
+## 5. Mode is chosen per video (user, 2026-11-13)
+No default mode: at the start of each new video offer documentary / explainer / light-documentary with a content-based recommendation (AskUserQuestion), the user picks; save the pick in `theme.json` (`look` + `style`). 04_Fable_Mythos currently = explainer (finals); the user chose light-documentary as the mode to move 04 to when planning continues.
