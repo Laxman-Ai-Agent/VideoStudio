@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05_Nvidia_CEO_Exit L01 (0-17 s): BREAKING bar; NVIDIA logo -> Huang press card, RESIGNED stamp; entity row NVIDIA / Huang / Kress; two questions */
+.qm { position: absolute; font: 400 calc(var(--u) * 16) var(--font-head); color: #E0393E; line-height: 1; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, tilt, bg, cam, head, rehead, card, stamp, breaking, chip, logo } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("company");
+  const tN = at("nvidia", 1.2), tJ = at("jensen", 2.7), tR = at("resign", 4.0), tS = at("shock", 4.7), tE = at("ents", 7.3),
+        tN2 = at("nv2", 8.2), tH2 = at("hu2", 8.9), tI = at("interim", 10.5), tK = at("kress", 11.5), tW = at("why", 13.5), tO = at("who", 15.8);
+  cam(0, 6.6, 1.035);
+
+  // A. breaking bar + NVIDIA logo big centre; Huang's press card lands, logo moves left; RESIGNED stamp; headline
+  const br = breaking("NVIDIA CEO JENSEN HUANG RESIGNS &nbsp;&middot;&nbsp; NOV 12, 2026 &nbsp;&middot;&nbsp; EFFECTIVE IMMEDIATELY", H * 0.86, 0.2);
+  const s0 = H * 0.4, lg = logo("nvidia", W / 2 - s0 / 2, H * 0.2, s0);
+  pop(lg, tN - 0.3, { scale: 0.85, opacity: 0 }, 0.6);
+  const hc = card({ i: "huang", x: W * 0.52, y: H * 0.1, h: H * 0.68, tape: true, rot: 3, cap: "JENSEN HUANG<small>CEO SINCE 1993</small>" });
+  pop(hc, tJ - 0.2, { x: u * 10, opacity: 0, rotation: 8 }, 0.7);
+  move(lg, tJ - 0.2, W * 0.08, H * 0.12, H * 0.2, H * 0.2);
+  const rs = stamp("RESIGNED", W * 0.55, H * 0.42, tR, { rot: -10 });
+  const h1 = head("Shock <em>exit</em><br>at NVIDIA", "NVIDIA CEO పదవికి Jensen Huang రాజీనామా", tS, { x: W * 0.06, y: H * 0.4, w: W * 0.42, size: 8 });
+
+  // B. the cast: three cards in a row, each on its name
+  bg("paper", tE - 0.5);
+  out(h1, tE - 0.4); out(rs, tE - 0.4);
+  const hb = head("Who is <em>who</em>", "ఈ story లో main entities", tE - 0.1, { x: W * 0.05, y: H * 0.06, w: W * 0.6, size: 5.6 });
+  const rowY = H * 0.28, rowH = H * 0.44;
+  out(hc.querySelector(".cap"), tE - 0.4);
+  fit(lg, tN2 - 0.3, W * 0.07, rowY + rowH * 0.12, W * 0.22, rowH * 0.76);
+  const c1 = chip("THE COMPANY", W * 0.09, rowY + rowH + u * 2, PAL.green); pop(c1, tN2);
+  fit(hc, tH2 - 0.3, W * 0.38, rowY, W * 0.24, rowH, 0.9, { rotation: -2 });
+  const c2 = chip("CEO WHO QUIT", W * 0.4, rowY + rowH + u * 2, PAL.red); pop(c2, tH2);
+  const kc = card({ i: "kress", x: W * 0.68, y: rowY, w: W * 0.27, h: rowH, rot: 2, tape: true });
+  pop(kc, tI - 0.2, { y: u * 8, opacity: 0, rotation: 6 }, 0.7);
+  const c3 = chip("INTERIM CEO", W * 0.7, rowY + rowH + u * 2, PAL.green); pop(c3, tI + 0.2);
+  const c3b = chip("COLETTE KRESS", W * 0.7, rowY + rowH + u * 8, PAL.ink); pop(c3b, tK);
+  out(br, tE, { y: u * 6 });
+
+  // C. two questions: WHY did he resign? WHO leads now? cards slide down, Huang greys out, Kress lifts
+  bg("scandal", tW - 0.6);
+  [c1, c2, c3, c3b].forEach((c, i) => out(c, tW - 0.5 + i * 0.05, { y: u * 2 }));
+  out(lg, tW - 0.5, { scale: 0.9 });
+  const q1 = rehead(hb, "Why did he <em>resign</em>?", "అసలు ఆయన ఎందుకు resign చేశారు?", tW - 0.2, { x: W * 0.05, y: H * 0.1, w: W * 0.48, size: 6.6 });
+  fit(hc, tW - 0.3, W * 0.56, H * 0.12, W * 0.18, H * 0.56, 0.9, { rotation: -4 });
+  fit(kc, tW - 0.3, W * 0.76, H * 0.2, W * 0.2, H * 0.5, 0.9, { rotation: 3 });
+  const qm = place(mk("div", "qm", undefined, "?"), W * 0.69, H * 0.04); pop(qm, tW + 0.2, { scale: 0.4, opacity: 0, rotation: -15 }, 0.6, E.pop);
+  const q2 = head("Who leads <em>NVIDIA</em> now?", "ఇప్పుడు NVIDIA ని ఎవరు lead చేస్తారు?", tO - 0.9, { x: W * 0.05, y: H * 0.52, w: W * 0.5, size: 5.4, mk: "#C9E88F" });
+  tl.to(hc, { filter: "grayscale(1) brightness(0.92)", duration: 0.8, ease: E.soft }, tO - 0.6);
+  tl.to(kc, { y: -u * 3, scale: 1.06, duration: 0.8, ease: E.io }, tO - 0.4);
+  cam(tW - 0.4, Math.max(1, D - tW + 0.4), 1.0);
+  X.done();
+</script></body></html>

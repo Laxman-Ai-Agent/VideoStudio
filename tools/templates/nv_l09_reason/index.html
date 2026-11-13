@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 05_Nvidia_CEO_Exit L09 (111.3-137.4 s): REASON? -> NVIDIA press release (marker) + 8-K page, NO REASON GIVEN;
+   CNBC live page + "two affairs" claim card; two silhouette cards (employee / suspected spy); ALLEGATIONS ONLY, NOT PROVEN */
+.big { position: absolute; font: 400 calc(var(--u) * 20) var(--font-head); color: #14171F; line-height: 1; white-space: nowrap; }
+.big em { font-style: normal; color: #E0393E; }
+.sil { position: absolute; background: #fff; box-shadow: 0 var(--u) calc(var(--u) * 3) #14171F2a; overflow: hidden; }
+.sil .fig { position: absolute; left: 50%; top: 10%; width: 46%; height: 60%; transform: translateX(-50%); }
+.sil .fig i { position: absolute; left: 50%; transform: translateX(-50%); background: #C9C5BB; }
+.sil .fig .hd { top: 0; width: 46%; aspect-ratio: 1; border-radius: 50%; }
+.sil .fig .bd { bottom: 0; width: 100%; height: 50%; border-radius: 50% 50% 8% 8%; }
+.sil .tx { position: absolute; left: 6%; right: 6%; bottom: 7%; font: 400 calc(var(--u) * 3.1) var(--font-head); text-transform: uppercase; color: #14171F; line-height: 1.1; text-align: center; }
+.sil .tx small { display: block; margin-top: calc(var(--u) * .7); font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .12em; color: #5B6472; }
+.sil.red .fig i { background: #E0393E; opacity: .8; }
+.src { position: absolute; font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .14em; color: #5B6472; white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="shake"><div id="stage"></div></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, fit, tilt, bg, cam, head, rehead, card, shot, mark, ring, zoom, unzoom, stamp, chip, quote, doc } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("scandal");
+  const tR = at("reason", 0.5), tL = at("release", 3.9), tF = at("filing", 6.1), tNo = at("none", 7.5), tC = at("cnbc", 8.0), tT = at("two", 10.5),
+        tA = at("after", 12.2), tEm = at("employee", 15.4), tIn = at("intel", 17.3), tSp = at("spy", 18.3), tRm = at("remember", 21.6),
+        tAl = at("alleg", 23.5), tP = at("prove", 25.0);
+
+  // A. one word fills the frame: REASON?
+  const big = place(mk("div", "big", undefined, "REASON<em>?</em>"), W * 0.5, H * 0.32); big.style.transform = "translateX(-50%)";
+  tl.fromTo(big, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: E.pop, immediateRender: true }, tR - 0.2);
+  const cf = chip("EVERYONE IS CONFUSED", W * 0.36, H * 0.66, PAL.red); pop(cf, tR + 1.6);
+
+  // B. the official press release lands big; marker on "Jensen Huang Resigns", camera pushes into "effective immediately"
+  out(big, tL - 0.6, { scale: 1.1 }); out(cf, tL - 0.6);
+  const pr = shot({ i: "release", x: W * 0.13, y: H * 0.08, w: W * 0.74, url: "nvidianews.nvidia.com/news/nvidia-announces-ceo-transition" });
+  pop(pr, tL - 0.4, { y: u * 10, opacity: 0, scale: 0.94 }, 0.8);
+  mark(pr, tL + 0.2, [0.185, 0.318, 0.09, 0.026]);
+  zoom(pr, tL + 0.6, [0.172, 0.4, 0.42, 0.048], 2.3, 1.2);
+  mark(pr, tL + 1.0, [0.172, 0.405, 0.42, 0.022]);
+
+  // C. the filing to the US government joins on the right; the reason line is empty -> NO REASON GIVEN
+  unzoom(pr, tF - 0.9, 0.8);
+  tl.to(pr, { left: W * 0.04, top: H * 0.16, scale: 0.68, rotation: -2, transformOrigin: "0 0", duration: 0.9, ease: E.io }, tF - 0.8);  // scale, so the markers stay on their lines
+  const dk = doc("FORM 8-K", "REASON: &mdash;", W * 0.6, H * 0.12, W * 0.3, H * 0.62); tilt(dk, 2);
+  pop(dk, tF - 0.2, { x: u * 10, opacity: 0, rotation: 6 }, 0.7);
+  const s1 = place(mk("div", "src", undefined, "FILING TO THE U.S. SEC"), W * 0.62, H * 0.78); pop(s1, tF + 0.3);
+  const rg = place(mk("div", "nbox"), W * 0.62, H * 0.12 + H * 0.62 * 0.5, W * 0.2, H * 0.08); pop(rg, tNo - 0.3, { opacity: 0, scale: 1.2 }, 0.45);
+  const st = stamp("NO REASON GIVEN", W * 0.3, H * 0.38, tNo - 0.2, { rot: -7, size: 6.4 });
+
+  // D. CNBC: the release + filing slide away, CNBC's live page comes in left, the claim card builds on the right
+  bg("paper", tC - 0.4);
+  const tOut = Math.max(tC - 0.4, tNo + 0.6);  // after the stamp has settled
+  [pr, dk, s1, rg, st].forEach((e) => out(e, tOut, { x: -u * 14 }));
+  const cn = shot({ i: "cnbc_live", x: W * 0.04, y: H * 0.14, w: W * 0.56, url: "cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates" });
+  pop(cn, tC - 0.3, { x: u * 12, opacity: 0 }, 0.8);
+  mark(cn, tC + 0.6, [0.22, 0.445, 0.27, 0.028]);
+  const qa = quote("Huang had <span style='color:#E0393E'>two affairs</span>", "CNBC report", W * 0.64, H * 0.2, W * 0.32, PAL.red);
+  pop(qa, tT - 0.2, { y: u * 5, opacity: 0 }, 0.6);
+  const ch = chip("THEN: RESIGNATION", W * 0.66, H * 0.56, PAL.ink); pop(ch, tA);
+  cam(tC, 4.4, 1.04, -u * 2, 0);
+
+  // E. the two reported cases as faceless cards (no real faces): company employee / woman US intelligence suspects as a Chinese spy
+  cam(tEm - 0.8, 1.0, 1.0, 0, 0);
+  tl.to(cn, { left: W * 0.03, top: H * 0.06, scale: 0.46, transformOrigin: "0 0", duration: 0.8, ease: E.io }, tEm - 0.8);
+  out(ch, tEm - 0.8);
+  move(qa, tEm - 0.8, W * 0.31, H * 0.07, W * 0.3);
+  const sil = (cls, txt, x) => { const e = place(mk("div", "sil " + cls, undefined, `<div class="fig"><i class="hd"></i><i class="bd"></i></div><div class="tx">${txt}</div>`), x, H * 0.36, W * 0.3, H * 0.5); return e; };
+  const a1 = sil("", "Company employee<small>CASE 1</small>", W * 0.12); tilt(a1, -2);
+  pop(a1, tEm - 0.3, { y: u * 8, opacity: 0, rotation: -6 }, 0.7);
+  const a2 = sil("red", "Suspected Chinese spy<small>CASE 2 &middot; PER U.S. INTELLIGENCE</small>", W * 0.56); tilt(a2, 2);
+  pop(a2, tIn - 0.2, { y: u * 8, opacity: 0, rotation: 6 }, 0.7);
+  tl.to(a2, { scale: 1.05, duration: 0.6, ease: E.io }, tSp);
+
+  // F. remember: ALLEGATIONS ONLY, NOT PROVEN -- everything dims, the note stamps over it
+  bg("paper", tRm - 0.3);
+  [cn, qa, a1, a2].forEach((e) => tl.to(e, { opacity: 0.35, filter: "grayscale(0.8)", duration: 0.6, ease: E.soft }, tRm - 0.2));
+  const n1 = head("Allegations <em>only</em>", "ఇవి ఇప్పటికీ allegations మాత్రమే", tAl - 0.3, { x: W * 0.18, y: H * 0.3, w: W * 0.64, size: 8, align: "center" });
+  const s2 = stamp("NOT PROVEN", W * 0.36, H * 0.62, tP - 0.1, { rot: -5, size: 7, color: PAL.ink });
+  cam(tRm, Math.max(1, D - tRm), 1.05);
+  X.done();
+</script></body></html>
