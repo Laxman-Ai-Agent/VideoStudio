@@ -2,11 +2,11 @@
 <script src="gsap.min.js"></script><script src="scene.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
 <style>/* 04_Fable_Mythos seq 15 (262-272 s): back to Fable (mint): harmless questions lose their BLOCKED stamps -> -55% refusals */
-.big { position: absolute; font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1; white-space: nowrap; }
+.big { position: absolute; font: 400 calc(var(--u) * 14.9) var(--font-head); line-height: 1; white-space: nowrap; }
 .bub { position: absolute; padding: calc(var(--u) * 1.2) calc(var(--u) * 2); border-radius: calc(var(--u) * 1.6) calc(var(--u) * 1.6) calc(var(--u) * 1.6) 0;
        background: #ffffff10; border: 1px solid #ffffff2a; color: var(--text); font: 700 calc(var(--u) * 2.2) var(--font-script); white-space: nowrap; }
 .no { position: absolute; right: calc(var(--u) * -4); top: calc(var(--u) * -2); padding: calc(var(--u) * .3) calc(var(--u) * .9); border: 2px solid #8C877F;
-      color: #8C877F; font: 800 calc(var(--u) * 1.6) var(--font-head); letter-spacing: .08em; transform: rotate(-8deg); background: #050506cc; }
+      color: #8C877F; font: 400 calc(var(--u) * 2.2) var(--font-head); letter-spacing: .08em; transform: rotate(-8deg); background: #050506cc; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -39,7 +39,7 @@
   // C. -55% counts up, FEWER REFUSALS
   const n = place(mk("div", "big", st), W * 0.68, H * 0.32); n.style.color = PAL.fab; fade(n, t55 - 0.2);
   count(n, 0, 55, t55 - 0.2, 0.9, (v) => "-" + Math.round(v) + "%");
-  const kR = kick("FEWER REFUSALS", W * 0.685, H * 0.32 + u * 12); fade(kR, t55 + 0.4);
-  const kE = kick("EARLY TESTING", W * 0.685, H * 0.32 + u * 15); fade(kE, t55 + 0.7); kE.style.fontSize = u * 1.6 + "px";
+  const kR = kick("FEWER REFUSALS", W * 0.685, H * 0.32 + u * 17); fade(kR, t55 + 0.4);
+  const kE = kick("EARLY TESTING", W * 0.685, H * 0.32 + u * 20); fade(kE, t55 + 0.7); kE.style.fontSize = u * 1.6 + "px";
   K.done();
 </script></body></html>

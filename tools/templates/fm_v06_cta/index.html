@@ -3,11 +3,11 @@
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
 <style>/* 04_Fable_Mythos 9x16 seq 06 (76.4-end): CTA: presenter points, comment box types FABLE, arrow down, FULL VIDEO card */
 .cb { position: absolute; padding: calc(var(--u) * 2.2) calc(var(--u) * 3); border-radius: calc(var(--u) * 1.4); background: #ffffff10; border: 1px solid #ffffff38;
-      color: var(--text); font: 800 calc(var(--u) * 6) var(--font-head); white-space: nowrap; }
+      color: var(--text); font: 400 calc(var(--u) * 8.1) var(--font-head); white-space: nowrap; }
 .cb small { display: block; font: 700 calc(var(--u) * 2.4) var(--font-script); color: #8C877F; letter-spacing: .14em; margin-bottom: calc(var(--u) * 1); }
 .car { display: inline-block; width: calc(var(--u) * .5); height: .9em; margin-left: 4px; vertical-align: -.1em; background: #6EF0B5; }
 .fv { position: absolute; display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 2); border-radius: calc(var(--u) * 1);
-      background: #6EF0B5; color: #050506; font: 800 calc(var(--u) * 5) var(--font-head); letter-spacing: .04em; }
+      background: #6EF0B5; color: #050506; font: 400 calc(var(--u) * 6.8) var(--font-head); letter-spacing: .04em; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -20,12 +20,12 @@
 
   // A. the presenter rises from the bottom, pointing; WANT THE FULL STORY?
   const tC = at("comment", 2.5), tF = at("fable", 3.2), tL = Math.min(at("link", 5.8), D - 0.9);
-  const pr = card({ i: "pres_point", x: W * 0.08, y: H * 0.32, w: W * 0.84, h: H * 0.44, shape: "cut" });
+  const pr = card({ i: "pres_point", x: 0, y: H * 0.32, w: W, h: H * 0.68, shape: "cut" });
   pop(pr, 0.1, { y: H * 0.2, opacity: 0, scale: 1.1 }, 0.7, E.in);
   const kW = kick("WANT THE FULL STORY?", W * 0.07, H * 0.05); kW.style.fontSize = u * 3.2 + "px"; fade(kW, 0.3);
 
   // B. comment box pops, FABLE types in with a blinking caret
-  const cb = place(mk("div", "cb", st, "<small>TYPE IN THE COMMENTS</small><span></span><i class='car'></i>"), W * 0.07, H * 0.09, W * 0.86);
+  const cb = place(mk("div", "cb", st, "<small>TYPE IN THE COMMENTS</small><span></span><i class='car'></i>"), W * 0.07, H * 0.09, W * 0.8);
   pop(cb, Math.max(0.4, tC - 0.4), { y: u * 8, opacity: 0 }, 0.5, E.in);
   const sp = cb.querySelector("span"), o = { n: 0 };
   tl.to(o, { n: 5, duration: 0.5, ease: "none", onUpdate: () => { sp.textContent = "FABLE".slice(0, Math.round(o.n)); } }, tF);

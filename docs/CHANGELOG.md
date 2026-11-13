@@ -2,6 +2,7 @@
 
 ## 2026-11-13
 - 04_Fable_Mythos: paired project from the user's workflow prompt (merge, 3 speeds, Gemini JSON align), theme, 20 Kaggle images, kit fable_kit, sequences fm_s01-fm_s12.
+- 04_Fable_Mythos: sequences fm_s13-fm_s18 (16x9) and fm_v01-fm_v06 (9x16, own portrait layout); Anton weight 400 + 1.35x sizes, presenter fills the frame height (16x9 right 54%, 9x16 lower ~70%). Both 480p previews rendered, beat-frame QA: fixed s13 2 over OPEN PROBLEMS + pet card too short, s15 -55% over its kickers, s16 crack visible before 'flaw' (non-scaling-stroke ignores pathLength), s17 heads wrapped (own .rt class hit the kit's redaction span), v02 SELECTED over the 9x16 captions (captions sit at ~0.75H), v03 350 over its kicker, v06 comment box past the edge. DarkWorld/README.md from scripts/make_darkworld.py.
 - grade.graded returns SVG files unchanged (logos are CSS masks; PIL cannot open SVG). Test: test_svg_is_not_graded.
 
 ## 2026-11-11 - 03_Wireless_Power previews checked

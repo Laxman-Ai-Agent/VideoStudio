@@ -36,11 +36,11 @@
   // C. presenter shock, big; IT KNEW IT WAS TESTED slams; DOUBT stamp
   const tTe = at("test", 9.7), tDb = at("doubt", 11.55);
   tl.to([kS, hS, mv, eye, bar, kM, kC], { opacity: 0, scale: 0.92, duration: 0.4, ease: E.out, stagger: 0.02 }, tTe - 0.5);
-  const pr = card({ i: "pres_shock", x: W * 0.02, y: H * 0.22, w: W * 0.96, h: H * 0.54, shape: "cut" });
+  const pr = card({ i: "pres_shock", x: 0, y: H * 0.3, w: W, h: H * 0.7, shape: "cut" });
   pop(pr, tTe - 0.2, { scale: 1.3, opacity: 0, y: u * 6 }, 0.5, E.in); tl.to(pr, { scale: 1.05, duration: Math.max(0.5, D - tTe), ease: "none" }, tTe + 0.4);
-  const s1 = head("IT KNEW IT", W * 0.07, H * 0.06, 9.5), s2 = head("<b>WAS TESTED</b>", W * 0.07, H * 0.125, 9.5);
+  const s1 = head("IT KNEW IT", W * 0.07, H * 0.06, 9.5), s2 = head("<b>WAS TESTED</b>", W * 0.07, H * 0.14, 9.5);
   tl.set([s1.querySelector(".rt"), s2.querySelector(".rt")], { opacity: 1 }, 0);
   slam(s1, tTe); slam(s2, tTe + 0.4);
-  stamp("DOUBT", W * 0.6, H * 0.6, PAL.myt, Math.min(tDb, D - 0.8), -10);
+  stamp("DOUBT", W * 0.56, H * 0.235, PAL.myt, Math.min(tDb, D - 0.8), -10);
   K.done();
 </script></body></html>

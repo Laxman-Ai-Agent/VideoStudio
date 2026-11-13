@@ -2,7 +2,7 @@
 <script src="gsap.min.js"></script><script src="scene.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
 <style>/* 04_Fable_Mythos seq 14 (235.3-262 s): chapter MYTHOS (violet glitch) -> code wall weak spots = VULNERABILITIES -> +14.4% -> 1 in 6 bugs */
-.big { position: absolute; font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1; white-space: nowrap; }
+.big { position: absolute; font: 400 calc(var(--u) * 14.9) var(--font-head); line-height: 1; white-space: nowrap; }
 .spot { position: absolute; width: calc(var(--u) * 5); height: calc(var(--u) * 5); margin: calc(var(--u) * -2.5) 0 0 calc(var(--u) * -2.5); border-radius: 50%;
         border: 2px solid #A47CFF; box-shadow: 0 0 calc(var(--u) * 3) #A47CFF, inset 0 0 calc(var(--u) * 2) #A47CFF; }
 .ring { position: absolute; border-radius: 50%; border: 2px solid #A47CFF; box-shadow: 0 0 calc(var(--u) * 3) #A47CFF88; }
@@ -38,7 +38,7 @@
     tl.to(s, { scale: 1.35, opacity: 0.6, duration: 0.6, yoyo: true, repeat: 5, ease: E.soft }, tWk + 0.5 + i * 0.18);
   }
   const kW = kick("WEAK SPOTS IN SOFTWARE", W * 0.62, H * 0.14); fade(kW, tWk);
-  const hV = place(mk("div", "kh", st), W * 0.62, H * 0.19); hV.style.fontSize = u * 4.2 + "px"; hV.style.color = PAL.myt; scramble(hV, "VULNERABILITIES", tV, 0.8);
+  const hV = place(mk("div", "kh", st), W * 0.62, H * 0.19); hV.style.fontSize = u * 5.7 + "px"; hV.style.color = PAL.myt; scramble(hV, "VULNERABILITIES", tV, 0.8);
 
   // C. +14.4% counter: known bugs found again, 5.2 vs 5.1
   const kK = kick("KNOWN BUGS FOUND / VS 5.1", W * 0.62, H * 0.36); fade(kK, t14 - 0.4);
@@ -56,7 +56,7 @@
   tl.fromTo(ring, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: E.pop, immediateRender: true }, t6);
   tl.to(bugs[3], { scale: 1.3, duration: 0.4, ease: E.pop }, t6);
   tl.to(bugs.filter((_, i) => i !== 3), { opacity: 0.22, duration: 0.4 }, t6 + 0.3);
-  const h6 = head("1 IN <b>6</b>", W / 2 - u * 18, H * 0.48, 9); redact(h6, t6 + 0.2);
+  const h6 = head("1 IN <b>6</b>", W / 2 - u * 12, H * 0.48, 9); redact(h6, t6 + 0.2);
   const kN = kick("NO OTHER AI CAUGHT IT", W / 2 - u * 17, H * 0.62); fade(kN, tN - 0.2);
   K.done();
 </script></body></html>

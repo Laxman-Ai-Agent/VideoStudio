@@ -2,13 +2,13 @@
 <script src="gsap.min.js"></script><script src="scene.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
 <style>/* 04_Fable_Mythos seq 13 (209.5-235.3 s): black hole, 2 open problems -> one prompt, three devices -> RoboDojo 27.6 -> 64.9 -> Anthropic's own tests */
-.big { position: absolute; font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1; white-space: nowrap; }
+.big { position: absolute; font: 400 calc(var(--u) * 14.9) var(--font-head); line-height: 1; white-space: nowrap; }
 .pr { position: absolute; padding: calc(var(--u) * 1.2) calc(var(--u) * 2); border: 1px solid #6EF0B5; border-radius: calc(var(--u) * .6); background: #050506d8;
       color: var(--text); font: 700 calc(var(--u) * 2.2) var(--font-script); letter-spacing: .08em; white-space: nowrap; min-width: calc(var(--u) * 30); min-height: calc(var(--u) * 2.4); }
 .trk { position: absolute; height: calc(var(--u) * 2.4); border-radius: 99px; background: #ffffff10; border: 1px solid #ffffff22; overflow: hidden; }
 .fil { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: 0 50%; border-radius: 99px; }
 .mk { position: absolute; font: 700 calc(var(--u) * 2) var(--font-script); letter-spacing: .12em; white-space: nowrap; }
-.mk b { display: block; font: 800 calc(var(--u) * 6) var(--font-head); letter-spacing: 0; }
+.mk b { display: block; font: 400 calc(var(--u) * 8.1) var(--font-head); letter-spacing: 0; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -25,7 +25,7 @@
   pop(bh, Math.max(0, tB - 0.1), { scale: 1.12, opacity: 0 }, 0.8, E.in);
   const kB = kick("BLACK HOLE PHYSICS", W * 0.58, H * 0.14); fade(kB, tB + 0.3);
   const n2 = place(mk("div", "big", st), W * 0.58, H * 0.2); n2.style.color = PAL.fab; fade(n2, tO - 0.2); count(n2, 0, 2, tO - 0.2, 0.6);
-  const hO = head("OPEN PROBLEMS", W * 0.58, H * 0.2 + u * 12.5, 4.6); redact(hO, tO + 0.1);
+  const hO = head("OPEN PROBLEMS", W * 0.58, H * 0.2 + u * 16.5, 4.6); redact(hO, tO + 0.1);
   const sv = stamp("SOLVED BY FABLE", W * 0.59, H * 0.47, PAL.fab, tO + 1.8, -6);
 
   // B. one prompt line types, three flow lines run to three real device cards, each on its spoken name
@@ -42,7 +42,7 @@
   });
 
   // C. robots: robot arm card, RoboDojo, a slider track fills 27.6 (old, grey) then 64.9 (mint)
-  const tR = at("robots", 14.0), tOld = at("old", 17.0), tNew = at("new", 19.25), tOwn = at("own", 23.5);
+  const tR = Math.max(at("robots", 14.0), at("pet", 13.2) + 1.1), tOld = at("old", 17.0), tNew = at("new", 19.25), tOwn = at("own", 23.5);
   tl.to([pr, hD, ...dev], { opacity: 0, y: -u * 5, duration: 0.5, ease: E.out, stagger: 0.02 }, tR - 0.6);
   const rb = card({ i: "robot", x: W * 0.06, y: H * 0.1, w: W * 0.36, h: H * 0.6 });
   pop(rb, tR - 0.1, { x: -u * 10, opacity: 0, rotation: -3 }, 0.7, E.in);

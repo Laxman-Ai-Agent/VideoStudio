@@ -24,7 +24,7 @@
 
   // B. bottom half (violet): the strong subjects chip in first, then the Mythos card
   const tC = at("cyber", 3.1), tB = at("biology", 4.3), tM = at("mythos", 6.3), tSe = at("selected", 8.9);
-  const B = place(mk("div", "half"), 0, H * 0.38, null, H * 0.38); B.style.background = `linear-gradient(180deg, ${PAL.myt}24, ${PAL.myt}08)`;
+  const B = place(mk("div", "half"), 0, H * 0.38, null, H * 0.32); B.style.background = `linear-gradient(180deg, ${PAL.myt}24, ${PAL.myt}08)`;
   tl.fromTo(B, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: E.io, immediateRender: true }, tC - 0.5);
   const c1 = chip("CYBER SECURITY", W * 0.43, H * 0.42, PAL.myt), c2 = chip("BIOLOGY", W * 0.43, H * 0.47, PAL.myt);
   [c1, c2].forEach((c) => (c.style.fontSize = u * 3.4 + "px"));
@@ -33,9 +33,10 @@
   const kM = kick("MYTHOS 5.2", W * 0.43, H * 0.53); fade(kM, tM);
 
   // C. a padlock card snaps shut, a chain line draws across, SELECTED ONLY
-  const lk = card({ i: "lock", x: W * 0.66, y: H * 0.56, w: W * 0.26, h: W * 0.26 });
+  tl.to([c1, c2, kM], { opacity: 0, x: u * 6, duration: 0.35, ease: E.out }, tSe - 0.7);
+  const lk = card({ i: "lock", x: W * 0.43, y: H * 0.545, w: W * 0.2, h: W * 0.2 });
   pop(lk, tSe - 0.4, { scale: 0.5, opacity: 0, rotation: -8 }, 0.45); shake(lk, tSe + 0.1, u * 0.6);
-  line(W * 0.04, H * 0.752, W * 0.96, H * 0.752, tSe, PAL.myt, 0.6, u * 0.4);
-  const h3 = head("<b>SELECTED</b>", W * 0.07, H * 0.655, 7.5), h4 = head("COMPANIES", W * 0.07, H * 0.705, 6); redact(h3, tSe); redact(h4, tSe + 0.25);
+  line(W * 0.04, H * 0.685, W * 0.96, H * 0.685, tSe, PAL.myt, 0.6, u * 0.4);
+  const h3 = head("<b>SELECTED</b>", W * 0.43, H * 0.42, 7.5), h4 = head("COMPANIES", W * 0.43, H * 0.48, 6); redact(h3, tSe); redact(h4, tSe + 0.25);
   K.done();
 </script></body></html>

@@ -9,7 +9,7 @@
 .cb small { display: block; font-size: calc(var(--u) * 1.5); color: #8C877F; letter-spacing: .14em; margin-bottom: calc(var(--u) * .8); }
 .car { display: inline-block; width: calc(var(--u) * .3); height: 1em; margin-left: 2px; vertical-align: -.15em; background: #6EF0B5; }
 .sub { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: calc(var(--u) * .8);
-       font: 800 calc(var(--u) * 2.6) var(--font-head); letter-spacing: .06em; }
+       font: 400 calc(var(--u) * 3.5) var(--font-head); letter-spacing: .06em; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -53,7 +53,7 @@
   const tQ = at("question", 27.0), tCm = at("comment", 31.2), tSub = Math.min(at("subscribe", 34.6), D - 1.2) - 1.4;
   tl.to(st.querySelectorAll(".ft"), { opacity: 0, duration: 0.4 }, tQ - 0.6);
   tl.to([kL, h1, h2, kS], { opacity: 0, x: -u * 6, duration: 0.45, ease: E.out, stagger: 0.03 }, tQ - 0.6);
-  const pr = card({ i: "pres_point", x: W * 0.54, y: H * 0.04, w: W * 0.42, h: H * 0.74, shape: "cut" });
+  const pr = card({ i: "pres_point", x: W * 0.46, y: 0, w: W * 0.54, h: H, shape: "cut" });
   pop(pr, tQ - 0.3, { scale: 1.2, opacity: 0, y: u * 4 }, 0.6, E.in);
   const q1 = chip("GROW THIS FAST?", W * 0.06, H * 0.14, PAL.fab), q2 = chip("OR PAUSE AND THINK?", W * 0.06, H * 0.23, PAL.myt);
   pop(q1, tQ, { x: -u * 6, opacity: 0 }, 0.45, E.in); pop(q2, tQ + 1.4, { x: -u * 6, opacity: 0 }, 0.45, E.in);

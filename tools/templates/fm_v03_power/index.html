@@ -2,7 +2,7 @@
 <script src="gsap.min.js"></script><script src="scene.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
 <style>/* 04_Fable_Mythos 9x16 seq 03 (27.4-50.5 s): how powerful: Fermat 350 years -> 30 hours ribbons -> laptop, new OS in 8 days -> one prompt, three devices */
-.big { position: absolute; font: 800 calc(var(--u) * 14) var(--font-head); line-height: 1; white-space: nowrap; }
+.big { position: absolute; font: 400 calc(var(--u) * 18.9) var(--font-head); line-height: 1; white-space: nowrap; }
 .rib { position: absolute; height: calc(var(--u) * 3); border-radius: 99px; transform-origin: 0 50%; }
 .rl { position: absolute; font: 700 calc(var(--u) * 2.8) var(--font-script); letter-spacing: .12em; white-space: nowrap; }
 .pr { position: absolute; padding: calc(var(--u) * 1.8) calc(var(--u) * 2.6); border: 1px solid #6EF0B5; border-radius: calc(var(--u) * .8); background: #050506d8;
@@ -23,7 +23,7 @@
   const fm = card({ i: "fermat", x: W * 0.07, y: H * 0.14, w: W * 0.4, h: W * 0.533, focus: [0.5, 0.35, 1.1], tag: "FERMAT" });
   pop(fm, tY - 0.3, { x: -u * 10, rotation: -5, opacity: 0 }, 0.7, E.in);
   const n3 = place(mk("div", "big", st), W * 0.52, H * 0.17); n3.style.color = PAL.text; fade(n3, tY - 0.1); count(n3, 0, 350, tY - 0.1, 1.2);
-  const kY = kick("YEARS UNSOLVED", W * 0.53, H * 0.17 + u * 15); kY.style.fontSize = u * 2.8 + "px"; fade(kY, tY + 0.6);
+  const kY = kick("YEARS UNSOLVED", W * 0.53, H * 0.17 + u * 20); kY.style.fontSize = u * 2.8 + "px"; fade(kY, tY + 0.6);
 
   // B. time ribbons: 350 years runs the full width, Fable's 30 hours is a tiny mint stub that wins
   const r1 = place(mk("div", "rib", st), W * 0.07, H * 0.51, W * 0.86), l1 = place(mk("div", "rl", st, "350 YEARS / HUMANS"), W * 0.07, H * 0.48);
@@ -43,7 +43,7 @@
   const n8 = place(mk("div", "big", st, "0"), W * 0.07, H * 0.48); n8.style.color = PAL.fab; fade(n8, tD - 0.1); count(n8, 0, 8, tD - 0.1, 0.6);
   const kD = kick("DAYS", W * 0.07 + u * 13, H * 0.48 + u * 7.5); kD.style.fontSize = u * 4 + "px"; fade(kD, tD + 0.3);
   const kO = kick("A NEW", W * 0.07, H * 0.6); kO.style.fontSize = u * 2.8 + "px"; fade(kO, tO - 0.2);
-  const hO = place(mk("div", "kh", st), W * 0.07, H * 0.63); hO.style.fontSize = u * 6.4 + "px"; scramble(hO, "OPERATING SYSTEM", tO, 0.8);
+  const hO = place(mk("div", "kh", st), W * 0.07, H * 0.63); hO.style.fontSize = u * 8.6 + "px"; scramble(hO, "OPERATING SYSTEM", tO, 0.8);
 
   // D. one paragraph prompt -> three real device cards stack in
   const tPr = at("prompt", 17.45), tDv = at("devices", 19.8);

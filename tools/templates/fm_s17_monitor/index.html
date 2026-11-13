@@ -5,14 +5,14 @@
 .beam { position: absolute; background: linear-gradient(90deg, #EDE6DA55, #EDE6DA00); clip-path: polygon(0 40%, 100% 0, 100% 100%, 0 60%); transform-origin: 0 50%; }
 .bar { position: absolute; background: #050506; box-shadow: 0 0 0 1px #ffffff18; transform-origin: 0 50%; }
 .ov { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; background: linear-gradient(180deg, #050506aa, #050506f2); padding: 6%; }
-.ov b { display: block; font: 800 calc(var(--u) * 6) var(--font-head); color: #A47CFF; line-height: 1; }
+.ov b { display: block; font: 400 calc(var(--u) * 8.1) var(--font-head); color: #A47CFF; line-height: 1; }
 .ov i { display: block; margin: 4% 0; font: 700 calc(var(--u) * 1.5) var(--font-script); font-style: normal; color: var(--text); letter-spacing: .12em; }
 .ov .tr { height: calc(var(--u) * 1.2); border-radius: 99px; background: #ffffff18; overflow: hidden; }
 .ov .tr div { height: 100%; width: 43%; background: #A47CFF; transform-origin: 0 50%; }
-.rt { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text);
-      font: 800 calc(var(--u) * 6) var(--font-head); line-height: 1; white-space: nowrap; }
-.rt small { font: 700 calc(var(--u) * 1.7) var(--font-script); letter-spacing: .14em; color: #8C877F; margin-top: calc(var(--u) * 1); }
-.bt { position: absolute; display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 3) var(--font-head); color: var(--text); }
+.rtx { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text);
+      font: 400 calc(var(--u) * 8.1) var(--font-head); line-height: 1; white-space: nowrap; }
+.rtx small { font: 700 calc(var(--u) * 1.7) var(--font-script); letter-spacing: .14em; color: #8C877F; margin-top: calc(var(--u) * 1); }
+.bt { position: absolute; display: flex; align-items: center; justify-content: center; font: 400 calc(var(--u) * 4.1) var(--font-head); color: var(--text); }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -53,7 +53,7 @@
     <circle cx="50" cy="50" r="44" fill="none" stroke="${PAL.myt}" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 50 50)"/></svg>`;
   fade(rg, t4 - 0.2);
   tl.fromTo(rg.querySelectorAll("circle")[1], { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0.75 }, duration: 0.8, ease: E.in, immediateRender: true }, t4);
-  const rt = place(mk("div", "rt", st, "1 IN 4<small>TIMES</small>"), rx, ry, rs, rs); fade(rt, t4 + 0.2);
+  const rt = place(mk("div", "rtx", st, "1 IN 4<small>TIMES</small>"), rx, ry, rs, rs); fade(rt, t4 + 0.2);
   const ov = mk("div", "ov", dc, "<b>0%</b><i>SUSPECTED A TEST</i><div class='tr'><div></div></div>");
   fade(ov, t43 - 0.3); count(ov.querySelector("b"), 0, 43, t43 - 0.1, 0.8, (v) => Math.round(v) + "%");
   tl.fromTo(ov.querySelector(".tr div"), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power2.out", immediateRender: true }, t43 - 0.1);
@@ -61,7 +61,7 @@
   // D. presenter shock + IS THIS A TEST? slam
   const tDb = at("doubt", 16.1), tRk = at("risk", 18.0), tUk = at("uk", 20.9), tMe = at("metr", 22.8), tUs = at("us", 23.8);
   tl.to([dc, kD, hD, rg, rt], { opacity: 0, x: -u * 8, duration: 0.45, ease: E.out, stagger: 0.03 }, tDb - 0.6);
-  const pr = card({ i: "pres_shock", x: W * 0.5, y: H * 0.04, w: W * 0.46, h: H * 0.74, shape: "cut" });
+  const pr = card({ i: "pres_shock", x: W * 0.46, y: 0, w: W * 0.54, h: H, shape: "cut" });
   pop(pr, tDb - 0.2, { scale: 1.25, opacity: 0, y: u * 4 }, 0.5, E.in);
   const s1 = head("IS THIS", W * 0.06, H * 0.26, 8), s2 = head("<b>A TEST?</b>", W * 0.06, H * 0.41, 8);
   tl.set([s1.querySelector(".rt"), s2.querySelector(".rt")], { opacity: 1 }, 0);

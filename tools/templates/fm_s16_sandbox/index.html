@@ -4,7 +4,7 @@
 <style>/* 04_Fable_Mythos seq 16 (272-295.8 s): chapter THE OTHER SIDE (coral): sandbox room, a crack drawn in the wall -> steps down 39% -> 21% -> 3.1% */
 .stp { position: absolute; border-top: 3px solid #FF6A4D; background: linear-gradient(180deg, #FF6A4D88, #FF6A4D10); }
 .sl { position: absolute; font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #8C877F; white-space: nowrap; }
-.sv { position: absolute; font: 800 calc(var(--u) * 5.4) var(--font-head); color: #FF6A4D; white-space: nowrap; line-height: 1; }
+.sv { position: absolute; font: 400 calc(var(--u) * 7.3) var(--font-head); color: #FF6A4D; white-space: nowrap; line-height: 1; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="shake"><div id="stage"></div></div>
@@ -27,11 +27,11 @@
   const cw = W * 0.46, chh = H * 0.62, sb = card({ i: "sandbox", x: W * 0.06, y: H * 0.08, w: cw, h: chh });
   pop(sb, tRm - 0.2, { scale: 1.15, opacity: 0 }, 0.8, E.in);
   const kR = kick("A CLOSED TEST ROOM", W * 0.56, H * 0.12); fade(kR, tRm + 0.2);
-  const hB = place(mk("div", "kh", st), W * 0.56, H * 0.17); hB.style.fontSize = u * 7 + "px"; scramble(hB, "SANDBOX", tSb, 0.7);
+  const hB = place(mk("div", "kh", st), W * 0.56, H * 0.17); hB.style.fontSize = u * 9.4 + "px"; scramble(hB, "SANDBOX", tSb, 0.7);
   const sv = mk("div", "", sb); sv.style.cssText = "position:absolute;inset:0";
   sv.innerHTML = `<svg width="${cw}" height="${chh}" viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0">
-    <polyline points="63,6 58,20 65,29 57,43 62,52 55,68 59,80" fill="none" stroke="${PAL.warn}" vector-effect="non-scaling-stroke"
-      style="stroke-width:${u * 0.45}px;filter:drop-shadow(0 0 ${u}px ${PAL.warn})" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`;
+    <polyline points="63,6 58,20 65,29 57,43 62,52 55,68 59,80" fill="none" stroke="${PAL.warn}"
+      stroke-width="0.5" style="filter:drop-shadow(0 0 ${u}px ${PAL.warn})" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`;
   tl.fromTo(sv.querySelector("polyline"), { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.7, ease: "power2.inOut", immediateRender: true }, tFl);
   shake(sb, tFl + 0.1, u * 0.4);
   const kFl = kick("A FLAW, LEFT ON PURPOSE", W * 0.56, H * 0.28); kFl.style.color = PAL.warn; fade(kFl, tFl + 0.2);
