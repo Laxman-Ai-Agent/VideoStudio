@@ -9,6 +9,9 @@ from pathlib import Path
 from .project import atomic_write
 
 LUFS, TRUE_PEAK, LRA = -14.0, -1.5, 11.0
+# linear loudnorm cannot limit and AAC adds overshoot (05 final measured -0.9 dBTP vs QA max -1.0):
+# a brick-wall limiter at -2 dBFS after loudnorm keeps the encoded true peak under the QA limit
+PEAK_GUARD = "alimiter=limit=0.794:level=false"
 MUSIC_UNDER, SFX_UNDER = 18.0, 10.0  # LU below the narration before ducking
 AUDIO_EXT = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 SFX_LEAD = 0.15  # a whoosh starts slightly before the cut
@@ -112,7 +115,7 @@ def assemble(clips: list[Path], audio: Path, out: Path, fps: int, frames: int,
     try:
         m = _loudnorm_json(srcs + ["-filter_complex", graph + f";[mix]{_probe_json()}[o]", "-map", "[o]"])
         p = subprocess.run(["ffmpeg", "-y", "-v", "error", *srcs, "-filter_complex",
-                            graph + f";[mix]{loudnorm_filter(m)},aresample=48000[a]",
+                            graph + f";[mix]{loudnorm_filter(m)},{PEAK_GUARD},aresample=48000[a]",
                             "-map", "0:v:0", "-map", "[a]", "-frames:v", str(frames), "-r", str(fps),
                             "-t", f"{length:.4f}", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
                             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",

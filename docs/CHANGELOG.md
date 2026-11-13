@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-13
+- 05_Nvidia_CEO_Exit 1080p finals (QA PASS), DarkWorld/README.md; keynote / Kress photos replaced (copyright) by a free photo and a name card. assemble: peak limiter after loudnorm (true peak -0.9 -> under -1 dBTP), test_assemble_peak.
 - 05_Nvidia_CEO_Exit: paired project (merge, 3 speeds, align), light-documentary news-desk look, real photos + screenshots (asset-collector), `news_kit`, sequences nv_l01-l14 / nv_v01-v05, 480p previews with beat-frame QA (fixed: substring beat matches, kit pop() wiping translateX centring, chips / stamps past the 9:16 edge, stamp re-showing after its out).
 - 04_Fable_Mythos rebuilt in the explainer style (user's reference class clip): theme (Plus Jakarta Sans + Noto Sans Telugu, pastel sections, captions off), `explainer_kit`, sequences fx_s01-s18 + fx_v01-v06, 20 light-style Kaggle images, theme captions style `off` (test). Both 480p previews rendered, QA PASS. 1080p finals rendered on the user's go (QA PASS), named 04_Fable_Mythos_16x9.mp4 / _9x16.mp4; DarkWorld/README.md describes the explainer look.
 - 04_Fable_Mythos: paired project from the user's workflow prompt (merge, 3 speeds, Gemini JSON align), theme, 20 Kaggle images, kit fable_kit, sequences fm_s01-fm_s12.
