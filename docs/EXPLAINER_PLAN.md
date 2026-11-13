@@ -50,3 +50,6 @@ Name: **light-documentary** = explainer LOOK (pastel sections, Plus Jakarta Sans
 
 ## 5. Mode is chosen per video (user, 2026-11-13)
 No default mode: at the start of each new video offer documentary / explainer / light-documentary with a content-based recommendation (AskUserQuestion), the user picks; save the pick in `theme.json` (`look` + `style`). 04_Fable_Mythos currently = explainer (finals); the user chose light-documentary as the mode to move 04 to when planning continues.
+
+## 6. Scope decision (user, 2026-11-13 end)
+04_Fable_Mythos stays as it is (explainer finals, done). light-documentary is NOT applied to 04: build the Phase 1 kit parts and try the mode on the NEXT video (offer the mode options first, per section 5).
