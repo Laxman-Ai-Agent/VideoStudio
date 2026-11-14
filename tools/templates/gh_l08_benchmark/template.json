@@ -1,0 +1,8 @@
+{
+ "name": "gh_l08_benchmark",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "L08 hype = one number, Terminal-Bench window, bar race Hydrogen 57% vs 3.8 Flash 18.2%, 3.1x gap, what is Terminal-Bench?"
+}

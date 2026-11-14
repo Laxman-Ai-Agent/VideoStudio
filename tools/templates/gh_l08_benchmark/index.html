@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06_Gemini_Hydrogen L08 (106.8-121 s): hype = one number (slot counter); Terminal-Bench card; bar race Hydrogen 57% vs 3.8 Flash 18.2%; 3.1x gap; "what is Terminal-Bench?" */
+.slot { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182826;
+  display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 16) var(--font-head); color: #101828; letter-spacing: -.03em; overflow: hidden; }
+.slot::before { content: "THE NUMBER"; position: absolute; top: 7%; font: 700 calc(var(--u) * 1.8) var(--font-script); color: #526070; letter-spacing: .2em; }
+.gap { position: absolute; padding: calc(var(--u) * .8) calc(var(--u) * 1.8); border-radius: calc(var(--u) * 1.2); background: #F5A524; color: #101828; font: 800 calc(var(--u) * 4.4) var(--font-head); white-space: nowrap; }
+.gap small { display: block; font: 700 calc(var(--u) * 1.6) var(--font-script); letter-spacing: .14em; }
+.src { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * .7) calc(var(--u) * 1.4); background: #fff; border-radius: calc(var(--u) * 1);
+  border: 1px dashed #52607088; font: 700 calc(var(--u) * 1.9) var(--font-script); color: #526070; letter-spacing: .1em; white-space: nowrap; }
+.src .lg { width: calc(var(--u) * 9); height: calc(var(--u) * 3); background: no-repeat center / contain; }
+.cur { display: inline-block; width: .55em; height: 1.05em; vertical-align: -.15em; background: #12A4D9; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, chip, num, count, hbar, rail, railSet, line, blink, ix } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice"); bg("lilac", 0.2);
+  const tHy = at("hype", 0.8), tN = at("number", 1.6), tTB = at("tb", 2.8), t57 = at("fifty", 4.8), tGo = at("google", 6.5), tOld = at("old", 8.4), tFl = at("flash", 9.6),
+        t18 = at("eighteen", 10.7), tTwo = at("two", 11.5), tWh = at("what", 13.2);
+  cam(0, 7, 1.035);
+
+  // A. hype chips swirl around one big number slot that spins
+  const h1 = head("All the hype: <em>one number</em>", "అసలు hype అంతా ఒక number చుట్టూనే", 0.2, { kick: "BENCHMARK", x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 6.6 });
+  const sl = place(mk("div", "slot"), W * 0.62, H * 0.24, W * 0.3, H * 0.4); pop(sl, tN - 0.3, { scale: 0.8, opacity: 0 }, 0.6, E.pop);
+  count(sl, 0, 99, tN - 0.2, 1.6, (v) => String(Math.round(v) % 100).padStart(2, "0"));
+  const hy = [["HYPE", "fire", PAL.red, 0.08, 0.42], ["BENCHMARK", "chip", PAL.violet, 0.24, 0.5], ["CODING", "code", PAL.cyan, 0.1, 0.58], ["SCORE", "up", PAL.green, 0.3, 0.66]]
+    .map(([t, i, c, fx, fy], k) => { const e = chip(t, W * fx, H * fy, { ico: i, c }); pop(e, tHy + k * 0.15, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+      tl.to(e, { y: -u * 1.5, duration: 1.2, yoyo: true, repeat: 1, ease: E.soft }, tHy + 0.6 + k * 0.1); return e; });
+  const rl = rail("TERMINAL-BENCH", "the number <b>everyone</b> is talking about", 0.5);
+
+  // B. Terminal-Bench window left; Hydrogen bar grows to 57%; slot settles on 57; Google claim tag
+  hy.forEach((e, k) => out(e, tTB - 0.6 + k * 0.05, { scale: 0.8 }));
+  const h2 = rehead(h1, "<em>Terminal-Bench</em> score", "Terminal-Bench test లో ఈ model score", tTB - 0.2, { kick: "BENCHMARK", x: W * 0.05, y: H * 0.07, w: W * 0.6, size: 6.6 });
+  const tm = term("terminal-bench", W * 0.05, H * 0.33, W * 0.3, H * 0.3); pop(tm, tTB, { x: -u * 4, opacity: 0 }, 0.6);
+  type(tm, tTB + 0.3, '<span class="p">$</span> tb run <span class="dim">--model</span> hydrogen');
+  type(tm, tTB + 1.0, '<span class="dim">tasks: real command-line work</span>');
+  type(tm, t57 + 0.3, 'result  <span class="ok">57.0%</span>');
+  fit(sl, tTB - 0.1, W * 0.72, H * 0.08, W * 0.2, H * 0.24);
+  tl.call(() => { sl.textContent = "57"; }, null, t57 + 1.0);
+  const ht = tile("H", 1, "Hydrogen", W * 0.4, H * 0.42, W * 0.07, PAL.cyan); flipIn(ht, t57 - 0.4, 0.6);
+  const bw = W * 0.42, bx = W * 0.49, bh = H * 0.075;
+  const b1 = hbar("GEMINI 4 HYDROGEN", bx, H * 0.47, bw, bh, 57, 70, PAL.cyan, t57, 1.3, (v) => v.toFixed(0) + "%");
+  const src = place(mk("div", "src", undefined, `<span class="lg"></span>CLAIMED BY GOOGLE`), bx, H * 0.58);
+  const gi = ix("google"); if (gi >= 0 && X.S.images[gi]) src.querySelector(".lg").style.backgroundImage = `url("${X.S.images[gi]}")`;
+  pop(src, tGo - 0.2, { y: u * 2, opacity: 0 }, 0.5);
+  railSet(rl, t57, "hydrogen &middot; <b>57%</b> &middot; Google's number");
+
+  // C. old Gemini 3.8 Flash bar: only 18.2%; bracket between the tips + 3.1x gap badge
+  out(src, tOld - 0.5, { y: u * 2 });
+  const ft = tile("F", "3.8", "Flash", W * 0.4, H * 0.66, W * 0.07, PAL.coal); flipIn(ft, tOld - 0.2, 0.6);
+  const b2 = hbar("OLD GEMINI 3.8 FLASH", bx, H * 0.71, bw, bh, 18.2, 70, PAL.coal, t18 - 0.2, 1.1, (v) => v.toFixed(1) + "%");
+  const tip1 = bx + bw * 57 / 70, tip2 = bx + bw * 18.2 / 70;
+  const br = line([[tip2 + u, H * 0.71 - u * 1.2], [tip2 + u, H * 0.66], [tip1, H * 0.66], [tip1, H * 0.555]], tTwo, 0.7, PAL.amber, u * 0.35);
+  const gp = place(mk("div", "gap", undefined, "3.1x<small>MORE SCORE</small>"), (tip1 + tip2) / 2 - u * 3, H * 0.59); pop(gp, tTwo + 0.4, { scale: 0.5, opacity: 0 }, 0.6, E.pop);
+  type(tm, tOld + 0.4, 'gemini-3.8-flash  <span class="no">18.2%</span>');
+  const oc = chip("ONLY 18.2%", W * 0.05, H * 0.7, { ico: "x", solid: true, c: PAL.red }); pop(oc, t18 + 0.6);
+  railSet(rl, t18, "hydrogen <b>57%</b> &middot; 3.8 flash <b>18.2%</b> &middot; <b>3x+</b> jump");
+
+  // D. "What is Terminal-Bench?": chart steps back to the right, terminal moves to centre with a blinking cursor
+  const h3 = rehead(h2, "What is <em>Terminal-Bench</em>?", "మరి ఈ Terminal-Bench అంటే ఏంటి?", tWh - 0.3, { kick: "NEXT", x: W * 0.05, y: H * 0.07, w: W * 0.66, size: 6.6 });
+  [b1, b2, br, gp, ht, ft, oc].forEach((e) => tl.to(e, { opacity: 0.25, duration: 0.5, ease: E.soft }, tWh - 0.2));
+  fit(tm, tWh - 0.2, W * 0.08, H * 0.34, W * 0.4, H * 0.44);
+  const cu = type(tm, tWh + 0.3, '<span class="p">$</span> tb --explain <span class="cur"></span>');
+  cam(tOld - 0.5, Math.max(1, D - tOld + 0.5), 1.0);
+  X.done();
+</script></body></html>

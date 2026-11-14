@@ -1,0 +1,8 @@
+{
+ "name": "gh_l01_intro",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "L01 Google -> Gemini -> H tile, terminal + bar chart 3x, daily-driver week strip, PRICE / SPEED / CAPABILITY cards"
+}

@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06_Gemini_Hydrogen L01 (0-18 s): Google -> Gemini -> H tile; terminal + bar chart, small model beats big ones 3x; daily-driver week strip; PRICE / SPEED / CAPABILITY cards */
+.wk { position: absolute; display: flex; gap: calc(var(--u) * 1); }
+.wk div { width: calc(var(--u) * 7.4); height: calc(var(--u) * 9); border-radius: calc(var(--u) * 1.2); background: #fff; box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #10182820;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .6); font: 700 calc(var(--u) * 1.7) var(--font-script); color: #526070; letter-spacing: .1em; }
+.wk div b { width: calc(var(--u) * 3.6); height: calc(var(--u) * 3.6); border-radius: calc(var(--u) * .7); background: #12A4D9; color: #fff; font: 800 calc(var(--u) * 2.2) var(--font-head);
+  display: flex; align-items: center; justify-content: center; letter-spacing: 0; }
+.qm { position: absolute; font: 800 calc(var(--u) * 12) var(--font-head); color: #F5A524; line-height: 1; }
+.mag { position: absolute; width: calc(var(--u) * 12); height: calc(var(--u) * 12); border-radius: 50%; border: calc(var(--u) * 1.1) solid #101828; background: #12A4D912; box-sizing: border-box; }
+.mag::after { content: ""; position: absolute; width: calc(var(--u) * 6); height: calc(var(--u) * 1.4); background: #101828; border-radius: 99px; left: 82%; top: 92%; transform: rotate(45deg); transform-origin: 0 50%; }
+.meter { position: absolute; left: calc(var(--u) * 2); right: calc(var(--u) * 2); bottom: calc(var(--u) * 2.2); height: calc(var(--u) * 1.2); border-radius: 99px; background: #10182812; overflow: hidden; }
+.meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--c); border-radius: 99px; transform-origin: 0 50%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, logo, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tG = at("google", 0.1), tM = at("gemini", 1.6), tH = at("hydro", 2.4), tC = at("cheap", 3.2), tCo = at("coding", 4.9), tBig = at("models", 6.2), t3 = at("three", 7.5),
+        tSc = at("score", 8.5), tDa = at("daily", 10.8), tWhy = at("why", 11.6), tP = at("price", 13.1), tS = at("speed", 13.7), tR = at("real", 14.6), tDe = at("detail", 16.7);
+  cam(0, 9, 1.03);
+
+  // A. Google logo -> Gemini wordmark big -> the H tile flips in; heading + cheap price tag; rail
+  const gl = logo("google", W * 0.3, H * 0.3, W * 0.4, H * 0.2); pop(gl, tG, { scale: 0.8, opacity: 0 }, 0.5);
+  move(gl, tM - 0.3, W * 0.06 + (W * 0.14 - H * 0.07 * 272 / 92) / 2, H * 0.08, H * 0.07 * 272 / 92, H * 0.07);
+  const t0 = chip("AI MODEL LAUNCH", W * 0.36, H * 0.56, { ico: "chip", c: PAL.cyan }); pop(t0, tG + 0.5); out(t0, tM - 0.3);
+  const k0 = chip("NEW &middot; NOV 2026", W * 0.22, H * 0.095, { ico: "star", c: PAL.cyan }); pop(k0, tG + 0.3, { x: -u * 2, opacity: 0 }, 0.5);
+  const gm = logo("gemini", W * 0.2, H * 0.33, W * 0.6, H * 0.24); pop(gm, tM - 0.2, { scale: 0.85, opacity: 0 }, 0.6);
+  const ht = tile("H", 1, "Hydrogen", W * 0.62, H * 0.2, W * 0.24, PAL.cyan, { mass: "GEMINI 4" });
+  flipIn(ht, tH - 0.1);
+  move(gm, tH - 0.1, W * 0.05, H * 0.2, W * 0.36, W * 0.36 * 65 / 288);
+  const h1 = head("Gemini 4 <em>Hydrogen</em>", "Google కొత్త cheap AI model", tH + 0.2, { x: W * 0.05, y: H * 0.36, w: W * 0.52, size: 7 });
+  const pt = ptag("CHEAP", "AI MODEL", W * 0.62, H * 0.77, PAL.amber); pop(pt, tC, { x: u * 4, opacity: 0 }, 0.5);
+  const c1 = chip("CODING", W * 0.05, H * 0.66, { ico: "code", c: PAL.cyan }); pop(c1, tC + 0.2);
+  const c2 = chip("FAST", W * 0.18, H * 0.66, { ico: "bolt", c: PAL.green }); pop(c2, tC + 0.35);
+  const c3 = chip("LOW COST", W * 0.29, H * 0.66, { ico: "dollar", c: PAL.damber }); pop(c3, tC + 0.5);
+  const rl = rail("GEMINI 4 HYDROGEN", "Google &middot; <b>cheap AI model</b> &middot; coding &middot; Nov 2026", 0.8);
+
+  // B. hard coding tests: terminal left types, bar chart right: big models first, then the small H bar shoots past; 3x
+  [c1, c2, c3, pt].forEach((e, i) => out(e, tCo - 0.6 + i * 0.05, { y: u * 2 }));
+  out(gm, tCo - 0.6); out(gl, tCo - 0.6); out(k0, tCo - 0.6);
+  const h2 = rehead(h1, "Hard <em>coding</em> tests", "కష్టమైన coding tests లో పెద్ద models తో పోటీ", tCo - 0.2, { x: W * 0.05, y: H * 0.08, w: W * 0.6, size: 6.6 });
+  const tm = term("coding-tests --hard", W * 0.05, H * 0.36, W * 0.38, H * 0.44); pop(tm, tCo - 0.1, { x: -u * 5, opacity: 0 }, 0.6);
+  type(tm, tCo + 0.3, '<span class="p">$</span> run benchmark <span class="dim">--level hard</span>');
+  type(tm, tCo + 1.2, '<span class="dim">loading 89 tasks ...</span>');
+  type(tm, tBig + 0.2, 'big-model-1    <span class="ok">PASS 19</span>');
+  type(tm, tBig + 0.6, 'big-model-2    <span class="ok">PASS 21</span>');
+  type(tm, t3 - 0.1, 'hydrogen       <span class="ok">PASS 57</span> <span class="p">&#9650;</span>');
+  type(tm, tSc + 0.2, '<span class="p">score x3</span> <span class="dim">vs old model</span>');
+  retile(ht, tCo - 0.3, W * 0.83, H * 0.07, W * 0.1);
+  const base = H * 0.78, hm = H * 0.4;
+  const b1 = vbar("BIG MODEL", W * 0.5, base, W * 0.07, hm, 0.36, PAL.coal, tBig - 0.2, 0.8);
+  const b2 = vbar("BIG MODEL", W * 0.6, base, W * 0.07, hm, 0.42, PAL.coal, tBig + 0.1, 0.8);
+  const b3 = vbar("HYDROGEN", W * 0.7, base, W * 0.07, hm, 0.12, PAL.cyan, tBig + 0.4, 0.6, "H");
+  const ax = line([[W * 0.48, base], [W * 0.8, base]], tBig - 0.3, 0.6, "#10182840", u * 0.3);
+  regrow(b3, t3 - 0.2, hm, 0.98, 1.0);
+  const n3 = num(W * 0.8, H * 0.3, PAL.amber, 13); count(n3, 1, 3, t3, 0.9, (v) => Math.round(v) + "x"); pop(n3, t3, { scale: 0.6, opacity: 0 }, 0.6, E.pop);
+  const sc = chip("MORE SCORE", W * 0.8, H * 0.52, { ico: "up", solid: true, c: PAL.green }); pop(sc, tSc);
+  railSet(rl, t3, "small model &middot; <b>3x score</b> &middot; hard coding tests");
+
+  // C. daily driver: chart + terminal shrink left, a week strip with H every day, WHY?
+  [b1, b2, b3, ax, n3, sc].forEach((e) => out(e, tDa - 0.7));
+  fit(tm, tDa - 0.6, W * 0.05, H * 0.5, W * 0.3, H * 0.3);
+  const h3 = rehead(h2, "Google's <em>daily driver</em>", "Google దీన్ని daily driver అని ఎందుకు పిలుస్తోంది?", tDa - 0.3, { x: W * 0.05, y: H * 0.08, w: W * 0.62, size: 6.6 });
+  retile(ht, tDa - 0.5, W * 0.72, H * 0.3, W * 0.18);
+  const wk = place(mk("div", "wk"), W * 0.38, H * 0.56);
+  ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].forEach((d, i) => { const c = mk("div", "", wk, `${d}<b>H</b>`); pop(c, tDa + i * 0.09, { y: u * 3, opacity: 0 }, 0.4); });
+  const cl = chip("EVERY DAY WORK", W * 0.38, H * 0.48, { ico: "cal", c: PAL.cyan }); pop(cl, tDa + 0.5);
+  const qm = place(mk("div", "qm", undefined, "?"), W * 0.91, H * 0.22); pop(qm, tWhy, { scale: 0.4, opacity: 0, rotation: -15 }, 0.6, E.pop);
+  railSet(rl, tDa, "<b>daily driver</b> &middot; why does Google call it that?");
+
+  // D. three feature cards PRICE / SPEED / CAPABILITY on the words, magnifier sweeps over them on "detail"
+  [wk, cl, qm].forEach((e) => out(e, tP - 0.6, { y: u * 2 })); out(tm, tP - 0.6, { x: -u * 4 });
+  const h4 = rehead(h3, "What it <em>really</em> offers", "price, speed, real capability: అన్నీ in detail గా", tP - 0.3, { x: W * 0.05, y: H * 0.08, w: W * 0.62, size: 6.6 });
+  retile(ht, tP - 0.5, W * 0.8, H * 0.06, W * 0.12);
+  const cw = W * 0.27, ch = H * 0.4, cy = H * 0.42;
+  const f1 = fcard("dollar", "PRICE", "1M tokens కి ఎంత?", W * 0.05, cy, cw, ch, PAL.amber); pop(f1, tP, { y: u * 6, opacity: 0 }, 0.6);
+  const f2 = fcard("bolt", "SPEED", "ఎంత fast?", W * 0.365, cy, cw, ch, PAL.green); pop(f2, tS, { y: u * 6, opacity: 0 }, 0.6);
+  const f3 = fcard("brain", "CAPABILITY", "real గా ఎంత strong?", W * 0.68, cy, cw, ch, PAL.cyan); pop(f3, tR, { y: u * 6, opacity: 0 }, 0.6);
+  [[f1, PAL.amber, tP], [f2, PAL.green, tS], [f3, PAL.cyan, tR]].forEach(([f, c, t]) => { const m = mk("div", "meter", f, "<i></i>"); m.style.setProperty("--c", c);
+    tl.fromTo(m.firstChild, { scaleX: 0 }, { scaleX: 0.7, duration: 1.2, ease: E.in, immediateRender: true }, t + 0.3); });
+  [[f1, "$ ?", PAL.damber, tP], [f2, "? x", PAL.dgreen, tS], [f3, "? %", PAL.dcyan, tR]].forEach(([f, v, c, t]) => { const e = mk("div", "", f, v);
+    Object.assign(e.style, { position: "absolute", left: u * 2 + "px", bottom: u * 5 + "px", font: `800 ${u * 8}px var(--font-head)`, color: c, opacity: 0.9 }); pop(e, t + 0.4, { y: u * 2, opacity: 0 }, 0.5); });
+  const mg = place(mk("div", "mag"), W * 0.02, H * 0.5); pop(mg, tDe - 0.5, { scale: 0.5, opacity: 0 }, 0.4);
+  move(mg, tDe - 0.2, W * 0.8, H * 0.5, null, null, Math.max(0.8, D - tDe - 0.2));
+  [f1, f2, f3].forEach((f, i) => tl.to(f, { y: -u * 2, duration: 0.3, yoyo: true, repeat: 1, ease: E.soft }, tDe - 0.1 + i * 0.35));
+  railSet(rl, tP, "<b>price</b> &middot; <b>speed</b> &middot; <b>real capability</b> &middot; in detail");
+  cam(tDa - 0.5, Math.max(1, D - tDa + 0.5), 1.0);
+  X.done();
+</script></body></html>
