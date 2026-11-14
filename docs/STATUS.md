@@ -12,6 +12,9 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
+## Explainer mode v2 (2026-11-14)
+- User: "explainer" now = the 06_Gemini_Hydrogen look. Recipe `docs/EXPLAINER_STYLE.md`, kit `tools/templates/explainer2_kit` (theme-driven copy of `lab_kit`, `params.motif` hex|ring|square|plus), rule in my-editor rules.md. Old `explainer_kit` only for 04.
+
 ## 06_Gemini_Hydrogen (2026-11-14) - closed
 - Paired topic (Gemini 4 Hydrogen, Google's cheap fast "daily driver" model): `projects/06_Gemini_Hydrogen/{16x9,9x16}`, mode light-documentary (user pick), user rules: every frame dense (text + graphics + motion, no blank areas); AI images photorealistic from Kaggle (never light 3D). Shared `theme.json` (element lab: Sora + Baloo Tammudu 2 + Space Grotesk, hydrogen cyan / amber; max 20% alike 04).
 - Done: inputs moved, 16x9 3 mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; align_mms -> `input/gemini_corrected.json`; `scripts/make_transcript.py`, `make_sequences.py` (beats = code defaults, scene-relative), `render_samples.py`; kit `tools/templates/lab_kit`; sequences gh_l01..l14 + gh_v01..v05; logos `assets/logos`, Kaggle images `assets/ai` (prompts `work/kaggle_images.json`, sources `assets/sources.json`); 480p previews `<fmt>/output/preview_<fmt>.mp4` with beat-frame QA fixes.

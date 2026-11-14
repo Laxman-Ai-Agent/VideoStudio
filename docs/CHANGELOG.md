@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-14
+- Explainer mode v2 = the 06 look: `explainer2_kit` (colours from theme, background motif per scene), docs/EXPLAINER_STYLE.md, rule + memory; EXPLAINER_PLAN.md marked superseded.
 - 06_Gemini_Hydrogen: paired project (16x9 merge, 3 speeds, 1.15x, align_mms), light-documentary "element lab" look (`lab_kit`: periodic tiles, terminal typing, bar races, info rail, icons), sequences gh_l01-l14 / gh_v01-v05, 8 photorealistic Kaggle Z-Image images, 480p previews + beat-frame QA. Lessons: kit class names clash with studio.css (`.bd`, `.dim`, `.tx`, `.ln`): prefix kit classes; type() must keep numeric entities whole.
 
 ## 2026-11-13

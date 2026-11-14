@@ -1,5 +1,7 @@
 # Plan: explainer mode + full-frame composition + no-crop images (2026-11-13, draft for the user's OK)
 
+> 2026-11-14: superseded for new videos by docs/EXPLAINER_STYLE.md (explainer = the 06 look, kit explainer2_kit).
+
 Source: the user's reference clip (Git & GitHub class 2, 9 s, 6 screens; analysis in the 2026-11-13 session) and two user
 rules already in `.claude/skills/my-editor/rules.md` (full-frame composition, never crop images).
 
