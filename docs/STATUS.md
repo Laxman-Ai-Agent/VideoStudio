@@ -12,10 +12,10 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 06_Gemini_Hydrogen (2026-11-14) - NEXT SESSION FIRST
+## 06_Gemini_Hydrogen (2026-11-14) - closed
 - Paired topic (Gemini 4 Hydrogen, Google's cheap fast "daily driver" model): `projects/06_Gemini_Hydrogen/{16x9,9x16}`, mode light-documentary (user pick), user rules: every frame dense (text + graphics + motion, no blank areas); AI images photorealistic from Kaggle (never light 3D). Shared `theme.json` (element lab: Sora + Baloo Tammudu 2 + Space Grotesk, hydrogen cyan / amber; max 20% alike 04).
 - Done: inputs moved, 16x9 3 mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; align_mms -> `input/gemini_corrected.json`; `scripts/make_transcript.py`, `make_sequences.py` (beats = code defaults, scene-relative), `render_samples.py`; kit `tools/templates/lab_kit`; sequences gh_l01..l14 + gh_v01..v05; logos `assets/logos`, Kaggle images `assets/ai` (prompts `work/kaggle_images.json`, sources `assets/sources.json`); 480p previews `<fmt>/output/preview_<fmt>.mp4` with beat-frame QA fixes.
-- Next: user's notes on the previews -> fix only those sequences; 1080p finals on the user's word -> `06_Gemini_Hydrogen_16x9.mp4` / `_9x16.mp4`; then `DarkWorld/README.md` (copy 05's `scripts/make_darkworld.py`). Music: still `calm/mars_background.mp3` (ask for a new track).
+- FINALS DONE 2026-11-14 on the user's go (QA PASS): `16x9/output/06_Gemini_Hydrogen_16x9.mp4` (1920x1080, 4:18), `9x16/output/06_Gemini_Hydrogen_9x16.mp4` (1080x1920, 1:06); `DarkWorld/README.md` via `scripts/make_darkworld.py`, paths verified. User adds the thumbnail. 06 CLOSED. Music still `calm/mars_background.mp3` (ask for a new track next video).
 - docs/CHANGELOG.md is ~430 lines: split (e.g. CHANGELOG_2026-11a.md) before it passes 450.
 
 ## 05_Nvidia_CEO_Exit (2026-11-13) - closed
