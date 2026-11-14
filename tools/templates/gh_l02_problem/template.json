@@ -1,0 +1,8 @@
+{
+ "name": "gh_l02_problem",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L02 (18.5-39 s): developer's day (laptop photo, 100+ tasks counter), task list ticks, every task calls a BIG AI -> bill receipt grows + WAIT spinner, Hydrogen = the solution"
+}

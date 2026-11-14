@@ -1,0 +1,8 @@
+{
+ "name": "gh_v03_workhorse",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 9x16; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 V03 9:16 (25.2-48.7 s): not the smartest, the workhorse (scooter photo); Terminal-Bench bars 18.2% vs 57%; price $1.50 per 1M input tokens"
+}

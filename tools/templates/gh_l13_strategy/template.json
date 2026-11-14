@@ -1,0 +1,8 @@
+{
+ "name": "gh_l13_strategy",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L13 (199.7-230.2 s): why launch a non-best model? Antigravity Orchestrator routes deep work to Carbon and fast work to Hydrogen; hotel kitchen analogy (head chef + assistants); where it ships: Gemini API / AI Studio / Gemini app / Google Search"
+}

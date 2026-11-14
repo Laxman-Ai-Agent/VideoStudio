@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 V04 9:16 (48.7-59.7 s): Agent Arena leaderboard (Hydrogen #5); why launch it? real strategy? question cards */
+.lbd { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 3); padding: calc(var(--u) * 3); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #10182826; }
+.lbd h4 { margin: 0 0 calc(var(--u) * 2); font: 800 calc(var(--u) * 4.4) var(--font-head); color: #101828; }
+.lbd .r { display: flex; align-items: center; gap: calc(var(--u) * 2.4); height: calc(var(--u) * 9); border-top: 1px solid #10182810; font: 700 calc(var(--u) * 3.6) var(--font-script); color: #526070; }
+.lbd .r .n { width: calc(var(--u) * 7); font: 800 calc(var(--u) * 4.6) var(--font-head); color: #101828; }
+.lbd .r.me { background: #12A4D914; color: #0B7CA8; border-radius: calc(var(--u) * 1.6); } .lbd .r.me .n { color: #12A4D9; }
+.qc { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2.4); padding: calc(var(--u) * 3); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822;
+  border-left: calc(var(--u) * 1.4) solid var(--c); font: 800 calc(var(--u) * 6) var(--font-head); color: #101828; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand");
+  const tAA = at("arena", 2.5), t5 = at("fifth", 3.8), tBest = at("best", 5.8), tLa = at("launch", 7.4), tStr = at("strategy", 10.2);
+  cam(0, D, 1.04);
+  const h1 = head("Agent Arena: <em>#5</em>", "ranking లో fifth place లోనే", 0.1, { kick: "THE CATCH", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const lb = place(mk("div", "lbd", undefined, "<h4>AGENT ARENA</h4>"), W * 0.07, H * 0.2, W * 0.86); pop(lb, tAA - 0.6, { y: u * 5, opacity: 0 }, 0.5);
+  const rows = [1, 2, 3, 4, 5, 6].map((n, i) => { const r = mk("div", "r" + (n === 5 ? " me" : ""), lb, `<span class="n">#${n}</span>${n === 5 ? "GEMINI 4 HYDROGEN" : "other model"}`); pop(r, tAA - 0.3 + i * 0.1, { x: u * 4, opacity: 0 }, 0.3); return r; });
+  tl.to(rows[4], { scale: 1.06, duration: 0.4, ease: E.pop }, t5);
+  const p5 = num(W * 0.07, H * 0.66, PAL.cyan, 30); p5.textContent = "#5"; pop(p5, t5, { scale: 0.5, opacity: 0 }, 0.5, E.pop);
+  const nb = chip("NOT THE BEST", W * 0.5, H * 0.74, { ico: "x", solid: true, c: PAL.red }); pop(nb, tBest - 0.4);
+  const rl = rail("THE CATCH", "agent arena &middot; hydrogen <b>#5</b>", 0.5);
+
+  out(lb, tLa - 0.6, { y: -u * 4 }); out(nb, tLa - 0.6); out(p5, tLa - 0.6);
+  const h2 = rehead(h1, "Why <em>launch</em> it?", "best కాకపోయినా ఎందుకు launch చేసింది?", tLa - 0.3, { kick: "QUESTION", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const q1 = place(mk("div", "qc", undefined, "WHY LAUNCH IT?"), W * 0.07, H * 0.28, W * 0.86); q1.style.setProperty("--c", PAL.amber); pop(q1, tLa, { x: -u * 6, opacity: 0 }, 0.5);
+  const q2 = place(mk("div", "qc", undefined, "GOOGLE'S REAL STRATEGY?"), W * 0.07, H * 0.44, W * 0.86); q2.style.setProperty("--c", PAL.cyan); pop(q2, tStr - 0.5, { x: u * 6, opacity: 0 }, 0.5);
+  const ht = tile("H", 1, "Hydrogen", W * 0.36, H * 0.6, W * 0.28, PAL.cyan); flipIn(ht, tLa + 0.4);
+  const fc = chip("ANSWER IN THE FULL VIDEO", W * 0.12, H * 0.84, { ico: "star", solid: true, c: PAL.ink }); pop(fc, tStr + 0.3);
+  railSet(rl, tLa, "why launch a <b>#5 model</b>? the <b>strategy</b>");
+  X.done();
+</script></body></html>

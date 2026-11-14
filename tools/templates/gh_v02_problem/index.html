@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 V02 9:16 (9.5-25.2 s): developer photo + task stack (bug / command), big costly AI photo + bill count-up, wait hourglass, Hydrogen drops in as the fix */
+.tot { position: absolute; font: 800 calc(var(--u) * 13) var(--font-head); color: #EF4444; letter-spacing: -.03em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tDev = at("dev", 1.7), tTask = at("tasks", 3.5), tBug = at("bug", 5.4), tCmd = at("cmd", 6.3), tCost = at("costly", 7.7), tShock = at("shock", 9.7), tWait = at("wait", 11.2), tProb = at("problem", 13.1), tGo = at("google", 13.7), tHy = at("hydro", 15.1);
+  cam(0, 8, 1.04);
+  const h1 = head("A dev's <em>day</em>", "రోజూ వందల small tasks", 0.1, { kick: "THE PROBLEM", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const dv = card({ i: "dev", x: W * 0.07, y: H * 0.2, w: W * 0.86, h: H * 0.32 }); pop(dv, tDev - 0.4, { y: u * 5, opacity: 0 }, 0.6);
+  const nT = num(W * 0.07, H * 0.56, PAL.cyan, 20); count(nT, 0, 100, tTask - 0.4, 1.0, (v) => Math.round(v) + "+"); pop(nT, tTask - 0.5, { opacity: 0 }, 0.3);
+  const c0 = chip("SMALL TASKS / DAY", W * 0.07, H * 0.66, { ico: "cal" }); pop(c0, tTask);
+  const k1 = chip("FIX A BUG", W * 0.07, H * 0.73, { ico: "search", solid: true, c: PAL.cyan }); pop(k1, tBug);
+  const k2 = chip("RUN A COMMAND", W * 0.07, H * 0.8, { ico: "code", solid: true, c: PAL.cyan }); pop(k2, tCmd);
+  const rl = rail("THE PROBLEM", "hundreds of <b>small tasks</b>", 0.5);
+
+  // costly AI: server photo replaces the developer, bill counts up, shock
+  [nT, c0].forEach((e) => out(e, tCost - 0.6));
+  const h2 = rehead(h1, "Big AI = <em>big bill</em>", "ప్రతి పనికి costly AI వాడితే bill shock", tCost - 0.3, { kick: "THE PROBLEM", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const ai = card({ i: "bigai", x: W * 0.07, y: H * 0.2, w: W * 0.86, h: H * 0.32 }); pop(ai, tCost - 0.3, { x: u * 8, opacity: 0 }, 0.6); out(dv, tCost);
+  const tot = place(mk("div", "tot", undefined, "$0"), W * 0.07, H * 0.55); count(tot, 0, 948, tCost + 0.3, 1.6, (v) => "$" + Math.round(v)); pop(tot, tCost, { opacity: 0 }, 0.3);
+  const sh = chip("BILL SHOCK!", W * 0.55, H * 0.6, { ico: "dollar", solid: true, c: PAL.red }); pop(sh, tShock, { scale: 0.5, opacity: 0 }, 0.5, E.pop);
+  const hg = card({ i: "hourglass", x: W * 0.62, y: H * 0.68, w: W * 0.3, h: H * 0.17, rot: 3 }); pop(hg, tWait - 0.4, { scale: 0.8, opacity: 0 }, 0.5);
+  const wt = chip("WAITING...", W * 0.07, H * 0.86, { ico: "clock", c: PAL.damber }); pop(wt, tWait);
+  railSet(rl, tCost, "every task &rarr; <b>costly AI</b> &middot; bill + wait");
+
+  // the fix: everything dims, H tile drops in
+  [ai, tot, sh, hg, wt, k1, k2].forEach((e) => out(e, tProb - 0.3));
+  const h3 = rehead(h2, "Google's <em>fix</em>", "సరిగ్గా ఈ problem కే Google solution", tProb - 0.1, { kick: "THE FIX", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const gl = logo("google", W * 0.3, H * 0.22, W * 0.4, H * 0.06); pop(gl, tGo, { opacity: 0 }, 0.4);
+  const ht = tile("H", 1, "Hydrogen", W * 0.27, H * 0.32, W * 0.46, PAL.cyan, { mass: "GEMINI 4" }); pop(ht, tHy - 0.6, { y: -H * 0.3, opacity: 0 }, 0.8, E.pop);
+  const f1 = chip("FAST", W * 0.18, H * 0.66, { ico: "bolt", solid: true, c: PAL.green }); pop(f1, tHy);
+  const f2 = chip("CHEAP", W * 0.52, H * 0.66, { ico: "dollar", solid: true, c: PAL.damber }); pop(f2, tHy + 0.2);
+  const f3 = chip("DAILY DRIVER", W * 0.3, H * 0.74, { ico: "route", c: PAL.cyan }); pop(f3, tHy + 0.4);
+  railSet(rl, tHy - 0.3, "the answer: <b>Gemini 4 Hydrogen</b>");
+  X.done();
+</script></body></html>

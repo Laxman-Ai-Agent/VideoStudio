@@ -1,0 +1,8 @@
+{
+ "name": "gh_l12_other_side",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L12 (171.4-199.7 s): the other side: hype card flips to catch; Agent Arena leaderboard (Hydrogen #5); numbers come from Google + partners, independent reviews pending; 94% honesty on own test -> be careful"
+}

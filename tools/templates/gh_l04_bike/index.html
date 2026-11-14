@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L04 (57.3-66.5 s): sports car (weekend = Carbon) vs scooter (every day = Hydrogen); Mon-Fri strip ticks under the bike; "daily driver" */
+.vs { position: absolute; width: calc(var(--u) * 8); height: calc(var(--u) * 8); border-radius: 50%; background: #101828; color: #fff; display: flex; align-items: center; justify-content: center;
+  font: 800 calc(var(--u) * 3) var(--font-head); box-shadow: 0 calc(var(--u)) calc(var(--u) * 2.4) #10182844; }
+.wk { position: absolute; display: flex; gap: calc(var(--u) * .8); }
+.wk div { width: calc(var(--u) * 6.2); height: calc(var(--u) * 7.4); border-radius: calc(var(--u)); background: #fff; box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #10182820;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .5); font: 700 calc(var(--u) * 1.6) var(--font-script); color: #526070; letter-spacing: .1em; }
+.wk div i { width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: 50%; background: #22C55E; display: flex; align-items: center; justify-content: center; }
+.wk div i svg { width: 70%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tWe = at("weekend", 0.3), tCar = at("car", 1.4), tOff = at("office", 2.9), tBike = at("bike", 3.6), tDaily = at("daily", 4.5), tBike2 = at("bike2", 6.0), tDD = at("driver", 7.2);
+  cam(0, D, 1.04, u * 1);
+
+  const h1 = head("Sports car vs <em>bike</em>", "Weekend sports car ఒకటి, రోజూ office bike ఒకటి", 0.1, { kick: "ANALOGY", x: W * 0.05, y: H * 0.06, w: W * 0.7 });
+  const cw = W * 0.38, ch = H * 0.42, cy = H * 0.3;
+  const car = card({ i: "car", x: W * 0.05, y: cy, w: cw, h: ch, rot: -2 }); pop(car, tCar - 0.5, { x: -u * 6, opacity: 0, rotation: -6 }, 0.7);
+  const c1 = chip("WEEKEND ONLY", W * 0.06, H * 0.76, { ico: "cal", c: PAL.red }); pop(c1, tWe + 0.4);
+  const t1 = tile("C", 6, "Carbon", W * 0.36, H * 0.74, W * 0.06, PAL.coal); flipIn(t1, tCar + 0.2, 0.6);
+  const vs = place(mk("div", "vs", undefined, "VS"), W * 0.5 - u * 4, H * 0.46); pop(vs, tOff - 0.4, { scale: 0.3, opacity: 0 }, 0.5, E.pop);
+  const bk = card({ i: "bike", x: W * 0.57, y: cy, w: cw, h: ch, rot: 2 }); pop(bk, tBike - 0.5, { x: u * 6, opacity: 0, rotation: 6 }, 0.7);
+  const c2 = chip("EVERY DAY TO OFFICE", W * 0.58, H * 0.76, { ico: "route", c: PAL.cyan }); pop(c2, tOff);
+  const t2 = tile("H", 1, "Hydrogen", W * 0.88, H * 0.74, W * 0.06, PAL.cyan); flipIn(t2, tBike + 0.2, 0.6);
+  const rl = rail("DAILY DRIVER", "<b>sports car</b> = weekend &middot; <b>bike</b> = every day", 0.5);
+
+  // daily work runs on the bike: car fades back, bike grows, Mon-Fri ticks
+  tl.to(car, { opacity: 0.35, scale: 0.9, filter: "grayscale(1)", duration: 0.7, ease: E.soft }, tDaily - 0.2);
+  tl.to([c1, t1], { opacity: 0.35, duration: 0.7 }, tDaily - 0.2);
+  tl.to(bk, { scale: 1.06, duration: 0.8, ease: E.io }, tDaily - 0.2);
+  const wk = place(mk("div", "wk"), W * 0.58, H * 0.14);
+  ["MON", "TUE", "WED", "THU", "FRI"].forEach((d, i) => { const c = mk("div", "", wk, `${d}<i>${ico("check", "#fff")}</i>`); pop(c, tDaily + i * 0.15, { y: -u * 2, opacity: 0 }, 0.35); });
+  out(h1, tDaily - 0.3, { y: -u * 2 });
+  const h2 = head("The <em>daily driver</em>", "Google daily driver అన్నది ఈ meaning లోనే", tDD - 0.4, { kick: "MEANING", x: W * 0.05, y: H * 0.06, w: W * 0.5 });
+  const eq = chip("HYDROGEN = THE BIKE", W * 0.5 - u * 14, H * 0.88, { ico: "check", solid: true, c: PAL.cyan }); pop(eq, tDD, { y: u * 2, opacity: 0 }, 0.4);
+  railSet(rl, tBike2, "daily work runs on <b>the bike</b> &middot; Hydrogen");
+  X.done();
+</script></body></html>

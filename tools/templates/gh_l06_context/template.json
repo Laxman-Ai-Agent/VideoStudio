@@ -1,0 +1,8 @@
+{
+ "name": "gh_l06_context",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L06 (81.5-99 s): 1M-token window fills, project files fly in, FLAT RATE (small input = big input price), Carbon vs Hydrogen price bars"
+}

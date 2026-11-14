@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L05 (66.5-81.5 s): is it cheap? price tags $1.50 input / $7.50 output per 1M tokens with a token counter; what is a token: a sentence splits into token chips */
+.coin { position: absolute; width: calc(var(--u) * 6); height: calc(var(--u) * 6); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFD976, #F5A524 60%, #C9821A);
+  color: #7A4A00; display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 3) var(--font-head); box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.4) #10182830; }
+.pc { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182826; padding: calc(var(--u) * 2.4); }
+.pc b { display: block; font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #526070; }
+.pc .v { font: 800 calc(var(--u) * 11) var(--font-head); line-height: 1.05; letter-spacing: -.03em; color: var(--c); }
+.pc .k { font: 700 calc(var(--u) * 2.2) var(--font-script); color: #101828; letter-spacing: .06em; }
+.sent { position: absolute; display: flex; flex-wrap: wrap; gap: calc(var(--u) * .7); }
+.sent span { padding: calc(var(--u) * .9) calc(var(--u) * 1.3); border-radius: calc(var(--u) * .8); font: 700 calc(var(--u) * 3.6) var(--font-script); color: #101828; background: var(--c); }
+.ctr { position: absolute; font: 800 calc(var(--u) * 3.4) var(--font-head); color: #101828; letter-spacing: .02em; }
+.ctr small { display: block; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #526070; letter-spacing: .14em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky"); bg("mint", 0.1);
+  const tCh = at("cheap", 1.3), tGo = at("google", 2.4), tM1 = at("million", 3.9), tIn = at("input", 4.2), tP1 = at("p1", 5.2), tOut = at("output", 7.5), tP2 = at("p2", 8.5),
+        tTok = at("token", 10.4), tAI = at("ai", 12.4), tRd = at("read", 12.6), tWr = at("write", 13.2), tTx = at("text", 13.5), tSm = at("small", 14.1);
+  cam(0, 10, 1.035);
+
+  const h1 = head("Is it really <em>cheap</em>?", "మరి ఇది నిజంగా cheap గా ఉందా?", 0.1, { kick: "PRICE", x: W * 0.05, y: H * 0.07, w: W * 0.56 });
+  const coins = [[0.66, 0.16], [0.78, 0.1], [0.88, 0.2], [0.72, 0.3], [0.84, 0.34]].map(([fx, fy], i) => { const c = place(mk("div", "coin", undefined, "$"), W * fx, H * fy);
+    pop(c, tCh - 0.2 + i * 0.1, { y: -u * 8, opacity: 0, rotation: -40 }, 0.6, E.pop); tl.to(c, { y: u * 1.5, rotation: 10, duration: 1.2, yoyo: true, repeat: 1, ease: E.soft }, tCh + 0.6); return c; });
+  const rl = rail("PRICE", "per <b>1 million tokens</b> &middot; Google's pricing", 0.5);
+
+  // two price cards + token counter
+  const src = chip("GOOGLE PRICING", W * 0.05, H * 0.3, { ico: "dollar", c: PAL.damber }); pop(src, tGo);
+  coins.forEach((c, i) => out(c, tM1 - 0.6 + i * 0.05, { y: -u * 3 }));
+  const ct = place(mk("div", "ctr", undefined, "0<small>TOKENS</small>"), W * 0.72, H * 0.18); pop(ct, tM1 - 0.3, { y: u * 2, opacity: 0 }, 0.4);
+  count(ct.firstChild, 0, 1000000, tM1 - 0.2, 1.2, (v) => Math.round(v).toLocaleString("en-US"));
+  const pw = W * 0.4, ph = H * 0.3, py = H * 0.42;
+  const p1 = place(mk("div", "pc", undefined, `<b>INPUT</b><div class="v">$0</div><div class="k">PER 1M TOKENS &middot; WHAT AI READS</div>`), W * 0.05, py, pw, ph); p1.style.setProperty("--c", PAL.cyan);
+  pop(p1, tIn - 0.3, { y: u * 5, opacity: 0 }, 0.6); count(p1.querySelector(".v"), 0, 1.5, tP1 - 0.2, 1.0, (v) => "$" + v.toFixed(2));
+  const p2 = place(mk("div", "pc", undefined, `<b>OUTPUT</b><div class="v">$0</div><div class="k">PER 1M TOKENS &middot; WHAT AI WRITES</div>`), W * 0.55, py, pw, ph); p2.style.setProperty("--c", PAL.damber);
+  pop(p2, tOut - 0.3, { y: u * 5, opacity: 0 }, 0.6); count(p2.querySelector(".v"), 0, 7.5, tP2 - 0.2, 1.0, (v) => "$" + v.toFixed(2));
+  railSet(rl, tP1, "input <b>$1.50</b> &middot; output <b>$7.50</b> &middot; per 1M tokens");
+
+  // what is a token: prices shrink up-right, a sentence splits into coloured token chips
+  out(src, tTok - 0.6); out(ct, tTok - 0.6);
+  fit(p1, tTok - 0.5, W * 0.6, H * 0.08, W * 0.17, H * 0.2); fit(p2, tTok - 0.4, W * 0.79, H * 0.08, W * 0.17, H * 0.2);
+  tl.to([p1.querySelector(".v"), p2.querySelector(".v")], { fontSize: u * 4.4, duration: 0.6, ease: E.io }, tTok - 0.5);
+  tl.to([p1.querySelector(".k"), p2.querySelector(".k")], { opacity: 0, duration: 0.3 }, tTok - 0.5);
+  const h2 = rehead(h1, "What is a <em>token</em>?", "AI చదివే, రాసే text లోని small pieces", tTok - 0.2, { kick: "SIMPLE", x: W * 0.05, y: H * 0.07, w: W * 0.52 });
+  const st = place(mk("div", "sent"), W * 0.05, H * 0.44, W * 0.9);
+  const cols = ["#BFEAF8", "#FDE7B0", "#CFF5DC", "#E2DCF3", "#FBD5D5", "#BFEAF8", "#FDE7B0", "#CFF5DC"];
+  [["AI", tAI], [" reads", tRd], [" and", tRd + 0.3], [" writes", tWr], [" text", tTx], [" in", tTx + 0.2], [" small", tSm], [" pieces", tSm + 0.25]].forEach(([w, t], i) => {
+    const e = mk("span", "", st, w); e.style.setProperty("--c", cols[i]); pop(e, t, { y: u * 3, opacity: 0, scale: 0.8 }, 0.4, E.pop); });
+  const lb = chip("1 TOKEN ~ 1 SMALL PIECE OF TEXT", W * 0.05, H * 0.66, { ico: "file", solid: true, c: PAL.cyan }); pop(lb, tSm + 0.3);
+  const ai = tile("H", 1, "Hydrogen", W * 0.82, H * 0.6, W * 0.09, PAL.cyan); flipIn(ai, tAI - 0.3, 0.6);
+  line([[W * 0.8, H * 0.67], [W * 0.62, H * 0.52]], tRd, 0.6, PAL.cyan, u * 0.3);
+  railSet(rl, tTok, "<b>token</b> = a small piece of text AI reads or writes");
+  X.done();
+</script></body></html>

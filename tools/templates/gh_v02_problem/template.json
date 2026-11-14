@@ -1,0 +1,8 @@
+{
+ "name": "gh_v02_problem",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 9x16; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 V02 9:16 (9.5-25.2 s): developer photo + task stack (bug / command), big costly AI photo + bill count-up, wait hourglass, Hydrogen drops in as the fix"
+}

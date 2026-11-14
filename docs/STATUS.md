@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-10. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
+Updated 2026-11-14. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
@@ -11,7 +11,14 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - Not verified by eye: animations / spinner / Play (the browser pane clock is paused when hidden); layer drag, resize, rotate were checked with the save request stubbed, so the full save -> rebuild -> reload round trip is untested by me.
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
-## 05_Nvidia_CEO_Exit (2026-11-13) - NEXT SESSION FIRST
+
+## 06_Gemini_Hydrogen (2026-11-14) - NEXT SESSION FIRST
+- Paired topic (Gemini 4 Hydrogen, Google's cheap fast "daily driver" model): `projects/06_Gemini_Hydrogen/{16x9,9x16}`, mode light-documentary (user pick), user rules: every frame dense (text + graphics + motion, no blank areas); AI images photorealistic from Kaggle (never light 3D). Shared `theme.json` (element lab: Sora + Baloo Tammudu 2 + Space Grotesk, hydrogen cyan / amber; max 20% alike 04).
+- Done: inputs moved, 16x9 3 mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; align_mms -> `input/gemini_corrected.json`; `scripts/make_transcript.py`, `make_sequences.py` (beats = code defaults, scene-relative), `render_samples.py`; kit `tools/templates/lab_kit`; sequences gh_l01..l14 + gh_v01..v05; logos `assets/logos`, Kaggle images `assets/ai` (prompts `work/kaggle_images.json`, sources `assets/sources.json`); 480p previews `<fmt>/output/preview_<fmt>.mp4` with beat-frame QA fixes.
+- Next: user's notes on the previews -> fix only those sequences; 1080p finals on the user's word -> `06_Gemini_Hydrogen_16x9.mp4` / `_9x16.mp4`; then `DarkWorld/README.md` (copy 05's `scripts/make_darkworld.py`). Music: still `calm/mars_background.mp3` (ask for a new track).
+- docs/CHANGELOG.md is ~430 lines: split (e.g. CHANGELOG_2026-11a.md) before it passes 450.
+
+## 05_Nvidia_CEO_Exit (2026-11-13) - closed
 - Paired topic (Jensen Huang resigns as NVIDIA CEO): `projects/05_Nvidia_CEO_Exit/{16x9,9x16}`, mode light-documentary (user pick), user rule: REAL photos + news screenshots, no AI images. Shared `theme.json` (news desk on paper: Archivo Black + Hind Guntur + Archivo Narrow, NVIDIA green / alert red / yellow marker, captions off; 19% max alike).
 - Done: inputs moved (`<fmt>/input/original/`), 16x9 3 mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; Gemini JSON aligned -> `scripts/make_transcript.py` (no Whisper); real photos / logos / screenshots via asset-collector -> `assets/` (licenses + urls in `assets/sources.json`; Kress, keynote, Blackwell, screenshots are copyright: credit); kit `tools/templates/news_kit` (cards never cropped, browser-frame screenshots + marker / zoom, stamps, calendar, quote); sequences nv_l01..l14 + nv_v01..v05 (`scripts/make_sequences.py 16x9|9x16`); samples via `scripts/render_samples.py`; plan.md approved.
 - Lessons: beat words match by substring (gold -> Goldman, Nvidia's first mention) -> use (word, nth); kit pop() set x:0 and wiped CSS translateX(-50%) centring (fixed: only animated keys reset). Music: library auto-picks `calm/mars_background.mp3` (16x9 true peak -0.9 dBTP QA fail); ask the user for a news track.

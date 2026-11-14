@@ -1,0 +1,8 @@
+{
+ "name": "gh_l05_price",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L05 (66.5-81.5 s): is it cheap? price tags $1.50 input / $7.50 output per 1M tokens with a token counter; what is a token: a sentence splits into token chips"
+}

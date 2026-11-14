@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L14 (230.2 s-end): the AI race is not won by the smartest alone; crores of tasks -> enough brains + speed + low price = workhorse (trophy to H); Google's bet; your pick: costly power vs fast + cheap; comment box + like */
+.chk { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.2); font: 800 calc(var(--u) * 3.2) var(--font-head); color: #101828; white-space: nowrap; }
+.chk i { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); border-radius: 50%; background: var(--c); display: flex; align-items: center; justify-content: center; }
+.chk i svg { width: 60%; }
+.opt { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; border-top: calc(var(--u) * .8) solid var(--c);
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: calc(var(--u) * 2.4); font: 800 calc(var(--u) * 3) var(--font-head); color: #101828; text-align: center; }
+.opt small { font: 700 calc(var(--u) * 1.9) var(--font-script); color: #526070; letter-spacing: .1em; margin-top: calc(var(--u) * .6); }
+.vs { position: absolute; width: calc(var(--u) * 8); height: calc(var(--u) * 8); border-radius: 50%; background: #101828; color: #fff; display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 3) var(--font-head); }
+.cbox { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182826; padding: calc(var(--u) * 1.6) calc(var(--u) * 2); }
+.cbox b { display: block; font: 700 calc(var(--u) * 1.7) var(--font-script); color: #526070; letter-spacing: .12em; margin-bottom: calc(var(--u)); }
+.cbox .ctx { font: 700 calc(var(--u) * 2.6) var(--font-script); color: #101828; border-bottom: 2px solid #12A4D9; padding-bottom: calc(var(--u) * .6); min-height: 1.3em; }
+.cur { display: inline-block; width: .5em; height: 1em; background: #12A4D9; vertical-align: -.12em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tRace = at("race", 1.9), tMost = at("most", 3.4), tCr = at("crores", 6.0), tInt = at("intel", 8.4), tSp = at("speed", 9.5), tPr = at("price", 10.5), tWh = at("workhorse", 11.8), tHy = at("hydro", 12.9),
+        tBet = at("bet", 14.3), tDaily = at("daily", 16.2), tCost = at("costly", 18.0), tFast = at("fast", 21.0), tCheap = at("cheap", 21.6), tOp = at("opinion", 24.5), tCom = at("comment", 25.3), tLike = at("like", 27.0);
+  cam(0, 12, 1.03);
+
+  // A. the AI race: big C tile vs small H tile on a track; "not always the smartest"
+  const h1 = head("Who wins the <em>AI race</em>?", "AI race లో win అయ్యేది ఎప్పుడూ most intelligent model మాత్రమే కాదు", 0.1, { kick: "THE BIG PICTURE", x: W * 0.05, y: H * 0.07, w: W * 0.66 });
+  const trk = line([[W * 0.06, H * 0.78], [W * 0.94, H * 0.78]], 0.4, 0.8, "#10182830", u * 0.5);
+  const tc = tile("C", 6, "Carbon", W * 0.1, H * 0.42, W * 0.15, PAL.coal); flipIn(tc, tRace - 0.4);
+  const ht = tile("H", 1, "Hydrogen", W * 0.3, H * 0.56, W * 0.1, PAL.cyan); flipIn(ht, tRace - 0.2);
+  const nm = chip("NOT ALWAYS THE SMARTEST", W * 0.5, H * 0.46, { ico: "brain", c: PAL.coal }); pop(nm, tMost);
+  const rl = rail("THE BOTTOM LINE", "the <b>AI race</b> &middot; who really wins?", 0.5);
+
+  // B. crores of tasks counter; three checks; H runs ahead and gets the trophy
+  const cn = num(W * 0.5, H * 0.36, PAL.cyan, 9); count(cn, 0, 10000000, tCr - 0.2, 1.4, (v) => Math.round(v).toLocaleString("en-IN") + "+"); pop(cn, tCr - 0.3, { y: u * 2, opacity: 0 }, 0.4);
+  out(nm, tCr - 0.4);
+  const tk = chip("TASKS EVERY DAY", W * 0.5, H * 0.29, { ico: "cal", c: PAL.cyan }); pop(tk, tCr);
+  const ch = [["ENOUGH BRAINS", "check", PAL.cyan, tInt], ["MORE SPEED", "bolt", PAL.green, tSp], ["LOWER PRICE", "dollar", PAL.damber, tPr]].map(([t, i, c, at0], k) => {
+    const e = place(mk("div", "chk", undefined, `<i>${ico(i, "#fff")}</i>${t}`), W * 0.5, H * 0.52 + k * u * 6.4); e.style.setProperty("--c", c); pop(e, at0, { x: u * 3, opacity: 0 }, 0.4); return e; });
+  tl.to(ht, { left: W * 0.36, top: H * 0.5, duration: 0.8, ease: E.io }, tWh - 0.6);
+  tl.to(tc, { opacity: 0.4, duration: 0.6 }, tWh - 0.6);
+  const tr = card({ i: "trophy", x: W * 0.32, y: H * 0.18, w: W * 0.16, h: H * 0.28 }); pop(tr, tWh - 0.3, { y: -u * 6, opacity: 0 }, 0.6, E.pop);
+  const wh = chip("REAL WORKHORSE", W * 0.3, H * 0.86, { ico: "trophy", solid: true, c: PAL.damber }); pop(wh, tWh);
+  const bt = chip("GOOGLE'S BET", W * 0.5, H * 0.74, { ico: "star", solid: true, c: PAL.cyan }); pop(bt, tBet);
+  railSet(rl, tCr, "enough brains + <b>speed</b> + <b>low price</b> = the real workhorse");
+
+  // C. your pick: costly power vs fast + cheap
+  [trk, tc, ht, cn, tk, ...ch, tr, wh, bt].forEach((e, i) => out(e, tDaily - 0.7 + i * 0.02, { y: u * 2 }));
+  const h2 = rehead(h1, "What would <em>you</em> use?", "మీ daily coding కోసం ఏది వాడతారు?", tDaily - 0.3, { kick: "YOUR PICK", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const ow = W * 0.36, oh = H * 0.5;
+  const o1 = place(mk("div", "opt", undefined, `COSTLY + MOST POWERFUL<small>Carbon-type big model</small>`), W * 0.06, H * 0.3, ow, oh); o1.style.setProperty("--c", PAL.coal); pop(o1, tDaily + 0.2, { x: -u * 5, opacity: 0 }, 0.5);
+  const t1 = tile("C", 6, "Carbon", W * 0.06 + ow / 2 - W * 0.055, H * 0.35, W * 0.11, PAL.coal); flipIn(t1, tCost);
+  const vs = place(mk("div", "vs", undefined, "VS"), W * 0.5 - u * 4, H * 0.5); pop(vs, tCost + 1.2, { scale: 0.3, opacity: 0 }, 0.5, E.pop);
+  const o2 = place(mk("div", "opt", undefined, `FAST + CHEAP<small>Hydrogen is enough?</small>`), W * 0.58, H * 0.3, ow, oh); o2.style.setProperty("--c", PAL.cyan); pop(o2, tDaily + 0.5, { x: u * 5, opacity: 0 }, 0.5);
+  const t2 = tile("H", 1, "Hydrogen", W * 0.58 + ow / 2 - W * 0.055, H * 0.35, W * 0.11, PAL.cyan); flipIn(t2, tCheap);
+  railSet(rl, tCost, "<b>costly power</b> or <b>fast + cheap</b>? tell us");
+
+  // D. comment box types an answer, like
+  [o1, o2, t1, t2, vs].forEach((e) => tl.to(e, { y: -H * 0.05, scale: 0.78, duration: 0.7, ease: E.io }, tOp - 0.4));
+  const cb = place(mk("div", "cbox", undefined, `<b>ADD A COMMENT</b><div class="ctx"></div>`), W * 0.2, H * 0.74, W * 0.6); pop(cb, tOp - 0.2, { y: u * 4, opacity: 0 }, 0.5);
+  const txt = "Hydrogen is enough for my daily work ", tx = cb.querySelector(".ctx"), o = { v: 0 };
+  tl.to(o, { v: txt.length, duration: 1.6, ease: "none", onUpdate: () => { tx.innerHTML = txt.slice(0, Math.round(o.v)) + '<span class="cur"></span>'; } }, tCom);
+  const lk = chip("LIKE", W * 0.82, H * 0.78, { ico: "thumb", solid: true, c: PAL.cyan }); pop(lk, tLike - 0.2, { scale: 0.4, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tOp, "comment your <b>opinion</b> &middot; <b>like</b> the video");
+  X.done();
+</script></body></html>

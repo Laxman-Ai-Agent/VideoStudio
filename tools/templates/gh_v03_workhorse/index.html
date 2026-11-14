@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 V03 9:16 (25.2-48.7 s): not the smartest, the workhorse (scooter photo); Terminal-Bench bars 18.2% vs 57%; price $1.50 per 1M input tokens */
+.pc { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 3); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #10182826; padding: calc(var(--u) * 4); text-align: center; }
+.pc b { display: block; font: 700 calc(var(--u) * 3.4) var(--font-script); letter-spacing: .14em; color: #526070; }
+.pc .v { font: 800 calc(var(--u) * 24) var(--font-head); color: #12A4D9; letter-spacing: -.03em; line-height: 1.1; }
+.pc .k { font: 700 calc(var(--u) * 3.6) var(--font-script); color: #101828; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky"); bg("lilac", 6.5); bg("mint", 18.3);
+  const tMost = at("most", 1.5), tDaily = at("daily", 3.7), tFast = at("fast", 4.6), tWh = at("workhorse", 6.1), tTB = at("tb", 7.0), tFl = at("flash", 10.7), t18 = at("p18", 11.5), tHy = at("hydro", 13.8),
+        t57 = at("p57", 14.9), tSur = at("surprise", 17.2), tPr = at("price", 18.8), tM = at("million", 19.8), t150 = at("p150", 21.4);
+  cam(0, 6, 1.04);
+
+  const h1 = head("Not the <em>smartest</em>", "Google దగ్గర ఉన్న most intelligent model కాదు", 0.1, { kick: "GEMINI 4 HYDROGEN", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const no = chip("NOT #1 BRAIN", W * 0.07, H * 0.24, { ico: "x", solid: true, c: PAL.red }); pop(no, tMost);
+  const bk = card({ i: "bike", x: W * 0.07, y: H * 0.32, w: W * 0.86, h: H * 0.34 }); pop(bk, tDaily - 0.4, { y: u * 5, opacity: 0 }, 0.6);
+  const c1 = chip("DAILY TASKS", W * 0.07, H * 0.7, { ico: "cal" }); pop(c1, tDaily);
+  const c2 = chip("FAST", W * 0.5, H * 0.7, { ico: "bolt", solid: true, c: PAL.green }); pop(c2, tFast);
+  const wh = chip("REAL WORKHORSE", W * 0.07, H * 0.78, { ico: "trophy", solid: true, c: PAL.cyan }); pop(wh, tWh - 0.2, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  const rl = rail("GEMINI 4 HYDROGEN", "not the smartest &middot; <b>the workhorse</b>", 0.5);
+
+  // Terminal-Bench vertical bar race
+  [no, bk, c1, c2, wh].forEach((e) => out(e, tTB - 0.6, { y: u * 3 }));
+  const h2 = rehead(h1, "<em>Terminal-Bench</em>", "tough coding test", tTB - 0.3, { kick: "BENCHMARK", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const tm = term("terminal-bench", W * 0.07, H * 0.15, W * 0.86, H * 0.11); pop(tm, tTB, { y: u * 3, opacity: 0 }, 0.5);
+  type(tm, tTB + 0.3, '<span class="p">$</span> tb run <span class="dim">--hard</span>');
+  const base = H * 0.76, hm = H * 0.42;
+  const tf = tile("F", "3.8", "Flash", W * 0.14, H * 0.8, W * 0.18, PAL.coal); flipIn(tf, tTB + 0.6, 0.5);
+  const b1 = vbar("", W * 0.12, base, W * 0.22, hm, 18.2 / 60, PAL.coal, t18 - 0.4, 0.8, "18.2%");
+  const tH = tile("H", 1, "Hydrogen", W * 0.62, H * 0.8, W * 0.18, PAL.cyan); flipIn(tH, tTB + 0.9, 0.5);
+  const b2 = vbar("", W * 0.6, base, W * 0.22, hm, 57 / 60, PAL.cyan, t57 - 0.4, 1.0, "57%");
+  const n3 = chip("3X+ MORE", W * 0.3, H * 0.28, { ico: "up", solid: true, c: PAL.amber }); pop(n3, tSur - 0.4, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, t18, "3.8 flash <b>18.2%</b> &middot; hydrogen <b>57%</b>");
+
+  // price card
+  [tf, b1, tH, b2, n3, tm].forEach((e) => out(e, tPr - 0.6, { y: u * 3 }));
+  const h3 = rehead(h2, "And it's <em>cheap</em>", "price కూడా చాలా తక్కువ", tPr - 0.3, { kick: "PRICE", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const pc = place(mk("div", "pc", undefined, `<b>INPUT PRICE</b><div class="v">$0</div><div class="k">per 1 million tokens</div>`), W * 0.07, H * 0.3, W * 0.86); pop(pc, tPr, { y: u * 5, opacity: 0 }, 0.5);
+  count(pc.querySelector(".v"), 0, 1.5, t150 - 0.3, 1.0, (v) => "$" + v.toFixed(2));
+  const tk = chip("1,000,000 TOKENS", W * 0.07, H * 0.62, { ico: "file" }); pop(tk, tM);
+  const cd = card({ i: "code", x: W * 0.07, y: H * 0.7, w: W * 0.86, h: H * 0.2 }); pop(cd, tM + 0.3, { y: u * 4, opacity: 0 }, 0.5);
+  const ch = chip("ONLY $1.50", W * 0.55, H * 0.62, { ico: "dollar", solid: true, c: PAL.damber }); pop(ch, t150 + 0.6);
+  railSet(rl, tPr, "input <b>$1.50</b> per 1M tokens");
+  X.done();
+</script></body></html>

@@ -1,0 +1,61 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L10 (137.3-151.2 s): growth arrow 18.2 -> 57 (3x), trophy "big achievement"; speed: gauge needle + race lanes, Hydrogen finishes 2.5x faster at high thinking */
+.lane { position: absolute; height: calc(var(--u) * 7); border-radius: 99px; background: #10182810; }
+.lane .fin { position: absolute; right: calc(var(--u) * 1.5); top: 15%; bottom: 15%; width: calc(var(--u) * 1.2);
+  background: repeating-linear-gradient(0deg, #101828 0 calc(var(--u) * 1.2), #fff calc(var(--u) * 1.2) calc(var(--u) * 2.4)); border-radius: 2px; }
+.lane .lb { position: absolute; left: 0; bottom: 100%; margin-bottom: calc(var(--u) * .5); font: 700 calc(var(--u) * 2) var(--font-script); color: #101828; letter-spacing: .06em; }
+.run { position: absolute; top: calc(var(--u) * .6); width: calc(var(--u) * 5.8); height: calc(var(--u) * 5.8); border-radius: 50%; background: var(--c); color: #fff;
+  display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 2.6) var(--font-head); box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #10182840; }
+.gz { position: absolute; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("lilac"); bg("sky", 5.6);
+  const tCh = at("cheap", 1.8), t3 = at("three", 2.6), tGrow = at("grow", 3.7), tBig = at("big", 4.9), tSp = at("speed", 6.0), tHigh = at("high", 7.7), tFl = at("flash", 9.4),
+        t25 = at("two", 10.7), tFast = at("fast", 11.7), tGo = at("google", 13.1);
+  cam(0, 6, 1.035);
+
+  // A. growth: two bars + curved arrow, 3x, trophy card
+  const h1 = head("A <em>3x</em> jump", "చిన్న cheap model three times grow అవ్వడం", 0.1, { kick: "BENCHMARK", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const base = H * 0.82, hm = H * 0.45;
+  const b1 = vbar("3.8 FLASH", W * 0.1, base, W * 0.08, hm, 18.2 / 60, PAL.coal, 0.3, 0.7, "18.2%");
+  const b2 = vbar("HYDROGEN", W * 0.26, base, W * 0.08, hm, 57 / 60, PAL.cyan, tCh - 0.3, 1.0, "57%");
+  const ar = line([[W * 0.15, base - hm * 0.36], [W * 0.2, base - hm * 0.75], [W * 0.27, base - hm * 1.02]], t3 - 0.3, 0.8, PAL.amber, u * 0.6);
+  const n3 = num(W * 0.38, H * 0.36, PAL.amber, 15); count(n3, 1, 3.1, t3, 1.0, (v) => v.toFixed(1) + "x"); pop(n3, t3, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  const gr = chip("SCORE GREW 3X+", W * 0.38, H * 0.6, { ico: "up", solid: true, c: PAL.green }); pop(gr, tGrow);
+  const tr = card({ i: "trophy", x: W * 0.64, y: H * 0.22, w: W * 0.3, h: H * 0.5 }); pop(tr, tBig - 0.4, { y: u * 5, opacity: 0, scale: 0.9 }, 0.6, E.pop);
+  const ba = chip("BIG ACHIEVEMENT", W * 0.68, H * 0.76, { ico: "trophy", c: PAL.damber }); pop(ba, tBig);
+  const rl = rail("BENCHMARK", "cheap model &middot; <b>3x+ growth</b> &middot; big achievement", 0.5);
+
+  // B. speed: gauge + race lanes
+  [b1, b2, ar, n3, gr, tr, ba].forEach((e, i) => out(e, tSp - 0.6 + i * 0.03, { y: u * 2 }));
+  const h2 = rehead(h1, "<em>2.5x</em> faster", "3.8 Flash కంటే దాదాపు two point five times fast", tSp - 0.2, { kick: "SPEED", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const R = H * 0.17, gx = W * 0.78, gy = H * 0.36;
+  const gz = place(mk("div", "gz", undefined, `<svg width="${R * 2.4}" height="${R * 1.5}" style="overflow:visible"><path d="M${R * 0.2} ${R * 1.3} A ${R} ${R} 0 0 1 ${R * 2.2} ${R * 1.3}" fill="none" stroke="#10182814" stroke-width="${u * 2}" stroke-linecap="round"/>
+    <path class="arc" d="M${R * 0.2} ${R * 1.3} A ${R} ${R} 0 0 1 ${R * 2.2} ${R * 1.3}" fill="none" stroke="${PAL.green}" stroke-width="${u * 2}" stroke-linecap="round"/>
+    <line class="nd" x1="${R * 1.2}" y1="${R * 1.3}" x2="${R * 1.2}" y2="${R * 0.45}" stroke="#101828" stroke-width="${u * 0.7}" stroke-linecap="round"/><circle cx="${R * 1.2}" cy="${R * 1.3}" r="${u * 1.2}" fill="#101828"/></svg>`), gx - R * 1.2, gy - R * 0.4);
+  pop(gz, tSp, { scale: 0.8, opacity: 0 }, 0.5);
+  const arc = gz.querySelector(".arc"), AL = arc.getTotalLength(); arc.style.strokeDasharray = AL;
+  tl.fromTo(arc, { strokeDashoffset: AL }, { strokeDashoffset: AL * 0.1, duration: 1.4, ease: E.in, immediateRender: true }, t25 - 0.2);
+  const nd = gz.querySelector(".nd"); gsap.set(nd, { svgOrigin: `${R * 1.2} ${R * 1.3}`, rotation: -80 });
+  tl.to(nd, { rotation: 70, duration: 1.4, ease: "back.out(1.4)" }, t25 - 0.2);
+  const hi = chip("HIGH THINKING (DEFAULT)", W * 0.05, H * 0.34, { ico: "brain", c: PAL.violet }); pop(hi, tHigh);
+  const lx = W * 0.05, lw = W * 0.58;
+  const l1 = place(mk("div", "lane", undefined, `<div class="lb">GEMINI 3.8 FLASH</div><div class="fin"></div>`), lx, H * 0.5, lw); pop(l1, tSp + 0.5, { opacity: 0, x: -u * 3 }, 0.4);
+  const l2 = place(mk("div", "lane", undefined, `<div class="lb">GEMINI 4 HYDROGEN</div><div class="fin"></div>`), lx, H * 0.68, lw); pop(l2, tSp + 0.7, { opacity: 0, x: -u * 3 }, 0.4);
+  const r1 = mk("div", "run", l1, "F"); r1.style.setProperty("--c", PAL.coal); r1.style.left = u * 0.6 + "px";
+  const r2 = mk("div", "run", l2, "H"); r2.style.setProperty("--c", PAL.cyan); r2.style.left = u * 0.6 + "px";
+  const end = lw - u * 9;
+  tl.to(r2, { left: end, duration: 1.2, ease: "power2.inOut" }, t25 - 0.2);
+  tl.to(r1, { left: end * 0.42, duration: 1.2, ease: "power2.inOut" }, t25 - 0.2); tl.to(r1, { left: end, duration: 1.8, ease: "power1.inOut" }, t25 + 1.0);
+  const fx = chip("2.5X FASTER", W * 0.66, H * 0.7, { ico: "bolt", solid: true, c: PAL.green }); pop(fx, tFast, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  const gs = chip("GOOGLE SAYS", W * 0.66, H * 0.8, { ico: "star", c: PAL.mute }); pop(gs, tGo);
+  railSet(rl, tSp, "high thinking &middot; <b>2.5x faster</b> than 3.8 Flash (Google)");
+  X.done();
+</script></body></html>

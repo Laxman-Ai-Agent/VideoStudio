@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L06 (81.5-99 s): 1M-token window fills, project files fly in, FLAT RATE (small input = big input price), Carbon vs Hydrogen price bars */
+.win { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182826; border: 2px solid #12A4D955; }
+.win .hd { display: flex; justify-content: space-between; align-items: center; padding: calc(var(--u) * 1.4) calc(var(--u) * 2); border-bottom: 1px solid #10182812;
+  font: 700 calc(var(--u) * 1.9) var(--font-script); color: #526070; letter-spacing: .14em; }
+.win .hd b { font: 800 calc(var(--u) * 3) var(--font-head); color: #0B7CA8; letter-spacing: 0; }
+.win .fill { position: absolute; left: calc(var(--u) * 2); right: calc(var(--u) * 2); bottom: calc(var(--u) * 2); height: calc(var(--u) * 1.6); border-radius: 99px; background: #10182810; overflow: hidden; }
+.win .fill i { position: absolute; inset: 0; background: linear-gradient(90deg, #12A4D9, #22C55E); transform-origin: 0 50%; border-radius: 99px; }
+.fl { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * .6); padding: calc(var(--u) * .7) calc(var(--u) * 1.2); border-radius: calc(var(--u) * .8); background: #F3F8FB;
+  border: 1px solid #10182814; font: 700 calc(var(--u) * 1.9) var(--font-script); color: #101828; white-space: nowrap; }
+.fl svg { width: calc(var(--u) * 2.2); height: calc(var(--u) * 2.2); }
+.eq { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.4); font: 800 calc(var(--u) * 3.4) var(--font-head); color: #101828; white-space: nowrap; }
+.eq .bx { background: #10182812; border-radius: calc(var(--u) * .6); height: calc(var(--u) * 3.4); }
+.eq .pr { color: #0B7CA8; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("mint");
+  const tInt = at("interesting", 0.8), tM = at("million", 3.2), tRead = at("read", 4.1), tProj = at("project", 6.1), tCode = at("code", 6.5), tBig = at("big", 8.8), tPr = at("price", 9.7),
+        tCh = at("change", 10.1), tFlat = at("flat", 11.2), tC = at("carbon", 12.1), tTwo = at("two", 12.8), tTen = at("ten", 13.6), tHy = at("hydro", 15.5), tCheap = at("cheap", 17.0);
+  cam(0, 11, 1.03);
+
+  const h1 = head("<em>1M tokens</em> at once", "ఒకేసారి one million tokens వరకు read చేయగలదు", 0.2, { kick: "CONTEXT", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const wn = place(mk("div", "win", undefined, `<div class="hd">CONTEXT WINDOW<b>0</b></div><div class="fill"><i></i></div>`), W * 0.5, H * 0.3, W * 0.45, H * 0.5);
+  pop(wn, tInt, { scale: 0.9, opacity: 0 }, 0.6);
+  for (let i = 0; i < 7; i++) { const r = place(mk("div", "", wn), u * 2, H * 0.1 + i * u * 4, (0.4 + ((i * 37) % 50) / 100) * W * 0.4, u * 1.2);
+    Object.assign(r.style, { position: "absolute", borderRadius: "99px", background: "#10182810" }); pop(r, tInt + 0.3 + i * 0.08, { scaleX: 0, opacity: 0 }, 0.4); tl.to(r, { opacity: 0, duration: 0.3 }, tProj + 0.4); }
+  count(wn.querySelector("b"), 0, 1000000, tM - 0.2, 1.4, (v) => Math.round(v).toLocaleString("en-US"));
+  const ht = tile("H", 1, "Hydrogen", W * 0.05, H * 0.36, W * 0.12, PAL.cyan); flipIn(ht, tInt + 0.3);
+  const rd = chip("READS IT ALL AT ONCE", W * 0.2, H * 0.44, { ico: "search", c: PAL.cyan }); pop(rd, tRead);
+  line([[W * 0.17, H * 0.5], [W * 0.49, H * 0.5]], tRead + 0.2, 0.6, "#12A4D980", u * 0.35);
+  const rl = rail("1M CONTEXT", "<b>1,000,000 tokens</b> in one go", 0.6);
+
+  // whole project code flies into the window, fill bar grows
+  const files = ["main.py", "api.ts", "utils.js", "db.sql", "tests.py", "auth.go", "index.html", "README.md", "config.yaml", "app.css", "server.rs", "model.py"];
+  const fs = files.map((f, i) => { const x0 = W * 0.06 + (i % 3) * W * 0.12, y0 = H * 0.62 + Math.floor(i / 3) * u * 4.6;
+    const e = place(mk("div", "fl", undefined, `${ico("file", PAL.cyan)}${f}`), x0, y0); pop(e, tProj - 0.3 + i * 0.05, { x: -u * 4, opacity: 0 }, 0.35);
+    const tx = W * 0.52 + (i % 3) * W * 0.14, ty = H * 0.4 + Math.floor(i / 3) * u * 5;
+    tl.to(e, { left: tx, top: ty, duration: 0.8, ease: E.io }, tCode + 0.2 + i * 0.06); return e; });
+  tl.fromTo(wn.querySelector("i"), { scaleX: 0 }, { scaleX: 0.92, duration: 1.4, ease: E.io, immediateRender: true }, tCode + 0.3);
+  const pj = chip("WHOLE PROJECT CODE", W * 0.06, H * 0.56, { ico: "folder", solid: true, c: PAL.cyan }); pop(pj, tProj);
+  out(rd, tProj - 0.4);
+  railSet(rl, tProj, "a whole <b>project's code</b> in one prompt");
+
+  // flat rate: small input and huge input cost the same per token
+  [pj, ht].forEach((e) => out(e, tBig - 0.5));
+  const h2 = rehead(h1, "Same <em>flat rate</em>", "అంత పెద్ద input ఇచ్చినా price change అవ్వదు", tBig - 0.2, { kick: "PRICE", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const e1 = place(mk("div", "eq", undefined, `<span>SMALL</span><span class="bx" style="width:${u * 5}px"></span><span>=</span><span class="pr">$1.50</span>`), W * 0.05, H * 0.36); pop(e1, tPr - 0.3);
+  const e2 = place(mk("div", "eq", undefined, `<span>HUGE</span><span class="bx" style="width:${u * 20}px;background:#12A4D940"></span><span>=</span><span class="pr">$1.50</span>`), W * 0.05, H * 0.46); pop(e2, tCh - 0.2);
+  const fr = chip("NO PRICE JUMP", W * 0.05, H * 0.58, { ico: "lock", solid: true, c: PAL.green }); pop(fr, tFlat, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tFlat, "big input, <b>same flat rate</b> per token");
+
+  // Carbon vs Hydrogen price bars; Hydrogen cheaper
+  fs.forEach((e) => out(e, tC - 0.6, { scale: 0.8 })); out(wn, tC - 0.5, { x: u * 4 }); [e1, e2, fr].forEach((e) => out(e, tC - 0.5, { y: u * 2 }));
+  const h3 = rehead(h2, "Carbon vs <em>Hydrogen</em>", "Carbon కంటే Hydrogen చాలా cheap", tC - 0.2, { kick: "PER 1M TOKENS", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const bx = W * 0.2, bw = W * 0.55, bh = H * 0.06, fm = (v) => "$" + v.toFixed(2);
+  const tc = tile("C", 6, "Carbon", W * 0.06, H * 0.33, W * 0.08, PAL.coal); flipIn(tc, tC - 0.2, 0.6);
+  const tH = tile("H", 1, "Hydrogen", W * 0.06, H * 0.6, W * 0.08, PAL.cyan); flipIn(tH, tHy - 0.4, 0.6);
+  hbar("CARBON INPUT", bx, H * 0.36, bw, bh, 2, 10.5, PAL.coal, tTwo, 0.8, fm);
+  hbar("CARBON OUTPUT", bx, H * 0.48, bw, bh, 10, 10.5, PAL.coal, tTen, 1.0, fm);
+  hbar("HYDROGEN INPUT", bx, H * 0.63, bw, bh, 1.5, 10.5, PAL.cyan, tHy, 0.8, fm);
+  hbar("HYDROGEN OUTPUT", bx, H * 0.75, bw, bh, 7.5, 10.5, PAL.cyan, tHy + 0.4, 1.0, fm);
+  const ch = chip("25% CHEAPER", W * 0.8, H * 0.66, { ico: "check", solid: true, c: PAL.green }); pop(ch, tCheap - 0.3, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tC, "carbon <b>$2 / $10</b> &middot; hydrogen <b>$1.50 / $7.50</b>");
+  X.done();
+</script></body></html>

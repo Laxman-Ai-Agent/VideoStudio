@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-14
+- 06_Gemini_Hydrogen: paired project (16x9 merge, 3 speeds, 1.15x, align_mms), light-documentary "element lab" look (`lab_kit`: periodic tiles, terminal typing, bar races, info rail, icons), sequences gh_l01-l14 / gh_v01-v05, 8 photorealistic Kaggle Z-Image images, 480p previews + beat-frame QA. Lessons: kit class names clash with studio.css (`.bd`, `.dim`, `.tx`, `.ln`): prefix kit classes; type() must keep numeric entities whole.
+
 ## 2026-11-13
 - 05_Nvidia_CEO_Exit 1080p finals (QA PASS), DarkWorld/README.md; keynote / Kress photos replaced (copyright) by a free photo and a name card. assemble: peak limiter after loudnorm (true peak -0.9 -> under -1 dBTP), test_assemble_peak.
 - 05_Nvidia_CEO_Exit: paired project (merge, 3 speeds, align), light-documentary news-desk look, real photos + screenshots (asset-collector), `news_kit`, sequences nv_l01-l14 / nv_v01-v05, 480p previews with beat-frame QA (fixed: substring beat matches, kit pop() wiping translateX centring, chips / stamps past the 9:16 edge, stamp re-showing after its out).

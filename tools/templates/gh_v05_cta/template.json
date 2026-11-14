@@ -1,0 +1,8 @@
+{
+ "name": "gh_v05_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 9x16; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 V05 9:16 (59.7 s-end): comment box types HYDROGEN, arrow -> FULL VIDEO link card"
+}

@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L12 (171.4-199.7 s): the other side: hype card flips to catch; Agent Arena leaderboard (Hydrogen #5); numbers come from Google + partners, independent reviews pending; 94% honesty on own test -> be careful */
+.flip { position: absolute; perspective: calc(var(--u) * 200); }
+.flip .in { position: absolute; inset: 0; transform-style: preserve-3d; }
+.flip .fc { position: absolute; inset: 0; border-radius: calc(var(--u) * 2); display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden;
+  font: 800 calc(var(--u) * 5) var(--font-head); color: #fff; box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182830; }
+.flip .fc small { font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; opacity: .85; margin-top: calc(var(--u)); }
+.flip .bk { transform: rotateY(180deg); }
+.lbd { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.8); padding: calc(var(--u) * 1.6) calc(var(--u) * 2); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; }
+.lbd h4 { margin: 0 0 calc(var(--u)); font: 800 calc(var(--u) * 2.4) var(--font-head); color: #101828; display: flex; justify-content: space-between; }
+.lbd h4 span { font: 700 calc(var(--u) * 1.6) var(--font-script); color: #526070; letter-spacing: .12em; }
+.lbd .r { display: flex; align-items: center; gap: calc(var(--u) * 1.4); height: calc(var(--u) * 5); border-top: 1px solid #10182810; font: 700 calc(var(--u) * 2.1) var(--font-script); color: #526070; }
+.lbd .r .n { width: calc(var(--u) * 3.6); font: 800 calc(var(--u) * 2.6) var(--font-head); color: #101828; }
+.lbd .r .bar { height: calc(var(--u) * 1.4); border-radius: 99px; background: #10182822; }
+.lbd .r.me { background: #12A4D914; color: #0B7CA8; border-radius: calc(var(--u)); } .lbd .r.me .bar { background: #12A4D9; } .lbd .r.me .n { color: #12A4D9; }
+.pend { position: absolute; box-sizing: border-box; border: 3px dashed #52607066; border-radius: calc(var(--u) * 2); display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(var(--u)); font: 800 calc(var(--u) * 3) var(--font-head); color: #526070; background: #ffffff99; }
+.pend svg { width: calc(var(--u) * 6); height: calc(var(--u) * 6); }
+.ring { position: absolute; }
+.ring .v { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 7) var(--font-head); color: #101828; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky"); bg("sand", 0.6);
+  const tSt = at("story", 1.3), tSide = at("side", 2.1), tAA = at("arena", 4.8), tFifth = at("fifth", 6.8), tBest = at("best", 9.2), tImp = at("important", 10.8), tGo = at("google", 13.1),
+        tPar = at("partners", 13.8), tOut = at("outside", 15.6), tRev = at("reviews", 18.0), tG2 = at("google2", 19.4), t94 = at("ninety", 20.5), tHon = at("honesty", 21.3), tOwn = at("own", 24.6),
+        tCare = at("careful", 27.5);
+  cam(0, 10, 1.03);
+
+  // A. the hype card flips to "the catch"
+  const h1 = head("The <em>other side</em>", "కానీ ఈ story కి మరో side ఉంది", 0.1, { kick: "REALITY CHECK", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const fp = place(mk("div", "flip", undefined, `<div class="in"><div class="fc" style="background:${PAL.cyan}">THE HYPE<small>57% &middot; 2.5X &middot; CHEAP</small></div><div class="fc bk" style="background:${PAL.damber}">THE CATCH<small>READ THE FINE PRINT</small></div></div>`), W * 0.58, H * 0.26, W * 0.34, H * 0.36);
+  pop(fp, 0.4, { scale: 0.85, opacity: 0 }, 0.5); tl.to(fp.querySelector(".in"), { rotationY: 180, duration: 0.9, ease: E.io }, tSide - 0.2);
+  const ht = tile("H", 1, "Hydrogen", W * 0.06, H * 0.36, W * 0.12, PAL.cyan); flipIn(ht, tSt - 0.4);
+  const rl = rail("THE OTHER SIDE", "great numbers &middot; but <b>read the fine print</b>", 0.5);
+
+  // B. Agent Arena leaderboard, Hydrogen at #5
+  out(fp, tAA - 1.0, { scale: 0.9 }); out(ht, tAA - 1.0);
+  const h2 = rehead(h1, "Agent Arena: <em>#5</em>", "Agent Arena ranking లో Hydrogen fifth place", tAA - 0.6, { kick: "RANKING", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const lb = place(mk("div", "lbd", undefined, "<h4>AGENT ARENA<span>RANKING</span></h4>"), W * 0.5, H * 0.18, W * 0.44); pop(lb, tAA - 0.4, { x: u * 5, opacity: 0 }, 0.6);
+  const rows = [1, 2, 3, 4, 5, 6].map((n, i) => { const me = n === 5, r = mk("div", "r" + (me ? " me" : ""), lb, `<span class="n">#${n}</span><span class="bar" style="width:${(90 - i * 9) * u * 0.4}px"></span>${me ? "GEMINI 4 HYDROGEN" : "other model"}`);
+    pop(r, tAA + i * 0.12, { x: u * 3, opacity: 0 }, 0.35); return r; });
+  tl.to(rows[4], { scale: 1.05, duration: 0.4, ease: E.pop }, tFifth);
+  const p5 = num(W * 0.05, H * 0.36, PAL.cyan, 18); p5.textContent = "#5"; pop(p5, tFifth, { scale: 0.5, opacity: 0 }, 0.5, E.pop);
+  const nb = chip("NOT THE BEST MODEL", W * 0.05, H * 0.62, { ico: "x", solid: true, c: PAL.red }); pop(nb, tBest);
+  railSet(rl, tFifth, "agent arena &middot; hydrogen is <b>#5</b>, not #1");
+
+  // C. who says so? Google + partners -> numbers; outside reviews pending
+  [lb, p5, nb].forEach((e) => out(e, tImp - 0.5, { y: u * 2 }));
+  const h3 = rehead(h2, "Who gave the <em>numbers</em>?", "ఈ benchmark numbers అన్నీ Google, partners చెప్పినవే", tImp - 0.2, { kick: "SOURCE", x: W * 0.05, y: H * 0.07, w: W * 0.62 });
+  const gl = logo("google", W * 0.06, H * 0.34, W * 0.16, H * 0.08); pop(gl, tGo - 0.2, { y: u * 2, opacity: 0 }, 0.4);
+  const pc = chip("+ PARTNERS", W * 0.06, H * 0.46, { ico: "users", c: PAL.cyan }); pop(pc, tPar);
+  line([[W * 0.14, H * 0.32], [W * 0.14, H * 0.34]], tPar + 0.2, 0.3, PAL.ink, u * 0.35);
+  const nm = chip("BENCHMARK NUMBERS: 57% &middot; 2.5X &middot; 94%", W * 0.06, H * 0.29, { ico: "chip", solid: true, c: PAL.ink }); pop(nm, tImp + 0.8);
+  const pd = place(mk("div", "pend", undefined, `${ico("clock", "currentColor")}INDEPENDENT REVIEWS<span style="font-size:${u * 2}px;letter-spacing:.14em">NOT YET</span>`), W * 0.62, H * 0.3, W * 0.32, H * 0.36);
+  pop(pd, tOut - 0.2, { scale: 0.9, opacity: 0 }, 0.5); tl.to(pd, { borderColor: "#EF4444aa", duration: 0.4 }, tRev);
+  railSet(rl, tGo, "numbers from <b>Google + partners</b> &middot; outside reviews <b>not yet</b>");
+
+  // D. 94% honesty ring, "own test" tag, be careful
+  [gl, pc, nm].forEach((e) => tl.to(e, { opacity: 0.3, duration: 0.5 }, t94 - 0.6));
+  const R = H * 0.15, rg = place(mk("div", "ring", undefined, `<svg width="${R * 2}" height="${R * 2}"><circle cx="${R}" cy="${R}" r="${R * 0.85}" fill="none" stroke="#10182814" stroke-width="${u * 1.6}"/>
+    <circle class="a" cx="${R}" cy="${R}" r="${R * 0.85}" fill="none" stroke="${PAL.green}" stroke-width="${u * 1.6}" stroke-linecap="round" transform="rotate(-90 ${R} ${R})"/></svg><div class="v">0%</div>`), W * 0.36, H * 0.52, R * 2, R * 2);
+  pop(rg, t94 - 0.4, { scale: 0.8, opacity: 0 }, 0.5);
+  const ac = rg.querySelector(".a"), AL = 2 * Math.PI * R * 0.85; ac.style.strokeDasharray = AL;
+  tl.fromTo(ac, { strokeDashoffset: AL }, { strokeDashoffset: AL * 0.06, duration: 1.2, ease: E.in, immediateRender: true }, t94); count(rg.querySelector(".v"), 0, 94, t94, 1.2, (v) => Math.round(v) + "%");
+  const hc = chip("HONESTY RATE", W * 0.06, H * 0.62, { ico: "shield", c: PAL.green }); pop(hc, tHon);
+  const ow = chip("GOOGLE'S OWN TEST", W * 0.06, H * 0.72, { ico: "star", solid: true, c: PAL.damber }); pop(ow, tOwn, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  const cf = chip("CHECK THE CLAIMS CAREFULLY", W * 0.06, H * 0.82, { ico: "search", solid: true, c: PAL.red }); pop(cf, tCare - 0.4, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, t94, "94% honesty &middot; <b>own test</b> &middot; treat claims with care");
+  X.done();
+</script></body></html>

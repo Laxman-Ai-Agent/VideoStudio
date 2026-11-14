@@ -1,0 +1,8 @@
+{
+ "name": "gh_v01_intro",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 9x16; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 V01 9:16 (0-9.5 s): Google -> Gemini -> big H tile; cheap tag; vertical bars: small model shoots past big ones, 3x"
+}

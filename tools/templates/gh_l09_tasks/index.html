@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L09 (121.3-137.3 s): not a quiz (crossed quiz card) -> real command-line tasks (build Linux, train ML model, configure old systems), automatic tests check, even big models miss tasks */
+.quiz { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); padding: calc(var(--u) * 2); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; }
+.quiz h4 { margin: 0 0 calc(var(--u) * 1.2); font: 800 calc(var(--u) * 2.6) var(--font-head); color: #101828; }
+.quiz div { margin-top: calc(var(--u) * .8); padding: calc(var(--u) * .8) calc(var(--u) * 1.2); border: 2px solid #10182818; border-radius: calc(var(--u) * .8); font: 700 calc(var(--u) * 2) var(--font-script); color: #526070; }
+.xx { position: absolute; color: #EF4444; } .xx svg { width: 100%; height: 100%; }
+.ck { position: absolute; display: flex; gap: calc(var(--u) * .8); }
+.ck div { width: calc(var(--u) * 5); height: calc(var(--u) * 5); border-radius: calc(var(--u)); display: flex; align-items: center; justify-content: center; background: var(--c); }
+.ck div svg { width: 65%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("lilac");
+  const tQ = at("quiz", 1.0), tCL = at("cmd", 2.3), tTough = at("tough", 3.4), tLin = at("linux", 5.5), tML = at("ml", 6.8), tCfg = at("cfg", 8.9), tWork = at("work", 10.2),
+        tAuto = at("auto", 11.6), tChk = at("check", 12.4), tMod = at("models", 13.9), tPass = at("pass", 15.3);
+  cam(0, 8, 1.03);
+
+  const h1 = head("Not a <em>quiz</em>", "ఇది normal quiz కాదు", 0.1, { kick: "TERMINAL-BENCH", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const qz = place(mk("div", "quiz", undefined, "<h4>QUIZ?</h4><div>A) option one</div><div>B) option two</div><div>C) option three</div>"), W * 0.05, H * 0.32, W * 0.26);
+  pop(qz, 0.3, { y: u * 3, opacity: 0 }, 0.5);
+  const xx = place(mk("div", "xx", undefined, ico("x", "currentColor")), W * 0.07, H * 0.33, W * 0.22, W * 0.22); pop(xx, tQ, { scale: 1.6, opacity: 0 }, 0.4, E.pop);
+  const tm = term("terminal-bench &middot; real tasks", W * 0.4, H * 0.3, W * 0.55, H * 0.5); pop(tm, tCL - 0.5, { x: u * 5, opacity: 0 }, 0.6);
+  type(tm, tCL - 0.1, '<span class="p">$</span> tb start <span class="dim">--real-world</span>');
+  const tc = chip("REAL TOUGH TASKS", W * 0.05, H * 0.72, { ico: "fire", solid: true, c: PAL.red }); pop(tc, tTough);
+  const rl = rail("TERMINAL-BENCH", "not a quiz &middot; <b>real command-line work</b>", 0.6);
+
+  // three real tasks: cards on the left, matching commands type in the terminal
+  out(qz, tLin - 0.8, { x: -u * 4 }); out(xx, tLin - 0.8); out(tc, tLin - 0.8);
+  const h2 = rehead(h1, "Real <em>tasks</em>", "Command line లో real tough tasks", tLin - 0.6, { kick: "TERMINAL-BENCH", x: W * 0.05, y: H * 0.07, w: W * 0.5 });
+  const cw = W * 0.32, chh = H * 0.13;
+  const k1 = fcard("code", "BUILD LINUX", "source code నుంచి", W * 0.05, H * 0.3, cw, chh, PAL.cyan); pop(k1, tLin - 0.3, { x: -u * 4, opacity: 0 }, 0.5);
+  const k2 = fcard("brain", "TRAIN ML MODEL", "model train చేయడం", W * 0.05, H * 0.46, cw, chh, PAL.violet); pop(k2, tML - 0.3, { x: -u * 4, opacity: 0 }, 0.5);
+  const k3 = fcard("chip", "CONFIGURE OLD SYSTEMS", "legacy setup", W * 0.05, H * 0.62, cw, chh, PAL.damber); pop(k3, tCfg - 0.3, { x: -u * 4, opacity: 0 }, 0.5);
+  [k1, k2, k3].forEach((k) => { k.querySelector(".ic").style.cssText += `position:absolute;left:0;top:0;width:${u * 6}px;height:${u * 6}px;margin:${u * 1.6}px`;
+    k.querySelectorAll(".t,.s").forEach((e) => { e.style.marginLeft = u * 9.5 + "px"; }); k.querySelector(".t").style.marginTop = u * 1.6 + "px"; });
+  type(tm, tLin, '<span class="p">$</span> make -j8 linux <span class="dim"># build kernel</span>');
+  type(tm, tML, '<span class="p">$</span> python train.py <span class="dim">--epochs 20</span>');
+  type(tm, tCfg, '<span class="p">$</span> ./configure legacy-server');
+  move(tm, tLin - 0.6, W * 0.42, H * 0.3, W * 0.53, H * 0.5);
+  railSet(rl, tLin, "build <b>Linux</b> &middot; train an <b>ML model</b> &middot; configure <b>old systems</b>");
+
+  // automatic tests check the work
+  type(tm, tAuto - 0.3, '<span class="dim">running automatic tests ...</span>');
+  type(tm, tChk, 'build <span class="ok">PASS</span>  train <span class="ok">PASS</span>  config <span class="no">FAIL</span>');
+  const ac = chip("AUTOMATIC CHECKS", W * 0.42, H * 0.84, { ico: "shield", solid: true, c: PAL.green }); pop(ac, tAuto);
+  const ck = place(mk("div", "ck"), W * 0.62, H * 0.83);
+  [[PAL.green, "check"], [PAL.green, "check"], [PAL.red, "x"]].forEach(([c, i], n) => { const d = mk("div", "", ck, ico(i, "#fff")); d.style.setProperty("--c", c); pop(d, tChk + 0.2 + n * 0.2, { scale: 0.4, opacity: 0 }, 0.4, E.pop); });
+  railSet(rl, tAuto, "<b>automatic tests</b> check if the work is done right");
+
+  // even big models miss tasks: C / Ar tiles get red marks
+  [k1, k2, k3].forEach((k) => out(k, tMod - 0.5, { x: -u * 3 }));
+  const ta = tile("C", 6, "Carbon", W * 0.08, H * 0.36, W * 0.1, PAL.coal); flipIn(ta, tMod - 0.2, 0.6);
+  const tb = tile("Ar", 18, "Argon", W * 0.22, H * 0.36, W * 0.1, PAL.violet); flipIn(tb, tMod, 0.6);
+  const mb = chip("EVEN BIG MODELS MISS TASKS", W * 0.05, H * 0.56, { ico: "x", solid: true, c: PAL.red }); pop(mb, tPass - 0.2, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tPass - 0.3, "even <b>big models</b> can't pass every task");
+  X.done();
+</script></body></html>

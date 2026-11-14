@@ -1,0 +1,76 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L02 (18.5-39 s): developer's day (laptop photo, 100+ tasks counter), task list ticks, every task calls a BIG AI -> bill receipt grows + WAIT spinner, Hydrogen = the solution */
+.todo { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; padding: calc(var(--u) * 2.2); }
+.todo h4 { margin: 0 0 calc(var(--u) * 1.4); font: 800 calc(var(--u) * 2.6) var(--font-head); color: #101828; }
+.todo .r { display: flex; align-items: center; gap: calc(var(--u) * 1.2); padding: calc(var(--u) * 1.1) 0; border-top: 1px solid #10182812; font: 700 calc(var(--u) * 2.4) var(--font-script); color: #101828; }
+.todo .r i { width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: calc(var(--u) * .7); border: 2px solid #12A4D9; display: flex; align-items: center; justify-content: center; color: #fff; }
+.todo .r i svg { width: 80%; opacity: 0; }
+.rc { position: absolute; box-sizing: border-box; background: #fff; padding: calc(var(--u) * 2) calc(var(--u) * 2.4); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182826;
+  font: 700 calc(var(--u) * 2.1) var(--font-script); color: #526070; clip-path: polygon(0 0, 100% 0, 100% 96%, 92% 100%, 84% 96%, 76% 100%, 68% 96%, 60% 100%, 52% 96%, 44% 100%, 36% 96%, 28% 100%, 20% 96%, 12% 100%, 4% 96%, 0 100%); }
+.rc h4 { margin: 0 0 calc(var(--u)); font: 800 calc(var(--u) * 2.6) var(--font-head); color: #101828; letter-spacing: .04em; }
+.rc .r { display: flex; justify-content: space-between; padding: calc(var(--u) * .5) 0; border-bottom: 1px dashed #10182822; }
+.rc .tot { display: flex; justify-content: space-between; margin-top: calc(var(--u) * 1.2); font: 800 calc(var(--u) * 4.4) var(--font-head); color: #EF4444; }
+.spin { position: absolute; width: calc(var(--u) * 7); height: calc(var(--u) * 7); border-radius: 50%; border: calc(var(--u) * .9) solid #10182818; border-top-color: #F5A524; box-sizing: border-box; }
+.big { position: absolute; box-sizing: border-box; border-radius: calc(var(--u) * 2); background: #3A3F4B; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font: 800 calc(var(--u) * 4) var(--font-head); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #10182840; }
+.big small { font: 700 calc(var(--u) * 1.8) var(--font-script); letter-spacing: .14em; opacity: .7; margin-top: calc(var(--u) * .6); }
+.big svg { width: calc(var(--u) * 7); height: calc(var(--u) * 7); margin-bottom: calc(var(--u)); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tDev = at("dev", 0.9), tTask = at("tasks", 3.3), tBug = at("bug", 5.1), tCmd = at("cmd", 6.1), tErr = at("err", 7.2), tBig = at("big", 10.3), tCost = at("costly", 10.8),
+        tBill = at("bill", 13.1), tShock = at("shock", 13.8), tWait = at("wait", 15.8), tProb = at("problem", 17.7), tGo = at("google", 18.3), tHy = at("hydro", 19.5);
+  cam(0, 9, 1.035, -u * 1);
+
+  // A. a developer's day: laptop photo big, 100+ small tasks counter, task chips scatter
+  const h1 = head("A developer's <em>day</em>", "మీరు ఒక software developer అనుకోండి", 0.2, { kick: "THE PROBLEM", x: W * 0.05, y: H * 0.08, w: W * 0.5 });
+  const lp = card({ i: "laptop", x: W * 0.5, y: H * 0.14, w: W * 0.45, h: H * 0.6, rot: 2 }); pop(lp, tDev - 0.3, { x: u * 6, opacity: 0, rotation: 6 }, 0.7);
+  const nT = num(W * 0.05, H * 0.44, PAL.cyan, 16); count(nT, 0, 100, tTask - 0.6, 1.2, (v) => Math.round(v) + "+"); pop(nT, tTask - 0.7, { scale: 0.7, opacity: 0 }, 0.5);
+  const lT = chip("SMALL TASKS EVERY DAY", W * 0.05, H * 0.66, { ico: "cal", c: PAL.cyan }); pop(lT, tTask);
+  const rl = rail("A DEVELOPER'S DAY", "hundreds of <b>small tasks</b> &middot; every single day", 0.6);
+
+  // B. task list ticks on bug / command / error-fix; laptop moves up-right smaller
+  out(nT, tBug - 0.6, { y: -u * 2 }); out(lT, tBug - 0.6);
+  fit(lp, tBug - 0.6, W * 0.66, H * 0.1, W * 0.3, H * 0.3, 0.9, { rotation: 3 });
+  const td = place(mk("div", "todo", undefined, "<h4>TODAY</h4>"), W * 0.05, H * 0.34, W * 0.36);
+  pop(td, tBug - 0.5, { y: u * 4, opacity: 0 }, 0.5);
+  const rows = [["search", "FIND BUG IN A FILE", tBug], ["code", "RUN A COMMAND", tCmd], ["x", "ERROR? FIX IT AGAIN", tErr]].map(([ic, t, at0]) => {
+    const r = mk("div", "r", td, `<i>${ico("check", "#fff")}</i>${t}`); pop(r, at0 - 0.2, { x: -u * 3, opacity: 0 }, 0.4);
+    tl.to(r.querySelector("i"), { background: PAL.cyan, duration: 0.25 }, at0 + 0.4); tl.to(r.querySelector("svg"), { opacity: 1, duration: 0.25 }, at0 + 0.4); return r; });
+  railSet(rl, tBug, "find a <b>bug</b> &middot; run a <b>command</b> &middot; fix the <b>error</b>");
+
+  // C. each small task calls a BIG costly AI -> bill receipt grows, SHOCK
+  const bg2 = place(mk("div", "big", undefined, `${ico("brain", "#fff")}BIG AI<small>COSTLY &middot; SLOW</small>`), W * 0.47, H * 0.42, W * 0.18, H * 0.3);
+  pop(bg2, tBig - 0.3, { scale: 0.7, opacity: 0 }, 0.6, E.pop);
+  const lns = rows.map((r, i) => line([[W * 0.41, H * 0.47 + i * u * 5.6], [W * 0.47, H * 0.57]], tBig + i * 0.2, 0.5, "#3A3F4B80", u * 0.3));
+  const h2 = rehead(h1, "Every task, a <em>costly AI</em>", "ప్రతి చిన్న పనికి పెద్ద, costly AI", tCost - 0.2, { kick: "THE PROBLEM", x: W * 0.05, y: H * 0.08, w: W * 0.58 });
+  out(lp, tBill - 0.6, { x: u * 4 });
+  const rc = place(mk("div", "rc", undefined, "<h4>AI BILL</h4>"), W * 0.7, H * 0.16, W * 0.25);
+  pop(rc, tBill - 0.4, { y: -u * 4, opacity: 0 }, 0.5);
+  ["bug search", "command run", "error fix", "retry fix", "file read"].forEach((t, i) => { const r = mk("div", "r", rc, `<span>${t}</span><span>+$${(0.8 + i * 0.35).toFixed(2)}</span>`); pop(r, tBill - 0.2 + i * 0.18, { opacity: 0, y: -u }, 0.3); });
+  const tot = mk("div", "tot", rc, "<span>TOTAL</span><span>$0</span>"); count(tot.lastChild, 0, 948, tBill + 0.6, 1.2, (v) => "$" + Math.round(v)); pop(tot, tBill + 0.5, { opacity: 0 }, 0.3);
+  const sh = chip("BILL SHOCK!", W * 0.74, H * 0.76, { ico: "dollar", solid: true, c: PAL.red }); pop(sh, tShock, { scale: 0.5, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tCost, "every small task &rarr; <b>big costly AI</b> &middot; bill keeps growing");
+
+  // D. and every answer = wait: spinner + slow progress
+  const sp = place(mk("div", "spin"), W * 0.525, H * 0.76); pop(sp, tWait - 0.6, { scale: 0.5, opacity: 0 }, 0.4); tl.to(sp, { rotation: 900, duration: 4, ease: "none" }, tWait - 0.6);
+  const wt = chip("WAITING FOR ANSWER...", W * 0.47, H * 0.88, { ico: "clock", c: PAL.damber }); pop(wt, tWait - 0.3);
+  railSet(rl, tWait, "<b>wait</b> for every answer &middot; slow and costly");
+
+  // E. Google's solution: everything greys back, the H tile flips in big at the centre
+  [td, bg2, rc, sh, sp, wt, ...lns].forEach((e) => out(e, tProb - 0.4, { scale: 0.96 }));
+  const h3 = rehead(h2, "Google's <em>solution</em>", "సరిగ్గా ఈ problem కే Google ఇచ్చిన solution", tProb - 0.2, { kick: "THE FIX", x: W * 0.05, y: H * 0.08, w: W * 0.6 });
+  const gl = logo("google", W * 0.05, H * 0.36, W * 0.16, H * 0.08); pop(gl, tGo, { y: u * 2, opacity: 0 }, 0.4);
+  const ht = tile("H", 1, "Hydrogen", W * 0.42, H * 0.3, W * 0.16, PAL.cyan, { mass: "GEMINI 4" }); flipIn(ht, tHy - 0.6);
+  const ok1 = chip("FAST", W * 0.62, H * 0.42, { ico: "bolt", solid: true, c: PAL.green }); pop(ok1, tHy - 0.2);
+  const ok2 = chip("CHEAP", W * 0.62, H * 0.52, { ico: "dollar", solid: true, c: PAL.damber }); pop(ok2, tHy);
+  railSet(rl, tHy - 0.4, "the answer: <b>Gemini 4 Hydrogen</b>");
+  X.done();
+</script></body></html>

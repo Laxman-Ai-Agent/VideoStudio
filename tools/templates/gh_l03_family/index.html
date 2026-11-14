@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L03 (39-57.3 s): "newest = smartest?" crown on H falls off; Google's family C / Ar / H tiles; C + Ar badges deep think / hours / tough tasks; H steps forward FAST */
+.crown { position: absolute; color: #F5A524; } .crown svg { width: 100%; height: 100%; }
+.iq { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.4); padding: calc(var(--u) * 1.6) calc(var(--u) * 2); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; }
+.iq b { display: block; font: 700 calc(var(--u) * 1.8) var(--font-script); color: #526070; letter-spacing: .14em; margin-bottom: calc(var(--u)); }
+.iq .tr { height: calc(var(--u) * 1.6); border-radius: 99px; background: #10182812; overflow: hidden; } .iq .tr i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #12A4D9, #7C6CF2); transform-origin: 0 50%; }
+.spd { position: absolute; height: calc(var(--u) * .5); border-radius: 99px; background: #12A4D9; transform-origin: 100% 50%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice"); bg("sky", 8.0);
+  const tNew = at("new", 1.0), tMost = at("most", 4.2), tInt = at("intel", 4.6), tNot = at("not", 6.1), tHy = at("hydro", 6.7), tGo = at("google", 8.4), tC = at("carbon", 9.2), tAr = at("argon", 9.9),
+        tBig = at("big", 10.5), tHrs = at("hours", 12.0), tDeep = at("deep", 12.9), tTough = at("tough", 14.0), tH2 = at("hydro2", 15.3), tFast = at("fast", 16.3), tDone = at("done", 17.0);
+  cam(0, 8, 1.03);
+
+  // A. newest = smartest? H tile wears a crown, "intelligence" meter fills
+  const h1 = head("Newest = <em>smartest</em>?", "కొత్త model అంటే most intelligent అనుకుంటారు", 0.2, { kick: "MYTH", x: W * 0.05, y: H * 0.08, w: W * 0.5 });
+  const nw = chip("NEW AI MODEL", W * 0.05, H * 0.42, { ico: "star", solid: true, c: PAL.cyan }); pop(nw, tNew);
+  const ht = tile("H", 1, "Hydrogen", W * 0.62, H * 0.28, W * 0.18, PAL.cyan, { mass: "GEMINI 4" }); flipIn(ht, tNew + 0.4);
+  const cr = place(mk("div", "crown", undefined, ico("crown", "currentColor")), W * 0.66, H * 0.1, W * 0.1, W * 0.1); pop(cr, tMost - 0.2, { y: -u * 6, opacity: 0 }, 0.6, E.pop);
+  const iq = place(mk("div", "iq", undefined, `<b>MOST INTELLIGENT?</b><div class="tr"><i></i></div>`), W * 0.05, H * 0.54, W * 0.36);
+  pop(iq, tInt - 0.3, { y: u * 3, opacity: 0 }, 0.5); tl.fromTo(iq.querySelector("i"), { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: E.in, immediateRender: true }, tInt);
+  const rl = rail("MODEL FAMILY", "new model = most intelligent? &middot; <b>not this time</b>", 0.6);
+
+  // B. not this time: crown slides off, red X chip, meter drops
+  tl.to(cr, { x: u * 14, y: u * 30, rotation: 50, opacity: 0, duration: 0.9, ease: E.out }, tNot);
+  const no = chip("NOT THE SMARTEST", W * 0.05, H * 0.72, { ico: "x", solid: true, c: PAL.red }); pop(no, tHy, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  tl.to(iq.querySelector("i"), { scaleX: 0.45, duration: 0.6, ease: E.io }, tHy);
+
+  // C. Google's family: Carbon + Argon tiles (big models) beside a smaller H; badges for deep thinking / hours / tough tasks
+  [nw, iq, no].forEach((e) => out(e, tGo - 0.5, { y: u * 2 }));
+  const h2 = rehead(h1, "Google's model <em>family</em>", "Google దగ్గర Carbon, Argon అనే పెద్ద models", tGo - 0.2, { kick: "GEMINI 4", x: W * 0.05, y: H * 0.08, w: W * 0.6 });
+  const s = W * 0.17, ty = H * 0.32;
+  const tc = tile("C", 6, "Carbon", W * 0.08, ty, s, PAL.coal, { mass: "BIG" }); flipIn(tc, tC - 0.3);
+  const ta = tile("Ar", 18, "Argon", W * 0.3, ty, s, PAL.violet, { mass: "BIG" }); flipIn(ta, tAr - 0.3);
+  retile(ht, tC - 0.4, W * 0.62, ty + s * 0.3, s * 0.75);
+  const bigC = chip("BIG MODELS", W * 0.49, H * 0.5, { ico: "brain", c: PAL.coal }); pop(bigC, tBig);
+  const br = line([[W * 0.08, H * 0.82], [W * 0.47, H * 0.82]], tBig - 0.2, 0.6, PAL.coal, u * 0.3);
+  const by = ty + s * 1.18 + u * 2;
+  const b1 = chip("HOURS OF THINKING", W * 0.08, by, { ico: "clock", c: PAL.violet }); pop(b1, tHrs);
+  const b2 = chip("DEEP THINK", W * 0.08, by + u * 6, { ico: "brain", c: PAL.coal }); pop(b2, tDeep);
+  const b3 = chip("TOUGH TASKS", W * 0.26, by + u * 6, { ico: "chip", c: PAL.coal }); pop(b3, tTough);
+  [tc, ta].forEach((e, i) => tl.to(e, { y: u * 1.2, duration: 1.4, yoyo: true, repeat: 1, ease: E.soft }, tHrs + i * 0.2));
+  railSet(rl, tC, "<b>Carbon</b> &middot; <b>Argon</b> &middot; deep thinking, tough tasks, hours");
+
+  // D. Hydrogen steps forward: grows, speed lines draw behind it, FAST + WORK DONE
+  [tc, ta].forEach((e) => tl.to(e, { opacity: 0.4, scale: 0.92, duration: 0.6, ease: E.soft }, tH2 - 0.3));
+  [b1, b2, b3, bigC, br].forEach((e) => tl.to(e, { opacity: 0.35, duration: 0.6 }, tH2 - 0.3));
+  retile(ht, tH2 - 0.3, W * 0.6, H * 0.24, W * 0.2);
+  [0.36, 0.46, 0.56].forEach((fy, i) => { const l = place(mk("div", "spd"), W * 0.5 - i * u * 3, H * fy, W * 0.09); tl.fromTo(l, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 0.7, duration: 0.5, ease: E.in, immediateRender: true }, tFast - 0.2 + i * 0.08); });
+  const f1 = chip("FAST", W * 0.83, H * 0.36, { ico: "bolt", solid: true, c: PAL.green }); pop(f1, tFast, { x: u * 3, opacity: 0 }, 0.4);
+  const f2 = chip("WORK DONE", W * 0.83, H * 0.46, { ico: "check", solid: true, c: PAL.cyan }); pop(f2, tDone, { x: u * 3, opacity: 0 }, 0.4);
+  const h3 = rehead(h2, "Hydrogen = <em>fast</em> work", "Hydrogen మాత్రం fast గా work complete చేయడానికి", tH2 - 0.1, { kick: "GEMINI 4", x: W * 0.05, y: H * 0.08, w: W * 0.5 });
+  railSet(rl, tH2, "<b>Hydrogen</b> &middot; built to finish work <b>fast</b>");
+  X.done();
+</script></body></html>

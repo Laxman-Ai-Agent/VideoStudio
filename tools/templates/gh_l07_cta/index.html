@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L07 (99-106.6 s): mid-video CTA: like / share / subscribe cards light up in turn; channel chip; tiles + price recap stay around for density */
+.ct { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2.4); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182826;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 1.4); font: 800 calc(var(--u) * 3) var(--font-head); color: #101828; }
+.ct .ic { width: calc(var(--u) * 10); height: calc(var(--u) * 10); border-radius: 50%; background: #10182810; color: #526070; display: flex; align-items: center; justify-content: center; }
+.ct .ic svg { width: 55%; height: 55%; }
+.ct small { font: 700 calc(var(--u) * 1.8) var(--font-script); color: #526070; letter-spacing: .12em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tUp = at("updates", 1.1), tLike = at("like", 2.9), tShare = at("share", 4.3), tDW = at("dark", 5.8), tSub = at("subscribe", 6.7);
+  cam(0, D, 1.04);
+  const h1 = head("Like these <em>AI updates</em>?", "ఈ AI updates నచ్చితే", 0.1, { kick: "THE DARK WORLD", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const tiles = [["C", 6, "Carbon", PAL.coal], ["Ar", 18, "Argon", PAL.violet], ["H", 1, "Hydrogen", PAL.cyan]].map(([s, n, nm, c], i) => { const t = tile(s, n, nm, W * (0.7 + i * 0.09), H * 0.08, W * 0.075, c);
+    flipIn(t, 0.3 + i * 0.12, 0.5); return t; });
+  const cw = W * 0.26, chh = H * 0.42, cy = H * 0.38;
+  const cards = [["thumb", "LIKE", "the video", tLike, PAL.cyan], ["share", "SHARE", "with tech friends", tShare, PAL.green], ["bell", "SUBSCRIBE", "The Dark World", tSub, PAL.red]].map(([ic, t, s, at0, c], i) => {
+    const e = place(mk("div", "ct", undefined, `<div class="ic">${ico(ic, "currentColor")}</div>${t}<small>${s}</small>`), W * 0.05 + i * (cw + W * 0.045), cy, cw, chh);
+    pop(e, tUp + i * 0.15, { y: u * 5, opacity: 0 }, 0.5);
+    tl.to(e.querySelector(".ic"), { background: c, color: "#fff", scale: 1.12, duration: 0.4, ease: E.pop }, at0);
+    tl.to(e, { y: -u * 2, boxShadow: `0 ${u * 2}px ${u * 5}px ${c}55`, duration: 0.4, ease: E.in }, at0); return e; });
+  const dw = chip("THE DARK WORLD", W * 0.5 - u * 12, H * 0.86, { ico: "star", solid: true, c: PAL.ink }); pop(dw, tDW, { y: u * 2, opacity: 0 }, 0.4);
+  rail("THE DARK WORLD", "<b>like</b> &middot; <b>share</b> &middot; <b>subscribe</b> for AI updates", 0.5);
+  X.done();
+</script></body></html>

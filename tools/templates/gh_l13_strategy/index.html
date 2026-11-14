@@ -1,0 +1,79 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L13 (199.7-230.2 s): why launch a non-best model? Antigravity Orchestrator routes deep work to Carbon and fast work to Hydrogen; hotel kitchen analogy (head chef + assistants); where it ships: Gemini API / AI Studio / Gemini app / Google Search */
+.ag { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 3.5) #10182826; overflow: hidden; }
+.ag .hd { height: calc(var(--u) * 4.4); display: flex; align-items: center; gap: calc(var(--u)); padding: 0 calc(var(--u) * 1.6); background: #101828; color: #fff; font: 800 calc(var(--u) * 2) var(--font-head); letter-spacing: .04em; }
+.ag .hd i { width: calc(var(--u) * 1.4); height: calc(var(--u) * 1.4); border-radius: 50%; background: #12A4D9; }
+.ag .core { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); width: calc(var(--u) * 14); height: calc(var(--u) * 14); border-radius: 50%; background: radial-gradient(circle, #12A4D9, #0B7CA8);
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 800 calc(var(--u) * 1.9) var(--font-head); box-shadow: 0 0 0 calc(var(--u) * 1.4) #12A4D922; }
+.ag .core svg { width: 40%; }
+.tk { position: absolute; padding: calc(var(--u) * .5) calc(var(--u) * 1.1); border-radius: calc(var(--u) * .7); background: var(--c); color: #fff; font: 700 calc(var(--u) * 1.6) var(--font-script); letter-spacing: .06em; white-space: nowrap; }
+.prod { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: calc(var(--u) * 1.2); font: 800 calc(var(--u) * 2.3) var(--font-head); color: #101828; }
+.prod .lg { width: 70%; height: 32%; background: no-repeat center / contain; }
+.qq { position: absolute; font: 800 calc(var(--u) * 9) var(--font-head); color: #F5A524; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, S, tl, E, at, mk, place, ix, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand"); bg("sky", 0.3);
+  const tBest = at("best", 1.7), tProud = at("proud", 3.1), tPlan = at("plan", 5.4), tAG = at("antigravity", 7.6), tOrc = at("orch", 9.5), tSes = at("session", 11.6), tDeep = at("deep", 12.1), tC = at("carbon", 13.5),
+        tFast = at("fast", 15.3), tHy = at("hydro", 16.7), tKit = at("kitchen", 18.8), tChef = at("chef", 19.6), tMenu = at("menu", 19.8), tCut = at("cut", 21.5), tCook = at("cook", 22.1), tAss = at("assist", 23.3),
+        tAPI = at("api", 26.8), tStu = at("studio", 27.7), tApp = at("app", 28.8), tSrch = at("search", 29.5);
+  const img = (k) => { const i = ix(k); return i >= 0 ? S.images[i] : ""; };
+  cam(0, 7, 1.03);
+
+  // A. why launch a non-best model so proudly? question marks + the plan
+  const h1 = head("Why launch it <em>proudly</em>?", "best కాని model ని ఎందుకు proud గా launch చేసింది?", 0.1, { kick: "STRATEGY", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const ht = tile("H", 1, "Hydrogen", W * 0.62, H * 0.3, W * 0.14, PAL.cyan); flipIn(ht, tBest - 0.4);
+  const n5 = chip("#5 IN RANKING", W * 0.62, H * 0.66, { ico: "x", c: PAL.red }); pop(n5, tBest);
+  const qs = [[0.8, 0.22], [0.86, 0.48], [0.56, 0.2]].map(([fx, fy], i) => { const q = place(mk("div", "qq", undefined, "?"), W * fx, H * fy); pop(q, tProud + i * 0.15, { scale: 0.3, opacity: 0, rotation: -20 }, 0.5, E.pop); return q; });
+  const pl = chip("THERE IS A PLAN", W * 0.05, H * 0.4, { ico: "route", solid: true, c: PAL.cyan }); pop(pl, tPlan);
+  const rl = rail("GOOGLE'S PLAN", "why launch a model that is <b>not #1</b>?", 0.5);
+
+  // B. Antigravity Orchestrator: tasks stream in; deep ones to Carbon (top right), fast ones to Hydrogen (bottom right)
+  [n5, pl, ...qs].forEach((e) => out(e, tAG - 0.6));
+  const h2 = rehead(h1, "The <em>Orchestrator</em>", "Antigravity లో Orchestrator feature", tAG - 0.3, { kick: "GOOGLE ANTIGRAVITY", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const ag = place(mk("div", "ag", undefined, `<div class="hd"><i></i>ANTIGRAVITY &middot; ONE SESSION</div><div class="core">${ico("route", "#fff")}ORCHESTRATOR</div>`), W * 0.3, H * 0.28, W * 0.38, H * 0.56);
+  pop(ag, tAG, { scale: 0.9, opacity: 0 }, 0.6); pop(ag.querySelector(".core"), tOrc - 0.2, { scale: 0.4, opacity: 0 }, 0.6, E.pop);
+  const tc = tile("C", 6, "Carbon", W * 0.8, H * 0.22, W * 0.1, PAL.coal); flipIn(tc, tDeep - 0.3, 0.6);
+  retile(ht, tAG - 0.3, W * 0.8, H * 0.6, W * 0.1);
+  const cx = W * 0.49, cy = H * 0.6;
+  const jobs = [["DESIGN SYSTEM", 1], ["fix typo", 0], ["run tests", 0], ["DEBUG RACE BUG", 1], ["rename var", 0], ["format code", 0], ["write docs", 0], ["git commit", 0]];
+  jobs.forEach(([t, deep], i) => { const e = place(mk("div", "tk", undefined, t), W * 0.04, H * 0.3 + i * u * 6.2); e.style.setProperty("--c", deep ? PAL.coal : PAL.cyan);
+    pop(e, tSes - 0.4 + i * 0.12, { x: -u * 4, opacity: 0 }, 0.3);
+    const tt = deep ? tC - 0.4 + i * 0.05 : tFast - 0.2 + i * 0.12, tx = deep ? W * 0.72 : W * 0.71, ty = deep ? H * 0.26 + (i % 2) * u * 5 : H * 0.58 + (i % 4) * u * 4;
+    tl.to(e, { left: cx - u * 5, top: cy - u, duration: 0.45, ease: E.io }, tt - 0.5); tl.to(e, { left: tx - u * 12, top: ty, duration: 0.5, ease: E.io }, tt); tl.to(e, { opacity: 0.85, scale: 0.9, duration: 0.2 }, tt + 0.5); });
+  const ln1 = line([[W * 0.68, H * 0.5], [W * 0.79, H * 0.32]], tC - 0.5, 0.5, PAL.coal, u * 0.35);
+  const ln2 = line([[W * 0.68, H * 0.66], [W * 0.79, H * 0.7]], tFast - 0.4, 0.5, PAL.cyan, u * 0.35);
+  const dc = chip("DEEP THINKING &rarr; CARBON", W * 0.66, H * 0.12, { ico: "brain", c: PAL.coal }); pop(dc, tC);
+  const fc = chip("FAST WORK &rarr; HYDROGEN", W * 0.66, H * 0.86, { ico: "bolt", c: PAL.cyan }); pop(fc, tHy);
+  railSet(rl, tSes, "deep work &rarr; <b>Carbon</b> &middot; fast work &rarr; <b>Hydrogen</b>");
+
+  // C. kitchen analogy: photo card + chef / assistant labels mapped to the tiles
+  [ag, dc, fc, ln1, ln2].forEach((e) => out(e, tKit - 0.7, { scale: 0.95 })); tl.to(".tk", { opacity: 0, duration: 0.4 }, tKit - 0.7);
+  const h3 = rehead(h2, "Like a hotel <em>kitchen</em>", "head chef plan చేస్తే, assistants fast గా పని చేసేస్తారు", tKit - 0.4, { kick: "ANALOGY", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const kc = card({ i: "kitchen", x: W * 0.05, y: H * 0.3, w: W * 0.46, h: H * 0.56, rot: -1.5 }); pop(kc, tKit - 0.3, { x: -u * 6, opacity: 0 }, 0.6);
+  retile(tc, tKit - 0.4, W * 0.56, H * 0.32, W * 0.1); retile(ht, tKit - 0.4, W * 0.56, H * 0.6, W * 0.1);
+  const c1 = chip("HEAD CHEF = CARBON", W * 0.68, H * 0.38, { ico: "crown", solid: true, c: PAL.coal }); pop(c1, tChef);
+  const c1b = chip("PLANS THE MENU", W * 0.68, H * 0.45, { ico: "file", c: PAL.coal }); pop(c1b, tMenu + 0.2);
+  const c2 = chip("ASSISTANTS = HYDROGEN", W * 0.68, H * 0.65, { ico: "users", solid: true, c: PAL.cyan }); pop(c2, tAss);
+  const c3 = chip("CUT", W * 0.68, H * 0.72, { ico: "bolt", c: PAL.green }); pop(c3, tCut);
+  const c4 = chip("COOK", W * 0.76, H * 0.72, { ico: "fire", c: PAL.red }); pop(c4, tCook);
+  railSet(rl, tKit, "head chef = <b>Carbon</b> &middot; fast assistants = <b>Hydrogen</b>");
+
+  // D. where it ships: four product cards
+  [kc, tc, c1, c1b, c2, c3, c4].forEach((e) => out(e, tAPI - 1.2, { y: u * 2 }));
+  retile(ht, tAPI - 1.2, W * 0.84, H * 0.07, W * 0.09);
+  const h4 = rehead(h3, "Shipping <em>everywhere</em>", "Gemini API, AI Studio, Gemini app, Google Search లోకి", tAPI - 0.9, { kick: "AVAILABLE", x: W * 0.05, y: H * 0.07, w: W * 0.66 });
+  const pw = W * 0.205, ph = H * 0.34;
+  [["GEMINI API", "gemini", tAPI, "code"], ["AI STUDIO", "gemini", tStu, "chip"], ["GEMINI APP", "gemini", tApp, "star"], ["GOOGLE SEARCH", "google", tSrch, "search"]].forEach(([t, k, at0, ic], i) => {
+    const e = place(mk("div", "prod", undefined, `<div class="lg" style="background-image:url('${img(k)}')"></div><span>${t}</span>`), W * 0.05 + i * (pw + W * 0.025), H * 0.42, pw, ph);
+    pop(e, at0 - 0.3, { y: u * 5, opacity: 0 }, 0.5); });
+  railSet(rl, tAPI - 0.6, "gemini api &middot; ai studio &middot; gemini app &middot; <b>google search</b>");
+  X.done();
+</script></body></html>

@@ -1,0 +1,8 @@
+{
+ "name": "gh_v04_rank",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 9x16; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 V04 9:16 (48.7-59.7 s): Agent Arena leaderboard (Hydrogen #5); why launch it? real strategy? question cards"
+}

@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 L11 (151.2-171.4 s): four thinking levels slider (low / medium / high / xhigh), quality / time / cost meters rise with the level, you pick; partner stats 2-2.8x speed, 12-23% fewer tokens */
+.sl { position: absolute; height: calc(var(--u) * 1.4); border-radius: 99px; background: #10182814; }
+.sl .on { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: linear-gradient(90deg, #12A4D9, #7C6CF2); width: 0; }
+.sl .st { position: absolute; top: 50%; width: calc(var(--u) * 2.4); height: calc(var(--u) * 2.4); margin: calc(var(--u) * -1.2) 0 0 calc(var(--u) * -1.2); border-radius: 50%; background: #fff; border: 3px solid #10182830; box-sizing: border-box; }
+.sl .lb { position: absolute; top: calc(var(--u) * 2.6); transform: translateX(-50%); font: 800 calc(var(--u) * 2.3) var(--font-head); color: #526070; white-space: nowrap; }
+.sl .kn { position: absolute; top: 50%; width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); margin: calc(var(--u) * -2.2) 0 0 calc(var(--u) * -2.2); border-radius: 50%; background: #12A4D9;
+  box-shadow: 0 0 0 calc(var(--u) * .8) #12A4D933, 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #10182840; left: 0; }
+.stat { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 4) calc(var(--u) * 3); box-shadow: 0 calc(var(--u)) calc(var(--u) * 3) #10182822; border-left: calc(var(--u) * .8) solid var(--c); }
+.stat .v { font: 800 calc(var(--u) * 11) var(--font-head); color: var(--c); letter-spacing: -.03em; line-height: 1.05; white-space: nowrap; }
+.stat b { display: block; font: 700 calc(var(--u) * 2) var(--font-script); color: #101828; letter-spacing: .1em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tLo = at("low", 1.1), tMe = at("medium", 1.6), tHi = at("high", 2.2), tXh = at("xhigh", 2.8), tFour = at("four", 3.5), tThink = at("think", 5.6), tQ = at("quality", 6.6), tT = at("time", 8.0),
+        tC = at("cost", 8.8), tLvl = at("level", 10.4), tSel = at("select", 11.0), tCo = at("companies", 13.4), tTwo = at("two", 15.0), tTw = at("twelve", 17.1), tTok = at("tokens", 19.0);
+  cam(0, 10, 1.03);
+
+  const h1 = head("Four <em>thinking</em> levels", "low, medium, high, xhigh: నాలుగు thinking levels", 0.1, { kick: "SETTINGS", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const ht = tile("H", 1, "Hydrogen", W * 0.84, H * 0.08, W * 0.1, PAL.cyan); flipIn(ht, 0.3);
+  const sx = W * 0.1, sw = W * 0.5, sy = H * 0.42;
+  const sl = place(mk("div", "sl", undefined, '<div class="on"></div>'), sx, sy, sw); pop(sl, 0.4, { scaleX: 0, opacity: 0 }, 0.6);
+  const L = ["LOW", "MEDIUM", "HIGH", "XHIGH"], tt = [tLo, tMe, tHi, tXh];
+  L.forEach((n, i) => { const st = mk("div", "st", sl); st.style.left = (i / 3 * 100) + "%"; const lb = mk("div", "lb", sl, n); lb.style.left = (i / 3 * 100) + "%"; pop(lb, tt[i] - 0.2, { y: u * 2, opacity: 0 }, 0.3);
+    tl.to(lb, { color: PAL.dcyan, duration: 0.2 }, tt[i]); });
+  const kn = mk("div", "kn", sl), on = sl.querySelector(".on");
+  const knob = (t, i, d = 0.4) => { tl.to(kn, { left: sw * i / 3, duration: d, ease: E.io }, t); tl.to(on, { width: sw * i / 3, duration: d, ease: E.io }, t); };
+  tt.forEach((t, i) => knob(t - 0.1, i, 0.35));
+  const f4 = chip("4 LEVELS", W * 0.1, H * 0.6, { ico: "gauge", solid: true, c: PAL.violet }); pop(f4, tFour);
+  const rl = rail("THINKING LEVELS", "<b>low</b> &middot; <b>medium</b> &middot; <b>high</b> &middot; <b>xhigh</b>", 0.5);
+
+  // meters: more thinking -> quality, time and cost all rise; then you pick a level for the job
+  out(f4, tThink - 0.5);
+  const base = H * 0.82, hm = H * 0.4, mx = W * 0.66;
+  const m1 = vbar("QUALITY", mx, base, W * 0.06, hm, 0.25, PAL.green, tThink - 0.4, 0.5, "");
+  const m2 = vbar("TIME", mx + W * 0.1, base, W * 0.06, hm, 0.25, PAL.damber, tThink - 0.3, 0.5, "");
+  const m3 = vbar("COST", mx + W * 0.2, base, W * 0.06, hm, 0.25, PAL.red, tThink - 0.2, 0.5, "");
+  [[m1, tQ], [m2, tT], [m3, tC]].forEach(([m, t]) => regrow(m, t - 0.2, hm, 0.95, 0.8));
+  knob(tThink, 0, 0.3); knob(tQ - 0.3, 3, 1.6);
+  const h2 = rehead(h1, "More thinking = <em>more cost</em>", "ఎక్కువ think చేస్తే quality, time, cost అన్నీ పెరుగుతాయి", tThink - 0.2, { kick: "TRADE-OFF", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  knob(tLvl - 0.2, 1, 0.7); [m1, m2, m3].forEach((m, i) => regrow(m, tLvl - 0.2, hm, [0.55, 0.4, 0.35][i], 0.7));
+  const yc = chip("YOU PICK THE LEVEL", W * 0.1, H * 0.62, { ico: "check", solid: true, c: PAL.cyan }); pop(yc, tSel, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  railSet(rl, tThink, "more thinking &rarr; <b>quality, time, cost</b> all go up &middot; you choose");
+
+  // partner companies: speed + fewer tokens stat cards
+  [sl, yc, m1, m2, m3].forEach((e, i) => out(e, tCo - 0.8 + i * 0.04, { y: u * 2 }));
+  const h3 = rehead(h2, "What <em>partners</em> saw", "Google తో పనిచేసే companies చెప్పినవి", tCo - 0.5, { kick: "EARLY USERS", x: W * 0.05, y: H * 0.07, w: W * 0.6 });
+  const us = chip("PARTNER COMPANIES", W * 0.05, H * 0.3, { ico: "users", c: PAL.cyan }); pop(us, tCo);
+  const s1 = place(mk("div", "stat", undefined, `<div class="v">2x</div><b>FASTER WORK</b>`), W * 0.05, H * 0.42, W * 0.42); s1.style.setProperty("--c", PAL.green);
+  pop(s1, tTwo - 0.3, { y: u * 4, opacity: 0 }, 0.5); count(s1.querySelector(".v"), 2, 2.8, tTwo + 0.6, 1.0, (v) => "2-" + v.toFixed(1) + "x");
+  tl.set(s1.querySelector(".v"), { textContent: "2x" }, tTwo - 0.3);
+  const s2 = place(mk("div", "stat", undefined, `<div class="v">12%</div><b>FEWER TOKENS</b>`), W * 0.52, H * 0.42, W * 0.42); s2.style.setProperty("--c", PAL.cyan);
+  pop(s2, tTw - 0.3, { y: u * 4, opacity: 0 }, 0.5); count(s2.querySelector(".v"), 12, 23, tTw + 0.4, 1.0, (v) => "12-" + Math.round(v) + "%");
+  tl.set(s2.querySelector(".v"), { textContent: "12%" }, tTw - 0.3);
+  const cl = chip("CLAIMED BY PARTNERS", W * 0.52, H * 0.72, { ico: "star", c: PAL.mute }); pop(cl, tTok);
+  railSet(rl, tCo, "partners: <b>2-2.8x speed</b> &middot; <b>12-23% fewer tokens</b>");
+  X.done();
+</script></body></html>

@@ -1,0 +1,8 @@
+{
+ "name": "gh_l10_speed",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 06_Gemini_Hydrogen 16x9; reuse only when the user asks", "kit": "lab_kit"},
+ "description": "06 L10 (137.3-151.2 s): growth arrow 18.2 -> 57 (3x), trophy \"big achievement\"; speed: gauge needle + race lanes, Hydrogen finishes 2.5x faster at high thinking"
+}

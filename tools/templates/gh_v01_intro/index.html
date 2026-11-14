@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 V01 9:16 (0-9.5 s): Google -> Gemini -> big H tile; cheap tag; vertical bars: small model shoots past big ones, 3x */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tG = at("google", 0.1), tM = at("gemini", 1.7), tH = at("hydro", 2.4), tC = at("cheap", 3.2), tCo = at("coding", 5.0), tBig = at("models", 6.1), t3 = at("three", 7.4), tSc = at("score", 8.4);
+  cam(0, D, 1.04);
+  const gl = logo("google", W * 0.2, H * 0.1, W * 0.6, H * 0.08); pop(gl, tG, { scale: 0.8, opacity: 0 }, 0.5);
+  const gm = logo("gemini", W * 0.1, H * 0.22, W * 0.8, H * 0.1); pop(gm, tM - 0.3, { y: u * 3, opacity: 0 }, 0.5);
+  const ht = tile("H", 1, "Hydrogen", W * 0.27, H * 0.34, W * 0.46, PAL.cyan, { mass: "GEMINI 4" }); flipIn(ht, tH - 0.2);
+  const pt = ptag("CHEAP", "AI MODEL", W * 0.3, H * 0.68, PAL.amber); pop(pt, tC, { y: u * 3, opacity: 0 }, 0.5);
+  const c1 = chip("CODING", W * 0.12, H * 0.77, { ico: "code" }); pop(c1, tC + 0.3);
+  const c2 = chip("FAST", W * 0.45, H * 0.77, { ico: "bolt", c: PAL.green }); pop(c2, tC + 0.45);
+  const rl = rail("GEMINI 4 HYDROGEN", "Google &middot; <b>cheap AI model</b>", 0.6);
+
+  // coding tests: H tile shrinks to the top, bars race
+  [gl, pt, c1, c2].forEach((e) => out(e, tCo - 0.6)); move(gm, tCo - 0.6, W * 0.07, H * 0.05, W * 0.42, W * 0.42 * 65 / 288);
+  retile(ht, tCo - 0.6, W * 0.72, H * 0.04, W * 0.2);
+  const h1 = head("Hard <em>coding</em> tests", "పెద్ద models తో పోటీ", tCo - 0.3, { x: W * 0.07, y: H * 0.15, w: W * 0.86 });
+  const base = H * 0.78, hm = H * 0.42;
+  const b1 = vbar("BIG MODEL", W * 0.1, base, W * 0.2, hm, 0.34, PAL.coal, tBig - 0.3, 0.7);
+  const b2 = vbar("BIG MODEL", W * 0.4, base, W * 0.2, hm, 0.4, PAL.coal, tBig, 0.7);
+  const b3 = vbar("HYDROGEN", W * 0.7, base, W * 0.2, hm, 0.12, PAL.cyan, tBig + 0.3, 0.5, "H");
+  regrow(b3, t3 - 0.2, hm, 0.98, 0.9);
+  const n3 = num(W * 0.4, H * 0.3, PAL.amber, 26); count(n3, 1, 3, t3, 0.9, (v) => Math.round(v) + "x"); pop(n3, t3, { scale: 0.6, opacity: 0 }, 0.5, E.pop);
+  const sc = chip("MORE SCORE", W * 0.32, H * 0.84, { ico: "up", solid: true, c: PAL.green }); pop(sc, tSc);
+  railSet(rl, t3, "small model &middot; <b>3x score</b>");
+  X.done();
+</script></body></html>

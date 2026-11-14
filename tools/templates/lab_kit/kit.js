@@ -22,10 +22,10 @@
   .lh .kk { display: inline-flex; align-items: center; gap: ${u * .6}px; font: 700 ${u * (V ? 2.6 : 1.9)}px var(--font-script); letter-spacing: .16em; text-transform: uppercase;
             color: ${PAL.dcyan}; background: #fff; border: 1px solid #12A4D955; border-radius: 99px; padding: ${u * .45}px ${u * 1.2}px; margin-bottom: ${u * 1.3}px; }
   .lh .kk::before { content: ""; width: ${u * .8}px; height: ${u * .8}px; border-radius: 50%; background: ${PAL.cyan}; }
-  .lh .en { font: 800 ${u * (V ? 8 : 7.4)}px var(--font-head); line-height: 1.04; letter-spacing: -.02em; }
+  .lh .en { font: 800 ${u * (V ? 8.6 : 7.4)}px var(--font-head); line-height: 1.04; letter-spacing: -.02em; }
   .lh .en em { font-style: normal; color: ${PAL.cyan}; position: relative; white-space: nowrap; }
   .lh .en em::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.06em; height: .12em; border-radius: 99px; background: currentColor; transform: scaleX(var(--k, 1)); transform-origin: 0 50%; }
-  .lh .te { margin-top: ${u * 1.2}px; font: 600 ${u * (V ? 4.6 : 3.8)}px var(--font); line-height: 1.3; color: ${PAL.mute}; }
+  .lh .te { margin-top: ${u * 1.2}px; font: 600 ${u * (V ? 5.6 : 3.8)}px var(--font); line-height: 1.3; color: ${PAL.mute}; }
   .tile { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--s) * 8); box-shadow: 0 calc(var(--s) * 4) calc(var(--s) * 12) #10182826, 0 0 0 1px #10182814;
           border-top: calc(var(--s) * 5) solid var(--c); color: var(--c); }
   .tile .n { position: absolute; left: 9%; top: 6%; font: 700 calc(var(--s) * 12) var(--font-script); color: ${PAL.mute}; }
@@ -143,7 +143,14 @@
     chip: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>', search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
     code: '<path d="M8 7 3 12l5 5M16 7l5 5-5 5M14 4l-4 16"/>', brain: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 1V5a3 3 0 0 0-3-1zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 1"/>',
     fire: '<path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-4-1-6 1-9z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-    up: '<path d="M4 17l6-6 4 4 7-8M15 7h6v6"/>', star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>' };
+    up: '<path d="M4 17l6-6 4 4 7-8M15 7h6v6"/>',
+    thumb: '<path d="M7 11v9H4v-9zM7 11l4-8c1.5 0 2.5 1 2.5 2.5V9h5.3a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.6 20H7"/>', share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/>', folder: '<path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>',
+    file: '<path d="M6 3h8l4 4v14H6zM14 3v4h4"/>', lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    crown: '<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/>', trophy: '<path d="M8 4h8v6a4 4 0 0 1-8 0zM8 6H4a3 3 0 0 0 4 4M16 6h4a3 3 0 0 1-4 4M12 14v4M8 21h8"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 4 6"/>', gauge: '<path d="M4 18a9 9 0 1 1 16 0M12 13l4-5"/>',
+    shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>', route: '<circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/>', star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>' };
+  const ICON = (k) => ICO[k];
   const ico = (k, c = "currentColor") => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICO[k] || ""}</svg>`;
   const chip = (text, x, y, o = {}) => { const e = place(mk("div", "lchip" + (o.solid ? " solid" : ""), o.parent, `${o.ico ? ico(o.ico, o.solid ? "#fff" : o.c || PAL.cyan) : ""}${text}`), x, y);
     if (o.c) e.style.setProperty("--c", o.c); return e; };

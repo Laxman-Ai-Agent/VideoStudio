@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script><script src="kit.js"></script>
+<style>/* 06 V05 9:16 (59.7 s-end): comment box types HYDROGEN, arrow -> FULL VIDEO link card */
+.cbox { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 3); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #10182826; padding: calc(var(--u) * 3.4); }
+.cbox b { display: block; font: 700 calc(var(--u) * 3.2) var(--font-script); color: #526070; letter-spacing: .12em; margin-bottom: calc(var(--u) * 2); }
+.cbox .ctx { font: 800 calc(var(--u) * 7.5) var(--font-head); color: #101828; border-bottom: 3px solid #12A4D9; padding-bottom: calc(var(--u)); min-height: 1.2em; }
+.cur { display: inline-block; width: .45em; height: .9em; background: #12A4D9; vertical-align: -.08em; }
+.fv { position: absolute; box-sizing: border-box; border-radius: calc(var(--u) * 3); background: #101828; color: #fff; padding: calc(var(--u) * 4); display: flex; align-items: center; gap: calc(var(--u) * 3);
+  font: 800 calc(var(--u) * 6) var(--font-head); }
+.fv i { width: calc(var(--u) * 13); height: calc(var(--u) * 13); border-radius: 50%; background: #12A4D9; display: flex; align-items: center; justify-content: center; flex: none; }
+.fv i::after { content: ""; border-left: calc(var(--u) * 4) solid #fff; border-top: calc(var(--u) * 2.6) solid transparent; border-bottom: calc(var(--u) * 2.6) solid transparent; margin-left: calc(var(--u)); }
+.fv small { display: block; font: 700 calc(var(--u) * 3) var(--font-script); color: #8DA2BF; letter-spacing: .12em; margin-top: calc(var(--u)); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, fade, pop, out, move, fit, cam, bg, head, rehead, tile, flipIn, retile, term, type, ico, chip, fcard, num, count, card, logo, hbar, vbar, regrow, rail, railSet, ptag, line } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tDet = at("details", 0.5), tCom = at("comment", 1.7), tHy = at("hydro", 2.6), tType = at("type", 3.3), tFull = at("full", 4.8), tLink = at("link", 5.3);
+  cam(0, D, 1.04);
+  const h1 = head("The <em>full story</em>", "Full details కావాలంటే", 0.1, { kick: "FULL VIDEO", x: W * 0.07, y: H * 0.05, w: W * 0.86 });
+  const ht = tile("H", 1, "Hydrogen", W * 0.38, H * 0.2, W * 0.24, PAL.cyan); flipIn(ht, tDet);
+  const cb = place(mk("div", "cbox", undefined, `<b>COMMENT SECTION</b><div class="ctx"></div>`), W * 0.07, H * 0.42, W * 0.86); pop(cb, tCom - 0.3, { y: u * 5, opacity: 0 }, 0.5);
+  const txt = "HYDROGEN", tx = cb.querySelector(".ctx"), o = { v: 0 };
+  tl.to(o, { v: txt.length, duration: 0.9, ease: "none", onUpdate: () => { tx.innerHTML = txt.slice(0, Math.round(o.v)) + '<span class="cur"></span>'; } }, tHy);
+  const ty = chip("TYPE THIS", W * 0.07, H * 0.355, { ico: "code", solid: true, c: PAL.amber }); pop(ty, tType);
+  line([[W * 0.5, H * 0.6], [W * 0.5, H * 0.67]], tFull - 0.4, 0.4, PAL.ink, u * 0.8);
+  const fv = place(mk("div", "fv", undefined, `<i></i><span>FULL VIDEO<small>link comes to you</small></span>`), W * 0.07, H * 0.69, W * 0.86); pop(fv, tCom, { y: u * 5, opacity: 0 }, 0.5); tl.fromTo(fv, { opacity: 0.35 }, { opacity: 1, duration: 0.4 }, tFull - 0.2);
+  [["FULL STORY", "file"], ["PRICE", "dollar"], ["STRATEGY", "route"]].forEach(([t, i], k) => { const c = chip(t, W * (0.07 + k * 0.3), H * 0.84, { ico: i }); pop(c, tFull + k * 0.15); });
+  tl.to(fv, { scale: 1.04, duration: 0.4, yoyo: true, repeat: 1, ease: E.soft }, tLink);
+  rail("THE DARK WORLD", "comment <b>HYDROGEN</b> &middot; get the full video", 0.5);
+  X.done();
+</script></body></html>
