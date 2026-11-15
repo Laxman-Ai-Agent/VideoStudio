@@ -1,0 +1,8 @@
+{
+ "name": "sw_l07_spike",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L07 not only sweets: sweets photo + PNG, rice / maida / cola / juice PNGs, red spike, fiber + protein flat green curve"
+}

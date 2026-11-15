@@ -1,0 +1,8 @@
+{
+ "name": "sw_v01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 9x16; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "V01 9x16 hook: night walk, 10-15 min ring, walker PNG, 10 / 13 crore counters"
+}

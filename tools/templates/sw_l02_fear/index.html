@@ -27,7 +27,12 @@
   [[.62, .62], [.69, .62], [.76, .62], [.655, .44], [.725, .44], [.69, .26]].forEach(([x, y], i) => {
     const b = place(mk("div", "pb", undefined, bottle(i % 2 ? K.amber : K.red)), W * x, H * y); bots.push(b);
     pop(b, tFe + .2 + i * .25, { y: -u * 10, opacity: 0 }, .6, "bounce.out"); });
+  if (X.ix("P23_tablets") >= 0) { bots.forEach((b) => { b.style.display = "none"; }); bots.length = 0;
+    const tb = B.png("P23_tablets", W * .72, H * .48, H * .42, { c: K.amber }); pop(tb, tFe, { scale: .4, opacity: 0, y: -u * 8 }, 1, E.spring); B.breathe(tb, tFe + 1, u * .6, 3); bots.push(tb); }
   const bL = badge("<b>FOR LIFE?</b>", K.red, W * .64, H * .84); pop(bL, tLi, { y: u * 2, opacity: 0, scale: .9 }, .5, E.pop);
+  if (X.ix("P15_sweets") >= 0) { const swp = B.png("P15_sweets", W * .3, H * .66, H * .2, { c: K.amber }); pop(swp, tEa - .3, { scale: .4, opacity: 0 }, .8, E.spring);
+    const xx = place(mk("div", "", undefined, "&times;"), W * .27, H * .52); Object.assign(xx.style, { position: "absolute", font: `800 ${u * 12}px var(--font-head)`, color: K.red, textShadow: `0 0 ${u * 2}px ${K.red}` });
+    pop(xx, tEa + .3, { scale: 2, opacity: 0 }, .5, E.spring); bots.push(swp, xx); }
   const bN = badge("NO FAVOURITE FOOD?", K.amber, W * .05, H * .5); pop(bN, tEa, { x: -u * 3, opacity: 0 }, .5);
 
   /* 2. the scale: 100 dots, each = 1% ; red 10 crore, amber 13 crore borderline */

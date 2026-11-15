@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk V05 (9:16, 68-86 s): plate photo + veg PNG + scale PNG -> 86% ring (DiRECT, UK, without medicines);
+   comment box types "SUGAR" -> "FULL VIDEO LINK". */
+.ring { position: absolute; }
+.ring b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 800 calc(var(--u) * 13) var(--font-script); color: #00E676; line-height: 1; }
+.ring b small { margin-top: calc(var(--u) * 1); font: 700 calc(var(--u) * 3.2) var(--font-head); color: #EAF2FF; letter-spacing: .1em; }
+.cm { position: absolute; padding: calc(var(--u) * 3) calc(var(--u) * 4); border-radius: calc(var(--u) * 2.4); background: #0F1626f0; border: 1px solid #00F0FF88;
+      box-shadow: 0 0 calc(var(--u) * 4) #00F0FF44; font: 800 calc(var(--u) * 8) var(--font-head); color: #00F0FF; white-space: nowrap; }
+.cm small { display: block; font: 700 calc(var(--u) * 3) var(--font-script); color: #8A97AD; letter-spacing: .14em; margin-bottom: calc(var(--u) * 1); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tPl = at("plate", 1.5), tWt = at("wt", 2.6), t86 = at("p86", 3.2), tNm = at("nomed", 4.8), tDi = at("direct", 8.7), tDe = at("det", 12.9), tCm = at("comm", 14.3), tTy = at("typ", 15.8), tLi = at("link", 17.9);
+  const bg = aiPhoto("plate", 0, 0, W, H, { pos: "50% 50%" }); const sh = mk("div", "b-l", bg); sh.style.background = "#0A0E17"; sh.style.opacity = .4;
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, 0); tl.to(sh, { opacity: .85, duration: .7 }, t86 - .4);
+  const h1 = head('Plate + <em class="g">weight loss</em>', "సరైన plate method మరియు weight loss", .1, { kick: "DiRECT STUDY · UK", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const vd = png("P16_vegdal", W * .3, H * .52, H * .16, { c: K.green }); pop(vd, tPl, { scale: .4, opacity: 0 }, .9, SP); breathe(vd, tPl + .8, u, 2.6);
+  const sc = png("P20_scale", W * .72, H * .52, H * .15, { c: K.cyan }); pop(sc, tWt, { scale: .4, opacity: 0 }, .9, SP); breathe(sc, tWt + .8, u, 2.8);
+  const rs = W * .6, ring = place(mk("div", "ring", undefined, `<svg width="${rs}" height="${rs}" style="overflow:visible"><circle cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="#0F1626cc" stroke="#ffffff22" stroke-width="${u * 2}"/>
+    <circle class="pg" cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="none" stroke="${K.green}" stroke-width="${u * 2}" stroke-linecap="round" transform="rotate(-90 ${rs / 2} ${rs / 2})" filter="url(#gG)"/></svg><b>0%<small>SUGAR NORMAL</small></b>`), W * .2, H * .2, rs, rs);
+  const pg = ring.querySelector(".pg"), C = 2 * Math.PI * rs * .42, num = ring.querySelector("b"); pg.style.strokeDasharray = C;
+  pop(ring, t86 - .2, { scale: .4, opacity: 0 }, 1, SP); tl.fromTo(pg, { strokeDashoffset: C }, { strokeDashoffset: C * .14, duration: 1.4, ease: "power2.out", immediateRender: true }, t86 + .2);
+  DOC.countTo(num, 0, 86, t86 + .2, 1.4, (v) => `${Math.round(v)}%<small>SUGAR NORMAL</small>`);
+  tl.to([vd, sc], { top: "+=" + H * .14, scale: .8, duration: .8, ease: SP }, t86 - .3);
+  const bN = badge("WITHOUT <b>MEDICINES</b>", K.green, W * .22, H * .54); bN.style.fontSize = u * 4 + "px"; pop(bN, tNm, { y: u * 3, opacity: 0 }, .8, SP);
+  const bD = badge("UK · <b>DiRECT</b> STUDY", K.cyan, W * .26, H * .62); bD.style.fontSize = u * 3.6 + "px"; pop(bD, tDi, { y: u * 3, opacity: 0 }, .7, SP);
+  /* comment CTA */
+  out([ring, vd, sc, bN, bD], tDe - .5, { scale: .8 });
+  const h2 = rehead(h1, 'Want the <em>full</em> details?', "కింద comment లో SUGAR అని type చేయండి", tDe - .3, { kick: "FULL VIDEO", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const cm = place(mk("div", "cm", undefined, `<small>COMMENT</small><span class="ty"></span>`), W * .14, H * .32); pop(cm, tCm - .2, { scale: .6, opacity: 0 }, .9, SP); breathe(cm, tCm + .8, u, 2.6);
+  const ty = cm.querySelector(".ty"), o = { n: 0 }; tl.to(o, { n: 5, duration: .9, ease: "none", onUpdate: () => { ty.textContent = "SUGAR".slice(0, Math.round(o.n)); } }, tTy);
+  const bL = badge("&#8594; <b>FULL VIDEO LINK</b>", K.green, W * .14, H * .54); bL.style.fontSize = u * 4.4 + "px"; pop(bL, tLi - .3, { y: u * 3, opacity: 0, scale: .8 }, .8, SP); breathe(bL, tLi + .6, u * .6, 2.4);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

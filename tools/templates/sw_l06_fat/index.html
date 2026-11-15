@@ -25,6 +25,7 @@
     <circle cx="50" cy="20" r="14" fill="#00F0FF0d" stroke="${K.cyan}" stroke-width="1.6"/>
     <path d="M30 40 Q50 34 70 40 L76 96 Q78 120 68 128 L66 194 M34 194 L32 128 Q22 120 24 96 Z M30 42 L14 104 M70 42 L86 104" fill="#00F0FF0a" stroke="${K.cyan}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
     <path d="M50 128 L50 194" stroke="${K.cyan}" stroke-width="1.6"/></svg>`;
+  if (X.ix("P09_torso") >= 0) { body.innerHTML = ""; const tp = B.png("P09_torso", bw / 2, bh / 2, bh * .98, { c: K.amber, parent: body }); }
   tl.fromTo(body, { opacity: 0, scale: .95 }, { opacity: 1, scale: 1, duration: .7, immediateRender: true }, 0); breathe(body, .5, u * .4, 3.6);
   const h1 = head('Fat in the <em class="a">wrong place</em>', "పొట్ట చుట్టూ, liver లో, కండరాల్లో కొవ్వు పేరుకుపోయినప్పుడు", .2, { kick: "WHY RESISTANCE", w: W * .5, x: W * .05, y: H * .14, size: 6.2 });
   const blob = (fx, fy, r, t, lbl, lx, ly) => { const e = place(mk("div", "b-dot"), bx + bw * fx - r, by + bh * fy - r, r * 2, r * 2);

@@ -1,0 +1,8 @@
+{
+ "name": "sw_l08_plate",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L08 plate method: glowing donut plate 1/2 veg, 1/4 protein, 1/4 rice with PNGs; millets still carbs"
+}

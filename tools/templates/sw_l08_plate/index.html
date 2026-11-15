@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L08 (129-146 s): the plate method. Balanced plate photo bg; a glowing donut plate fills: 1/2 vegetables (green),
+   1/4 protein (amber), 1/4 rice / roti (cyan), PNGs land in their parts; then millets PNG: good but still carbs, watch the amount. */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tPl = at("plate", 1.9), tHa = at("half", 3.9), tQt = at("qtr", 5.1), tPr = at("prot", 7.6), tRi = at("rice", 9.9), tMi = at("mil", 11.4), tCa = at("carbs", 14.2), tAm = at("amt", 15.2);
+
+  const bg = aiPhoto("plate", 0, 0, W, H, { pos: "50% 50%" }); const sh = mk("div", "b-l", bg); sh.style.background = "#0A0E17"; sh.style.opacity = .35;
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, 0); tl.to(sh, { opacity: .82, duration: .8 }, tPl);
+  const h1 = head("The <em>plate</em> method", "doctors చెప్పే simple plate method", .1, { kick: "WHAT TO EAT", w: W * .44, x: W * .05, y: H * .12, size: 8 });
+
+  /* donut plate: 3 arcs draw in on their words */
+  const R = H * .27, cx = W * .69, cy = H * .52, C = 2 * Math.PI * R, sw = R * .5;
+  const pl = place(mk("div", "b-svg"), cx - R * 1.4, cy - R * 1.4, R * 2.8, R * 2.8), o = R * 1.4;
+  pl.innerHTML = `<svg width="${R * 2.8}" height="${R * 2.8}" style="overflow:visible"><circle cx="${o}" cy="${o}" r="${R + sw * .62}" fill="#0F1626" stroke="#ffffff30" stroke-width="${u * .3}"/>
+    ${[[K.green, .5, 0, "gG"], [K.amber, .25, .5, "gA"], [K.cyan, .25, .75, "gC"]].map(([c, f, s, fl]) => `<circle class="arc" cx="${o}" cy="${o}" r="${R}" fill="none" stroke="${c}" stroke-opacity=".85" stroke-width="${sw}"
+      stroke-dasharray="${C * f - u * .8} ${C}" stroke-dashoffset="${-C * s}" transform="rotate(-90 ${o} ${o})" filter="url(#${fl})"/>`).join("")}</svg>`;
+  tl.fromTo(pl, { scale: .4, opacity: 0, rotation: -60 }, { scale: 1, opacity: 1, rotation: 0, duration: 1.1, ease: SP, immediateRender: true }, tPl);
+  const arcs = [...pl.querySelectorAll(".arc")]; arcs.forEach((a) => tl.set(a, { opacity: 0 }, 0));
+  const part = (a, t, k, lab, c, px, py, bx, by) => { tl.fromTo(a, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: false }, t);
+    const p = k ? png(k, px, py, H * .17, { c }) : null; if (p) { pop(p, t + .2, { scale: .3, opacity: 0, y: -u * 6 }, .9, SP); breathe(p, t + 1, u * .4, 2.6); }
+    const b = badge(lab, c, bx, by); pop(b, t + .3, { x: -u * 2, opacity: 0 }, .7, SP); return [p, b]; };
+  const pV = part(arcs[0], tHa, "P16_vegdal", "1/2 <b>VEGETABLES</b>", K.green, cx - R * .55, cy, W * .05, H * .5);
+  const pP = part(arcs[1], tQt, null, "1/4 <b>PROTEIN</b> · DAL, EGG, FISH", K.amber, 0, 0, W * .05, H * .58);
+  const pR = part(arcs[2], tRi - .4, "P11_rice", "1/4 <b>RICE / ROTI</b>", K.cyan, cx + R * .45, cy - R * .5, W * .05, H * .66);
+  tl.to(arcs[1], { strokeOpacity: 1, duration: .25, yoyo: true, repeat: 1 }, tPr);
+
+  /* millets: good, still carbs */
+  out([pl, pV[0], pR[0], pV[1], pP[1], pR[1]], tMi - .4, { scale: .8 });
+  const h2 = rehead(h1, 'Millets? <em class="a">Still carbs</em>', "millets, ముడి బియ్యం మంచివే, కానీ ఎంత తింటున్నామో చూసుకోవాలి", tMi, { kick: "CAREFUL", w: W * .48, x: W * .05, y: H * .12, size: 8 });
+  const mi = png("P17_millets", W * .7, H * .52, H * .4, { c: K.amber }); pop(mi, tMi + .1, { scale: .4, opacity: 0 }, 1, SP); breathe(mi, tMi + 1.1, u * .6, 3);
+  const b1 = badge("<b>GOOD</b> CHOICE", K.green, W * .05, H * .56); pop(b1, tMi + .6, { x: -u * 3, opacity: 0 }, .7, SP);
+  const b2 = badge("STILL <b>CARBS</b>", K.amber, W * .05, H * .64); pop(b2, tCa, { x: -u * 3, opacity: 0 }, .7, SP);
+  const b3 = badge("WATCH THE <b>AMOUNT</b>", K.red, W * .05, H * .72); pop(b3, tAm, { x: -u * 3, opacity: 0 }, .7, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

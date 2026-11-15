@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk V03 (9:16, 29-44 s): insulin key -> cell door; torso PNG with belly / liver fat; door jams = insulin resistance. */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, cell, tintCell, key, organ, spark, flow } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tGl = at("glu", 1.1), tCe = at("cell", 1.9), tPa = at("panc", 3.4), tIn = at("ins", 4.7), tKe = at("key", 5.6), tBu = at("but", 6.9), tBe = at("belly", 7.4),
+        tLv = at("liver", 8.3), tSt = at("stop", 11.6), tRe = at("res", 13.6);
+  const h1 = head('Insulin = the <em class="a">key</em>', "glucose కణాల్లోకి వెళ్ళాలంటే insulin తాళం చెవి కావాలి", .1, { kick: "HOW IT WORKS", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const ce = cell(W * .66, H * .42, W * .22, { c: K.green }); tl.fromTo(ce, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, ease: SP, immediateRender: true }, tCe - .3); breathe(ce, tCe + .7, u, 3);
+  const dp = ce.doorPt;
+  flow([[W * .05, H * .6], [W * .25, H * .52], [dp[0] - u * 3, dp[1]]], 12, tGl, D, { stop: .97, speed: .3, pile: true });
+  const pa = organ(W * .06, H * .22, u * 14); pop(pa, tPa, { scale: .5, opacity: 0 }, .9, SP); breathe(pa, tPa + .8, u * .6, 2.8);
+  const bP = badge("<b>PANCREAS</b>", K.amber, W * .08, H * .33); bP.style.fontSize = u * 3.4 + "px"; pop(bP, tPa + .2, { y: u * 2, opacity: 0 }, .7, SP);
+  const k1 = key(W * .1, H * .36, u * 6); pop(k1, tIn, { scale: .3, opacity: 0 }, .7, SP);
+  tl.to(k1, { left: dp[0] - u * 11, top: dp[1] - u * 3, duration: 1.2, ease: "power2.inOut" }, tKe);
+  /* fat builds, door jams */
+  out([pa, bP], tBu - .2, { scale: .8 });
+  const to = png("P09_torso", W * .24, H * .42, H * .26, { c: K.amber }); pop(to, tBu, { scale: .5, opacity: 0 }, .9, SP); breathe(to, tBu + .9, u * .6, 3);
+  const bB = badge("BELLY + LIVER <b>FAT</b>", K.amber, W * .06, H * .58); bB.style.fontSize = u * 3.6 + "px"; pop(bB, tBe, { x: -u * 4, opacity: 0 }, .7, SP);
+  tl.to(k1, { rotation: 35, duration: .35, transformOrigin: "100% 50%" }, tSt - 1.4); tl.to(k1, { rotation: 0, duration: .3 }, tSt - .9);
+  tl.fromTo(ce.door, { rotation: 0 }, { rotation: 6, duration: .07, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, tSt - 1.2);
+  spark(dp[0], dp[1], tSt - 1.1, K.red); spark(dp[0], dp[1], tSt, K.red); tintCell(ce, tSt - .6, K.red, .8);
+  const h2 = rehead(h1, 'Insulin <em class="r">resistance</em>', "కణాలు insulin మాట వినడం మానేస్తాయి", tSt - .4, { kick: "THE PROBLEM", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const bD = badge("KEY YES · <b>DOOR STUCK</b>", K.red, W * .4, H * .64); bD.style.fontSize = u * 3.6 + "px"; pop(bD, tRe, { y: u * 3, opacity: 0, scale: .8 }, .8, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

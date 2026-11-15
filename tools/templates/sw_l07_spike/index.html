@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L07 (107-129 s): not only sweets. Sweets photo bg + sweets PNG; rice / bread / cola / juice PNGs drop in a row,
+   a red spike shoots up on the glucose graph; then veg + dal PNG joins the rice: the same meal rises slowly, flat green curve. */
+.x { position: absolute; font: 800 calc(var(--u) * 16) var(--font-head); color: #FF3B30; text-shadow: 0 0 calc(var(--u) * 3) #FF3B30; line-height: 1; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, graph, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tSw = at("sw", 2.7), tBu = at("but", 4.6), tRi = at("rice", 5.3), tMa = at("maida", 6.1), tCo = at("cola", 6.7), tJu = at("juice", 7.7), tFa = at("fast", 8.6),
+        tSp = at("spike", 13.0), tFi = at("fib", 15.5), tPr = at("prot", 16.7), tSl = at("slow", 18.7), tLs = at("less", 20.6);
+
+  const bg = aiPhoto("sweets", 0, 0, W, H, { pos: "60% 50%" }); mk("div", "b-l", bg).style.background = "linear-gradient(90deg,#0A0E17ee 0%,#0A0E1799 45%,#0A0E1730 100%)";
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, 0);
+  const h1 = head("Now, <em class=\"a\">food</em>", "sweets మానేస్తే చాలు అనుకుంటారు", .1, { kick: "WHAT WE EAT", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const sw = png("P15_sweets", W * .72, H * .5, H * .42, { c: K.amber }); pop(sw, tSw - .3, { scale: .4, opacity: 0 }, 1, SP); breathe(sw, tSw + .7, u * .7, 3);
+  const bS = badge("ONLY <b>SWEETS</b>?", K.amber, W * .62, H * .78); pop(bS, tSw, { y: u * 2, opacity: 0 }, .7, SP);
+
+  /* but: the everyday carbs drop in a row */
+  tl.to(bg, { opacity: .25, duration: .8 }, tBu); out([sw, bS], tBu, { scale: .7 });
+  const h2 = rehead(h1, 'These spike <em class="r">too</em>', "తెల్ల అన్నం, మైదా, cool drinks, fruit juice కూడా", tBu, { kick: "FAST CARBS", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const row = [["P11_rice", "WHITE RICE", tRi], ["P14_bread", "MAIDA", tMa], ["P12_cola", "COOL DRINK", tCo], ["P13_juice", "FRUIT JUICE", tJu]].map(([k, n, t], i) => {
+    const x = W * (.12 + i * .2), o = png(k, x, H * .55, H * .24, { c: K.red, g: 1.4 });
+    tl.fromTo(o, { y: -H * .4, opacity: 0, rotation: -12 }, { y: 0, opacity: 1, rotation: 0, duration: .9, ease: SP, immediateRender: true }, t - .25); breathe(o, t + .7, u * .5, 2.6 + i * .2);
+    const b = badge(n, K.red, x - u * 5, H * .7); pop(b, t, { y: u * 2, opacity: 0 }, .6, SP); return [o, b]; });
+  const bF = badge("FAST DIGEST = <b>FAST GLUCOSE</b>", K.red, W * .05, H * .82); pop(bF, tFa, { x: -u * 3, opacity: 0 }, .7, SP);
+
+  /* the spike */
+  out(row.flat(), tSp - 1.4, { y: u * 4, stagger: .05 }); out(bF, tSp - 1.4);
+  const gr = graph(W * .4, H * .38, W * .52, H * .38); tl.fromTo(gr, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, tSp - 1.2);
+  const ri = png("P11_rice", W * .2, H * .62, H * .26, { c: K.red }); pop(ri, tSp - 1.2, { scale: .5, opacity: 0 }, .8, SP); breathe(ri, tSp, u * .5, 2.8);
+  gr.line(tSp - .9, "spike", K.red, 1.8);
+  const bK = badge("<b>SPIKE</b>", K.red, W * .58, H * .3); pop(bK, tSp + .3, { scale: .6, opacity: 0 }, .7, SP);
+
+  /* fiber + protein join: slow, flat */
+  const vd = png("P16_vegdal", W * .2, H * .62, H * .26, { c: K.green }); tl.fromTo(vd, { x: -W * .2, opacity: 0 }, { x: 0, opacity: 1, duration: .9, ease: SP, immediateRender: true }, tFi);
+  tl.to(ri, { x: -W * .07, scale: .8, duration: .7, ease: SP }, tFi); tl.to(vd, { left: "+=" + W * .06, duration: .7, ease: SP }, tFi + .1);
+  const h3 = rehead(h2, 'Add <em class="g">fiber + protein</em>', "కూరగాయల fiber, పప్పు protein తో కలిపి తింటే", tFi, { kick: "SLOW IT DOWN", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const bP = badge("FIBER + <b>PROTEIN</b>", K.green, W * .05, H * .82); pop(bP, tPr, { x: -u * 3, opacity: 0 }, .7, SP);
+  gr.line(tSl - .4, "flat", K.green, 2); out(bK, tSl);
+  const bL = badge("SLOW = <b>NO SPIKE</b>", K.green, W * .66, H * .48); pop(bL, tLs - .3, { scale: .6, opacity: 0 }, .8, SP); breathe(bL, tLs + .6, u * .5, 2.6);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

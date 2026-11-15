@@ -1,0 +1,8 @@
+{
+ "name": "sw_l10_glut4",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L10 walk secret: walker / dumbbell / muscle PNGs, cell PNG with GLUT4 doors rising, glucose pulled in, no insulin, 10-15 min ring + flattened spike"
+}

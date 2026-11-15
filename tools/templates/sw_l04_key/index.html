@@ -2,38 +2,69 @@
 <script src="gsap.min.js"></script><script src="scene.js"></script>
 <link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
 <script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
-<style>/* 09_Sugar_Walk L04 (60-70 s): insulin = key. The two keys from L03 arrive; a big glowing key; three cells (muscle, liver, fat)
-   pop in a row, their doors swing open, glucose flows inside, blood sugar meter falls red -> green. */
+<style>/* 09_Sugar_Walk L04 (60-70 s) rev 2 (3D PNGs): insulin = key. Big golden key PNG springs in; muscle, liver, fat PNGs land on glowing
+   pedestals with a lock ring each; small keys fly from the big key into each lock, rings burst green (doors open); glucose molecule PNGs
+   stream into each organ and are absorbed; blood sugar meter falls red -> green. */
+.ped { position: absolute; border-radius: 50%; }
+.lk { position: absolute; border-radius: 50%; border: calc(var(--u) * .45) solid #FFB800; box-shadow: 0 0 calc(var(--u) * 1.6) #FFB800, inset 0 0 calc(var(--u) * 1) #FFB80088; }
 </style></head><body>
 <div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
   <div id="stage"></div>
 </div>
 <script>
-  const { W, H, D, u, tl, E, at, pop, out, cam, head, rehead } = X;
-  const { K, dbg, breathe, badge, cell, key, flow, meter } = B;
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, meter } = B;
+  const SP = E.spring;
   document.documentElement.style.setProperty("--u", u + "px");
   dbg();
   const tKe = at("key", 1.9), tMu = at("musc", 3.4), tLv = at("liver", 4.3), tFa = at("fat", 4.8), tOp = at("open", 5.8), tGl = at("glu", 6.7), tDn = at("down", 9.2);
 
-  const h1 = head('Insulin is a <em class="a">key</em>', "insulin అంటే ఒక తాళం చెవి లాంటిది", .2, { kick: "HOW IT WORKS", w: W * .44, x: W * .05, y: H * .14, size: 6.4 });
-  const kb = key(W * .08, H * .5, u * 7); tl.fromTo(kb, { opacity: 0, scale: .3, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: .8, ease: E.pop, immediateRender: true }, tKe - .3);
-  breathe(kb, tKe + .6, u * .7, 3);
+  const h1 = head('Insulin is a <em class="a">key</em>', "insulin అంటే ఒక తాళం చెవి లాంటిది", .1, { kick: "HOW IT WORKS", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  /* the big golden key */
+  const key = png("P04_key", W * .22, H * .66, H * .36, { c: K.amber, g: 2.6 });
+  tl.fromTo(key, { scale: .2, opacity: 0, rotation: -40 }, { scale: 1, opacity: 1, rotation: 0, duration: 1.1, ease: SP, immediateRender: true }, tKe - .5);
+  breathe(key, tKe + .6, u * .9, 3); tl.to(key, { rotation: 8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 3 }, tKe + .6);
 
-  /* three cells, each with its own door */
-  const C3 = [["MUSCLE", .55, tMu], ["LIVER", .72, tLv], ["FAT", .89, tFa]].map(([n, fx, t]) => {
-    const c = cell(W * fx, H * .5, H * .11, { c: K.green }); tl.fromTo(c, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .6, ease: E.pop, immediateRender: true }, t);
-    breathe(c, t + .7, u * .5, 2.6 + fx); const b = badge(n, K.green, W * fx - u * 5, H * .68); pop(b, t + .1, { y: u * 2, opacity: 0 }, .45); return c; });
-  const me = meter(W * .42, H * .3, u * 2.4, H * .42, "BLOOD SUGAR");
-  tl.fromTo(me, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, tMu);
-  me.set(0, .75, K.red, "HIGH", .1);
+  /* muscle, liver, fat on glowing pedestals, each with a lock ring */
+  const SL = [["P06_muscle", "MUSCLE", .52, tMu], ["P07_liver", "LIVER", .7, tLv], ["P08_fat", "FAT", .88, tFa]];
+  const org = SL.map(([k, n, fx, t], i) => {
+    const x = W * fx, y = H * .5, ped = place(mk("div", "ped"), x - W * .075, y + H * .14, W * .15, H * .05);
+    ped.style.background = `radial-gradient(ellipse at 50% 50%, ${K.amber}55 0%, ${K.amber}11 55%, transparent 72%)`;
+    const o = png(k, x, y, H * .27, { c: K.red, g: 1.6 });
+    tl.fromTo(o, { y: -H * .25, opacity: 0, scale: .6 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: SP, immediateRender: true }, t - .2);
+    tl.fromTo(ped, { opacity: 0, scaleX: .3 }, { opacity: 1, scaleX: 1, duration: .6, immediateRender: true }, t);
+    breathe(o, t + .9, u * .6, 2.6 + i * .3);
+    const lk = place(mk("div", "lk"), x + H * .07, y - H * .17, u * 4, u * 4); pop(lk, t + .3, { scale: 0, opacity: 0 }, .7, SP);
+    const b = badge(n, K.amber, x - u * 4.5, y + H * .21); pop(b, t + .2, { y: u * 2, opacity: 0 }, .6, SP);
+    return { o, lk, b, x, y };
+  });
+  const me = meter(W * .41, H * .3, u * 2.4, H * .4, "BLOOD SUGAR");
+  tl.fromTo(me, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, tMu); me.set(0, .78, K.red, "HIGH", .1);
 
-  /* doors swing open, glucose flows in, sugar falls */
-  C3.forEach((c, i) => { tl.to(c.door, { rotation: -85, duration: .45, ease: E.pop }, tOp + i * .15);
-    tl.to(c.hole, { attr: { fill: K.green }, duration: .3 }, tOp + i * .15);
-    flow([[W * .44, H * (.82 + i * .03)], [c.doorPt[0] - u * 3, c.doorPt[1] + u * 2], [c.cx, c.cy]], 7, tGl + i * .12, D, { speed: .4, c: K.cyan, r: u * .5 }); });
-  const bO = badge("DOORS <b>OPEN</b>", K.green, W * .55, H * .2); pop(bO, tOp, { y: -u * 2, opacity: 0, scale: .9 }, .5, E.pop);
-  const h2 = rehead(h1, 'Glucose goes <em class="g">in</em>', "glucose లోపలికి వెళ్తుంది, రక్తంలో sugar తగ్గుతుంది", tGl, { kick: "HEALTHY BODY", w: W * .44, x: W * .05, y: H * .14, size: 6.4 });
-  me.set(tDn - .9, .25, K.green, "NORMAL", 1.2);
-  cam(0, Math.max(D, 1), 1.03);
+  /* keys fly into the locks, rings burst green = doors open */
+  org.forEach((g, i) => {
+    const t = tOp - .5 + i * .18, k = png("P04_key", W * .22, H * .66, H * .09, { c: K.amber, g: 1.2 });
+    tl.fromTo(k, { opacity: 0, scale: .5 }, { opacity: 1, scale: 1, duration: .25, immediateRender: true }, t);
+    tl.to(k, { left: g.x + H * .07 + u * 2 - parseFloat(k.style.width) / 2, top: g.y - H * .17 + u * 2 - H * .045, rotation: 90, duration: .6, ease: "power2.inOut" }, t);
+    tl.to(k, { opacity: 0, scale: .4, duration: .2 }, t + .6);
+    tl.to(g.lk, { borderColor: K.green, boxShadow: `0 0 ${u * 3}px ${K.green}, inset 0 0 ${u}px ${K.green}`, scale: 1.5, duration: .35, ease: SP }, t + .6);
+    tl.to(g.lk, { scale: 1, duration: .5, ease: SP }, t + .95);
+    tl.to(g.b, { "--c": K.green, duration: .3 }, t + .6);
+  });
+  const bO = badge("DOORS <b>OPEN</b>", K.green, W * .62, H * .14); pop(bO, tOp + .3, { y: -u * 2, opacity: 0, scale: .8 }, .8, SP);
+
+  /* glucose molecules stream into each organ and are absorbed */
+  const h2 = rehead(h1, 'Glucose goes <em class="g">in</em>', "glucose లోపలికి వెళ్తుంది, రక్తంలో sugar తగ్గుతుంది", tGl, { kick: "HEALTHY BODY", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  out(key, tGl - .2, { scale: .6, y: u * 6 });
+  for (let i = 0; i < 12; i++) {
+    const g = org[i % 3], t = tGl + i * .2, m = png("P01_glucose", W * (.06 + (i % 4) * .06), H * (.78 + (i % 3) * .05), H * .085, { c: K.cyan, g: 1.4 });
+    tl.fromTo(m, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .3, ease: SP, immediateRender: true }, t);
+    tl.to(m, { left: g.x - parseFloat(m.style.width) / 2, top: g.y - H * .04, rotation: 120, duration: 1.1, ease: "power2.in" }, t + .1);
+    tl.to(m, { opacity: 0, scale: .2, duration: .25 }, t + 1.1);
+    tl.to(g.o, { scale: 1.06, duration: .12, yoyo: true, repeat: 1 }, t + 1.15);
+  }
+  me.set(tDn - 1.2, .24, K.green, "NORMAL", 1.4);
+  const bN = badge("SUGAR <b>DOWN</b>", K.green, W * .37, H * .8); pop(bN, tDn - .1, { y: u * 2, opacity: 0, scale: .8 }, .8, SP);
+  cam(0, Math.max(D, 1), 1.035);
   X.done();
 </script></body></html>

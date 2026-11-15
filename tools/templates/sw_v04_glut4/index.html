@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk V04 (9:16, 44-68 s): the mechanism. Walker PNG, muscle PNG lights up; muscle cell PNG: GLUT4 doors rise to the membrane,
+   glucose PNGs pulled in, key crossed = no insulin; "1-2 DAYS" timer -> walk daily. */
+.g4 { position: absolute; width: calc(var(--u) * 3.4); height: calc(var(--u) * 6.8); margin: calc(var(--u) * -3.4) 0 0 calc(var(--u) * -1.7); border-radius: 99px;
+      background: linear-gradient(#00F0FF, #0090A0); box-shadow: 0 0 calc(var(--u) * 2.6) #00F0FF; }
+.xx { position: absolute; font: 800 calc(var(--u) * 18) var(--font-head); color: #FF3B30; text-shadow: 0 0 calc(var(--u) * 3) #FF3B30; line-height: 1; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tMc = at("mech", 3.2), tWa = at("walk", 6.2), tMu = at("musc", 7.2), tAc = at("active", 7.8), tGl = at("glut", 10.8), tDo = at("doors", 12.4), tOu = at("out", 12.9),
+        tNo = at("noins", 14.7), tGu = at("glu", 17.3), tMa = at("magic", 20.6), tDa = at("days", 22.5);
+  const h1 = head('The <em class="g">walk</em> secret', "మన శరీరంలోని ఒక అద్భుతమైన mechanism", .1, { kick: "BUT HERE IS THE MAGIC", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const wk = png("P18_walker", W * .32, H * .44, H * .34, { c: K.green }); pop(wk, tWa - .4, { x: -u * 10, opacity: 0 }, .9, SP); breathe(wk, tWa + .5, u, 1.6);
+  const mu = png("P06_muscle", W * .72, H * .44, H * .18, { c: K.green, g: 2.4 }); pop(mu, tMu, { scale: .3, opacity: 0 }, .9, SP);
+  tl.to(mu, { filter: `drop-shadow(0 0 ${u * 5}px ${K.green}) drop-shadow(0 0 ${u * 2}px ${K.green})`, duration: .4, yoyo: true, repeat: 3 }, tAc);
+  const bA = badge("MUSCLES <b>ACTIVE</b>", K.green, W * .5, H * .58); bA.style.fontSize = u * 3.6 + "px"; pop(bA, tAc, { y: u * 3, opacity: 0 }, .7, SP);
+  /* inside the muscle cell */
+  out([wk, mu, bA], tGl - .8, { scale: .7 });
+  const cx = W * .5, cy = H * .42, R = W * .33;
+  const ce = png("P05_cell", cx, cy, R * 2.1, { c: K.green, g: 2 }); tl.fromTo(ce, { scale: .2, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: SP, immediateRender: true }, tGl - .6); breathe(ce, tGl + .5, u * .6, 3);
+  const h2 = rehead(h1, '<em>GLUT4</em> doors open', "GLUT4 అనే ప్రత్యేకమైన తలుపులు బయటకు వస్తాయి", tGl - .4, { kick: "INSIDE THE MUSCLE CELL", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const doors = [0, 60, 120, 180, 240, 300].map((a, i) => { const r = a * Math.PI / 180, d = place(mk("div", "g4"), cx + Math.cos(r) * R * .25, cy + Math.sin(r) * R * .25); d.style.rotate = (a + 90) + "deg";
+    tl.fromTo(d, { opacity: 0, scale: .3 }, { opacity: 1, scale: 1, duration: .4, ease: SP, immediateRender: true }, tDo - .6 + i * .1);
+    tl.to(d, { left: cx + Math.cos(r) * R * .86, top: cy + Math.sin(r) * R * .86, duration: 1, ease: SP }, tOu - .1 + i * .08); d.a = r; return d; });
+  const ky = png("P04_key", W * .2, H * .64, H * .07, { c: K.amber }); pop(ky, tNo - .2, { scale: .4, opacity: 0 }, .7, SP);
+  const xx = place(mk("div", "xx", undefined, "&times;"), W * .14, H * .59); pop(xx, tNo + .3, { scale: 2, opacity: 0 }, .5, SP);
+  const bN = badge("NO <b>INSULIN</b> NEEDED", K.green, W * .34, H * .62); bN.style.fontSize = u * 3.8 + "px"; pop(bN, tNo + .4, { x: u * 4, opacity: 0 }, .7, SP);
+  for (let i = 0; i < 12; i++) { const dr = doors[i % 6], t = tGu - 1 + i * .25, m = png("P01_glucose", cx + Math.cos(dr.a) * R * 1.5, cy + Math.sin(dr.a) * R * 1.4, W * .1, { c: K.cyan, g: 1 });
+    tl.fromTo(m, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .25, immediateRender: true }, t);
+    tl.to(m, { left: cx + Math.cos(dr.a) * R * .3 - W * .05, top: cy + Math.sin(dr.a) * R * .3 - W * .05, rotation: 140, duration: .9, ease: "power2.in" }, t + .1);
+    tl.to(m, { opacity: 0, scale: .3, duration: .2 }, t + .9); }
+  /* the catch: lasts 1-2 days */
+  out([ce, ...doors, ky, xx, bN], tMa - .4, { scale: .8 });
+  const h3 = rehead(h2, 'Lasts only <em class="a">1-2 days</em>', "ఈ magic effect ఒకటి రెండు రోజులు మాత్రమే", tMa - .2, { kick: "SO WALK DAILY", w: W * .88, x: W * .06, y: H * .06, size: 9.4 });
+  const s = DOC.stat("1-2", "DAYS · THEN IT FADES", W * .1, H * .32, K.amber); s.b.style.fontSize = u * 22 + "px"; s.querySelector("span").style.fontSize = u * 3.6 + "px"; pop(s, tMa, { scale: .5, opacity: 0 }, .9, SP);
+  const bW = badge("WALK <b>EVERY DAY</b>", K.green, W * .1, H * .58); bW.style.fontSize = u * 4.2 + "px"; pop(bW, tDa, { x: -u * 4, opacity: 0, scale: .8 }, .8, SP); breathe(bW, tDa + .8, u * .6, 2.6);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

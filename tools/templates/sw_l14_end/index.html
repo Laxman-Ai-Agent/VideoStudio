@@ -1,0 +1,76 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L14 (237-280 s): safety + recap + CTA. Red banner (don't stop / change medicines yourself) with tablets PNG; insulin +
+   more exercise + less rice -> meter falls too low; dizzy photo: sweating / shaking / dizziness = hypoglycemia; doctor photo + glucometer PNG
+   "HbA1c every 3 months"; recap: plate + walk + sleep -> the cell door opens green again; share + comment box. */
+.ban { position: absolute; left: 0; right: 0; padding: calc(var(--u) * 1.6) 0; text-align: center; background: #FF3B30; color: #fff; font: 800 calc(var(--u) * 4) var(--font-head);
+       box-shadow: 0 0 calc(var(--u) * 4) #FF3B30aa; letter-spacing: .02em; }
+.cm { position: absolute; padding: calc(var(--u) * 2) calc(var(--u) * 2.6); border-radius: calc(var(--u) * 1.6); background: #0F1626f0; border: 1px solid #00F0FF77;
+      box-shadow: 0 0 calc(var(--u) * 3) #00F0FF33; font: 700 calc(var(--u) * 3.2) var(--font-head); color: #EAF2FF; white-space: nowrap; }
+.cm small { display: block; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #8A97AD; letter-spacing: .14em; margin-bottom: calc(var(--u) * .8); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, meter, cell, aiPhoto, spark } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tIm = at("imp", 1.1), tSt = at("stop", 5.0), tDo = at("dose", 5.8), tIn = at("ins", 7.1), tEx = at("ex", 10.0), tRi = at("rice", 11.1), tLo = at("low", 13.2),
+        tSw = at("sweat", 14.5), tSh = at("shake", 15.2), tDz = at("dizzy", 15.7), tHy = at("hypo", 17.1), tDc = at("doc", 20.1), tHb = at("hb", 22.6), tSo = at("so", 24.8),
+        tPl = at("plate", 29.4), tWa = at("walk", 31.0), tSl = at("sleep", 32.0), tCe = at("cells", 33.8), tLi = at("listen", 35.3), tSh2 = at("share", 39.5), tQ = at("q", 41.5);
+
+  /* A. medicines: never stop on your own */
+  const h1 = head('One <em class="r">important</em> caution', "sugar normal అయిందని మీరంతట మీరే మందులు ఆపకండి", .1, { kick: "SAFETY FIRST", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const tb = png("P23_tablets", W * .76, H * .5, H * .38, { c: K.amber }); pop(tb, tIm, { scale: .4, opacity: 0 }, .9, SP); breathe(tb, tIm + 1, u * .6, 3);
+  const ban = place(mk("div", "ban", undefined, "DON'T STOP MEDICINES ON YOUR OWN"), 0, H * .74); tl.fromTo(ban, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: SP, immediateRender: true }, tSt - .3);
+  const bD = badge("DON'T CHANGE THE <b>DOSE</b>", K.red, W * .05, H * .56); pop(bD, tDo, { x: -u * 3, opacity: 0 }, .7, SP);
+  out([tb, ban, bD], tIn - .4, { scale: .8 });
+  const h2 = rehead(h1, 'Sugar can drop <em class="r">too low</em>', "insulin వాడుతూ exercise పెంచినా, అన్నం బాగా తగ్గించినా", tIn - .2, { kick: "CAREFUL", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const me = meter(W * .84, H * .28, u * 2.6, H * .46, "BLOOD SUGAR"); tl.fromTo(me, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, tIn); me.set(tIn, .55, K.green, "OK", .5);
+  const b1 = badge("<b>INSULIN</b> / SUGAR MEDICINES", K.amber, W * .05, H * .5), b2 = badge("+ MORE <b>EXERCISE</b>", K.cyan, W * .05, H * .58), b3 = badge("+ MUCH LESS <b>RICE</b>", K.cyan, W * .05, H * .66);
+  pop(b1, tIn + .3, { x: -u * 3, opacity: 0 }, .7, SP); pop(b2, tEx, { x: -u * 3, opacity: 0 }, .7, SP); pop(b3, tRi, { x: -u * 3, opacity: 0 }, .7, SP);
+  const ky = png("P04_key", W * .55, H * .55, H * .14, { c: K.amber }); pop(ky, tIn + .4, { scale: .4, opacity: 0 }, .7, SP);
+  const wk = png("P18_walker", W * .66, H * .56, H * .3, { c: K.cyan }); pop(wk, tEx + .1, { x: -u * 5, opacity: 0 }, .8, SP); breathe(wk, tEx + 1, u * .5, 1.6);
+  me.set(tLo - .5, .06, K.red, "TOO LOW", 1.1); spark(W * .84 + u * 1.3, H * .7, tLo + .5, K.red);
+
+  /* B. hypoglycemia signs on the dizzy photo */
+  out([b1, b2, b3, ky, wk, me], tSw - .5, { scale: .8 });
+  const bg1 = aiPhoto("dizzy", 0, 0, W, H, { t: tSw - .5, pos: "60% 40%" }); mk("div", "b-l", bg1).style.background = "linear-gradient(90deg,#0A0E17f2 0%,#0A0E17a0 45%,#0A0E1740 100%)";
+  DOC.reveal(bg1, tSw - .5, "l", .8); bg1.parentNode.insertBefore(bg1, bg1.parentNode.firstChild);
+  const h3 = rehead(h2, '<em class="r">Hypoglycemia</em> signs', "చెమటలు, వణుకు, తల తిరగడం వస్తే", tSw - .3, { kick: "TOO LOW SUGAR", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const sg = [["SWEATING", tSw], ["SHAKING", tSh], ["DIZZINESS", tDz]].map(([n, t], i) => { const b = badge(`<b>${n}</b>`, K.red, W * .05, H * (.5 + i * .09)); b.style.fontSize = u * 2.8 + "px";
+    pop(b, t, { x: -u * 4, opacity: 0, scale: .8 }, .8, SP); return b; });
+
+  /* C. doctor + HbA1c every 3 months */
+  out(sg, tDc - .5, { x: -u * 3 });
+  const bg2 = aiPhoto("doctor", 0, 0, W, H, { t: tDc - .5, pos: "55% 45%" }); mk("div", "b-l", bg2).style.background = "linear-gradient(90deg,#0A0E17f2 0%,#0A0E17a0 45%,#0A0E1740 100%)";
+  DOC.reveal(bg2, tDc - .5, "l", .8); bg1.after(bg2);
+  const h4 = rehead(h3, 'Talk to your <em class="g">doctor</em>', "ఏ మార్పు చేసినా ముందు doctor తో మాట్లాడండి", tDc - .3, { kick: "BEFORE ANY CHANGE", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const gm = png("P24_glucometer", W * .2, H * .64, H * .26, { c: K.cyan }); pop(gm, tHb - .4, { scale: .4, opacity: 0 }, .9, SP); breathe(gm, tHb + .6, u * .5, 3);
+  const bH = badge("<b>HbA1c</b> EVERY 3 MONTHS", K.amber, W * .32, H * .62); bH.style.fontSize = u * 2.6 + "px"; pop(bH, tHb, { x: -u * 3, opacity: 0 }, .8, SP);
+
+  /* D. recap: plate + walk + sleep -> cells listen to insulin again */
+  out([gm, bH], tSo - .4, { scale: .8 }); tl.to([bg1, bg2], { opacity: 0, duration: .7 }, tSo - .4);
+  const h5 = rehead(h4, 'Small habits, <em class="g">big change</em>', "sugar అంటే శరీరం insulin మాట వినకపోవడం", tSo - .2, { kick: "RECAP", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const ce = cell(W * .74, H * .52, H * .2, { c: K.red }); tl.fromTo(ce, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, ease: SP, immediateRender: true }, tSo); breathe(ce, tSo + 1, u * .5, 3);
+  const RC = [["P16_vegdal", "RIGHT PLATE", tPl], ["P18_walker", "WALK AFTER MEALS", tWa], ["P26_clock", "GOOD SLEEP", tSl]].map(([k, n, t], i) => {
+    const o = png(k, W * (.09 + i * .16), H * .6, H * .2, { c: K.green }); pop(o, t, { scale: .3, opacity: 0, y: u * 4 }, .9, SP); breathe(o, t + .9, u * .4, 2.6 + i * .3);
+    const b = badge(n, K.green, W * (.04 + i * .16), H * .75); pop(b, t + .1, { y: u * 2, opacity: 0 }, .6, SP); return [o, b]; });
+  B.tintCell(ce, tCe, K.green, .9); tl.to(ce.door, { rotation: -85, duration: .5, ease: SP }, tLi); tl.to(ce.hole, { attr: { fill: K.green }, duration: .3 }, tLi);
+  const bL = badge("CELLS <b>LISTEN AGAIN</b>", K.green, W * .64, H * .82); pop(bL, tLi + .2, { y: u * 2, opacity: 0, scale: .8 }, .8, SP);
+
+  /* E. share + comment */
+  out([ce, bL, ...RC.flat()], tSh2 - .5, { scale: .8 });
+  const h6 = rehead(h5, '<em>Share</em> this video', "మీ ఇంట్లో ఎవరికైనా sugar ఉంటే ఈ video share చేయండి", tSh2 - .3, { kick: "HELP SOMEONE", w: W * .56, x: W * .05, y: H * .1, size: 7.6 });
+  const cm = place(mk("div", "cm", undefined, `<small>COMMENT BELOW</small><span class="ty"></span>`), W * .05, H * .55); pop(cm, tQ - .6, { y: u * 3, opacity: 0 }, .8, SP);
+  const ty = cm.querySelector(".ty"), msg = "Do you walk after meals?", o = { n: 0 };
+  tl.to(o, { n: msg.length, duration: 1.6, ease: "none", onUpdate: () => { ty.textContent = msg.slice(0, Math.round(o.n)); } }, tQ - .2);
+  const sh = png("P18_walker", W * .78, H * .56, H * .4, { c: K.cyan }); pop(sh, tSh2, { x: u * 6, opacity: 0 }, .9, SP); breathe(sh, tSh2 + 1, u * .6, 1.6);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

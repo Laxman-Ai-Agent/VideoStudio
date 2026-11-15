@@ -81,6 +81,15 @@
     if (o.round) { e.style.borderRadius = "50%"; }
     return e;
   }
+  /* swap a vector part for its 3D PNG when the scene has it (names list): behind the svg (cell) or replacing it (key, pancreas) */
+  function pngIn(e, k, x, y, w, h, op = 1, replace = false) {
+    const i = X.ix(k), src = (S.images || [])[i]; if (i < 0 || !src) return;
+    if (replace) { e.innerHTML = ""; e.style.filter = ""; }
+    const sv = e.querySelector("svg"); if (sv) Object.assign(sv.style, { position: "absolute", left: 0, top: 0 });
+    const im = document.createElement("div"); im.className = "b-png"; Object.assign(im.style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px", backgroundImage: `url(${src})`, opacity: op });
+    if (replace) im.style.filter = `drop-shadow(0 0 ${u * 1.4}px #FFB800aa)`;
+    e.prepend(im);
+  }
   /* 2D cell: glowing membrane, cytoplasm, nucleus, a door on the left (rotates open from its top hinge) */
   function cell(x, y, r, o = {}) {
     const c = o.c || K.green, s = r * 2.6, cx = s / 2, cy = s / 2;
@@ -91,6 +100,7 @@
       <rect class="door" x="${cx - r - u * .9}" y="${cy - r * .2}" width="${u * 1.8}" height="${r * .4}" rx="${u * .5}" fill="#0F1626" stroke="${K.amber}" stroke-width="${u * .35}" style="transform-box:fill-box;transform-origin:50% 0%"/>
       <circle class="hole" cx="${cx - r}" cy="${cy + r * .05}" r="${u * .35}" fill="${K.amber}"/></svg>`;
     e.mem = e.querySelector(".mem"); e.door = e.querySelector(".door"); e.hole = e.querySelector(".hole"); e.r = r; e.cx = x; e.cy = y;
+    pngIn(e, "P05_cell", s / 2 - r * 1.08, s / 2 - r * 1.08, r * 2.16, r * 2.16, .9);
     e.doorPt = [x - r, y]; return e;
   }
   // tint a cell's membrane to colour c at time t
@@ -99,6 +109,7 @@
     const e = place(mk("div", "b-svg", parent), x, y, s * 1.8, s);
     e.innerHTML = `<svg viewBox="0 0 36 20" width="${s * 1.8}" height="${s}" style="overflow:visible;filter:drop-shadow(0 0 ${u}px ${K.amber})">
       <circle cx="8" cy="10" r="6.5" fill="none" stroke="${K.amber}" stroke-width="3"/><path d="M14.5 10H34M28 10v5M32 10v4" stroke="${K.amber}" stroke-width="3" stroke-linecap="round"/></svg>`;
+    pngIn(e, "P04_key", 0, -s * .5, s * 1.8, s * 2, 1, true);
     return e;
   }
   function organ(x, y, s = u * 12, parent) {  // pancreas silhouette
@@ -106,6 +117,7 @@
     e.innerHTML = `<svg viewBox="0 0 100 50" width="${s * 2}" height="${s}" style="overflow:visible;filter:drop-shadow(0 0 ${u * .8}px ${K.amber}aa)">
       <path d="M6 30c4-14 20-18 34-14s24 2 34-4 20-4 22 6-10 16-24 18-30 4-42 8S2 44 6 30z" fill="${K.amber}22" stroke="${K.amber}" stroke-width="2.4"/>
       <path d="M18 30c16-4 34-2 52-8" fill="none" stroke="${K.amber}" stroke-opacity=".5" stroke-width="1.4" stroke-dasharray="3 3"/></svg>`;
+    pngIn(e, "P03_pancreas", 0, -s * .3, s * 2, s * 1.6, 1, true);
     return e;
   }
   /* glucose dots flowing along a polyline path from t0 to t1; o.stop = fraction of the path where dots stop (a closed door) */
@@ -172,6 +184,36 @@
     <feGaussianBlur in="SourceGraphic" stdDeviation="${u * .9}" result="b"/><feFlood flood-color="${c}" flood-opacity=".9"/><feComposite in2="b" operator="in" result="g"/>
     <feMerge><feMergeNode in="g"/><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`).join("")}</defs></svg>`;
   document.documentElement.append(defs);  // bio.js runs in <head>: body does not exist yet
-  window.B = { K, spring, dbg, glow, breathe, badge, aiPhoto, cell, tintCell, key, organ, flow, meter, spark, svg };
+  /* 3D object PNG (assets/png cut-out) centred at x, y with height h, rim glow in its meaning colour; o.w overrides the width */
+  const pcss = document.createElement("style"); pcss.textContent = `.b-png { position: absolute; background: no-repeat center / contain; }`; document.head.append(pcss);
+  function png(k, x, y, h, o = {}) {
+    const i = X.ix(k), src = (S.images || [])[i], ar = (X.P.ar || [])[i] || 1, w = o.w || h * ar;
+    const e = place(mk("div", "b-png", o.parent), x - w / 2, y - h / 2, w, h);
+    if (src) e.style.backgroundImage = `url(${src})`;
+    e.style.filter = `drop-shadow(0 0 ${u * (o.g || 1.8)}px ${(o.c || K.cyan)}88) drop-shadow(0 ${u * 1.2}px ${u * 2}px #000c)`;
+    e.cx = x; e.cy = y; return e;
+  }
+  /* glucose graph: axis + label; g.line(t, kind, c, d) draws a glowing curve (spike | flat | up | down) with a moving head dot */
+  const FILT = { [K.cyan]: "gC", [K.green]: "gG", [K.amber]: "gA", [K.red]: "gR" };
+  function graph(x, y, w, h, label = "BLOOD GLUCOSE", parent) {
+    const e = place(mk("div", "b-svg", parent), x, y, w, h);
+    e.innerHTML = `<svg width="${w}" height="${h}" style="overflow:visible"><line x1="0" y1="${h}" x2="${w}" y2="${h}" stroke="#ffffff38" stroke-width="${u * .25}"/>
+      <line x1="0" y1="0" x2="0" y2="${h}" stroke="#ffffff20" stroke-width="${u * .2}"/>
+      <text x="0" y="${h + u * 2.8}" style="font:700 ${u * 1.7}px var(--font-script);fill:#8A97AD;letter-spacing:.14em">${label}</text></svg>`;
+    const sv = e.querySelector("svg");
+    const D0 = { spike: `M0 ${h * .9} C ${w * .25} ${h * .9}, ${w * .3} ${h * .02}, ${w * .45} ${h * .02} C ${w * .6} ${h * .02}, ${w * .65} ${h * .75}, ${w} ${h * .8}`,
+                 flat: `M0 ${h * .9} C ${w * .3} ${h * .9}, ${w * .4} ${h * .55}, ${w * .55} ${h * .55} C ${w * .7} ${h * .55}, ${w * .8} ${h * .75}, ${w} ${h * .78}`,
+                 up: `M0 ${h * .9} C ${w * .4} ${h * .88}, ${w * .6} ${h * .3}, ${w} ${h * .08}`, down: `M0 ${h * .1} C ${w * .4} ${h * .12}, ${w * .6} ${h * .7}, ${w} ${h * .85}` };
+    e.line = (t, kind, c = K.red, d = 1.6) => {
+      const p = document.createElementNS(NS, "path"); p.setAttribute("d", D0[kind]); p.setAttribute("fill", "none"); p.setAttribute("stroke", c); p.setAttribute("stroke-width", u * .7);
+      p.setAttribute("stroke-linecap", "round"); p.setAttribute("filter", `url(#${FILT[c] || "gC"})`); sv.append(p);
+      const dot = document.createElementNS(NS, "circle"); dot.setAttribute("r", u * 1); dot.setAttribute("fill", "#fff"); dot.setAttribute("filter", "url(#gC)"); sv.append(dot);
+      const L = p.getTotalLength(), pr = { k: 0 }, set = () => { p.style.strokeDashoffset = L * (1 - pr.k); const q = p.getPointAtLength(pr.k * L); dot.setAttribute("cx", q.x); dot.setAttribute("cy", q.y); };
+      p.style.strokeDasharray = L; set(); tl.fromTo(dot, { opacity: 0 }, { opacity: 1, duration: .2, immediateRender: true }, t);
+      tl.to(pr, { k: 1, duration: d, ease: "power2.inOut", onUpdate: set }, t); p.dot = dot; return p;
+    };
+    return e;
+  }
+  window.B = { K, spring, png, graph, dbg, glow, breathe, badge, aiPhoto, cell, tintCell, key, organ, flow, meter, spark, svg };
   window.B3 = { vessel };
 })();

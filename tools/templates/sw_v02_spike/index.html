@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk V02 (9:16, 18-29 s): not only sweets. Fast-carbs portrait photo; sweets PNG crossed; rice + cola PNGs drop; red spike on the graph. */
+.xx { position: absolute; font: 800 calc(var(--u) * 26) var(--font-head); color: #FF3B30; text-shadow: 0 0 calc(var(--u) * 4) #FF3B30; line-height: 1; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, graph, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tSw = at("sw", 1.45), tBu = at("but", 3.35), tRi = at("rice", 4.65), tCo = at("cola", 5.15), tFa = at("fast", 6.55), tGl = at("glu", 7.85), tSp = at("spike", 9.95);
+  const bg = aiPhoto("carbs", 0, 0, W, H, { pos: "50% 50%" }); mk("div", "b-l", bg).style.background = "linear-gradient(180deg,#0A0E17f0 0%,#0A0E17a0 34%,#0A0E1760 60%,#0A0E17e0 100%)";
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, 0);
+  const h1 = head('Only <em class="a">sweets</em>?', "sweets మానేస్తే చాలు అనుకుంటారు", .1, { kick: "WHAT WE EAT", w: W * .88, x: W * .06, y: H * .06, size: 10 });
+  const sw = png("P15_sweets", W * .5, H * .42, H * .2, { c: K.amber }); pop(sw, tSw - .3, { scale: .4, opacity: 0 }, .9, SP); breathe(sw, tSw + .6, u, 3);
+  const xx = place(mk("div", "xx", undefined, "&times;"), W * .38, H * .32); pop(xx, tBu - .2, { scale: 2, opacity: 0 }, .5, SP);
+  out([sw, xx], tRi - .5, { scale: .7 }); tl.to(bg, { opacity: .3, duration: .6 }, tRi - .5);
+  const h2 = rehead(h1, 'These spike <em class="r">too</em>', "తెల్ల అన్నం, cool drinks కూడా", tRi - .4, { kick: "FAST CARBS", w: W * .88, x: W * .06, y: H * .06, size: 10 });
+  const ri = png("P11_rice", W * .3, H * .36, H * .16, { c: K.red }); pop(ri, tRi, { y: -H * .2, opacity: 0 }, .9, SP); breathe(ri, tRi + .8, u * .8, 2.6);
+  const co = png("P12_cola", W * .72, H * .36, H * .2, { c: K.red }); pop(co, tCo, { y: -H * .2, opacity: 0 }, .9, SP); breathe(co, tCo + .8, u * .8, 2.8);
+  const bF = badge("FAST DIGEST = <b>FAST GLUCOSE</b>", K.red, W * .06, H * .5); bF.style.fontSize = u * 3.6 + "px"; pop(bF, tFa, { x: -u * 4, opacity: 0 }, .7, SP);
+  const gr = graph(W * .1, H * .54, W * .8, H * .13, "BLOOD GLUCOSE"); tl.fromTo(gr, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, tGl - .3);
+  gr.line(tGl, "spike", K.red, 2);
+  const bS = badge("<b>SPIKE!</b>", K.red, W * .4, H * .5); bS.style.fontSize = u * 4.4 + "px"; out(bF, tSp - .5); pop(bS, tSp - .2, { scale: .5, opacity: 0 }, .8, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

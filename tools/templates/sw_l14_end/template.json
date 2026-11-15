@@ -1,0 +1,8 @@
+{
+ "name": "sw_l14_end",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L14 do not stop medicines, too-low sugar, hypoglycemia signs, doctor + HbA1c every 3 months, recap cell opens, share + comment"
+}

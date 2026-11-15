@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L12 (193-222 s): weight loss. Scale photo bg + scale PNG, -15 KG count; 86% ring (DiRECT, UK) "remission";
+   amber "not a cure: weight back = sugar back"; HbA1c = 3-month average (3 month pages); -1% -> 37% less risk, eye / kidney / nerve PNGs (UKPDS). */
+.ring { position: absolute; }
+.ring b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 800 calc(var(--u) * 7) var(--font-script); color: #00E676; line-height: 1; }
+.ring b small { margin-top: calc(var(--u) * .6); font: 700 calc(var(--u) * 1.6) var(--font-head); color: #EAF2FF; letter-spacing: .1em; }
+.kg { position: absolute; font: 800 calc(var(--u) * 7) var(--font-script); color: #00F0FF; text-shadow: 0 0 calc(var(--u) * 2) #00F0FF99; }
+.mo { position: absolute; width: calc(var(--u) * 9); height: calc(var(--u) * 10); border-radius: calc(var(--u) * 1.2); background: #0F1626ee; border: 1px solid #FFB80088;
+      box-shadow: 0 0 calc(var(--u) * 2) #FFB80044; text-align: center; font: 800 calc(var(--u) * 2.2) var(--font-head); color: #FFB800; padding-top: calc(var(--u) * 3.6); box-sizing: border-box; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tWe = at("weight", .7), tUk = at("uk", 2.4), tKg = at("kg", 4.2), t86 = at("p86", 6.7), tNm = at("nomed", 8.3), tRe = at("rem", 11.7), tCu = at("cure", 13.5),
+        tBa = at("back", 15.0), tHb = at("hba", 17.1), tM3 = at("m3", 18.8), tOn = at("one", 21.3), tEy = at("eye", 22.5), tKi = at("kid", 23.0), tNe = at("ner", 23.6),
+        t37 = at("p37", 25.5), tUp = at("ukpds", 27.4);
+
+  const bg = aiPhoto("scale", 0, 0, W, H, { pos: "50% 55%" }); mk("div", "b-l", bg).style.background = "linear-gradient(90deg,#0A0E17f0 0%,#0A0E17a0 45%,#0A0E1750 100%)";
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, 0);
+  const h1 = head('Lose weight, <em class="g">beat sugar</em>?', "బరువు తగ్గితే ఏమవుతుంది?", .1, { kick: "DiRECT STUDY · UK", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const sc = png("P20_scale", W * .72, H * .62, H * .34, { c: K.cyan }); pop(sc, tWe, { y: u * 8, opacity: 0 }, .9, SP); breathe(sc, tWe + .9, u * .5, 3);
+  const kg = place(mk("div", "kg", undefined, "-0 KG"), W * .63, H * .24); pop(kg, tKg - .2, { scale: .5, opacity: 0 }, .7, SP);
+  DOC.countTo(kg, 0, 15, tKg, 1.3, (v) => `-${Math.round(v)} KG`);
+  const bU = badge("<b>UK</b> · DiRECT", K.cyan, W * .05, H * .52); pop(bU, tUk, { x: -u * 3, opacity: 0 }, .7, SP);
+
+  /* 86% ring: sugar normal without medicines = remission */
+  out([sc, kg], t86 - .5, { scale: .7 }); tl.to(bg, { opacity: .3, duration: .7 }, t86 - .5);
+  const rs = H * .42, ring = place(mk("div", "ring", undefined, `<svg width="${rs}" height="${rs}" style="overflow:visible"><circle cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="#0F1626cc" stroke="#ffffff1c" stroke-width="${u * 1.4}"/>
+    <circle class="pg" cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="none" stroke="${K.green}" stroke-width="${u * 1.4}" stroke-linecap="round" transform="rotate(-90 ${rs / 2} ${rs / 2})" filter="url(#gG)"/></svg><b>0%<small>SUGAR NORMAL</small></b>`), W * .6, H * .3, rs, rs);
+  const pg = ring.querySelector(".pg"), Cc = 2 * Math.PI * rs * .42, num = ring.querySelector("b"); pg.style.strokeDasharray = Cc;
+  pop(ring, t86 - .4, { scale: .4, opacity: 0 }, 1, SP); tl.fromTo(pg, { strokeDashoffset: Cc }, { strokeDashoffset: Cc * .14, duration: 1.4, ease: "power2.out", immediateRender: true }, t86);
+  DOC.countTo(num, 0, 86, t86, 1.4, (v) => `${Math.round(v)}%<small>SUGAR NORMAL</small>`); breathe(ring, t86 + 1.5, u * .5, 3);
+  const bN = badge("WITHOUT <b>MEDICINES</b>", K.green, W * .05, H * .6); pop(bN, tNm, { x: -u * 3, opacity: 0 }, .7, SP);
+  const h2 = rehead(h1, 'This is <em class="g">remission</em>', "15 kg కంటే ఎక్కువ తగ్గిన వాళ్ళలో 86% మందికి sugar normal", tRe - .3, { kick: "DiRECT STUDY · UK", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const bC = badge("NOT A <b>CURE</b>", K.amber, W * .05, H * .68); pop(bC, tCu, { x: -u * 3, opacity: 0, scale: .8 }, .7, SP);
+  const bB = badge("WEIGHT BACK = <b>SUGAR BACK</b>", K.red, W * .05, H * .76); pop(bB, tBa, { x: -u * 3, opacity: 0 }, .7, SP);
+
+  /* HbA1c: 3-month average, 1% down = 37% less risk */
+  out([ring, bU, bN, bC, bB], tHb - .5, { scale: .8 }); tl.to(bg, { opacity: 0, duration: .6 }, tHb - .5);
+  const h3 = rehead(h2, '<em class="a">HbA1c</em> = 3-month average', "HbA1c అంటే గత మూడు నెలల sugar average", tHb - .2, { kick: "THE KEY TEST", w: W * .56, x: W * .05, y: H * .12, size: 8 });
+  const mos = ["MONTH 1", "MONTH 2", "MONTH 3"].map((m, i) => { const e = place(mk("div", "mo", undefined, m), W * (.08 + i * .09), H * .5);
+    pop(e, tM3 + i * .2, { y: -u * 6, opacity: 0, rotation: -8 }, .8, SP); return e; });
+  const bAv = badge("= <b>AVERAGE</b>", K.amber, W * .36, H * .56); pop(bAv, tM3 + 1, { x: -u * 2, opacity: 0 }, .7, SP);
+  const one = place(mk("div", "kg", undefined, "-1%"), W * .62, H * .26); one.style.color = K.green; pop(one, tOn, { scale: .4, opacity: 0 }, .8, SP);
+  const org = [["P21_eye", "EYES", tEy], ["P21_kidney", "KIDNEYS", tKi], ["P21_nerve", "NERVES", tNe]].map(([k, n, t], i) => {
+    const x = W * (.58 + i * .14), o = png(k, x, H * .58, H * .17, { c: K.red }); pop(o, t, { scale: .3, opacity: 0 }, .8, SP); breathe(o, t + .8, u * .4, 2.6 + i * .3);
+    const b = badge(n, K.red, x - u * 5, H * .72); pop(b, t + .1, { y: u * 2, opacity: 0 }, .6, SP); return [o, b]; });
+  out(mos.concat(bAv), t37 - .6, { y: u * 3 });
+  const s37 = DOC.stat("0%", "LESS RISK OF DAMAGE", W * .08, H * .5, K.green); pop(s37, t37 - .3, { scale: .5, opacity: 0 }, .8, SP);
+  DOC.countTo(s37.b, 0, 37, t37, 1.2, (v) => `${Math.round(v)}%`);
+  org.forEach(([o, b], i) => { tl.to(o, { filter: `drop-shadow(0 0 ${u * 2.4}px ${K.green}cc) drop-shadow(0 ${u * 1.2}px ${u * 2}px #000c)`, duration: .5 }, t37 + .4 + i * .15);
+    tl.to(b, { "--c": K.green, duration: .4 }, t37 + .4 + i * .15); });
+  const bK = badge("SOURCE: <b>UKPDS</b>", K.cyan, W * .08, H * .82); pop(bK, tUp, { y: u * 2, opacity: 0 }, .6, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

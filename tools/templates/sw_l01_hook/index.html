@@ -63,6 +63,14 @@
   const bI = badge("NO <b>INSULIN</b> NEEDED", K.green, W * .05, H * .6); bI.style.fontSize = u * 2.8 + "px"; pop(bI, tIn, { x: -u * 4, opacity: 0, scale: .8 }, .9, SP); breathe(bI, tIn + 1, u * .5, 3);
   const ar = place(mk("div", "arr", undefined, "&#8595; SUGAR"), cx + cw * .62, cy + ch * .82); pop(ar, tDn - .2, { y: -u * 4, opacity: 0, scale: .6 }, .9, SP); breathe(ar, tDn + .8, u * .6, 2.6);
   out(sp, tDn - .4);
+  /* 4. what this video answers: three question cards, each with its 3D object */
+  const tWh = at("why", 10.5), tRq = at("riceq", 12.2), tEa = at("eat", 15.1), tDe = at("det", 18.0);
+  out([bI, ar, cv], tWh - 1, { y: u * 3 }); tl.to(bgs[2], { opacity: .35, duration: .8 }, tWh - 1);
+  const h3 = rehead(h2, 'In this <em>video</em>', "ఈ video లో in detail గా చూద్దాం", tWh - .8, { kick: "3 QUESTIONS", w: W * .6, x: W * .05, y: H * .14, size: 8.4 });
+  [["P01_glucose", "WHY DOES SUGAR COME?", K.cyan, tWh], ["P11_rice", "WHAT HAPPENS TO RICE?", K.amber, tRq], ["P16_vegdal", "WHAT TO EAT?", K.green, tEa]].forEach(([k, q, c, t], i) => {
+    const x = W * (.2 + i * .3), p = B.png(k, x, H * .58, H * .26, { c }); pop(p, t - .2, { scale: .3, opacity: 0, y: u * 6 }, 1, SP); breathe(p, t + .8, u * .6, 2.6 + i * .3);
+    const b = badge(`<b>${i + 1}</b> ${q}`, c, x - W * .12, H * .78); b.style.fontSize = u * 2.4 + "px"; pop(b, t, { y: u * 3, opacity: 0 }, .8, SP); });
+  const bDe = badge("IN <b>DETAIL</b>", K.cyan, W * .05, H * .45); pop(bDe, tDe, { x: -u * 3, opacity: 0 }, .7, SP);
   cam(0, Math.max(D, 1), 1.035);
   X.done();
 </script></body></html>

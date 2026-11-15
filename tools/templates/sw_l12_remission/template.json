@@ -1,0 +1,8 @@
+{
+ "name": "sw_l12_remission",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L12 DiRECT -15 kg, 86% remission ring, not a cure; HbA1c 3-month average, -1% = 37% less risk, eye / kidney / nerve PNGs"
+}

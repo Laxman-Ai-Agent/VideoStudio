@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk V01 (9:16, 0-18 s): hook. Night-walk portrait photo (Ken Burns + vignette), walker PNG, "10-15 MIN WALK" ring
+   after meals; then 10 CRORE + 13 CRORE counters stacked with ICMR badge. Content stays above 0.70 H (captions). */
+.ring { position: absolute; }
+.ring b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 800 calc(var(--u) * 11) var(--font-script); color: #00E676; line-height: 1; }
+.ring b small { margin-top: calc(var(--u) * 1); font: 700 calc(var(--u) * 3.4) var(--font-head); color: #EAF2FF; letter-spacing: .1em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tMe = at("meal", 4.5), tTe = at("ten", 6.5), tWa = at("walk", 8.8), tIn = at("india", 10.1), t10 = at("c10", 11.0), t13 = at("c13", 14.3), tBo = at("border", 15.4), tIc = at("icmr", 16.6);
+  const bg = aiPhoto("walk", 0, 0, W, H, { pos: "50% 50%" }); mk("div", "b-l", bg).style.background = "linear-gradient(180deg,#0A0E17f0 0%,#0A0E1780 34%,#0A0E1730 60%,#0A0E17d0 100%)";
+  tl.fromTo(bg, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, 0);
+  const h1 = head('Control <em class="r">blood sugar</em>', "మీరు చేయాల్సిన మొదటి పని", .1, { kick: "BLOOD SUGAR", w: W * .88, x: W * .06, y: H * .06, size: 10 });
+  const rs = W * .52, ring = place(mk("div", "ring", undefined, `<svg width="${rs}" height="${rs}" style="overflow:visible"><circle cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="#0F1626cc" stroke="#ffffff22" stroke-width="${u * 1.6}"/>
+    <circle class="pg" cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="none" stroke="${K.green}" stroke-width="${u * 1.6}" stroke-linecap="round" transform="rotate(-90 ${rs / 2} ${rs / 2})" filter="url(#gG)"/></svg><b>10-15<small>MIN WALK</small></b>`), W * .24, H * .3, rs, rs);
+  const pg = ring.querySelector(".pg"), C = 2 * Math.PI * rs * .42; pg.style.strokeDasharray = C;
+  pop(ring, tTe - .4, { scale: .4, opacity: 0 }, 1, SP); tl.fromTo(pg, { strokeDashoffset: C }, { strokeDashoffset: 0, duration: 2.2, ease: "power2.inOut", immediateRender: true }, tTe); breathe(ring, tTe + 1, u, 3);
+  const bM = badge("RIGHT AFTER <b>MEALS</b>", K.cyan, W * .2, H * .58); bM.style.fontSize = u * 4 + "px"; pop(bM, tMe, { y: u * 4, opacity: 0 }, .8, SP);
+  const wk = png("P18_walker", W * .8, H * .5, H * .26, { c: K.green }); pop(wk, tWa - .3, { x: u * 10, opacity: 0 }, .9, SP); breathe(wk, tWa + .7, u, 1.6);
+
+  /* India numbers */
+  out([ring, bM, wk], tIn - .4, { scale: .8 }); tl.to(bg, { opacity: .3, duration: .6 }, tIn - .4);
+  const h2 = rehead(h1, 'India: <em class="r">10 crore</em>', "diabetes తో బాధపడుతున్నారు", tIn - .2, { kick: "ICMR STUDY", w: W * .88, x: W * .06, y: H * .06, size: 10 });
+  const s1 = DOC.stat("0", "CRORE HAVE DIABETES", W * .1, H * .3, K.red); pop(s1, t10 - .2, { scale: .5, opacity: 0 }, .8, SP); DOC.countTo(s1.b, 0, 10, t10, 1.2);
+  const s2 = DOC.stat("0", "CRORE ON THE BORDER", W * .1, H * .46, K.amber); pop(s2, t13 - .2, { scale: .5, opacity: 0 }, .8, SP); DOC.countTo(s2.b, 0, 13, t13, 1.2);
+  [s1, s2].forEach((s) => { s.b.style.fontSize = u * 18 + "px"; s.querySelector("span").style.fontSize = u * 3.4 + "px"; });
+  const bB = badge("<b>BORDERLINE</b>", K.amber, W * .1, H * .62); bB.style.fontSize = u * 3.6 + "px"; pop(bB, tBo, { x: -u * 4, opacity: 0 }, .7, SP);
+  const bI = badge("SOURCE: <b>ICMR</b>", K.cyan, W * .55, H * .62); bI.style.fontSize = u * 3.6 + "px"; pop(bI, tIc, { x: u * 4, opacity: 0 }, .7, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>

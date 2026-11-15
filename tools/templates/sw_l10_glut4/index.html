@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L10 (154-174 s): the walk secret. Walker + dumbbell PNGs, muscle PNG lights up; zoom into a muscle cell PNG: GLUT4 doors
+   (cyan capsules) rise from inside to the membrane and pull glucose molecule PNGs in, key crossed = no insulin needed; then night-walk
+   photo, 10-15 MIN timer ring after meals, the meal spike flattens on the graph. */
+.g4 { position: absolute; width: calc(var(--u) * 2.2); height: calc(var(--u) * 4.4); margin: calc(var(--u) * -2.2) 0 0 calc(var(--u) * -1.1); border-radius: 99px;
+      background: linear-gradient(#00F0FF, #0090A0); box-shadow: 0 0 calc(var(--u) * 1.8) #00F0FF; }
+.xx { position: absolute; font: 800 calc(var(--u) * 12) var(--font-head); color: #FF3B30; text-shadow: 0 0 calc(var(--u) * 2.4) #FF3B30; line-height: 1; }
+.ring { position: absolute; }
+.ring b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font: 800 calc(var(--u) * 5) var(--font-script); color: #00E676; }
+.ring b small { font: 700 calc(var(--u) * 1.6) var(--font-head); color: #EAF2FF; letter-spacing: .1em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, png, graph, aiPhoto } = B;
+  const SP = E.spring;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tWa = at("walk", .6), tLi = at("lift", 1.4), tMu = at("musc", 2.3), tCe = at("cell", 4.8), tGl = at("glut", 5.8), tDo = at("doors", 7.1), tOu = at("out", 7.4),
+        tNo = at("noins", 8.9), tPu = at("pull", 12.1), tMe = at("meal", 13.9), tTe = at("ten", 14.9), tW2 = at("walk2", 16.7), tSt = at("studies", 19.7);
+
+  const bg1 = aiPhoto("dumb", 0, 0, W, H, { pos: "50% 45%" }); mk("div", "b-l", bg1).style.background = "linear-gradient(90deg,#0A0E17f0 0%,#0A0E17a0 45%,#0A0E1740 100%)";
+  tl.fromTo(bg1, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, 0);
+  const h1 = head('Move your <em class="g">muscles</em>', "నడిచినప్పుడు, బరువులు ఎత్తినప్పుడు కండరాలు పనిచేస్తాయి", .1, { kick: "THE SECRET", w: W * .48, x: W * .05, y: H * .12, size: 8 });
+  const wk = png("P18_walker", W * .6, H * .55, H * .55, { c: K.green }); pop(wk, tWa - .2, { x: -u * 8, opacity: 0 }, .9, SP); breathe(wk, tWa + .8, u * .6, 1.6);
+  const db = png("P19_dumbbell", W * .82, H * .62, H * .2, { c: K.green }); pop(db, tLi, { y: -u * 8, opacity: 0, rotation: -30 }, .9, SP); breathe(db, tLi + .8, u * .8, 1.8);
+  const mu = png("P06_muscle", W * .2, H * .68, H * .26, { c: K.green, g: 2.4 }); pop(mu, tMu, { scale: .3, opacity: 0 }, .9, SP);
+  tl.to(mu, { filter: `drop-shadow(0 0 ${u * 4}px ${K.green}) drop-shadow(0 0 ${u * 1.5}px ${K.green})`, duration: .4, yoyo: true, repeat: 3 }, tMu + .6);
+  const bA = badge("MUSCLES <b>ACTIVE</b>", K.green, W * .1, H * .85); pop(bA, tMu + .3, { y: u * 2, opacity: 0 }, .7, SP);
+
+  /* zoom into the muscle cell: GLUT4 doors rise to the surface */
+  tl.to(bg1, { opacity: 0, duration: .7 }, tCe - .4); out([wk, db, bA], tCe - .4, { scale: .7 });
+  tl.to(mu, { left: W * .08, top: H * .72, width: H * .12, height: H * .12, duration: .8, ease: "power2.inOut" }, tCe - .4);
+  const cx = W * .66, cy = H * .52, R = H * .3;
+  const ce = png("P05_cell", cx, cy, R * 2.1, { c: K.green, g: 2 }); tl.fromTo(ce, { scale: .2, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.1, ease: SP, immediateRender: true }, tCe - .3);
+  breathe(ce, tCe + .9, u * .5, 3.2);
+  const h2 = rehead(h1, '<em>GLUT4</em> doors open', "కండర కణాల్లో GLUT4 అనే చిన్న తలుపులు బయటకు వస్తాయి", tGl - .2, { kick: "INSIDE THE MUSCLE CELL", w: W * .44, x: W * .05, y: H * .12, size: 8 });
+  const AN = [200, 160, 125, 235, 270];
+  const doors = AN.map((a, i) => { const r = a * Math.PI / 180, d = place(mk("div", "g4"), cx + Math.cos(r) * R * .25, cy + Math.sin(r) * R * .25); d.style.rotate = (a + 90) + "deg";
+    tl.fromTo(d, { opacity: 0, scale: .3 }, { opacity: 1, scale: 1, duration: .4, ease: SP, immediateRender: true }, tGl + i * .12);
+    tl.to(d, { left: cx + Math.cos(r) * R * .86, top: cy + Math.sin(r) * R * .86, duration: 1.1, ease: SP }, tOu - .2 + i * .1); d.a = r; return d; });
+  const bD = badge("<b>GLUT4</b> DOORS", K.cyan, cx - R * 1.35, cy - R * .95); pop(bD, tDo, { scale: .6, opacity: 0 }, .7, SP);
+
+  /* no insulin needed: key crossed, glucose pulled in */
+  const ky = png("P04_key", W * .2, H * .62, H * .16, { c: K.amber }); pop(ky, tNo - .2, { scale: .4, opacity: 0 }, .7, SP);
+  const xx = place(mk("div", "xx", undefined, "&times;"), W * .17, H * .5); pop(xx, tNo + .3, { scale: 2, opacity: 0 }, .5, SP);
+  const bN = badge("NO <b>INSULIN</b> NEEDED", K.green, W * .05, H * .8); pop(bN, tNo + .4, { x: -u * 3, opacity: 0 }, .7, SP);
+  for (let i = 0; i < 10; i++) { const dr = doors[i % 5], t = tNo + .8 + i * .3, sx = cx + Math.cos(dr.a) * R * 1.5, sy = cy + Math.sin(dr.a) * R * 1.4;
+    const m = png("P01_glucose", sx, sy, H * .07, { c: K.cyan, g: 1 });
+    tl.fromTo(m, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .25, immediateRender: true }, t);
+    tl.to(m, { left: cx + Math.cos(dr.a) * R * .3 - parseFloat(m.style.width) / 2, top: cy + Math.sin(dr.a) * R * .3 - H * .035, rotation: 140, duration: .9, ease: "power2.in" }, t + .1);
+    tl.to(m, { opacity: 0, scale: .3, duration: .2 }, t + .9); }
+  const bP = badge("GLUCOSE <b>PULLED IN</b>", K.cyan, cx - u * 8, cy + R * 1.08); pop(bP, tPu, { y: u * 2, opacity: 0 }, .7, SP);
+
+  /* after meals: 10-15 minutes, the spike flattens */
+  out([ce, ...doors, bD, ky, xx, bN, bP, mu], tMe - .4, { scale: .8 });
+  const bg2 = aiPhoto("walk", 0, 0, W, H, { t: tMe - .4, pos: "45% 50%" }); mk("div", "b-l", bg2).style.background = "linear-gradient(90deg,#0A0E17f0 0%,#0A0E1790 45%,#0A0E1730 100%)";
+  DOC.reveal(bg2, tMe - .4, "l", .9); bg2.parentNode.insertBefore(bg2, bg2.parentNode.firstChild);
+  const h3 = rehead(h2, '<em class="g">10-15 min</em> after meals', "భోజనం తర్వాత 10 నుంచి 15 నిమిషాల చిన్న walk", tMe, { kick: "THE HABIT", w: W * .5, x: W * .05, y: H * .12, size: 8 });
+  const rs = H * .24, ring = place(mk("div", "ring", undefined, `<svg width="${rs}" height="${rs}" style="overflow:visible"><circle cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="#0F1626cc" stroke="#ffffff22" stroke-width="${u}"/>
+    <circle class="pg" cx="${rs / 2}" cy="${rs / 2}" r="${rs * .42}" fill="none" stroke="${K.green}" stroke-width="${u}" stroke-linecap="round" transform="rotate(-90 ${rs / 2} ${rs / 2})" filter="url(#gG)"/></svg><b>10-15<small>MINUTES</small></b>`), W * .07, H * .52, rs, rs);
+  const pg = ring.querySelector(".pg"), Cc = 2 * Math.PI * rs * .42; pg.style.strokeDasharray = Cc;
+  pop(ring, tTe - .3, { scale: .4, opacity: 0 }, .9, SP); tl.fromTo(pg, { strokeDashoffset: Cc }, { strokeDashoffset: 0, duration: 2.2, ease: "power2.inOut", immediateRender: true }, tTe);
+  const gr = graph(W * .48, H * .5, W * .44, H * .3, "GLUCOSE AFTER A MEAL"); tl.fromTo(gr, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, tTe);
+  const ln = gr.line(tTe + .2, "spike", K.red, 1.4); tl.to([ln, ln.dot], { opacity: .25, duration: .5 }, tW2);
+  gr.line(tW2, "flat", K.green, 1.8);
+  const bS = badge("SMALL <b>STUDIES</b>", K.cyan, W * .48, H * .4); pop(bS, tSt - .3, { y: u * 2, opacity: 0 }, .6, SP);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>
