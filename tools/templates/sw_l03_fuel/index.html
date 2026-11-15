@@ -19,9 +19,11 @@
         tDr = at("direct", 12.7), tPa = at("panc", 15.4), tIn = at("ins", 16.8);
 
   /* 3D vessel first, so everything else sits on top of it */
-  const v = M3.view({ fov: 68, lights: false, exposure: 1.05 });
-  v.scene.add(new THREE.AmbientLight(0x40202a, .6));
+  const v = M3.view({ fov: 68, lights: false, exposure: .8 });
+  v.scene.add(new THREE.AmbientLight(0x30182a, .35));
   const ves = B3.vessel(v, { rbc: 80, glu: 110 });
+  ves.wall.material.color.setHex(0x240610); ves.wall.material.emissive.setHex(0x0a0206); ves.wall.material.roughness = .7;
+  v.scene.children.forEach((o) => { if (o.isPointLight) { o.color.setHex(0xff9a90); o.intensity = .7; o.distance = 8; } });
   tl.fromTo(v.c, { opacity: 0 }, { opacity: 1, duration: .9, immediateRender: true }, tDi - .2);
   tl.to(ves.st, { p: .55, duration: Math.max(D - tDi, 1), ease: "sine.inOut" }, tDi - .2);
   tl.to(ves.st, { g: 1, duration: .8, ease: E.in }, tGl);
