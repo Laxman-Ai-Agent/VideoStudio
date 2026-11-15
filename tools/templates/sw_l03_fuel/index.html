@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="three.min.js"></script><script src="kit.js"></script><script src="doc.js"></script><script src="m3d.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L03 (42-60 s): food -> glucose -> blood -> a cell door it cannot pass. AI rice plate (right) -> shrinks into a circle;
+   3D blood-vessel fly-through, glucose particles light up in cyan; vessel dims, a 2D cell with a closed door; glucose piles at the door;
+   pancreas pops up and sends two insulin keys toward the door (they arrive in L04). */
+.shade { position: absolute; inset: 0; background: linear-gradient(90deg, #0A0E17ee 0%, #0A0E17a8 36%, #0A0E1700 64%); pointer-events: none; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, aiPhoto, cell, key, organ, flow, spark } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tRi = at("rice", 3.9), tCh = at("chap", 4.4), tDi = at("dig", 6.2), tGl = at("glu", 7.0), tBl = at("blood", 8.0), tFu = at("fuel", 10.9),
+        tDr = at("direct", 12.7), tPa = at("panc", 15.4), tIn = at("ins", 16.8);
+
+  /* 3D vessel first, so everything else sits on top of it */
+  const v = M3.view({ fov: 68, lights: false, exposure: 1.05 });
+  v.scene.add(new THREE.AmbientLight(0x40202a, .6));
+  const ves = B3.vessel(v, { rbc: 80, glu: 110 });
+  tl.fromTo(v.c, { opacity: 0 }, { opacity: 1, duration: .9, immediateRender: true }, tDi - .2);
+  tl.to(ves.st, { p: .55, duration: Math.max(D - tDi, 1), ease: "sine.inOut" }, tDi - .2);
+  tl.to(ves.st, { g: 1, duration: .8, ease: E.in }, tGl);
+  const sh = mk("div", "shade"); tl.fromTo(sh, { opacity: 0 }, { opacity: 1, duration: .8, immediateRender: true }, tDi);
+
+  /* 1. the meal: AI photo on the right, text left */
+  const ph = aiPhoto("rice", W * .52, H * .13, W * .43, H * .64, { pos: "50% 50%" });
+  ph.style.borderRadius = u * 1.6 + "px"; ph.style.boxShadow = `0 0 ${u * 4}px #00F0FF22`;
+  DOC.reveal(ph, .2, "r", 1); breathe(ph, 1.2, u * .5, 3.6);
+  const h1 = head('What happens <em>inside</em>?', "మనం తిన్న అన్నం శరీరంలో ఏమవుతుంది?", .3, { kick: "NORMAL BODY", w: W * .44, x: W * .05, y: H * .14, size: 6.2 });
+  const bR = badge("RICE", K.cyan, W * .56, H * .69); pop(bR, tRi, { y: u * 2, opacity: 0, scale: .8 }, .5, E.pop);
+  const bC = badge("CHAPATI", K.cyan, W * .68, H * .69); pop(bC, tCh, { y: u * 2, opacity: 0, scale: .8 }, .5, E.pop);
+
+  /* 2. digest: the plate shrinks into a circle top-right, we are inside a vessel */
+  out(bR, tDi - .3); out(bC, tDi - .3);
+  move(ph, tDi - .2, W * .83, H * .08, H * .2, H * .2, 1.0, { borderRadius: H * .1, boxShadow: `0 0 ${u * 3}px #00F0FF66` });
+  const h2 = rehead(h1, 'Food becomes <em>glucose</em>', "digest అయి glucose గా మారి రక్తంలో కలుస్తుంది", tDi, { kick: "DIGESTION", w: W * .46, x: W * .05, y: H * .14, size: 6.2 });
+  const bG = badge("<b>GLUCOSE</b> IN THE BLOOD", K.cyan, W * .05, H * .56); pop(bG, tBl, { x: -u * 3, opacity: 0 }, .55);
+  const aro = place(mk("div", "b-svg", undefined, `<svg width="${u * 12}" height="${u * 6}" style="overflow:visible"><path d="M0 ${u * 5} C ${u * 4} ${u * 5}, ${u * 8} ${u * 4}, ${u * 11} ${u}" fill="none" stroke="${K.cyan}" stroke-width="${u * .35}" stroke-dasharray="${u} ${u * .8}"/></svg>`), W * .79, H * .26);
+  tl.fromTo(aro, { opacity: 0, scaleX: .2, transformOrigin: "100% 0%" }, { opacity: 1, scaleX: 1, duration: .6, immediateRender: true }, tGl);
+
+  /* 3. fuel: vessel dims, a cell with a closed door; glucose flows to it and stops */
+  tl.to(v.c, { opacity: .38, duration: .8, ease: E.io }, tFu - .4);
+  out(bG, tFu - .3); out(aro, tFu - .3); out(ph, tFu - .3, { scale: .8 });
+  const ce = cell(W * .72, H * .5, H * .23, { c: K.green });
+  tl.fromTo(ce, { scale: .5, opacity: 0 }, { scale: 1, opacity: 1, duration: .8, ease: E.pop, immediateRender: true }, tFu - .2); breathe(ce, tFu + .6, u * .6, 3);
+  const h3 = rehead(h2, 'Fuel, but <em class="r">locked out</em>', "glucose కణాలకు fuel, కానీ direct గా లోపలికి వెళ్ళలేదు", tFu, { kick: "THE CELL", w: W * .44, x: W * .05, y: H * .14, size: 6.2 });
+  const bF = badge("<b>FUEL</b> FOR THE CELL", K.green, W * .64, H * .16); pop(bF, tFu + .5, { y: -u * 2, opacity: 0 }, .5);
+  const dp = ce.doorPt;
+  flow([[W * .33, H * .78], [W * .45, H * .66], [dp[0] - u * 2, dp[1]]], 16, tFu + .3, D, { stop: .98, speed: .3 });
+
+  /* direct: the door holds, red spark, warning badge */
+  tl.fromTo(ce.door, { rotation: 0 }, { rotation: 7, duration: .08, repeat: 7, yoyo: true, ease: "none", immediateRender: false }, tDr);
+  spark(dp[0], dp[1], tDr + .1, K.red);
+  const bD = badge("CAN'T ENTER <b>DIRECTLY</b>", K.red, W * .58, H * .82); pop(bD, tDr + .2, { y: u * 2, opacity: 0, scale: .9 }, .5, E.pop);
+
+  /* pancreas sends insulin keys toward the door (they arrive in L04) */
+  out(bD, tPa - .3);
+  const pa = organ(W * .06, H * .66, u * 8); pop(pa, tPa, { y: u * 3, opacity: 0, scale: .8 }, .6, E.pop); breathe(pa, tPa + .6, u * .4, 2.8);
+  const bP = badge("<b>PANCREAS</b>", K.amber, W * .08, H * .6); pop(bP, tPa + .2, { y: u * 2, opacity: 0 }, .5);
+  [0, 1].forEach((i) => { const k = key(W * .14, H * .74, u * 3.2); tl.fromTo(k, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .4, ease: E.pop, immediateRender: true }, tIn + i * .35);
+    tl.to(k, { left: W * (.36 + i * .08), top: H * (.7 - i * .08), duration: Math.max(D - tIn - i * .35, .5), ease: "sine.inOut" }, tIn + i * .35); });
+  const bI = badge("<b>INSULIN</b> RELEASED", K.amber, W * .3, H * .88); pop(bI, tIn + .2, { y: u * 2, opacity: 0 }, .5);
+  cam(0, Math.max(D, 1), 1.03);
+  M3.ready();
+  X.done();
+</script></body></html>

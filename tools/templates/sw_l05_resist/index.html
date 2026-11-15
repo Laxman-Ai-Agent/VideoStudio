@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L05 (70-85 s): type 2 = insulin resistance. Same cell as L03 (continuity); pancreas keeps sending keys; the first key
+   reaches the door and turns but the door jams (shake + red spark), membrane goes green -> red, glucose piles up outside,
+   blood sugar meter climbs green -> amber -> red; KEY yes / DOOR stuck chips. */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, cell, tintCell, key, organ, flow, meter, spark } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tWh = at("where", 1.1), tTy = at("type", 2.7), tIn = at("ins", 3.9), tBu = at("but", 5.8), tCe = at("cells", 6.4), tSt = at("stop", 7.8),
+        tRe = at("res", 9.9), tKe = at("key", 11.8), tDo = at("door", 13.3);
+
+  /* the same cell as L03, right side */
+  const ce = cell(W * .72, H * .5, H * .23, { c: K.green }); breathe(ce, 0, u * .6, 3);
+  tl.fromTo(ce, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .5, immediateRender: true }, 0);
+  const dp = ce.doorPt;
+  const h1 = head('Where does it <em class="r">start</em>?', "మరి sugar ఎక్కడ మొదలవుతుంది?", .2, { kick: "TYPE 2 DIABETES", w: W * .4, x: W * .05, y: H * .14, size: 6.2 });
+  const bT = badge("<b>TYPE 2</b>", K.amber, W * .05, H * .5); pop(bT, tTy, { x: -u * 3, opacity: 0 }, .5, E.pop);
+
+  /* blood sugar meter between the text and the cell */
+  const me = meter(W * .47, H * .26, u * 2.6, H * .46, "BLOOD SUGAR");
+  tl.fromTo(me, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, tWh);
+  me.set(tWh, .25, K.green, "NORMAL", .8); me.set(tSt, .58, K.amber, "RISING"); me.set(tRe + .4, .88, K.red, "HIGH");
+
+  /* pancreas keeps making keys */
+  const pa = organ(W * .06, H * .68, u * 8); pop(pa, tIn - .3, { y: u * 3, opacity: 0, scale: .8 }, .6, E.pop); breathe(pa, tIn + .4, u * .4, 2.8);
+  const bS = badge("INSULIN: <b>STILL MADE</b>", K.green, W * .2, H * .62); pop(bS, tIn + .3, { y: u * 2, opacity: 0 }, .5);
+  const kx = dp[0] - u * 5.9, ky = dp[1] - u * 1.6;
+  const k1 = key(W * .14, H * .76, u * 3.2);
+  tl.fromTo(k1, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .4, ease: E.pop, immediateRender: true }, tIn);
+  tl.to(k1, { left: kx, top: ky, duration: tCe - tIn, ease: "power2.inOut" }, tIn + .1);
+  [1, 2].forEach((i) => { const k = key(W * .14, H * .76, u * 2.6); tl.fromTo(k, { opacity: 0, scale: .4 }, { opacity: .8, scale: 1, duration: .4, ease: E.pop, immediateRender: true }, tIn + i * .9);
+    tl.to(k, { left: W * (.3 + i * .05), top: H * (.8 - i * .05), duration: 2.5, ease: "sine.inOut" }, tIn + i * .9); breathe(k, tIn + i * .9 + 2.5, u * .5, 2.4); });
+
+  /* key turns, the door jams: shake, red spark, membrane turns red */
+  out(bS, tBu - .2); out(bT, tBu - .2);
+  tl.to(k1, { rotation: 35, duration: .35, ease: E.io, transformOrigin: "100% 50%" }, tCe + .3);
+  tl.to(k1, { rotation: 0, duration: .3, ease: E.io }, tCe + .9);
+  tl.fromTo(ce.door, { rotation: 0 }, { rotation: 6, duration: .07, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, tCe + .4);
+  spark(dp[0], dp[1], tCe + .5, K.red); spark(dp[0], dp[1], tSt + .2, K.red);
+  tintCell(ce, tSt - .2, K.red, .8);
+  const bL = badge("CELLS <b>STOP LISTENING</b>", K.red, W * .58, H * .84); pop(bL, tSt, { y: u * 2, opacity: 0, scale: .9 }, .5, E.pop);
+  flow([[W * .3, H * .9], [W * .48, H * .82], [dp[0] - u * 6, dp[1] + u * 3]], 22, tBu, D, { stop: .98, speed: .32, pile: true, c: K.cyan });
+
+  /* name it: insulin resistance; key yes / door stuck */
+  out(bL, tRe - .3);
+  const h2 = rehead(h1, 'Insulin <em class="r">resistance</em>', "తాళం చెవి ఉంది, కానీ తలుపు తెరుచుకోవడం లేదు", tRe, { kick: "THE PROBLEM", w: W * .4, x: W * .05, y: H * .14, size: 6.2 });
+  const cK = badge("KEY: <b>YES</b>", K.amber, W * .05, H * .56); pop(cK, tKe, { x: -u * 3, opacity: 0 }, .5, E.pop);
+  const cD = badge("DOOR: <b>STUCK</b>", K.red, W * .05, H * .64); pop(cD, tDo, { x: -u * 3, opacity: 0 }, .5, E.pop);
+  spark(dp[0], dp[1], tDo + .2, K.red);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

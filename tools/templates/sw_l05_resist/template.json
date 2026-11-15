@@ -1,0 +1,8 @@
+{
+ "name": "sw_l05_resist",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L05 insulin resistance: pancreas keeps making keys, key turns but the cell door jams, membrane turns red, glucose piles up, blood sugar meter rises"
+}
