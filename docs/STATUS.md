@@ -12,12 +12,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 09_Sugar_Walk (2026-11-15) - in progress (healthcare mode)
+## 09_Sugar_Walk (2026-11-15) - finals done (healthcare mode)
 - Paired topic (blood sugar, walk after meals): `projects/09_Sugar_Walk/{16x9,9x16}`; inputs moved, 16x9 3 mp3s merged, 1.15x -> `<fmt>/input/audio.mp3`, align_mms -> `input/gemini_corrected.json`, transcripts done (`scripts/make_transcript.py`).
 - User brief: dark science documentary (Vox / Kurzgesagt), then "many AI 3D object PNGs, explain every step"; user named it the HEALTHCARE MODE (recipe `docs/HEALTHCARE_STYLE.md`, memory healthcare-mode). plan.md rev 2. User: no more samples, deliver full 480p previews.
 - Assets: photo backgrounds `assets/ai` (20, done); 3D PNGs: prompts `work/kaggle_png.json` (28, glossy on white, user's brain sample) -> `work/png_raw` -> `scripts/cutout.py` -> `assets/png` (done: 28 PNGs).
 - Kit `tools/templates/sugar_kit` (bio.js: dbg, aiPhoto, png, graph, cell/key/organ auto-PNG, flow, meter, spring ease, glow filters, 3D vessel). Sequences sw_l01..l14 + sw_v01..v05 all written (syntax-checked); beats: code defaults (scene-relative word times) + make_sequences beats for l01-l11.
-- DONE: 480p previews with PNGs `<fmt>/output/preview_<fmt>.mp4` (QA PASS), sent. Next: user notes -> finals only on the user's word; then DarkWorld (`scripts/make_darkworld.py`).
+- FINALS DONE 2026-11-15 on the user's go (QA PASS): `16x9/output/09_Sugar_Walk_16x9.mp4` (1920x1080, 4:40), `9x16/output/09_Sugar_Walk_9x16.mp4` (1080x1920, 1:26); `DarkWorld/README.txt` (thumbnails pending: user adds to DarkWorld/16X9, 9X16, then re-run scripts/make_darkworld.py). Music still calm/mars_background.mp3.
+- Earlier: 480p previews with PNGs `<fmt>/output/preview_<fmt>.mp4` (QA PASS), sent. Next: user notes -> finals only on the user's word; then DarkWorld (`scripts/make_darkworld.py`).
 
 ## 07_NASA_Moon_Base (2026-11-15) - closed (finals done)
 - Done: inputs, merge, 1.15x audio, align_mms, plan.md rev 2 (image-led light documentary, user brief + memory light-documentary-image-led), theme "mission survey".
