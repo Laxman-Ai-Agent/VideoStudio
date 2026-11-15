@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L04 (49-79 s): CLPS = a delivery service. Real CLPS launch full bleed -> flow NASA -> private lander -> Moon with payload chips riding the line
+   -> delivery receipt ("NASA doesn't build landers") -> 10 YEARS / $10B MAX */
+.node { position: absolute; border-radius: 50%; background: #fff no-repeat center / cover; box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172230; border: calc(var(--u) * .6) solid #fff; }
+.node.n { display: flex; align-items: center; justify-content: center; font: 900 calc(var(--u) * 3.4) var(--font-head); color: #fff; background: #121722; }
+.nl { position: absolute; transform: translateX(-50%); text-align: center; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #59606B; letter-spacing: .14em; white-space: nowrap; }
+.nl b { display: block; font: 800 calc(var(--u) * 2.2) var(--font-head); color: #121722; letter-spacing: 0; }
+.rc { position: absolute; background: #fff; border-radius: calc(var(--u) * .8); padding: calc(var(--u) * 1.6) calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172230;
+  font: 700 calc(var(--u) * 1.7) var(--font-script); color: #59606B; letter-spacing: .1em; line-height: 2; border-top: calc(var(--u) * .6) dashed #E4572E; }
+.rc b { color: #121722; } .rc .h { font: 900 calc(var(--u) * 2.4) var(--font-head); color: #121722; letter-spacing: 0; margin-bottom: calc(var(--u) * .4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { S, W, H, D, u, PAL, tl, E, ix, mk, place, pop, out, move, cam, bg, head, rehead, chip, line, rail, railSet } = X, { photo, kb, reveal, hide, pill, stat, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  /* A: a real CLPS launch (IM-2), text on a dark wash */
+  const p = photo("im2", 0, 0, W, H, { wash: "dl", credit: "NASA · CLPS IM-2 LAUNCH, KSC" }); kb(p, 0, 8.4, 104, 114, "60% 50%", "66% 40%");
+  const hA = head("CLPS-2 WORKS<br>THE <em>SAME WAY</em>", "credit card లాగే: అవసరమైనంత మాత్రమే", 0.4, { kick: "CLPS-2", w: W * .5, x: W * .05, y: H * .3, size: 5.4 });
+  hA.querySelector(".en").style.color = "#fff"; hA.querySelector(".te").style.color = "#ffffffd0";
+  hide(p, 7.6, "l", .9); out(hA, 7.4, { y: -u * 2 });
+  /* B: what CLPS is: a delivery flow */
+  const hB = head("WHAT IS <em>CLPS</em>?", "NASA equipment ని Moon కి పంపడానికి private companies ని hire చేసే system", 8.0, { kick: "COMMERCIAL LUNAR PAYLOAD SERVICES", w: W * .9, x: W * .05, y: H * .07, size: 5 });
+  const Y = H * .52, R = H * .1, X3 = [W * .16, W * .5, W * .84];
+  const n1 = place(mk("div", "node n", undefined, "NASA"), X3[0] - R, Y - R, R * 2, R * 2);
+  const n2 = place(mk("div", "node"), X3[1] - R, Y - R, R * 2, R * 2); n2.style.backgroundImage = `url(${S.images[ix("blueghost")]})`;
+  const n3 = place(mk("div", "node"), X3[2] - R, Y - R, R * 2, R * 2); n3.style.backgroundImage = `url(${S.images[ix("clem")]})`;
+  const L1 = place(mk("div", "nl", undefined, "<b>NASA</b>PAYLOADS"), X3[0], Y + R + u * 1.4), L2 = place(mk("div", "nl", undefined, "<b>PRIVATE LANDER</b>HIRED COMPANY"), X3[1], Y + R + u * 1.4),
+        L3 = place(mk("div", "nl", undefined, "<b>THE MOON</b>DELIVERED"), X3[2], Y + R + u * 1.4);
+  [[n1, L1, 9.4], [n2, L2, 16.3], [n3, L3, 11.0]].forEach(([n, l, t]) => { pop(n, t, { scale: .6, opacity: 0 }, .6, E.pop); pop(l, t + .2, { y: u * 2, opacity: 0 }); });
+  const ln = line([[X3[0] + R, Y], [X3[2] - R, Y]], 10.2, 1.4, PAL.cyan, u * .45); tl.set(ln.querySelector("path"), { attr: { "stroke-dasharray": `${u * 1.4} ${u}` } }, 11.7);
+  const pr = chip("ROVERS", X3[0] - R, Y - R - u * 5, { ico: "gauge", solid: true, c: "#E4572E" }), pi = chip("INSTRUMENTS", X3[0] - R, Y - R - u * 9.4, { ico: "search", solid: true, c: "#2F6FDB" });
+  pop(pr, 13.1, { y: u * 2, opacity: 0 }); pop(pi, 13.7, { y: u * 2, opacity: 0 });
+  move(pr, 15.2, X3[2] - R * 1.4, Y - R - u * 5, null, null, 2.4); move(pi, 15.6, X3[2] - R * 1.4, Y - R - u * 9.4, null, null, 2.4);
+  const hr = pill("<em>HIRED</em> FOR THE TRIP", X3[1] - u * 11, Y - R - u * 6.4); pop(hr, 17.2, { scale: .7, opacity: 0 }, .5, E.pop);
+  /* C: NASA buys a delivery: a receipt */
+  const grp = [n1, n2, n3, L1, L2, L3, ln, pr, pi, hr];
+  grp.forEach((e) => tl.to(e, { y: -H * .18, scale: .7, opacity: 0, duration: .8, ease: E.io }, 18.5));
+  const hC = rehead(hB, "NASA <em>DOESN'T</em> BUILD LANDERS", "Delivery service లాగా ఆ work ని కొంటుంది", 18.7, { kick: "HOW IT WORKS", w: W * .9, x: W * .05, y: H * .07, size: 5 });
+  const rc = place(mk("div", "rc", undefined, `<div class="h">DELIVERY ORDER</div>CUSTOMER: <b>NASA</b><br>PAYLOAD: <b>ROVER + INSTRUMENTS</b><br>CARRIER: <b>PRIVATE LANDER</b><br>DESTINATION: <b>THE MOON</b>`), W * .3, H * .44, W * .4);
+  pop(rc, 19.0, { y: u * 6, opacity: 0, rotation: 2 }, .7, E.pop);
+  /* D: the contract size */
+  out(rc, 24.6, { x: -u * 4 }); grp.forEach((e) => out(e, 24.4));
+  const hD = rehead(hC, "<em>CLPS-2</em> IN NUMBERS", "10 years contract, maximum limit 10 billion dollars", 24.9, { kick: "THE NEW CONTRACT", w: W * .9, x: W * .05, y: H * .07, size: 5 });
+  const s1 = stat("<span>0</span> YEARS", "CONTRACT LENGTH", W * .08, H * .46, "#121722"), s2 = stat("$<span>0</span>B", "MAXIMUM LIMIT", W * .52, H * .46, "#E4572E");
+  pop(s1, 26.0, { y: u * 3, opacity: 0 }); pop(s2, 27.9, { y: u * 3, opacity: 0 });
+  countTo(s1.b.querySelector("span"), 0, 10, 26.0, 1); countTo(s2.b.querySelector("span"), 0, 10, 28.0, 1);
+  const rl = rail("CLPS", "COMMERCIAL LUNAR PAYLOAD SERVICES", 8.4);
+  railSet(rl, 19.0, "NASA <b>BUYS THE DELIVERY</b> · COMPANIES BUILD AND FLY THE LANDERS");
+  railSet(rl, 25.2, "CLPS-2 · <b>10 YEARS · UP TO $10 BILLION</b>");
+  cam(8, Math.max(D - 8, 1), 1.03);
+  X.done();
+</script></body></html>

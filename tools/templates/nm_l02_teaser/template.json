@@ -1,0 +1,8 @@
+{
+ "name": "nm_l02_teaser",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 07_NASA_Moon_Base 16x9; reuse only when the user asks", "kit": "moon_kit"},
+ "description": "07 l02_teaser (plan.md)"
+}

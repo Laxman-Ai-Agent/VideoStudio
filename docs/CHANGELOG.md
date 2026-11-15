@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2026-11-15
-- 07_NASA_Moon_Base: paired project (16x9 merge of 4 parts, 3 speeds, 1.15x, align_mms), plan rev 2 after the user's image-led light-documentary brief, theme, samples nm_l01 (3D Moon) + nm_l11 (3D Curiosity).
+- 07_NASA_Moon_Base: paired project (16x9 merge of 4 parts, 3 speeds, 1.15x, align_mms), plan rev 2 after the user's image-led light-documentary brief, theme, samples nm_l01 (3D Moon) + nm_l11 (3D Curiosity); NASA photo set + 9 Kaggle images; moon_kit/doc.js (image-led parts); sequences nm_l02-l10 with beat-frame QA (fixed: half-width photos left a dark band -> inner cover layer, `.stat span` hid the number, dimmed leftovers under new content, empty openings).
 - 3D: three.js 0.147.0 vendored (`moon_kit`, registered in LIBRARIES.md), `m3d.js` follows the HyperFrames hf-seek / buildReady protocol; render copies `params.files` ungraded and keys the cache on them (test_raw_files_copied_ungraded_and_keyed).
 
 ## 2026-11-14

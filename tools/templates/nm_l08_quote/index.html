@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L08 (129-135 s): Jared Isaacman, real briefing photo full bleed on a dark wash; his line words in; bricks stack one per mission */
+.qt { position: absolute; color: #fff; font: 800 calc(var(--u) * 3.7) var(--font-head); line-height: 1.15; letter-spacing: -.01em; }
+.qt em { font-style: normal; color: #E4572E; }
+.qt .w { display: inline-block; margin-right: .25em; }
+.who { position: absolute; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #ffffffcc; letter-spacing: .16em; }
+.who b { display: block; font: 800 calc(var(--u) * 2.4) var(--font-head); color: #fff; letter-spacing: 0; }
+.br { position: absolute; width: calc(var(--u) * 6); height: calc(var(--u) * 2.6); background: #E4572E; border-radius: calc(var(--u) * .4); box-shadow: inset 0 calc(var(--u) * -.4) 0 #0003; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, tl, E, mk, place, pop, cam, bg } = X, { photo, kb, reveal } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const p = photo("brief2", 0, 0, W, H, { wash: "dl", pos: "70% 30%", credit: "NASA · JARED ISAACMAN, MOON BASE BRIEFING" }); reveal(p, 0, "c", .8); kb(p, 0, D, 110, 122, "75% 30%", "70% 26%");
+  const who = place(mk("div", "who", undefined, `<b>JARED ISAACMAN</b>NASA ADMINISTRATOR`), W * .06, H * .18); pop(who, 0.4, { x: -u * 3, opacity: 0 });
+  const words = "“WE ARE BUILDING THE <em>MOON BASE</em>, <em>ONE MISSION</em> AT A TIME.”".split(/ (?![^<]*<\/em>)/);
+  const q = place(mk("div", "qt", undefined, words.map((w) => `<span class="w">${w}</span>`).join("")), W * .06, H * .32, W * .4);
+  tl.fromTo(q.children, { y: u * 2, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .22, ease: E.in, immediateRender: true }, 1.6);
+  const n = 5, bx = W * .06, by = H * .8;
+  for (let i = 0; i < n; i++) { const b = place(mk("div", "br"), bx + i * u * 6.6, by); pop(b, 3.3 + i * .35, { y: -u * 6, opacity: 0 }, .45, E.pop); }
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

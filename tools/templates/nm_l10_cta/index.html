@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L10 (159-165 s): CTA over a soft, blurred PROMISE rendering; like / share / subscribe pop on the spoken words */
+.ct { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.2); padding: calc(var(--u) * 1.2) calc(var(--u) * 2.4); border-radius: 99px; background: #fff;
+  font: 800 calc(var(--u) * 3) var(--font-head); color: #121722; box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172230; }
+.ct svg { width: calc(var(--u) * 3.6); height: calc(var(--u) * 3.6); }
+.ct.sub { background: #E4572E; color: #fff; }
+.ch { position: absolute; font: 900 calc(var(--u) * 6) var(--font-head); color: #121722; letter-spacing: -.02em; }
+.ch em { font-style: normal; color: #E4572E; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, tl, E, mk, place, pop, cam, bg, ico } = X, { photo, kb } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const p = photo("promise2", 0, 0, W, H, { credit: "NASA · ARTIST'S RENDERING OF PROMISE" }); p.style.filter = "blur(6px) brightness(1.1)"; kb(p, 0, D, 110, 118);
+  const sh = place(mk("div", ""), 0, 0, W, H); sh.style.cssText += "position:absolute;background:#EEEFEAc0";
+  const ch = place(mk("div", "ch", undefined, "THE <em>DARK WORLD</em>"), W * .5, H * .28); ch.style.transform = "translateX(-50%)"; pop(ch, 0.4, { y: u * 3, opacity: 0 });
+  const kk = place(mk("div", "ct", undefined, "ENJOYING THESE SPACE UPDATES?"), W * .5, H * .16); kk.style.transform = "translateX(-50%)"; kk.style.fontSize = u * 2.2 + "px"; pop(kk, 1.0, { y: -u * 2, opacity: 0 });
+  const A = [["thumb", "LIKE", 4.2, ""], ["share", "SHARE", 4.7, ""], ["bell", "SUBSCRIBE", 5.2, " sub"]];
+  A.forEach(([i, t, at, c], k) => { const e = place(mk("div", "ct" + c, undefined, `${ico(i)}${t}`), W * (.14 + k * .26), H * .55); pop(e, at, { y: u * 4, opacity: 0, scale: .8 }, .5, E.pop); });
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

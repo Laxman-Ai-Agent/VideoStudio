@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L09 (135-159 s): PROMISE. NASA rendering full bleed -> Mark 1 lander split; price stack $94M + $140M option = $234M; JPL + launch end 2028 timeline */
+.stk { position: absolute; display: flex; flex-direction: column-reverse; gap: calc(var(--u) * .6); }
+.blk { box-sizing: border-box; border-radius: calc(var(--u) * 1); padding: 0 calc(var(--u) * 1.8); display: flex; align-items: center; justify-content: space-between; color: #fff; }
+.blk b { font: 900 calc(var(--u) * 3.4) var(--font-head); } .blk span { font: 700 calc(var(--u) * 1.5) var(--font-script); letter-spacing: .14em; }
+.blk.o { background: repeating-linear-gradient(135deg, #2F6FDB, #2F6FDB calc(var(--u) * 1), #3c7ae0 calc(var(--u) * 1), #3c7ae0 calc(var(--u) * 2)); }
+.tln { position: absolute; height: calc(var(--u) * .5); background: #12172230; border-radius: 99px; }
+.tln .f { position: absolute; left: 0; top: 0; bottom: 0; background: #E4572E; border-radius: 99px; transform-origin: 0 50%; }
+.tk { position: absolute; transform: translateX(-50%); text-align: center; font: 700 calc(var(--u) * 1.5) var(--font-script); color: #59606B; letter-spacing: .12em; white-space: nowrap; }
+.tk i { display: block; width: calc(var(--u) * 1.8); height: calc(var(--u) * 1.8); margin: 0 auto calc(var(--u) * .7); border-radius: 50%; background: #fff; border: calc(var(--u) * .45) solid #121722; box-sizing: border-box; }
+.tk.hot i { background: #E4572E; border-color: #E4572E; } .tk.hot { color: #121722; } .tk b { display: block; font: 800 calc(var(--u) * 2) var(--font-head); color: #121722; letter-spacing: 0; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, mk, place, pop, out, move, fit, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, big, pill, tag, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  /* A: the star of the show */
+  const p = photo("promise5", 0, 0, W, H, { wash: "l", credit: "NASA · ARTIST'S RENDERING OF PROMISE" }); reveal(p, 0, "r", 1); kb(p, 0, 9, 106, 120, "60% 60%", "66% 64%");
+  const h = head("THE <em>PROMISE</em> ROVER", "ఈ announcement లో అందరి focus దీని మీదే", 0.4, { kick: "THE HEADLINER", w: W * .5, x: W * .05, y: H * .1, size: 5.6 });
+  /* B: Blue Origin's Mark 1 carries it to the south pole (split, photo slides left) */
+  move(p, 4.2, 0, 0, W * .5, H, 1.0); out(p.wash, 4.2);
+  const lp = photo("mark1", W * .5, 0, W * .5, H, { credit: "AI IMAGE · MARK 1 LANDER ILLUSTRATION" }); reveal(lp, 4.4, "l", 1); kb(lp, 4.4, 5, 106, 118, "50% 60%", "50% 50%");
+  out(h, 4.0, { y: -u * 2 });
+  const t1 = tag("BLUE ORIGIN", "MARK 1 LANDER", "up", "#121722", W * .54, H * .1); pop(t1, 4.8, { y: u * 2, opacity: 0 });
+  const t2 = tag("SOUTH POLE", "LANDING TARGET", "search", "#2F6FDB", W * .54, H * .26); pop(t2, 7.0, { y: u * 2, opacity: 0 });
+  /* C: the price stack */
+  [t1, t2].forEach((e) => out(e, 8.4)); hide(lp, 8.5, "r", .8); move(p, 8.5, 0, 0, W * .42, H, .9);
+  const h2 = head("THE <em>DEAL</em>", "Base deal + option = total", 8.9, { kick: "CONTRACT VALUE", w: W * .5, x: W * .47, y: H * .08, size: 5.2 });
+  const bw = W * .3, stk = place(mk("div", "stk"), W * .47, H * .3, bw, H * .5);
+  const b1 = mk("div", "blk", stk, `<span>BASE DEAL</span><b>$94M</b>`); b1.style.cssText += `height:${H * .5 * 94 / 234}px;background:#121722`;
+  const b2 = mk("div", "blk o", stk, `<span>OPTION</span><b>$140M</b>`); b2.style.height = H * .5 * 140 / 234 - u * .6 + "px";
+  tl.fromTo(b1, { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: .7, ease: E.io, immediateRender: true }, 9.4);
+  tl.fromTo(b2, { y: -H * .4, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: "bounce.out", immediateRender: true }, 11.5);
+  const tot = big(`$<span>0</span>M<small>TOTAL</small>`, W * .8, H * .44, 6.4, "#E4572E"); pop(tot, 15.8, { x: u * 3, opacity: 0 }); countTo(tot.querySelector("span"), 94, 234, 15.9, 1.2);
+  const ar = pill("UP TO", W * .8, H * .36); pop(ar, 15.8, { y: u * 2, opacity: 0 });
+  /* D: JPL builds it, launch end of 2028 */
+  [stk, tot, ar, h2].forEach((e) => out(e, 18.8, { y: -u * 2 }));
+  const h3 = head("BUILT BY <em>JPL</em>", "2028 end లో launch చేయాలని plan", 19.2, { kick: "NASA'S JET PROPULSION LAB", w: W * .52, x: W * .47, y: H * .1, size: 5.2 });
+  const TX = W * .47, TW = W * .46, TY = H * .62, tln = place(mk("div", "tln", undefined, `<div class="f"></div>`), TX, TY, TW);
+  pop(tln, 20.4, { opacity: 0 });
+  const ticks = [["2026", "CONTRACT", 0], ["2027", "BUILD + TEST", .45], ["END 2028", "LAUNCH", 1]].map(([y, l, f], i) => {
+    const e = place(mk("div", "tk" + (i === 2 ? " hot" : ""), undefined, `<i></i><b>${y}</b>${l}`), TX + TW * f, TY - u * .65); pop(e, 20.6 + i * .5, { y: u * 2, opacity: 0 }); return e; });
+  tl.fromTo(tln.querySelector(".f"), { scaleX: 0 }, { scaleX: 1, duration: 2, ease: E.io, immediateRender: true }, 21.4);
+  const rl = rail("PROMISE", "LUNAR ROVER · <b>BLUE ORIGIN MARK 1</b> → MOON SOUTH POLE", 0.8);
+  railSet(rl, 9.6, "<b>$94M</b> BASE + <b>$140M</b> OPTION = <b>$234M</b>");
+  railSet(rl, 19.6, "BUILT BY <b>NASA JPL</b> · LAUNCH PLANNED <b>END OF 2028</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

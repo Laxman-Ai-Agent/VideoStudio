@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L06 (96-111 s): how much really left? Calendar NOV 7 + the real KSC event photo; REAL ORDERS; VADR = buying launches with a New Glenn photo */
+.cal { position: absolute; width: calc(var(--u) * 15); background: #fff; border-radius: calc(var(--u) * 1.2); overflow: hidden; box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172240; text-align: center; }
+.cal .m { background: #E4572E; color: #fff; font: 800 calc(var(--u) * 2.2) var(--font-head); padding: calc(var(--u) * .6) 0; letter-spacing: .1em; }
+.cal .d { font: 900 calc(var(--u) * 8) var(--font-head); color: #121722; line-height: 1.1; }
+.cal .y { font: 700 calc(var(--u) * 1.5) var(--font-script); color: #59606B; letter-spacing: .2em; padding-bottom: calc(var(--u) * .8); }
+.rk { position: absolute; display: flex; gap: calc(var(--u) * 1.4); }
+.rk i { width: calc(var(--u) * 5); height: calc(var(--u) * 5); border-radius: calc(var(--u) * 1); background: #121722; color: #fff; display: flex; align-items: center; justify-content: center; }
+.rk i svg { width: 60%; height: 60%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, mk, place, pop, out, move, cam, bg, head, rehead, chip, ico, rail, railSet } = X, { photo, kb, reveal, pill, tag } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const h = head("HOW MUCH <em>REALLY</em> LEFT?", "ఇప్పటికిప్పుడు real గా ఎంత money బయటికి వెళ్లింది?", 0.2, { kick: "REAL MONEY", w: W * .9, x: W * .05, y: H * .07, size: 5.2 });
+  const p = photo("maxpower", W * .05, H * .36, W * .6, H * .52, { card: true, credit: "NASA · KENNEDY SPACE CENTER, NOV 2026" }); reveal(p, 0.6, "l", 1); kb(p, 0.6, D - 0.6, 104, 116, "40% 40%", "50% 35%");
+  const cal = place(mk("div", "cal", undefined, `<div class="m">NOV</div><div class="d">7</div><div class="y">2026</div>`), W * .7, H * .38); pop(cal, 3.7, { y: -u * 5, opacity: 0, rotation: 6 }, .7, E.pop);
+  const ks = chip("KENNEDY SPACE CENTER", W * .7, H * .7, { ico: "route", solid: true, c: "#121722" }); pop(ks, 4.7, { y: u * 2, opacity: 0 });
+  const ro = pill("<em>REAL</em> ORDERS GIVEN", W * .07, H * .78, { dark: true }); pop(ro, 7.4, { x: -u * 3, opacity: 0 });
+  /* VADR: the photo becomes a New Glenn launch; contract tag + rocket icons */
+  [cal, ks, ro].forEach((e) => out(e, 9.4)); out(p, 9.4, { x: -u * 4 });
+  const h2 = rehead(h, "<em>VADR</em>: BUYING LAUNCHES", "Rockets ని, అంటే launches ని కొనే మరో contract", 9.7, { kick: "THE BIGGEST ORDER", w: W * .9, x: W * .05, y: H * .07, size: 5.2 });
+  const ng = photo("newglenn", W * .5, H * .32, W * .45, H * .58, { card: true, credit: "NASA · NEW GLENN NG-2 LAUNCH" }); reveal(ng, 10.0, "u", 1); kb(ng, 10, D - 10, 106, 120, "50% 60%", "50% 40%");
+  const tg = tag("VADR", "LAUNCH SERVICES CONTRACT", "up", "#E4572E", W * .05, H * .4); pop(tg, 10.3, { x: -u * 3, opacity: 0 });
+  const rk = place(mk("div", "rk", undefined, [1, 2, 3, 4, 5, 6].map(() => `<i>${ico("up", "#fff")}</i>`).join("")), W * .05, H * .6);
+  tl.fromTo(rk.children, { y: u * 3, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .12, ease: E.in, immediateRender: true }, 11.3);
+  const lb = chip("ROCKETS = LAUNCHES", W * .05, H * .74, { ico: "check", c: "#1FA971" }); pop(lb, 12.4, { y: u * 2, opacity: 0 });
+  const rl = rail("NOV 7", "MOON BASE EVENT · <b>KENNEDY SPACE CENTER</b>", 0.8);
+  railSet(rl, 10.0, "VADR · <b>NASA BUYS ROCKET LAUNCHES</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

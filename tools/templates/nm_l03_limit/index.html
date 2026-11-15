@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L03 (26-49 s): $10B headline over the real Nov 7 briefing photo -> split: "NOT PAID YET" / "IT'S A LIMIT" -> credit card analogy with a limit meter */
+.hl { position: absolute; background: #fff; padding: calc(var(--u) * 1.6) calc(var(--u) * 2.4); border-radius: calc(var(--u) * .8); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #0b0f1755; }
+.hl .s { font: 700 calc(var(--u) * 1.5) var(--font-script); letter-spacing: .2em; color: #E4572E; }
+.hl .t { font: 900 calc(var(--u) * 5.2) var(--font-head); color: #121722; line-height: 1.05; letter-spacing: -.02em; }
+.hl .t em { font-style: normal; color: #E4572E; }
+.meter { position: absolute; }
+.meter .tr { position: absolute; left: 0; right: 0; top: calc(var(--u) * 3.4); height: calc(var(--u) * 3.2); border-radius: 99px; background: #fff; box-shadow: inset 0 0 0 calc(var(--u) * .35) #121722; overflow: hidden; }
+.meter .f { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: #2F6FDB; transform-origin: 0 50%; }
+.meter .a, .meter .b { position: absolute; top: 0; font: 700 calc(var(--u) * 1.7) var(--font-script); letter-spacing: .12em; color: #59606B; }
+.meter .b { right: 0; color: #121722; }
+.meter .c { position: absolute; top: calc(var(--u) * 7.4); font: 800 calc(var(--u) * 2.6) var(--font-head); color: #2F6FDB; }
+.x { position: absolute; font: 900 calc(var(--u) * 4) var(--font-head); color: #fff; background: #D94848; padding: calc(var(--u) * .6) calc(var(--u) * 1.6); border-radius: calc(var(--u) * .6); transform: rotate(-4deg); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, mk, place, pop, out, move, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, big, pill, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  /* A: the real Nov 7 Moon Base briefing, a headline card lands on it */
+  const p = photo("brief2", 0, 0, W, H, { credit: "NASA · MOON BASE BRIEFING, KSC, NOV 7 2026" });
+  kb(p, 0, 11, 104, 116, "50% 40%", "45% 35%");
+  const hl = place(mk("div", "hl", undefined, `<div class="s">BREAKING · NASA</div><div class="t">NASA'S <em>$10 BILLION</em><br>MOON CONTRACTS</div>`), W * .06, H * .52);
+  pop(hl, 1.2, { y: u * 5, opacity: 0, rotation: -2 }, .7, E.pop);
+  const c1 = chip("GIVEN TO ONE COMPANY?", W * .06, H * .4, { ico: "users", solid: true, c: "#121722" }); pop(c1, 6.4, { y: u * 2, opacity: 0 });
+  /* B: split. photo slides to the left half; the truth on the right */
+  move(p, 10.6, 0, 0, W * .46, H, 1.0); out(hl, 10.4, { y: u * 3 }); out(c1, 10.4);
+  const h = head("NOT <em>PAID</em> YET", "ఈ money ఇంకా ఎవరికీ ఇవ్వలేదు", 11.2, { kick: "THE REAL STORY", w: W * .48, x: W * .5, y: H * .1, size: 5.2 });
+  const b10 = big(`$<span>10</span><small>BILLION</small>`, W * .5, H * .38, 11); pop(b10, 11.6, { y: u * 3, opacity: 0 });
+  const xp = place(mk("div", "x"), W * .52, H * .58); xp.textContent = "NOT PAID"; pop(xp, 12.3, { scale: 1.6, opacity: 0 }, .45, E.pop);
+  const lm = pill("IT'S A <em>LIMIT</em>", W * .52, H * .72); pop(lm, 13.8, { x: u * 4, opacity: 0 });
+  /* C: credit card analogy: card photo wipes over the left half; meter on the right */
+  const cc = photo("card", 0, 0, W * .46, H, { credit: "AI IMAGE · ILLUSTRATION" }); reveal(cc, 16.2, "u", .9); kb(cc, 16.2, D - 16.2, 106, 116);
+  [b10, xp, lm].forEach((e, i) => out(e, 16 + i * .08, { x: u * 3 }));
+  const h2 = rehead(h, "CREDIT CARD <em>LIMIT</em>", "limit 10 lakhs ఉంటే, 10 lakhs spend చేసినట్టు కాదు", 16.6, { kick: "THINK OF IT LIKE THIS", w: W * .48, x: W * .5, y: H * .1, size: 4.8 });
+  const m = place(mk("div", "meter", undefined, `<div class="a">SPENT</div><div class="b">LIMIT ₹10 LAKHS</div><div class="tr"><div class="f"></div></div><div class="c">₹<span>0</span> LAKHS USED</div>`), W * .52, H * .46, W * .42);
+  pop(m, 18.0, { y: u * 2, opacity: 0 });
+  tl.fromTo(m.querySelector(".f"), { scaleX: 0 }, { scaleX: .18, duration: 1.2, ease: E.io, immediateRender: true }, 19.6);
+  countTo(m.querySelector("span"), 0, 1.8, 19.6, 1.2, (v) => v.toFixed(1));
+  const c2 = chip("USE ONLY WHAT YOU NEED", W * .52, H * .7, { ico: "check", c: "#1FA971" }); pop(c2, 21.6, { y: u * 2, opacity: 0 });
+  const rl = rail("CLPS-2", "HEADLINE: <b>$10 BILLION</b>", 0.8);
+  railSet(rl, 11.4, "<b>$10B = MAXIMUM LIMIT</b> · NOT MONEY ALREADY PAID");
+  railSet(rl, 18.2, "SAME IDEA AS A <b>CREDIT CARD LIMIT</b>");
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

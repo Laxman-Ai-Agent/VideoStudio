@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L07 (111-129 s): $1.3B over 6 orders, three companies, Arrow $185M bar; then a full-height triptych of the rockets (Falcon 9 / New Glenn / Terran R) */
+.dots6 { position: absolute; display: flex; gap: calc(var(--u) * 1); }
+.dots6 i { width: calc(var(--u) * 2.4); height: calc(var(--u) * 2.4); border-radius: 50%; background: #E4572E; }
+.bar { position: absolute; }
+.bar .tr { position: absolute; left: 0; right: 0; top: calc(var(--u) * 3); height: calc(var(--u) * 2.6); border-radius: 99px; background: #12172214; }
+.bar .f { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: #2F6FDB; transform-origin: 0 50%; }
+.bar .a { position: absolute; top: 0; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.bar .v { position: absolute; top: calc(var(--u) * 6.4); font: 900 calc(var(--u) * 4) var(--font-head); color: #2F6FDB; }
+.col { position: absolute; top: 0; height: 100%; overflow: hidden; background: #121722 no-repeat 50% 50% / cover; }
+.col .nm { position: absolute; left: 0; right: 0; bottom: calc(var(--u) * 7); text-align: center; font: 900 calc(var(--u) * 3.4) var(--font-head); color: #fff; text-shadow: 0 2px 10px #000a; }
+.col .nm small { display: block; font: 700 calc(var(--u) * 1.4) var(--font-script); letter-spacing: .16em; opacity: .85; }
+.col.tr { background: linear-gradient(180deg, #1b2230, #121722); }
+.col.tr .sil { position: absolute; left: 50%; top: 18%; width: calc(var(--u) * 4.4); height: 52%; margin-left: calc(var(--u) * -2.2); background: linear-gradient(90deg, #cfd5de, #fff 45%, #aab2bf);
+  border-radius: 50% 50% calc(var(--u) * .6) calc(var(--u) * .6) / 12% 12% calc(var(--u) * .6) calc(var(--u) * .6); }
+.col.tr .soon { position: absolute; left: 0; right: 0; top: 74%; text-align: center; font: 700 calc(var(--u) * 1.4) var(--font-script); letter-spacing: .16em; color: #E4572E; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { S, W, H, D, u, PAL, tl, E, ix, mk, place, pop, out, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, big, tag, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const h = head("<em>6</em> ORDERS", "Six orders కలిపి roughly 1.3 billion dollars", 0.2, { kick: "VADR ORDERS", w: W * .5, x: W * .05, y: H * .07, size: 5.2 });
+  const d6 = place(mk("div", "dots6", undefined, "<i></i>".repeat(6)), W * .05, H * .34);
+  tl.fromTo(d6.children, { scale: 0 }, { scale: 1, duration: .35, stagger: .1, ease: E.pop, immediateRender: true }, 0.5);
+  const b = big(`$<span>0</span><small>BILLION</small>`, W * .05, H * .42, 12); pop(b, 2.0, { y: u * 3, opacity: 0 }); countTo(b.querySelector("span"), 0, 1.3, 2.0, 1.2, (v) => v.toFixed(1));
+  const C = [["ARROW", "SCIENCE AND TECHNOLOGY", "#2F6FDB", 4.8], ["BLUE ORIGIN", "NEW GLENN", "#121722", 6.1], ["IMPULSE SPACE", "IN-SPACE TRANSPORT", "#E4572E", 7.0]];
+  const T = C.map(([k, d, c, t], i) => { const e = tag(k, d, "up", c, W * .6, H * (.3 + i * .16)); pop(e, t, { x: u * 4, opacity: 0 }); return e; });
+  /* Arrow example: $185M of the $1.3B */
+  T.forEach((e, i) => out(e, 9.0 + i * .06, { x: u * 3 })); out(d6, 9.0);
+  const br = place(mk("div", "bar", undefined, `<div class="a">ARROW ORDER · OF $1.3B TOTAL</div><div class="tr"><div class="f"></div></div><div class="v">$<span>0</span>M</div>`), W * .56, H * .4, W * .38);
+  pop(br, 10.0, { y: u * 2, opacity: 0 });
+  tl.fromTo(br.querySelector(".f"), { width: 0 }, { width: "14.2%", duration: 1.2, ease: E.io, immediateRender: true }, 12.0); countTo(br.querySelector("span"), 0, 185, 12.0, 1.2);
+  const ex = chip("EXAMPLE", W * .56, H * .3, { ico: "star", c: "#2F6FDB" }); pop(ex, 9.4, { y: u * 2, opacity: 0 });
+  /* rockets: three full-height columns slide up one by one */
+  const t0 = 14.2, cw = W / 3;
+  const c1 = place(mk("div", "col", undefined, `<div class="nm">FALCON 9<small>SPACEX</small></div>`), 0, 0, cw); c1.style.backgroundImage = `url(${S.images[ix("falcon9")]})`; c1.style.backgroundPosition = "50% 60%";
+  const c2 = place(mk("div", "col", undefined, `<div class="nm">NEW GLENN<small>BLUE ORIGIN</small></div>`), cw, 0, cw); c2.style.backgroundImage = `url(${S.images[ix("newglenn")]})`;
+  const c3 = place(mk("div", "col tr", undefined, `<div class="sil"></div><div class="soon">IN DEVELOPMENT</div><div class="nm">TERRAN R<small>RELATIVITY SPACE</small></div>`), cw * 2, 0, cw);
+  [[c1, t0 + .4], [c2, t0 + 1.3], [c3, t0 + 2.0]].forEach(([c, t]) => reveal(c, t, "u", .8));
+  tl.fromTo([c1, c2], { backgroundSize: "auto 110%" }, { backgroundSize: "auto 122%", duration: D - t0, ease: "none", immediateRender: true }, t0);
+  const rl = rail("VADR", "<b>$1.3 BILLION</b> · ARROW · BLUE ORIGIN · IMPULSE SPACE", 0.8);
+  railSet(rl, 10.2, "ARROW ORDER · <b>$185 MILLION</b>");
+  railSet(rl, t0 + .5, "ROCKETS FOR THESE MISSIONS · <b>FALCON 9 · NEW GLENN · TERRAN R</b>");
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

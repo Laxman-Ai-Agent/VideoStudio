@@ -12,10 +12,12 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 07_NASA_Moon_Base (2026-11-15) - samples, waiting for the user's look check
-- Done: inputs moved, 16x9 four mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; align_mms -> `input/gemini_corrected.json`; plan.md rev 2 (user brief: image-led light documentary, big / full-screen real photos, not all in cards, 2D/3D, cinematic camera); theme "mission survey" (Unbounded + Hind Guntur + Space Mono, rocket orange / ice blue).
-- New: three.js r147 vendored in `tools/templates/moon_kit` (kit = explainer2 copy + `m3d.js`: hf-seek drawing, `__hf.buildReady`); render copies `params.files` raw (3D models, textures, ungraded). NASA assets in `assets/nasa` (LRO Moon kit, Curiosity glb, photos via `scripts/nasa_get.py`, sources `assets/sources.json`).
-- Samples 480p: `16x9/output/samples/sample_nm_l01_intro.mp4` (3D Moon dive to the south pole), `sample_nm_l11_spares.mp4` (Curiosity selfie -> 3D model with part labels). Next: user look check -> remaining sequences nm_l02..l16, nm_v01..v05, NASA photos + Kaggle gaps.
+## 07_NASA_Moon_Base (2026-11-15) - sequences in progress (NEXT SESSION: continue here)
+- Done: inputs, merge, 1.15x audio, align_mms, plan.md rev 2 (image-led light documentary, user brief + memory light-documentary-image-led), theme "mission survey".
+- 3D: three.js r147 in `tools/templates/moon_kit` (`m3d.js`: hf-seek + `__hf.buildReady`); render copies `params.files` raw. Image-led parts in `moon_kit/doc.js` (photo with inner `.im` cover layer, kb Ken Burns, reveal/hide wipes, big, pill, tag, lab, stat, countTo).
+- Assets: NASA photos `assets/nasa` (`scripts/nasa_get.py <nasa_id> <name>`, sources `assets/sources.json`): 4 real PROMISE renderings, Isaacman Nov 7 briefing, KSC event, launches, MMRTG, Apollo flag + bootprint, Clementine south pole, Moon Base concept, VSTB test rover, LRO Moon kit + Curiosity glb. Kaggle `assets/ai` K01-K09 (prompts `work/kaggle_images.json`; K03 is upright, not tipped).
+- Sequences written + 480p samples + QA (`scripts/qa_sheet.py`): nm_l01-l11 (16x9). User OK'd the L01 / L11 look.
+- TODO: write nm_l12_mmrtg (181.5-196.7, lines 25-26), nm_l13_southpole (197.1-223.2), nm_l14_record (223.6-251.6), nm_l15_plan (252.2-273.7), nm_l16_end (274.3-294.1) per plan.md; add pics/beats in `scripts/make_sequences.py`; then 9x16 nm_v01-v05 (portrait layouts, K08/K09 portrait images); full 480p previews both formats (`studio run` / preview path as in 06); DarkWorld folder at the end. Template dirs + template.json for all of them already exist.
 
 ## Explainer mode v2 (2026-11-14)
 - User: "explainer" now = the 06_Gemini_Hydrogen look. Recipe `docs/EXPLAINER_STYLE.md`, kit `tools/templates/explainer2_kit` (theme-driven copy of `lab_kit`, `params.motif` hex|ring|square|plus), rule in my-editor rules.md. Old `explainer_kit` only for 04.

@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L02 (18-26 s): teaser. NASA's own PROMISE rendering full bleed, slow push; "nuclear" + "Mars spare parts" chips; IN DETAIL */
+.scan { position: absolute; height: 2px; background: linear-gradient(90deg, transparent, #E4572E, transparent); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, mk, place, pop, out, cam, bg, head, chip, rail } = X, { photo, kb, reveal, pill } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const p = photo("promise4", 0, 0, W, H, { wash: "l", credit: "NASA · ARTIST'S RENDERING OF PROMISE" });
+  reveal(p, 0, "r", 1.0); kb(p, 0, D, 108, 124, "62% 55%", "70% 60%");
+  const h = head("A <em>NUCLEAR</em> ROVER", "Mars rover spare parts తో build చేస్తున్నారు", 0.4, { kick: "COMING UP", w: W * .5, x: W * .05, y: H * .12, size: 5.6 });
+  const c1 = chip("NUCLEAR POWERED", W * .05, H * .5, { ico: "bolt", solid: true, c: "#E4572E" }); pop(c1, 2.2, { x: -u * 3, opacity: 0 });
+  const c2 = chip("MARS SPARE PARTS", W * .05, H * .58, { ico: "route", solid: true, c: "#121722" }); pop(c2, 3.4, { x: -u * 3, opacity: 0 });
+  const c3 = chip("SOUTH POLE OF THE MOON", W * .05, H * .66, { ico: "search", c: "#2F6FDB" }); pop(c3, 4.8, { x: -u * 3, opacity: 0 });
+  const sc = place(mk("div", "scan"), W * .45, H * .2, W * .5); tl.fromTo(sc, { y: 0, opacity: 0 }, { y: H * .6, opacity: 1, duration: 2.4, ease: "sine.inOut", immediateRender: true }, 2.4); out(sc, 4.8);
+  const pd = pill("IN <em>DETAIL</em> ↓", W * .05, H * .78, { dark: true }); pop(pd, 6.8, { y: u * 2, opacity: 0 });
+  rail("PROMISE", "PREVIEW · <b>HOW A MOON ROVER IS BUILT FROM MARS SPARES</b>", 0.8);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>
