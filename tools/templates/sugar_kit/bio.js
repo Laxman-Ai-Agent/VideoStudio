@@ -164,6 +164,14 @@
     };
     return { curve, st, wall };
   }
-  window.B = { K, dbg, glow, breathe, badge, aiPhoto, cell, tintCell, key, organ, flow, meter, spark, svg };
+  // spring() feel (Remotion-like damped spring) as a GSAP ease; SVG feGaussianBlur glow filters #gC #gG #gA #gR for vector parts
+  const spring = (t) => 1 - Math.exp(-6.5 * t) * Math.cos(9.5 * t);
+  E.spring = spring;
+  const defs = document.createElement("div"); defs.style.cssText = "position:absolute;width:0;height:0;overflow:hidden";
+  defs.innerHTML = `<svg width="0" height="0"><defs>${[["gC", K.cyan], ["gG", K.green], ["gA", K.amber], ["gR", K.red]].map(([id, c]) => `<filter id="${id}" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="${u * .9}" result="b"/><feFlood flood-color="${c}" flood-opacity=".9"/><feComposite in2="b" operator="in" result="g"/>
+    <feMerge><feMergeNode in="g"/><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`).join("")}</defs></svg>`;
+  document.documentElement.append(defs);  // bio.js runs in <head>: body does not exist yet
+  window.B = { K, spring, dbg, glow, breathe, badge, aiPhoto, cell, tintCell, key, organ, flow, meter, spark, svg };
   window.B3 = { vessel };
 })();

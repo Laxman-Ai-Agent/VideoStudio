@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L01 (0-20 s) hook, user brief: AI photo backgrounds full frame (glucometer -> rice plate -> night walk) with Ken Burns
+   1.00 -> 1.06 + vignette rgba(10,14,23,.6); crisp vector layer on top: one big glucose curve with feGaussianBlur glow (red spike after the
+   meal, green drop after the walk), big bold headings, dark pill badges, spring pops, everything breathing. */
+.b-ov { position: absolute; inset: 0; background: rgba(10,14,23,.6); pointer-events: none; }
+.b-ovl { position: absolute; inset: 0; background: linear-gradient(90deg, #0A0E17e0 0%, #0A0E1790 40%, #0A0E1700 70%); pointer-events: none; }
+.cv { position: absolute; overflow: visible; }
+.cv .ax { font: 700 calc(var(--u) * 1.7) var(--font-script); fill: #8A97AD; letter-spacing: .14em; }
+.plus { position: absolute; font: 800 calc(var(--u) * 7) var(--font-head); color: #EAF2FF; }
+.arr { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1); font: 800 calc(var(--u) * 6) var(--font-head); color: #00E676;
+       text-shadow: 0 0 calc(var(--u) * 2.4) #00E676aa; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, breathe, badge, aiPhoto } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const SP = E.spring;
+  const tSu = at("sugar", .7), tMe = at("med", 2.8), tMl = at("meal", 3.9), tWa = at("walk", 5.7), tIn = at("ins", 6.6), tDn = at("down", 8.4);
+
+  /* AI backgrounds, full frame, each with Ken Burns 1.00 -> 1.06 and the 0.6 navy overlay; next one wipes in on its word */
+  const bgs = [["gluco", 0, "60% 35%"], ["rice", tMl - .3, "62% 45%"], ["walk", tWa - .3, "45% 50%"]].map(([k, t, pos]) => {
+    const p = aiPhoto(k, 0, 0, W, H, { t, d: Math.max(D - t, 1), pos }); mk("div", "b-ovl", p);
+    if (t > 0) DOC.reveal(p, t, "l", .9); else tl.fromTo(p, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, 0); return p; });
+
+  /* 1. control your sugar: glucometer reading counts up in red */
+  const h1 = head('Control your <em class="r">blood sugar</em>', "రక్తంలో sugar ని అదుపులో ఉంచాలంటే", .1, { kick: "BLOOD SUGAR", w: W * .52, x: W * .05, y: H * .14, size: 8.4 });
+  const rd = badge('<b>90</b> mg/dL', K.red, W * .6, H * .52); rd.style.fontSize = u * 3.4 + "px"; pop(rd, tSu, { scale: .4, opacity: 0 }, .9, SP); breathe(rd, tSu + 1, u * .6, 2.8);
+  DOC.countTo(rd.querySelector("b"), 90, 180, tSu + .2, 1.6);
+
+  /* 2. medicines + a short walk after meals */
+  const bM = badge("<b>MEDICINES</b>", K.amber, W * .05, H * .58); bM.style.fontSize = u * 2.8 + "px"; pop(bM, tMe, { x: -u * 4, opacity: 0, scale: .8 }, .9, SP);
+  const pl = place(mk("div", "plus", undefined, "+"), W * .27, H * .55); pop(pl, tMe + .4, { scale: 0, opacity: 0, rotation: -90 }, .8, SP);
+  const bA = badge("AFTER A <b>MEAL</b>", K.cyan, W * .32, H * .58); bA.style.fontSize = u * 2.8 + "px"; pop(bA, tMl, { x: -u * 4, opacity: 0, scale: .8 }, .9, SP);
+  out(rd, tMl - .3, { scale: .7 });
+
+  /* the glucose curve: red spike after the meal, green drop after the walk (feGaussianBlur glow) */
+  const cw = W * .46, ch = H * .3, cx = W * .5, cy = H * .6;
+  const cv = place(mk("div", "cv"), cx, cy, cw, ch);
+  cv.innerHTML = `<svg width="${cw}" height="${ch}" style="overflow:visible">
+    <line x1="0" y1="${ch}" x2="${cw}" y2="${ch}" stroke="#ffffff30" stroke-width="${u * .2}"/><text class="ax" x="0" y="${ch + u * 2.6}">GLUCOSE AFTER A MEAL</text>
+    <path class="up" d="M0 ${ch * .85} C ${cw * .2} ${ch * .85}, ${cw * .3} ${ch * .05}, ${cw * .45} ${ch * .05}" fill="none" stroke="${K.red}" stroke-width="${u * .7}" stroke-linecap="round" filter="url(#gR)"/>
+    <path class="dn" d="M${cw * .45} ${ch * .05} C ${cw * .6} ${ch * .05}, ${cw * .68} ${ch * .7}, ${cw} ${ch * .72}" fill="none" stroke="${K.green}" stroke-width="${u * .7}" stroke-linecap="round" filter="url(#gG)"/>
+    <circle class="hd" r="${u * 1.1}" fill="#fff" filter="url(#gC)"/></svg>`;
+  const up = cv.querySelector(".up"), dn = cv.querySelector(".dn"), hd = cv.querySelector(".hd"), Lu = up.getTotalLength(), Ld = dn.getTotalLength();
+  [up, dn].forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  tl.fromTo(cv, { opacity: 0, y: u * 3 }, { opacity: 1, y: 0, duration: .8, ease: SP, immediateRender: true }, tMl);
+  const pr = { a: 0, b: 0 }, head0 = () => { const q = pr.b > 0 ? dn.getPointAtLength(pr.b * Ld) : up.getPointAtLength(pr.a * Lu); hd.setAttribute("cx", q.x); hd.setAttribute("cy", q.y); };
+  head0();
+  tl.to(pr, { a: 1, duration: tWa - tMl - .2, ease: "power2.inOut", onUpdate: () => { up.style.strokeDashoffset = Lu * (1 - pr.a); head0(); } }, tMl + .2);
+  tl.to(pr, { b: 1, duration: 2.2, ease: "power2.inOut", onUpdate: () => { dn.style.strokeDashoffset = Ld * (1 - pr.b); head0(); } }, tWa + .1);
+  const sp = badge("<b>SPIKE</b>", K.red, cx + cw * .3, cy - u * 6); pop(sp, tWa - .7, { y: u * 2, opacity: 0, scale: .7 }, .8, SP);
+  breathe(cv, tMl + 1, u * .5, 3.4);
+
+  /* 3. the walk: heading changes, no insulin needed, sugar goes down */
+  out([bM, pl, bA], tWa - .2, { x: -u * 3 });
+  const h2 = rehead(h1, 'A short <em class="g">walk</em> after meals', "భోజనం తర్వాత ఒక చిన్న walk", tWa, { kick: "THE SIMPLE FIX", w: W * .52, x: W * .05, y: H * .14, size: 8.4 });
+  const bI = badge("NO <b>INSULIN</b> NEEDED", K.green, W * .05, H * .6); bI.style.fontSize = u * 2.8 + "px"; pop(bI, tIn, { x: -u * 4, opacity: 0, scale: .8 }, .9, SP); breathe(bI, tIn + 1, u * .5, 3);
+  const ar = place(mk("div", "arr", undefined, "&#8595; SUGAR"), cx + cw * .62, cy + ch * .82); pop(ar, tDn - .2, { y: -u * 4, opacity: 0, scale: .6 }, .9, SP); breathe(ar, tDn + .8, u * .6, 2.6);
+  out(sp, tDn - .4);
+  cam(0, Math.max(D, 1), 1.035);
+  X.done();
+</script></body></html>
