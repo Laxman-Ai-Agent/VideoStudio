@@ -1,0 +1,101 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="three.min.js"></script><script src="kit.js"></script><script src="m3d.js"></script><script src="doc.js"></script>
+<style>/* 07 L13 (197-223 s): why the south pole. 3D Moon dives to the pole -> Clementine south pole photo + crater cross-section (sun never reaches
+   the floor) -> crater ice full bleed with glints -> water = H2O / O2 / H2 cards -> mission: 18 months ring + 1 m drill gauge beside the drill image */
+.pin { position: absolute; width: 0; height: 0; }
+.pin i { position: absolute; left: calc(var(--u) * -1); top: calc(var(--u) * -1); width: calc(var(--u) * 2); height: calc(var(--u) * 2); border-radius: 50%; background: #2F6FDB; box-shadow: 0 0 0 calc(var(--u) * .5) #fff; }
+.pin b { position: absolute; left: calc(var(--u) * 2.4); top: calc(var(--u) * -1.6); white-space: nowrap; font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #fff;
+  background: #121722; padding: calc(var(--u) * .35) calc(var(--u) * 1); border-radius: calc(var(--u) * .5); }
+.xs { position: absolute; background: #fff; border-radius: calc(var(--u) * 1.4); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172240; overflow: hidden; }
+.xs .tt { position: absolute; left: calc(var(--u) * 1.6); top: calc(var(--u) * 1.1); font: 700 calc(var(--u) * 1.5) var(--font-script); color: #59606B; letter-spacing: .14em; }
+.gl { position: absolute; width: calc(var(--u) * 2.4); height: calc(var(--u) * 2.4); margin: calc(var(--u) * -1.2) 0 0 calc(var(--u) * -1.2);
+  background: radial-gradient(circle, #fff 0 12%, #bfe0ff99 22%, transparent 60%); }
+.gl::before, .gl::after { content: ""; position: absolute; left: 48%; top: 0; width: 4%; height: 100%; background: linear-gradient(#fff0, #fff, #fff0); }
+.gl::after { transform: rotate(90deg); }
+.use { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172226; border-top: calc(var(--u) * .7) solid var(--c); text-align: center; padding-top: calc(var(--u) * 2.4); }
+.use b { display: block; font: 900 calc(var(--u) * 6.4) var(--font-head); color: var(--c); letter-spacing: -.03em; line-height: 1; }
+.use b sub { font-size: .45em; }
+.use i { display: block; margin-top: calc(var(--u) * 1.6); font: 800 normal calc(var(--u) * 2.4) var(--font-head); color: #121722; }
+.use span { display: block; margin-top: calc(var(--u) * .5); font: 700 calc(var(--u) * 1.3) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.ring { position: absolute; }
+.ring .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring .c b { font: 900 calc(var(--u) * 7.4) var(--font-head); color: #E4572E; line-height: 1; } .ring .c span { font: 700 calc(var(--u) * 1.6) var(--font-script); color: #59606B; letter-spacing: .16em; }
+.gg { position: absolute; border-left: calc(var(--u) * .4) solid #121722; background: linear-gradient(180deg, #c9b9a3, #8a7a66); border-radius: 0 calc(var(--u) * .6) calc(var(--u) * .6) 0; }
+.gg .tk { position: absolute; left: calc(var(--u) * -3.6); font: 700 calc(var(--u) * 1.4) var(--font-script); color: #59606B; transform: translateY(-50%); }
+.gg .bit { position: absolute; left: 40%; width: 20%; top: 0; height: 0; background: #2F6FDB; border-radius: 0 0 calc(var(--u) * 1) calc(var(--u) * 1); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, fade, pop, out, move, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, tag, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tCr = at("crat", 4.0), tSu = at("sun", 4.7), tIc = at("ice", 7.3), tSc = at("sci", 9.0), tWa = at("water", 10.8), tOx = at("oxy", 12.6), tFu = at("fuel", 14.7),
+        tPr = at("prom", 16.7), tM18 = at("m18", 18.0), tMe = at("meter", 20.0), tBa = at("base", 22.4), tI2 = at("ice2", 25.4);
+
+  /* A: 3D Moon turns its south pole to us */
+  const v = M3.view({ fov: 30, exposure: .95, amb: .18 }); v.key.position.set(-5, 1.2, 3.2); v.cam.setViewOffset(W, H, -W * .17, 0, W, H);
+  const moon = M3.moon(v, "moon_color_2k.jpg", "moon_disp.jpg", 1);
+  const st = { rx: -.5, ry: .2, z: 3.6, look: .3 };
+  tl.to(st, { rx: -1.2, ry: .6, z: 2.1, look: .95, duration: 3.2, ease: E.io }, 0);
+  const pin = mk("div", "pin", undefined, `<i></i><b>SOUTH POLE</b>`), pole = new THREE.Vector3(0, -1.004, 0);
+  v.update = () => { moon.rotation.set(st.rx, st.ry, 0, "XYZ"); moon.updateMatrixWorld(); const tg = moon.localToWorld(pole.clone()).multiplyScalar(st.look);
+    v.cam.position.set(tg.x, tg.y, tg.z + st.z); v.cam.lookAt(tg); v.cam.updateMatrixWorld(); const P = M3.toScreen(v, moon.localToWorld(pole.clone())); place(pin, P[0], P[1]); };
+  pop(pin, 1.6, { scale: 0, opacity: 0 }, .5, E.pop);
+  const h = head("WHY THE <em>SOUTH POLE</em>?", "ఇంత hard work చేసి south pole కే ఎందుకు?", .2, { kick: "THE TARGET", w: W * .46, x: W * .05, y: H * .14, size: 5.4 });
+
+  /* B: real south pole photo + cross-section: the sun stays low, crater floors stay dark forever */
+  out(h, 3.1, { y: -u * 2 }); out(pin, 3.1); tl.to(v.c, { opacity: 0, duration: .6, ease: E.out }, 3.3);
+  const cp = photo("clem", 0, 0, W, H, { wash: "l", credit: "NASA · CLEMENTINE, MOON SOUTH POLE", pos: "50% 50%" }); reveal(cp, 3.2, "c", 1); kb(cp, 3.2, 3.6, 100, 116, "50% 50%", "52% 48%");
+  const h2 = head("NO <em>SUNLIGHT</em>", "కొన్ని craters లోకి sunlight ఎప్పుడూ పడదు", 3.5, { kick: "PERMANENT SHADOW", w: W * .44, x: W * .05, y: H * .12, size: 5.6 });
+  const xw = W * .4, xh = H * .4, xs = place(mk("div", "xs", undefined, `<div class="tt">CROSS-SECTION · CRATER</div>`), W * .06, H * .46, xw, xh); pop(xs, tCr, { y: u * 3, opacity: 0 });
+  const gy = xh * .5, P = (a) => a.map(([x, y]) => `${x * xw} ${gy + y * xh}`).join(" L");
+  xs.insertAdjacentHTML("beforeend", `<svg width="${xw}" height="${xh}" style="position:absolute;left:0;top:0">
+    <path class="sh" d="M${P([[.38, 0], [.47, .3], [.72, .3], [.8, 0]])}Z" fill="#121722"/>
+    <path d="M${P([[0, 0], [.32, 0], [.38, -.06], [.47, .3], [.72, .3], [.8, -.06], [.86, 0], [1, 0]])} L${xw} ${xh} L0 ${xh}Z" fill="#c9bfb0"/>
+    <circle cx="${xw * .06}" cy="${gy - xh * .1}" r="${u * 2}" fill="#F5A524"/>
+    ${[[.38, -.06], [.6, -.02], [.86, 0]].map(([x, y]) => `<path class="ry" d="M${xw * .1} ${gy - xh * .1} L${xw * x} ${gy + y * xh}" stroke="#F5A524" stroke-width="${u * .35}" stroke-dasharray="${u} ${u * .6}" fill="none"/>`).join("")}
+    <text x="${xw * .595}" y="${gy + xh * .22}" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="${u * 1.4}" fill="#9cc4ff">ALWAYS DARK</text></svg>`);
+  xs.querySelectorAll(".ry").forEach((r, i) => tl.fromTo(r, { opacity: 0, scaleX: 0, transformOrigin: "0 50%" }, { opacity: 1, scaleX: 1, duration: .5, ease: E.io, immediateRender: true }, tSu + i * .15));
+  fade(xs.querySelector(".sh"), tSu + .5, .6);
+
+  /* C: water ice in the crater floor */
+  [h2, xs].forEach((e) => out(e, 6.0, { y: -u * 2 }));
+  const cr = photo("crater", 0, 0, W, H, { wash: "t", credit: "AI IMAGE · SHADOWED CRATER (ILLUSTRATION)" }); reveal(cr, 6.0, "u", 1); kb(cr, 6.0, 4.4, 104, 114, "50% 60%", "50% 64%");
+  out(cp, 7.2, { duration: .1 });
+  const h3 = head("WATER <em>ICE</em>", "అలాంటి places లో ice form లో water దాగి ఉండొచ్చు", 6.3, { kick: "THE PRIZE", w: W * .9, x: W * .05, y: H * .06, size: 5 });
+  const gls = [[.46, .58], [.55, .62], [.62, .56], [.5, .66], [.68, .63], [.58, .52]].map(([x, y], i) => { const g = place(mk("div", "gl"), W * x, H * y);
+    tl.fromTo(g, { scale: 0, opacity: 0 }, { scale: 1.3, opacity: 1, duration: .5, ease: E.soft, repeat: 3, yoyo: true, immediateRender: true }, tIc + i * .22); return g; });
+  const t1 = tag("WATER ICE?", "SCIENTISTS' ESTIMATE", "search", "#2F6FDB", W * .05, H * .74); pop(t1, tSc, { x: -u * 3, opacity: 0 });
+
+  /* D: one find, three uses */
+  [h3, t1, ...gls].forEach((e) => out(e, tWa - .5)); out(cr.wash, tWa - .5);
+  move(cr, tWa - .4, 0, 0, W * .4, H, 1);
+  const h4 = head("ONE FIND, <em>3 USES</em>", "ఆ water దొరికితే", tWa - .1, { kick: "WHY WATER MATTERS", w: W * .55, x: W * .45, y: H * .1, size: 5 });
+  const U = [["H<sub>2</sub>O", "DRINK", "DRINKING WATER", "#2F6FDB", tWa + .8], ["O<sub>2</sub>", "OXYGEN", "TO BREATHE", "#1FA971", tOx], ["H<sub>2</sub>", "FUEL", "ROCKET PROPELLANT", "#E4572E", tFu - .3]];
+  const us = U.map(([s, t, d, c, tt], i) => { const e = place(mk("div", "use", undefined, `<b>${s}</b><i>${t}</i><span>${d}</span>`), W * (.45 + i * .175), H * .4, W * .16, H * .34);
+    e.style.setProperty("--c", c); pop(e, tt, { y: u * 4, opacity: 0, scale: .9 }, .6, E.pop); return e; });
+
+  /* E: PROMISE's job: 18 months, 1 m drill, find the base site + the ice */
+  [h4, ...us].forEach((e) => out(e, tPr - .6, { y: -u * 2 })); hide(cr, tPr - .4, "l", .8);
+  const dr = photo("drill", W * .44, 0, W * .56, H, { credit: "AI IMAGE · ROVER DRILL (ILLUSTRATION)" }); reveal(dr, tPr - .4, "l", 1); kb(dr, tPr - .4, D - tPr, 104, 118, "55% 70%", "50% 78%");
+  const h5 = head("PROMISE'S <em>JOB</em>", "18 months పాటు తిరుగుతూ, 1 meter లోతు drill", tPr, { kick: "THE MISSION", w: W * .38, x: W * .04, y: H * .1, size: 4.6 });
+  const R = H * .3, rg = place(mk("div", "ring", undefined, `<svg width="${R}" height="${R}"><circle cx="${R / 2}" cy="${R / 2}" r="${R * .44}" fill="#fff" stroke="#12172214" stroke-width="${u * 1.2}"/>
+    <circle class="a" cx="${R / 2}" cy="${R / 2}" r="${R * .44}" fill="none" stroke="#E4572E" stroke-width="${u * 1.2}" stroke-linecap="round" transform="rotate(-90 ${R / 2} ${R / 2})"/></svg>
+    <div class="c"><b>0</b><span>MONTHS</span></div>`), W * .04, H * .44, R, R);
+  pop(rg, tM18 - .5, { scale: .8, opacity: 0 }); const ca = rg.querySelector(".a"), cl = 2 * Math.PI * R * .44; ca.style.strokeDasharray = cl;
+  tl.fromTo(ca, { strokeDashoffset: cl }, { strokeDashoffset: 0, duration: 1.3, ease: E.io, immediateRender: true }, tM18 - .3); countTo(rg.querySelector("b"), 0, 18, tM18 - .3, 1.3);
+  const gh = H * .36, gg = place(mk("div", "gg", undefined, `<div class="bit"></div>` + [0, .5, 1].map((f) => `<div class="tk" style="top:${f * gh}px">${f}m</div>`).join("")), W * .3, H * .44, W * .08, gh);
+  pop(gg, tMe - .6, { y: u * 2, opacity: 0 }); tl.fromTo(gg.querySelector(".bit"), { height: 0 }, { height: gh, duration: 1.4, ease: E.io, immediateRender: true }, tMe);
+  const c0 = chip("1 METER DEEP", W * .26, H * .84, { ico: "gauge", c: "#2F6FDB" }); pop(c0, tMe + 1, { y: u * 2, opacity: 0 });
+  const c1 = chip("BEST PLACE FOR A BASE?", W * .5, H * .66, { ico: "search", solid: true, c: "#121722" }); pop(c1, tBa, { x: u * 3, opacity: 0 });
+  const c2 = chip("WHERE IS THE ICE?", W * .5, H * .76, { ico: "search", solid: true, c: "#2F6FDB" }); pop(c2, tI2 - .3, { x: u * 3, opacity: 0 });
+  const rl = rail("SOUTH POLE", "SOME CRATERS <b>NEVER SEE SUNLIGHT</b>", .6);
+  railSet(rl, tIc, "<b>WATER ICE</b> MAY HIDE IN THE DARK");
+  railSet(rl, tWa + .4, "WATER → <b>DRINK · OXYGEN · ROCKET FUEL</b>");
+  railSet(rl, tM18, "PROMISE: <b>18 MONTHS</b> · DRILL <b>1 METER</b> DEEP");
+  cam(0, Math.max(D, 1), 1.025);
+  M3.ready();
+  X.done();
+</script></body></html>

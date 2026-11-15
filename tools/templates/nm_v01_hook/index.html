@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="three.min.js"></script><script src="kit.js"></script><script src="m3d.js"></script><script src="doc.js"></script>
+<style>/* 07 9:16 V01 (0-14.5 s): hook. 3D Moon + "$10B" count-up -> "BUT..." -> PROMISE rendering full bleed, stamp "NOT BUILT NEW" */
+.halo { position: absolute; border-radius: 50%; background: radial-gradient(circle, #ffffffe6 0%, #ffffff80 38%, #E4572E10 62%, transparent 70%); }
+.but { position: absolute; left: 50%; transform: translateX(-50%); font: 900 calc(var(--u) * 14) var(--font-head); color: #121722; letter-spacing: -.04em; white-space: nowrap; }
+.stmp { position: absolute; font: 900 calc(var(--u) * 7.6) var(--font-head); color: #E4572E; border: calc(var(--u) * 1.1) solid #E4572E; border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 1.4) calc(var(--u) * 3);
+  background: #ffffffe6; line-height: 1.05; text-align: center; letter-spacing: -.02em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, fade, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, big, pill, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tNa = at("nasa", 2.1), tTe = at("ten", 3.0), tCo = at("cont", 4.7), tBu = at("but", 6.4), tSh = at("shock", 7.7), tSo = at("south", 10.0), tPr = at("prom", 11.6), tCm = at("comp", 12.5);
+
+  /* A: the Moon + $10B */
+  const R = W * .9, halo = place(mk("div", "halo"), W * .5 - R * .6, H * .56 - R * .6, R * 1.2, R * 1.2); fade(halo, 0, .8);
+  const v = M3.view({ fov: 30, exposure: .95, amb: .18 }); v.key.position.set(-5, 1.2, 3.2); v.cam.setViewOffset(W, H, 0, -H * .06, W, H);
+  const moon = M3.moon(v, "moon_color_2k.jpg", "moon_disp.jpg", 1), st = { rx: -.2, ry: -.4, z: 10 };
+  tl.to(st, { ry: .5, rx: -.6, duration: Math.max(D, 1), ease: "none" }, 0); tl.to(st, { z: 8.4, duration: tBu, ease: E.soft }, 0);
+  v.update = () => { moon.rotation.set(st.rx, st.ry, 0, "XYZ"); v.cam.position.set(0, 0, st.z); v.cam.lookAt(0, 0, 0); };
+  const h = head("A <em>MOON BASE</em>", "చంద్రుడి మీద permanent base కోసం", .2, { kick: "NASA" });
+  const bg10 = big(`$<span>0</span>B`, W * .07, H * .76, 20, "#E4572E"); pop(bg10, tTe - .3, { y: u * 3, opacity: 0 });
+  countTo(bg10.querySelector("span"), 0, 10, tTe - .2, 1.2);
+  const c1 = chip("NEW CONTRACTS ANNOUNCED", W * .07, H * .7, { ico: "file", solid: true, c: "#121722" }); pop(c1, tCo - .2, { y: u * 2, opacity: 0 });
+
+  /* B: but... */
+  [h, bg10, c1].forEach((e) => out(e, tBu - .4, { y: -u * 3 })); tl.to([v.c, halo], { opacity: .25, duration: .6, ease: E.soft }, tBu - .3);
+  const bt = place(mk("div", "but", undefined, "BUT..."), W * .5, H * .36); pop(bt, tBu, { scale: .7, opacity: 0 }, .6, E.pop);
+  const p1 = pill("ONE <em>SHOCKING</em> DETAIL", W * .15, H * .54); pop(p1, tSh, { y: u * 3, opacity: 0 });
+
+  /* C: PROMISE rover, not built new */
+  [bt, p1].forEach((e) => out(e, tSo - .7));
+  const p = photo("promise5", 0, 0, W, H, { wash: "t", credit: "NASA · ARTIST'S RENDERING OF PROMISE", pos: "62% 50%" }); reveal(p, tSo - .5, "u", .9); kb(p, tSo - .5, D - tSo + .5, 104, 114, "62% 50%", "66% 54%");
+  const h2 = head("THE <em>PROMISE</em> ROVER", "south pole కి వెళ్ళబోయే NASA కొత్త rover", tSo - .2, { kick: "SOUTH POLE" });
+  const sp = place(mk("div", "stmp", undefined, "NOT BUILT<br>NEW"), W * .14, H * .66); gsap.set(sp, { rotation: -6 }); sp._rot = -6;
+  pop(sp, tCm, { scale: 1.5, opacity: 0 }, .45, E.pop);
+  const rl = rail("NASA", "<b>$10B</b> MOON BASE CONTRACTS", .6);
+  railSet(rl, tPr, "PROMISE ROVER · <b>MOON SOUTH POLE</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  M3.ready();
+  X.done();
+</script></body></html>

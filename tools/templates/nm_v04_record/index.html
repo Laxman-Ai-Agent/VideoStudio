@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 9:16 V04 (55-64.8 s): lander record. NASA Moon Base lander image (top band) + 2x2 record cards, each lander shows its fate, score 1/4 */
+.bd { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #12172222; overflow: hidden; }
+.bd .nm { margin: calc(var(--u) * 2) calc(var(--u) * 2.4) 0; font: 800 calc(var(--u) * 3.6) var(--font-head); color: #121722; white-space: nowrap; }
+.bd .sg { position: absolute; left: 0; right: 0; top: 24%; bottom: 25%; background: linear-gradient(180deg, #1d2433, #2c3445); overflow: hidden; }
+.bd .gr { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(180deg, #a9a49c, #7d7a74); }
+.bd .ld { position: absolute; left: 50%; bottom: 22%; width: 48%; margin-left: -24%; transform-origin: 50% 100%; } .bd .ld svg { display: block; width: 100%; }
+.bd .rs { position: absolute; left: calc(var(--u) * 2); right: calc(var(--u) * 2); bottom: calc(var(--u) * 2); padding: calc(var(--u) * 1) 0; text-align: center; border-radius: calc(var(--u) * 1);
+  font: 800 calc(var(--u) * 2.8) var(--font-head); color: #fff; background: var(--c); }
+.sc { position: absolute; background: #121722d9; border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 1.4) calc(var(--u) * 2.4); font: 900 calc(var(--u) * 11) var(--font-head); color: #fff; letter-spacing: -.04em; line-height: 1; text-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 2) #000a; }
+.sc em { font-style: normal; color: #1FA971; } .sc small { display: block; font: 700 calc(var(--u) * 2.4) var(--font-script); letter-spacing: .16em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, cam, bg, head, chip, rail, railSet } = X, { photo, kb, reveal } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand");
+  const tLa = at("land", 1.8), tPr = at("priv", 3.4), tFa = at("fail", 4.7), tCr = at("crash", 5.7), tSu = at("surf", 7.6), tL2 = at("land2", 8.8);
+  const p = photo("moonbase", 0, 0, W, H * .3, { credit: "NASA · MOON BASE UPDATE", pos: "50% 45%" }); reveal(p, 0, "d", .8); kb(p, 0, D, 104, 116, "50% 45%", "50% 40%");
+  const h = head("LANDING IS <em>HARD</em>", "చాలా private landers విజయవంతం కాలేదు", .3, { kick: "THE RECORD", x: W * .07, y: H * .32, w: W * .86, size: 7.6 });
+  const LD = (c) => `<svg viewBox="0 0 100 90"><path d="M22 52 8 86M78 52l14 34M38 58l-6 28M62 58l6 28M2 86h14M84 86h14" stroke="#d6d9de" stroke-width="4" stroke-linecap="round"/>
+    <rect x="18" y="22" width="64" height="38" rx="5" fill="${c}"/><rect x="30" y="8" width="40" height="16" rx="3" fill="#e9ecf1"/><circle cx="50" cy="40" r="7" fill="#12172255"/></svg>`;
+  const R = [["PEREGRINE", "NEVER REACHED", "#D94848", tFa - .6], ["ODYSSEUS", "TIPPED OVER", "#E08A1E", tCr - .3], ["ATHENA", "ON ITS SIDE", "#E08A1E", tSu - .6], ["BLUE GHOST 1", "SUCCESS", "#1FA971", tL2 - .8]];
+  const cw = W * .41, ch = H * .22, bds = R.map(([n, rs, c, t], i) => {
+    const e = place(mk("div", "bd", undefined, `<div class="nm">${n}</div><div class="sg"><div class="gr"></div><div class="ld">${LD(i === 3 ? "#D9A93A" : "#c2c7cf")}</div></div><div class="rs">${rs}</div>`),
+      W * .07 + (i % 2) * (cw + W * .04), H * .5 + Math.floor(i / 2) * (ch + H * .02), cw, ch);
+    pop(e, t, { y: u * 4, opacity: 0, scale: .94 }); e.ld = e.querySelector(".ld"); e.rs = e.querySelector(".rs"); e.rs.style.setProperty("--c", c); pop(e.rs, t + .9, { scale: .6, opacity: 0 }, .4, E.pop); return e; });
+  tl.fromTo(bds[0].ld, { y: -ch * .4, opacity: 1 }, { y: -ch * .2, opacity: 0, duration: 1, ease: "power1.in", immediateRender: true }, R[0][3] + .1);
+  [[1, 32], [2, 80], [3, 0]].forEach(([i, rot]) => tl.fromTo(bds[i].ld, { y: -ch * .4, rotation: 0 }, { y: 0, rotation: rot, duration: .9, ease: "power2.out", immediateRender: true }, R[i][3] + .1));
+  const sc = place(mk("div", "sc", undefined, `<em>1</em> / 4<small>CLEAN LANDINGS</small>`), W * .5, H * .08); pop(sc, tL2, { scale: .7, opacity: 0 }, .5, E.pop);
+  const rl = rail("RECORD", "PRIVATE MOON LANDERS · <b>MOST FAILED</b>", .6);
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L15 (252-274 s): plan + cost. Moon Base photo left (continues L14) + phase timeline 2026 -> 2033 -> 2036+ and money bars $20B / $30B ->
+   photo goes full bleed, today's contracts = first 3 glowing bricks under a ghost base -> Apollo flag (left half): land, plant the flag, go home */
+.tl2 { position: absolute; height: calc(var(--u) * .5); background: #12172230; border-radius: 99px; }
+.ph3 { position: absolute; box-sizing: border-box; border-radius: calc(var(--u) * .8); display: flex; align-items: center; justify-content: center; color: #fff;
+  font: 800 calc(var(--u) * 1.9) var(--font-head); background: var(--c); transform-origin: 0 50%; }
+.ph3.st { background: repeating-linear-gradient(135deg, #2F6FDB, #2F6FDB calc(var(--u) * 1), #4a86e6 calc(var(--u) * 1), #4a86e6 calc(var(--u) * 2)); }
+.yr { position: absolute; transform: translateX(-50%); font: 700 calc(var(--u) * 1.6) var(--font-script); color: #59606B; letter-spacing: .1em; white-space: nowrap; }
+.yr::before { content: ""; display: block; width: calc(var(--u) * .4); height: calc(var(--u) * 1.4); margin: 0 auto calc(var(--u) * .5); background: #121722; border-radius: 2px; }
+.yr.hot { color: #2F6FDB; font-weight: 700; }
+.brc { position: absolute; height: calc(var(--u) * 1.6); border: calc(var(--u) * .35) solid #121722; border-top: 0; box-sizing: border-box; border-radius: 0 0 calc(var(--u) * .6) calc(var(--u) * .6); }
+.brc b { position: absolute; left: 50%; top: 120%; transform: translateX(-50%); font: 800 calc(var(--u) * 1.8) var(--font-head); color: #121722; white-space: nowrap; }
+.bk { position: absolute; box-sizing: border-box; border-radius: calc(var(--u) * .5); display: flex; align-items: center; justify-content: center; font: 800 calc(var(--u) * 1.8) var(--font-head); }
+.bk.on { background: #E4572E; color: #fff; box-shadow: 0 0 calc(var(--u) * 3) #E4572Eaa, 0 calc(var(--u) * .5) calc(var(--u) * 1.4) #0004; }
+.bk.gh { border: calc(var(--u) * .3) dashed #ffffffcc; background: #ffffff22; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, move, cam, bg, head, rehead, chip, rail, railSet, hbar } = X, { photo, kb, reveal, hide, tag } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand");
+  const tY7 = at("y7", .9), tB20 = at("b20", 2.6), tTh = at("third", 4.6), tB30 = at("b30", 6.1), tT3 = at("t3", 9.2), t36 = at("y2036", 10.0), tCo = at("cont", 14.1),
+        tBr = at("bricks", 16.2), tAp = at("apollo", 17.4), tFl = at("flag", 20.2), tRt = at("ret", 21.1);
+
+  /* A: timeline + money beside the Moon Base photo */
+  const p = photo("moonbase", 0, 0, W * .36, H, { credit: "NASA · MOON BASE UPDATE", pos: "50% 50%" }); reveal(p, 0, "l", .7); kb(p, 0, tCo, 110, 122, "50% 50%", "45% 50%");
+  const h = head("THE <em>COST</em>", "First 7 years లో 2 phases కి roughly $20 billion", .2, { kick: "MOON BASE BUDGET", w: W * .58, x: W * .4, y: H * .07, size: 5.2 });
+  const X0 = W * .42, XW = W * .52, TY = H * .5, xf = (y) => X0 + XW * (y - 2026) / 12;
+  const ln = place(mk("div", "tl2"), X0, TY, XW); pop(ln, .4, { opacity: 0, scaleX: 0 });
+  const yrs = [[2026, "2026"], [2033, "2033"], [2038, "2036+"]].map(([y, s], i) => { const e = place(mk("div", "yr" + (i === 2 ? " hot" : ""), undefined, s), xf(y), TY - u * .45); pop(e, .6 + i * .25, { y: u * 2, opacity: 0 }); return e; });
+  const PH = [["PHASE 1", 2026, 2029.5, "#E4572E", tY7 - .4], ["PHASE 2", 2029.5, 2033, "#B9431F", tY7], ["PHASE 3", 2033, 2038, "#2F6FDB", tTh]];
+  const phs = PH.map(([s, a, b, c, t], i) => { const e = place(mk("div", "ph3" + (i === 2 ? " st" : ""), undefined, s), xf(a) + u * .2, TY - H * .1, xf(b) - xf(a) - u * .4, H * .075);
+    e.style.setProperty("--c", c); tl.fromTo(e, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: E.io, immediateRender: true }, t); return e; });
+  const br = place(mk("div", "brc", undefined, "<b>7 YEARS</b>"), xf(2026), TY + H * .055, xf(2033) - xf(2026)); pop(br, tY7 + .4, { y: -u * 2, opacity: 0 });
+  const fmt = (v) => "$" + Math.round(v) + "B";
+  const b1 = hbar("PHASES 1 + 2", X0, H * .72, XW * .62, u * 2.2, 20, 30, "#E4572E", tB20, 1, fmt);
+  const b2 = hbar("ALL 3 PHASES", X0, H * .84, XW * .62, u * 2.2, 30, 30, "#2F6FDB", tB30, 1.1, fmt);
+  const c1 = chip("SOME REPORTS", W * .83, H * .835, { ico: "file" }); pop(c1, tB30 + 1.6, { x: u * 2, opacity: 0 });
+
+  /* B: phase 3 runs to 2036 or later */
+  tl.to(phs[2], { scale: 1.06, duration: .4, yoyo: true, repeat: 3, ease: E.soft }, tT3);
+  const c2 = chip("2036 OR LATER", xf(2033), TY - H * .2, { ico: "clock", solid: true, c: "#2F6FDB" }); pop(c2, t36, { y: u * 2, opacity: 0 });
+
+  /* C: today's contracts = the first bricks */
+  [h, ln, ...yrs, ...phs, br, b1, b2, c1, c2].forEach((e, i) => out(e, 12.4 + i * .03, { y: -u * 2 }));
+  const wsh = mk("div", "wash"); place(wsh, 0, 0, W, H); wsh.style.position = "absolute"; wsh.style.background = "linear-gradient(0deg, #0b0f17e8 0%, #0b0f1766 45%, #0b0f1722 100%)";
+  move(p, 12.6, 0, 0, W, H, 1.1); tl.fromTo(wsh, { opacity: 0 }, { opacity: 1, duration: .8, ease: E.soft, immediateRender: true }, 13);
+  const dk = mk("div", "ondark");
+  const h2 = head("THE <em>FIRST</em> BRICKS", "ఈ రోజు ఇచ్చిన contracts ఆ big building లో first bricks మాత్రమే", 13, { kick: "TODAY'S CONTRACTS", w: W * .62, x: W * .05, y: H * .08, size: 5, parent: dk });
+  const bw = W * .14, bh = H * .07, gx = W * .5 - bw * 2.1, by = H * .8;
+  const on = ["CLPS-2", "VADR", "PROMISE"].map((s, i) => { const e = place(mk("div", "bk on", undefined, s), gx + bw * .55 + i * bw * 1.05, by, bw, bh); pop(e, tCo + i * .35, { y: -H * .2, opacity: 0 }, .6, "bounce.out"); return e; });
+  const gh = [];
+  [[4, 1], [3, 2], [2, 3]].forEach(([n, r]) => { for (let i = 0; i < n; i++) { const e = place(mk("div", "bk gh"), W * .5 - n * bw * 1.05 / 2 + i * bw * 1.05 + bw * .025, by - r * bh * 1.12, bw, bh);
+    pop(e, tBr - .3 + (r - 1) * .25 + i * .06, { opacity: 0, y: -u * 2 }, .4); gh.push(e); } });
+
+  /* D: Apollo: land, plant the flag, go home */
+  [h2, ...on, ...gh].forEach((e) => out(e, tAp - .7, { y: -u * 2 })); out(wsh, tAp - .5); hide(p, tAp - .4, "u", .7);
+  const f = photo("flag", 0, 0, W * .45, H, { credit: "NASA · APOLLO 11 FLAG", pos: "50% 35%" }); reveal(f, tAp - .4, "l", .9); kb(f, tAp - .4, D - tAp + .4, 104, 112, "50% 35%", "50% 30%");
+  const h3 = head("APOLLO: <em>VISIT</em>, THEN HOME", "Apollo days లో flag పాతి, return వచ్చేశారు", tAp, { kick: "1969 - 1972", w: W * .5, x: W * .5, y: H * .1, size: 4.6 });
+  [["LAND", "HUMANS WALK ON THE MOON", "check", "#121722", tAp + .9], ["FLAG", "PLANT IT, TAKE PHOTOS", "star", "#E4572E", tFl - .3], ["RETURN", "FLY BACK HOME", "route", "#2F6FDB", tRt - .2]]
+    .forEach(([k, d, ic, c, t], i) => { const e = tag(k, d, ic, c, W * (.5 + i * .04), H * (.44 + i * .15)); pop(e, t, { x: u * 3, opacity: 0 }); });
+  const rl = rail("COST", "PHASES 1 + 2 · <b>~$20B</b> IN 7 YEARS", .6);
+  railSet(rl, tB30, "ALL 3 PHASES · <b>UP TO ~$30B</b> (REPORTS)");
+  railSet(rl, tCo, "TODAY'S CONTRACTS = <b>FIRST BRICKS</b>");
+  railSet(rl, tAp + .3, "APOLLO 1969-72 · <b>VISIT, FLAG, RETURN</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L14 (223-252 s): not easy. NASA Moon Base lander image -> record board of 4 private landers, each lander animates its fate
+   (Peregrine never arrives, Odysseus tips, Athena lands on its side, Blue Ghost 1 lands clean) -> score 1/4 -> Moon Base plan: March 2026, 3 phases */
+.bd { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.4); box-shadow: 0 calc(var(--u) * .9) calc(var(--u) * 2.6) #12172222; overflow: hidden; border-top: calc(var(--u) * .6) solid var(--c); }
+.bd .nm { margin: calc(var(--u) * 1.4) calc(var(--u) * 1.6) 0; font: 800 calc(var(--u) * 2.6) var(--font-head); color: #121722; }
+.bd .co { margin: calc(var(--u) * .3) calc(var(--u) * 1.6) 0; font: 700 calc(var(--u) * 1.3) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.bd .sg { position: absolute; left: 0; right: 0; top: 30%; bottom: 24%; background: linear-gradient(180deg, #1d2433, #2c3445); overflow: hidden; }
+.bd .gr { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(180deg, #a9a49c, #7d7a74); }
+.bd .ld { position: absolute; left: 50%; bottom: 22%; width: 46%; margin-left: -23%; transform-origin: 50% 100%; }
+.bd .ld svg { display: block; width: 100%; }
+.bd .rs { position: absolute; left: calc(var(--u) * 1.6); right: calc(var(--u) * 1.6); bottom: calc(var(--u) * 1.4); padding: calc(var(--u) * .7) 0; text-align: center; border-radius: calc(var(--u) * .6);
+  font: 800 calc(var(--u) * 1.7) var(--font-head); color: #fff; background: var(--c); letter-spacing: .02em; }
+.sc { position: absolute; font: 900 calc(var(--u) * 11) var(--font-head); color: #121722; letter-spacing: -.04em; line-height: 1; white-space: nowrap; }
+.sc em { font-style: normal; color: #1FA971; } .sc small { display: block; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #59606B; letter-spacing: .16em; margin-top: calc(var(--u) * .6); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, tag, pill } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand");
+  const tEa = at("easy", 1.9), tRe = at("rec", 4.2), tPe = at("pere", 5.8), tRc = at("reach", 7.2), tOd = at("ody", 9.0), tSi = at("side", 10.6), tAt = at("ath", 11.8),
+        tGh = at("ghost", 15.5), tSu = at("succ", 17.0), tSa = at("safe", 19.2), tCh = at("chal", 21.2), tMo = at("moon", 22.3), tMa = at("march", 25.5), tPh = at("ph", 27.2);
+
+  /* A: NASA's lander lineup, full bleed */
+  const p = photo("moonbase", 0, 0, W, H, { wash: "b", credit: "NASA · MOON BASE UPDATE" }); reveal(p, 0, "r", .8); kb(p, 0, tRe + 1, 104, 114, "50% 40%", "50% 46%");
+  const h = head("NOT <em>EASY</em>", "ఇదంతా అనుకున్నంత easy కాదు", .3, { kick: "THE HARD PART", w: W * .9, x: W * .05, y: H * .62, size: 6 });
+  const c0 = chip("LANDING ON THE MOON", W * .62, H * .7, { ico: "x", solid: true, c: "#D94848" }); pop(c0, tEa + .3, { x: u * 3, opacity: 0 });
+
+  /* B: the record board */
+  out(h, tRe - .5, { y: u * 2 }); out(c0, tRe - .5); hide(p, tRe - .3, "u", .8);
+  const h2 = head("PRIVATE LANDER <em>RECORD</em>", "ఇప్పటివరకు private landers record చూస్తే", tRe, { kick: "SO FAR", w: W * .64, x: W * .05, y: H * .06, size: 4.6 });
+  const LD = (c) => `<svg viewBox="0 0 100 90"><path d="M22 52 8 86M78 52l14 34M38 58l-6 28M62 58l6 28" stroke="#d6d9de" stroke-width="4" stroke-linecap="round"/>
+    <path d="M2 86h14M84 86h14" stroke="#d6d9de" stroke-width="4" stroke-linecap="round"/><rect x="18" y="22" width="64" height="38" rx="5" fill="${c}"/>
+    <rect x="30" y="8" width="40" height="16" rx="3" fill="#e9ecf1"/><circle cx="50" cy="40" r="7" fill="#12172255"/></svg>`;
+  const R = [["PEREGRINE", "ASTROBOTIC", "NEVER REACHED", "#D94848", tPe], ["ODYSSEUS", "INTUITIVE MACHINES", "LANDED, TIPPED", "#E08A1E", tOd],
+             ["ATHENA", "INTUITIVE MACHINES", "ON ITS SIDE", "#E08A1E", tAt], ["BLUE GHOST 1", "FIREFLY", "FULL SUCCESS", "#1FA971", tGh]];
+  const cw = W * .21, bds = R.map(([n, co, rs, c, t], i) => {
+    const e = place(mk("div", "bd", undefined, `<div class="nm">${n}</div><div class="co">${co}</div><div class="sg"><div class="gr"></div><div class="ld">${LD(i === 3 ? "#D9A93A" : "#c2c7cf")}</div></div><div class="rs">${rs}</div>`),
+      W * .05 + i * (cw + W * .023), H * .3, cw, H * .58);
+    e.style.setProperty("--c", "#121722"); pop(e, tRe + .3 + i * .15, { y: u * 4, opacity: 0 }); e.ld = e.querySelector(".ld"); e.rs = e.querySelector(".rs"); e.rs.style.setProperty("--c", c); return e; });
+  const fall = (e, t, rot = 0, d = 1.2) => tl.fromTo(e.ld, { y: -H * .3, rotation: 0 }, { y: 0, rotation: rot, duration: d, ease: "power2.out", immediateRender: true }, t);
+  // Peregrine: starts the trip, never arrives (fades out high above the ground)
+  tl.fromTo(bds[0].ld, { y: -H * .3, opacity: 1 }, { y: -H * .16, opacity: 0, duration: 1.4, ease: "power1.in", immediateRender: true }, tPe);
+  // Odysseus: lands, then leans over; Athena: comes down already on its side; Blue Ghost: clean
+  fall(bds[1], tOd - .2); tl.to(bds[1].ld, { rotation: 28, duration: .8, ease: "bounce.out" }, tSi);
+  fall(bds[2], tAt - .2, 78, 1.4); fall(bds[3], tGh - .3, 0, 1.6);
+  [[0, tRc], [1, tSi + .4], [2, tAt + 1.6], [3, tSu]].forEach(([i, t]) => pop(bds[i].rs, t, { scale: .6, opacity: 0 }, .45, E.pop));
+
+  /* C: score */
+  [0, 1, 2].forEach((i) => tl.to(bds[i], { opacity: .45, duration: .5, ease: E.soft }, tSa - .4));
+  const sc = place(mk("div", "sc", undefined, `<em>1</em> / 4<small>CLEAN LANDINGS</small>`), W * .74, H * .05); pop(sc, tSa - .3, { scale: .8, opacity: 0 }, .6, E.pop);
+  const h3 = rehead(h2, "STILL A <em>BIG</em> CHALLENGE", "చంద్రుడి మీద safe గా land అవ్వడం ఇప్పటికీ big challenge", tSa, { kick: "THE TAKEAWAY", w: W * .64, x: W * .05, y: H * .06, size: 4.2 });
+
+  /* D: the Moon Base plan begins */
+  [...bds, sc, h3].forEach((e, i) => out(e, tMo - .6 + i * .05, { y: -u * 2 }));
+  const p2 = photo("moonbase", 0, 0, W, H, { wash: "l", credit: "NASA · MOON BASE UPDATE" }); reveal(p2, tMo - .3, "u", 1); kb(p2, tMo - .3, D - tMo, 104, 116, "60% 50%", "68% 52%");
+  const h4 = head("THE <em>MOON BASE</em> PLAN", "Moon Base overall plan విషయానికి వస్తే", tMo, { kick: "THE BIG PICTURE", w: W * .48, x: W * .05, y: H * .12, size: 5 });
+  const t1 = tag("MARCH 2026", "NASA ANNOUNCED IT", "cal", "#E4572E", W * .05, H * .5); pop(t1, tMa - .4, { x: -u * 3, opacity: 0 });
+  ["PHASE 1", "PHASE 2", "PHASE 3"].forEach((s, i) => { const e = pill(s, W * (.05 + i * .135), H * .68, { dark: i === 2 }); pop(e, tPh - .5 + i * .3, { y: u * 2, opacity: 0, scale: .9 }, .5, E.pop); });
+  const rl = rail("RECORD", "PRIVATE MOON LANDERS · <b>SO FAR</b>", .6);
+  railSet(rl, tGh, "ONLY <b>BLUE GHOST 1</b> LANDED FULLY RIGHT");
+  railSet(rl, tMo + .4, "NASA MOON BASE · <b>MARCH 2026</b> · <b>3 PHASES</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

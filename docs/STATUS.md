@@ -12,12 +12,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 07_NASA_Moon_Base (2026-11-15) - sequences in progress (NEXT SESSION: continue here)
+## 07_NASA_Moon_Base (2026-11-15) - all sequences + 480p previews done, waiting for user notes
 - Done: inputs, merge, 1.15x audio, align_mms, plan.md rev 2 (image-led light documentary, user brief + memory light-documentary-image-led), theme "mission survey".
 - 3D: three.js r147 in `tools/templates/moon_kit` (`m3d.js`: hf-seek + `__hf.buildReady`); render copies `params.files` raw. Image-led parts in `moon_kit/doc.js` (photo with inner `.im` cover layer, kb Ken Burns, reveal/hide wipes, big, pill, tag, lab, stat, countTo).
-- Assets: NASA photos `assets/nasa` (`scripts/nasa_get.py <nasa_id> <name>`, sources `assets/sources.json`): 4 real PROMISE renderings, Isaacman Nov 7 briefing, KSC event, launches, MMRTG, Apollo flag + bootprint, Clementine south pole, Moon Base concept, VSTB test rover, LRO Moon kit + Curiosity glb. Kaggle `assets/ai` K01-K09 (prompts `work/kaggle_images.json`; K03 is upright, not tipped).
-- Sequences written + 480p samples + QA (`scripts/qa_sheet.py`): nm_l01-l11 (16x9). User OK'd the L01 / L11 look.
-- TODO: write nm_l12_mmrtg (181.5-196.7, lines 25-26), nm_l13_southpole (197.1-223.2), nm_l14_record (223.6-251.6), nm_l15_plan (252.2-273.7), nm_l16_end (274.3-294.1) per plan.md; add pics/beats in `scripts/make_sequences.py`; then 9x16 nm_v01-v05 (portrait layouts, K08/K09 portrait images); full 480p previews both formats (`studio run` / preview path as in 06); DarkWorld folder at the end. Template dirs + template.json for all of them already exist.
+- Assets: NASA photos `assets/nasa` (`scripts/nasa_get.py <nasa_id> <name>`, sources `assets/sources.json`); note `moon_base.jpg` = NASA "Moon Base June 30 Update" (3 landers, no base render; NASA library has no good base concept). Kaggle `assets/ai` K01-K09 (K03 is upright, unused).
+- Sequences nm_l01-l16 (16x9) + nm_v01-v05 (9x16) written, 480p samples QA'd (`scripts/render_samples.py`, `scripts/qa_sheet.py`); beats in `scripts/make_sequences.py <var>`. Lessons: never use class `.tx` (studio.css `.tx` = absolute inset 0); `place()` overwrites CSS `left` (centre with x = W*.5); beat words match by substring ("land" hits "lander": use (word, nth)).
+- Previews: `studio.cmd run 07/16x9` and `run 07/9x16 --format 9:16` -> `<fmt>/output/preview_<fmt>.mp4` (480p). visual-assets.json written empty (written sequences, no asset stage).
+- NEXT: user notes on the previews; 1080p `--final` only on the user's word; then DarkWorld folder (`scripts/make_darkworld.py`).
 
 ## Explainer mode v2 (2026-11-14)
 - User: "explainer" now = the 06_Gemini_Hydrogen look. Recipe `docs/EXPLAINER_STYLE.md`, kit `tools/templates/explainer2_kit` (theme-driven copy of `lab_kit`, `params.motif` hex|ring|square|plus), rule in my-editor rules.md. Old `explainer_kit` only for 04.

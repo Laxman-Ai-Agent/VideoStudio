@@ -1,0 +1,74 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L16 (274-294 s): end. Apollo flag + bootprint split, "FLAGS / FOOTPRINTS" struck -> "STAY" over the PROMISE rendering ->
+   Mark 1 lander: it depends on safe deliveries -> question card "humans on the Moon permanently by 2036?" + comment / like */
+.lbl { position: absolute; transform: translate(-50%, -50%); font: 900 calc(var(--u) * 5) var(--font-head); color: #fff; letter-spacing: -.01em; text-shadow: 0 calc(var(--u) * .3) calc(var(--u) * 2) #000c; white-space: nowrap; }
+.lbl s { position: absolute; left: -6%; right: -6%; top: 50%; height: calc(var(--u) * 1); margin-top: calc(var(--u) * -.5); background: #D94848; border-radius: 99px; transform-origin: 0 50%; text-decoration: none; }
+.stay { position: absolute; font: 900 calc(var(--u) * 22) var(--font-head); color: #E4572E; letter-spacing: -.05em; line-height: 1; }
+.qc { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 5) #0007; padding: calc(var(--u) * 3) calc(var(--u) * 3.4); border-top: calc(var(--u) * .8) solid #E4572E; }
+.qc .k { font: 700 calc(var(--u) * 1.7) var(--font-script); color: #E4572E; letter-spacing: .16em; }
+.qc .q { margin-top: calc(var(--u) * 1.4); font: 800 calc(var(--u) * 4.6) var(--font-head); color: #121722; line-height: 1.12; letter-spacing: -.02em; }
+.qc .q em { font-style: normal; color: #2F6FDB; }
+.qc .te { margin-top: calc(var(--u) * 1.2); font: 600 calc(var(--u) * 2.8) var(--font); color: #59606B; }
+.qc .bt { display: flex; gap: calc(var(--u) * 1.6); margin-top: calc(var(--u) * 2.4); }
+.qc .bt div { flex: 1; text-align: center; padding: calc(var(--u) * 1.2) 0; border-radius: 99px; font: 800 calc(var(--u) * 2.6) var(--font-head); color: #fff; background: var(--c); }
+.cm { position: absolute; box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--u) * 1.2); background: #fff; border-radius: calc(var(--u) * 1.2); padding: 0 calc(var(--u) * 2);
+  box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) #0006; font: 700 calc(var(--u) * 2.2) var(--font-script); color: #121722; }
+.cm svg { width: calc(var(--u) * 3); height: calc(var(--u) * 3); color: #2F6FDB; flex: none; }
+.cm .cur { display: inline-block; width: .5em; height: 1.1em; background: #2F6FDB; vertical-align: -.2em; }
+.lk { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.2) calc(var(--u) * 2.4); border-radius: 99px; background: #E4572E; color: #fff;
+  font: 800 calc(var(--u) * 2.6) var(--font-head); box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) #0006; }
+.lk svg { width: calc(var(--u) * 3.2); height: calc(var(--u) * 3.2); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, fade, cam, bg, head, ico, chip, rail, railSet } = X, { photo, kb, reveal, hide, lab } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sand");
+  const tFg = at("flags", 2.5), tFt = at("foot", 3.0), tSt = at("stay", 4.6), tDr = at("dream", 5.9), tDe = at("deliv", 8.5), tSa = at("safe", 9.4), tOp = at("op", 12.5),
+        t36 = at("y2036", 13.0), tPe = at("perm", 15.6), tCm = at("comm", 17.2), tLk = at("like", 19.6);
+
+  /* A: flags and footprints (the Apollo way) ... crossed out */
+  const f = photo("flag", 0, 0, W * .45, H, { credit: "NASA · APOLLO 11 FLAG", pos: "50% 35%" }); kb(f, 0, tSt, 112, 120, "50% 30%", "50% 26%");
+  const b = photo("boot", W * .45, 0, W * .55, H, { credit: "NASA · APOLLO 11 BOOTPRINT" }); reveal(b, .2, "l", .9); kb(b, .2, tSt, 104, 116, "40% 60%", "38% 64%");
+  const q = lab("JARED ISAACMAN", "NASA ADMINISTRATOR · THIS TIME", "#E4572E", W * .03, H * .06); pop(q, .3, { y: u * 2, opacity: 0 });
+  const l1 = place(mk("div", "lbl", undefined, "FLAGS<s></s>"), W * .225, H * .6), l2 = place(mk("div", "lbl", undefined, "FOOTPRINTS<s></s>"), W * .72, H * .6);
+  pop(l1, tFg - .2, { scale: .8, opacity: 0 }); pop(l2, tFt - .1, { scale: .8, opacity: 0 });
+  [l1, l2].forEach((e, i) => tl.fromTo(e.querySelector("s"), { scaleX: 0 }, { scaleX: 1, duration: .3, ease: E.io, immediateRender: true }, tFt + .25 + i * .12));
+
+  /* A2: STAY */
+  [l1, l2, q].forEach((e) => out(e, tSt - .4)); hide(f, tSt - .3, "u", .6); hide(b, tSt - .3, "d", .6);
+  const p = photo("promise4", 0, 0, W, H, { wash: "l", credit: "NASA · ARTIST'S RENDERING OF PROMISE" }); reveal(p, tSt - .3, "c", .7); kb(p, tSt - .3, tDe - tSt, 104, 114, "60% 50%", "64% 52%");
+  const sy = place(mk("div", "stay", undefined, "STAY."), W * .05, H * .3); pop(sy, tSt, { scale: .7, opacity: 0, x: -u * 4 }, .6, E.pop);
+  const h0 = head("", "ఈసారి goal: అక్కడే stay చేయడం", tSt + .3, { w: W * .5, x: W * .05, y: H * .56 });
+
+  /* B: it depends on safe deliveries */
+  [sy, h0].forEach((e) => out(e, tDr + .9, { y: -u * 2 }));
+  const m = photo("mark1", 0, 0, W, H, { wash: "l", credit: "AI IMAGE · MARK 1 LANDER ILLUSTRATION" }); reveal(m, tDr + 1, "r", .9); kb(m, tDr + 1, tOp - tDr, 104, 116, "60% 55%", "66% 58%");
+  const h = head("IT DEPENDS ON <em>SAFE</em> LANDINGS", "ఈ small deliveries ఎంత safe గా చంద్రుడిని reach అవుతాయో", tDr + 1.2, { kick: "WILL THE DREAM COME TRUE?", w: W * .42, x: W * .05, y: H * .1, size: 4.6 });
+  const C = [["SAFE DELIVERIES", "check", "#1FA971", tDe], ["SUPPLIES PILE UP", "folder", "#2F6FDB", tSa + .2], ["A BASE THAT STAYS", "star", "#E4572E", tSa + 1.2]];
+  const cs = C.map(([s, ic, c, t], i) => { const e = chip(s, W * (.05 + i * .03), H * (.54 + i * .1), { ico: ic, solid: true, c }); pop(e, t, { x: -u * 3, opacity: 0 }); return e; });
+
+  /* C: the question */
+  [h, ...cs].forEach((e) => out(e, tOp - .5, { y: -u * 2 }));
+  const dw = mk("div", ""); place(dw, 0, 0, W, H); dw.style.cssText += "position:absolute;background:#0b0f17b0"; fade(dw, tOp - .4, .6);
+  const qc = place(mk("div", "qc", undefined, `<div class="k">YOUR OPINION</div><div class="q">HUMANS ON THE MOON <em>PERMANENTLY</em> BY 2036?</div>
+    <div class="te">2036 కల్లా చంద్రుడి మీద humans permanent గా ఉండగలరా?</div><div class="bt"><div style="--c:#1FA971">YES</div><div style="--c:#D94848">NO</div></div>`), W * .2, H * .14, W * .6);
+  pop(qc, tOp - .2, { y: u * 5, opacity: 0, scale: .94 }, .7);
+  const em = qc.querySelector("em"); tl.fromTo(em, { color: "#121722" }, { color: "#2F6FDB", duration: .4, immediateRender: true }, tPe);
+  qc.querySelectorAll(".bt div").forEach((e, i) => pop(e, t36 + 1 + i * .25, { scale: .6, opacity: 0 }, .45, E.pop));
+
+  /* D: comment + like */
+  const cm = place(mk("div", "cm", undefined, `${ico("users")}<span class="typ"></span><span class="cur"></span>`), W * .2, H * .76, W * .4, H * .09); pop(cm, tCm - .3, { y: u * 3, opacity: 0 });
+  const tx = cm.querySelector(".typ"), msg = "YES / NO? COMMENT BELOW", o = { v: 0 };
+  tl.to(o, { v: msg.length, duration: 1.4, ease: "none", onUpdate: () => { tx.textContent = msg.slice(0, Math.round(o.v)); } }, tCm);
+  const lk = place(mk("div", "lk", undefined, `${ico("thumb", "#fff")}LIKE`), W * .64, H * .765); pop(lk, tLk - .3, { scale: .5, opacity: 0 }, .6, E.pop);
+  tl.to(lk, { scale: 1.12, duration: .25, yoyo: true, repeat: 1, ease: E.soft }, tLk + .4);
+  const rl = rail("THE GOAL", "NOT FLAGS & FOOTPRINTS · <b>STAY ON THE MOON</b>", .6);
+  railSet(rl, tDe, "IT ALL DEPENDS ON <b>SAFE DELIVERIES</b>");
+  railSet(rl, tOp, "TELL US IN THE <b>COMMENTS</b> · THE DARK WORLD");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

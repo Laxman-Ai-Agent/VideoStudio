@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 9:16 V03 (32.7-55 s): crater ice (portrait AI crater, glints) -> MMRTG photo top + no solar / heat -> current -> night flow ->
+   drill image top + 18 months ring + 1 m gauge + base site */
+.gl { position: absolute; width: calc(var(--u) * 4); height: calc(var(--u) * 4); margin: calc(var(--u) * -2) 0 0 calc(var(--u) * -2);
+  background: radial-gradient(circle, #fff 0 12%, #bfe0ff99 22%, transparent 60%); }
+.gl::before, .gl::after { content: ""; position: absolute; left: 48%; top: 0; width: 4%; height: 100%; background: linear-gradient(#fff0, #fff, #fff0); } .gl::after { transform: rotate(90deg); }
+.ring { position: absolute; } .ring .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring .c b { font: 900 calc(var(--u) * 13) var(--font-head); color: #E4572E; line-height: 1; } .ring .c span { font: 700 calc(var(--u) * 2.4) var(--font-script); color: #59606B; letter-spacing: .16em; }
+.gg { position: absolute; border-left: calc(var(--u) * .6) solid #121722; background: linear-gradient(180deg, #c9b9a3, #8a7a66); border-radius: 0 calc(var(--u) * 1) calc(var(--u) * 1) 0; }
+.gg .tk { position: absolute; left: calc(var(--u) * -6); font: 700 calc(var(--u) * 2.2) var(--font-script); color: #59606B; transform: translateY(-50%); }
+.gg .bit { position: absolute; left: 40%; width: 20%; top: 0; height: 0; background: #2F6FDB; border-radius: 0 0 calc(var(--u) * 1.4) calc(var(--u) * 1.4); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, cam, bg, head, rehead, chip, rail, railSet, line } = X, { photo, kb, reveal, hide, tag, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tCr = at("crat", 2.0), tIc = at("ice", 2.8), tWa = at("water", 3.6), tSo = at("solar", 5.4), tNu = at("nuc", 7.1), tHe = at("heat", 10.5), tCu = at("cur", 11.1),
+        tNi = at("night", 12.9), tM18 = at("m18", 15.3), tMe = at("meter", 17.5), tBa = at("base", 19.7);
+
+  /* A: ice in a dark crater */
+  const c = photo("craterv", 0, 0, W, H, { wash: "t", credit: "AI IMAGE · SHADOWED CRATER (ILLUSTRATION)" }); reveal(c, 0, "u", .8); kb(c, 0, 5.4, 104, 116, "50% 60%", "50% 66%");
+  const h = head("ICE IN THE <em>DARK</em>", "sunlight పడని dark craters లో water", .2, { kick: "THE SEARCH" });
+  [[.4, .62], [.55, .66], [.62, .6], [.47, .7], [.7, .68]].forEach(([x, y], i) => { const g = place(mk("div", "gl"), W * x, H * y);
+    tl.fromTo(g, { scale: 0, opacity: 0 }, { scale: 1.3, opacity: 1, duration: .5, ease: E.soft, repeat: 3, yoyo: true, immediateRender: true }, tIc + i * .2); });
+  const t0 = tag("WATER ICE", "SEARCH TARGET", "search", "#2F6FDB", W * .07, H * .82); pop(t0, tWa, { x: -u * 4, opacity: 0 });
+
+  /* B: nuclear power instead of solar */
+  [h, t0].forEach((e) => out(e, tSo - .7, { y: -u * 3 })); hide(c, tSo - .5, "u", .7);
+  const m = photo("mmrtg", 0, 0, W, H * .46, { credit: "NASA/JPL · MARS 2020'S MMRTG", pos: "50% 45%" }); reveal(m, tSo - .5, "d", .9); kb(m, tSo - .5, 9.5, 104, 114, "50% 45%", "50% 38%");
+  const h2 = head("<em>NUCLEAR</em> POWER", "solar panels బదులు small nuclear generator", tSo - .2, { kick: "MMRTG", x: W * .07, y: H * .49, w: W * .86, size: 7.6 });
+  const cx = chip("NO SOLAR PANELS", W * .5, H * .38, { ico: "x", solid: true, c: "#D94848" }); pop(cx, tSo + .2, { scale: .7, opacity: 0 }, .45, E.pop);
+  const tg = tag("MMRTG", "SMALL NUCLEAR GENERATOR", "bolt", "#121722", W * .07, H * .7); pop(tg, tNu, { x: -u * 4, opacity: 0 }); out(tg, tHe - .7, { x: -u * 4 });
+  const F = [["HEAT", "FROM RADIOACTIVE MATERIAL", "fire", "#E4572E", tHe - .3], ["CURRENT", "ELECTRIC POWER", "bolt", "#2F6FDB", tCu], ["NIGHTS TOO", "NEVER STOPS WORKING", "clock", "#1FA971", tNi]];
+  const fl = F.map(([k, d, ic, cc, t], i) => { const e = tag(k, d, ic, cc, W * .07, H * (.66 + i * .095)); pop(e, t, { x: -u * 4, opacity: 0 }); return e; });
+
+  /* C: 18 months, 1 m drill, best base site */
+  [h2, cx, ...fl].forEach((e) => out(e, tM18 - .8, { y: -u * 3 })); hide(m, tM18 - .6, "u", .7);
+  const d = photo("drill", 0, 0, W, H * .46, { credit: "AI IMAGE · ROVER DRILL (ILLUSTRATION)", pos: "62% 60%" }); reveal(d, tM18 - .6, "d", .9); kb(d, tM18 - .6, D - tM18, 110, 124, "62% 60%", "58% 72%");
+  const h3 = head("PROMISE'S <em>JOB</em>", "18 months తిరుగుతూ 1 meter drill", tM18 - .4, { kick: "THE MISSION", x: W * .07, y: H * .49, w: W * .86, size: 7.6 });
+  const R = W * .4, rg = place(mk("div", "ring", undefined, `<svg width="${R}" height="${R}"><circle cx="${R / 2}" cy="${R / 2}" r="${R * .44}" fill="#fff" stroke="#12172214" stroke-width="${u * 2}"/>
+    <circle class="a" cx="${R / 2}" cy="${R / 2}" r="${R * .44}" fill="none" stroke="#E4572E" stroke-width="${u * 2}" stroke-linecap="round" transform="rotate(-90 ${R / 2} ${R / 2})"/></svg>
+    <div class="c"><b>0</b><span>MONTHS</span></div>`), W * .07, H * .66, R, R);
+  pop(rg, tM18 - .2, { scale: .8, opacity: 0 }); const ca = rg.querySelector(".a"), cl = 2 * Math.PI * R * .44; ca.style.strokeDasharray = cl;
+  tl.fromTo(ca, { strokeDashoffset: cl }, { strokeDashoffset: 0, duration: 1.3, ease: E.io, immediateRender: true }, tM18); countTo(rg.querySelector("b"), 0, 18, tM18, 1.3);
+  const gh = H * .2, gg = place(mk("div", "gg", undefined, `<div class="bit"></div>` + [0, .5, 1].map((f) => `<div class="tk" style="top:${f * gh}px">${f}m</div>`).join("")), W * .7, H * .67, W * .14, gh);
+  pop(gg, tMe - .6, { y: u * 2, opacity: 0 }); tl.fromTo(gg.querySelector(".bit"), { height: 0 }, { height: gh, duration: 1.3, ease: E.io, immediateRender: true }, tMe);
+  const cb = chip("BEST BASE SITE?", W * .07, H * .38, { ico: "search", solid: true, c: "#121722" }); pop(cb, tBa, { x: -u * 4, opacity: 0 });
+  const rl = rail("SOUTH POLE", "SEARCH FOR <b>WATER ICE</b>", .6);
+  railSet(rl, tSo, "MMRTG: <b>HEAT → CURRENT</b>, DAY + NIGHT");
+  railSet(rl, tM18, "<b>18 MONTHS</b> · DRILL <b>1 METER</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

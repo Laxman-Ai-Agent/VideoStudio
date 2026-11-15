@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 L12 (181-197 s): MMRTG. PROMISE rendering + solar panel crossed out -> real MMRTG photo split, heat -> current -> rover flow ->
+   full-bleed rover at night, sunlight bar drops to zero while MMRTG power stays full */
+.sol { position: absolute; display: grid; grid-template-columns: repeat(6, 1fr); gap: calc(var(--u) * .35); padding: calc(var(--u) * .5); background: #c9d3e0; border-radius: calc(var(--u) * .6);
+  box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #0006; transform: perspective(900px) rotateX(28deg) rotateZ(-6deg); }
+.sol i { display: block; aspect-ratio: 1 / 1.3; background: linear-gradient(150deg, #2c4f8f, #142a52); border-radius: 2px; }
+svg.xx { position: absolute; overflow: visible; }
+.pw { position: absolute; background: #fff; border-radius: calc(var(--u) * 1.4); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #0005; border-top: calc(var(--u) * .6) solid #E4572E; }
+.pw .tt { position: absolute; left: calc(var(--u) * 2); top: calc(var(--u) * 1.2); font: 700 calc(var(--u) * 1.5) var(--font-script); color: #59606B; letter-spacing: .14em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, cam, bg, head, rehead, chip, rail, railSet, hbar, line } = X, { photo, kb, reveal, hide, tag, stat } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tSo = at("solar", .9), tMm = at("mm", 2.9), tNu = at("nuc", 4.6), tRa = at("radio", 6.6), tHe = at("heat", 8.1), tCu = at("cur", 8.6),
+        tNi = at("night", 11.3), tCr = at("crat", 13.6), tRo = at("rover", 14.6);
+
+  /* A: the rover in a dark crater; solar panels? no */
+  const p = photo("promise6", 0, 0, W, H, { wash: "l", credit: "NASA · ARTIST'S RENDERING OF PROMISE" }); reveal(p, 0, "r", .8); kb(p, 0, tMm + 1, 108, 118, "60% 55%", "66% 58%");
+  const h = head("NO <em>SOLAR</em> PANELS", "Power కోసం solar panels మీద depend అవ్వకుండా", .3, { kick: "POWER", w: W * .5, x: W * .05, y: H * .12, size: 5.6 });
+  const sol = place(mk("div", "sol", undefined, "<i></i>".repeat(18)), W * .1, H * .56, W * .24); pop(sol, tSo, { y: u * 3, opacity: 0 });
+  const xx = place(mk("div", ""), W * .1, H * .55, W * .24, H * .2); xx.style.position = "absolute";
+  xx.innerHTML = `<svg class="xx" width="${W * .24}" height="${H * .2}"><path d="M0 0L${W * .24} ${H * .2}M${W * .24} 0L0 ${H * .2}" stroke="#D94848" stroke-width="${u * 1.1}" stroke-linecap="round" fill="none"/></svg>`;
+  const xp = xx.querySelector("path"), xl = 2 * Math.hypot(W * .24, H * .2); xp.style.strokeDasharray = xl;
+  tl.fromTo(xp, { strokeDashoffset: xl }, { strokeDashoffset: 0, duration: .6, ease: E.io, immediateRender: true }, tSo + .9);
+
+  /* B: real MMRTG photo takes the left half; the scene photo leaves fully */
+  [sol, xx].forEach((e) => out(e, tMm - .5)); out(h, tMm - .4, { y: -u * 2 }); hide(p, tMm - .2, "r", .8);
+  const m = photo("mmrtg", 0, 0, W * .42, H, { credit: "NASA/JPL · MARS 2020'S MMRTG", pos: "50% 40%" }); reveal(m, tMm - .3, "u", .9); kb(m, tMm - .3, D - tMm, 104, 116, "50% 40%", "50% 30%");
+  const h2 = head("<em>MMRTG</em>", "ఒక చిన్న nuclear generator", tMm, { kick: "THE POWER SOURCE", w: W * .5, x: W * .47, y: H * .1, size: 7 });
+  const t1 = tag("NUCLEAR", "SMALL GENERATOR · NO SUN NEEDED", "bolt", "#E4572E", W * .47, H * .4); pop(t1, tNu, { x: u * 3, opacity: 0 });
+  const c1 = chip("SAME POWER TYPE AS CURIOSITY + PERSEVERANCE", W * .47, H * .56, { ico: "check", c: "#1FA971" }); pop(c1, tNu + 1, { y: u * 2, opacity: 0 });
+
+  /* C: heat -> current -> rover */
+  [t1, c1].forEach((e) => out(e, tRa - .5, { x: u * 3 }));
+  const F = [["RADIOACTIVE", "MATERIAL DECAYS", "star", "#59606B", tRa], ["HEAT", "WARMTH FROM DECAY", "fire", "#E4572E", tHe], ["CURRENT", "ELECTRIC POWER", "bolt", "#2F6FDB", tCu + .2],
+             ["ROVER", "DRIVES + DRILLS", "route", "#121722", 9.3]];
+  const G = [[.47, .4], [.72, .4], [.72, .62], [.47, .62]];
+  const fl = F.map(([k, d, ic, c, t], i) => { const e = tag(k, d, ic, c, W * G[i][0], H * G[i][1]); e.style.width = W * .22 + "px"; e.style.boxSizing = "border-box";
+    pop(e, t, { y: u * 2, opacity: 0, scale: .9 }); return e; });
+  const yc = (i) => H * (G[i][1] + .039);
+  const ar = [[[W * .695, yc(0)], [W * .715, yc(0)]], [[W * .83, H * .49], [W * .83, H * .61]], [[W * .715, yc(2)], [W * .695, yc(2)]]]
+    .map((pts, i) => line(pts, F[i + 1][4] - .3, .4, "#12172255", u * .45));
+
+  /* D: night: full-bleed rover in the dark, power panel */
+  [...fl, ...ar, h2].forEach((e) => out(e, 9.9, { y: -u * 2 })); hide(m, 10.1, "l", .8);
+  const n = photo("night", 0, 0, W, H, { wash: "dl", credit: "AI IMAGE · ROVER AT NIGHT (ILLUSTRATION)" }); reveal(n, 10.1, "r", .9); kb(n, 10.1, D - 10, 104, 120, "60% 62%", "64% 66%");
+  const dk = mk("div", "ondark");
+  const h3 = head("WORKS IN THE <em>DARK</em>", "Sunlight లేని nights లో, dark craters లో కూడా", 10.5, { kick: "DAY OR NIGHT", w: W * .5, x: W * .05, y: H * .1, size: 5.6, parent: dk });
+  const pw = place(mk("div", "pw", undefined, `<div class="tt">POWER CHECK</div>`), W * .05, H * .54, W * .38, H * .3); pop(pw, tNi - .4, { y: u * 3, opacity: 0 });
+  const bw = W * .38 - u * 13;
+  const b1 = hbar("SUNLIGHT", u * 2, H * .3 * .42, bw, u * 1.6, 100, 100, "#F5A524", tNi - .2, .6, (v) => Math.round(v) + "%", pw);
+  const b2 = hbar("MMRTG POWER", u * 2, H * .3 * .78, bw, u * 1.6, 100, 100, "#1FA971", tNi, .6, (v) => Math.round(v) + "%", pw);
+  const o = { v: 100 }; tl.to(b1.f, { scaleX: .02, duration: 1, ease: E.io }, tNi + .8);
+  tl.to(o, { v: 0, duration: 1, ease: E.io, onUpdate: () => { b1.v.textContent = Math.round(o.v) + "%"; } }, tNi + .8);
+  const c3 = chip("DARK CRATERS: STILL WORKING", W * .55, H * .74, { ico: "check", solid: true, c: "#1FA971" }); pop(c3, tCr, { x: u * 3, opacity: 0 });
+  const rl = rail("MMRTG", "POWER WITHOUT <b>SOLAR PANELS</b>", .6);
+  railSet(rl, tHe, "RADIOACTIVE <b>HEAT → CURRENT</b>");
+  railSet(rl, tRo, "NIGHTS + <b>SHADOWED CRATERS</b>: ROVER KEEPS WORKING");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

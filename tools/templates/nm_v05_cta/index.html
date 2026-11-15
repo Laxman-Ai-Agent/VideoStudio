@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 9:16 V05 (64.8-80.9 s): CTA. "$10B: who got it?" + 8 company tiles -> PROMISE rendering, Mars spares / nuclear chips ->
+   comment box types "MOON" -> full video link button */
+.co { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 1.6); box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) #12172222; border-left: calc(var(--u) * .8) solid var(--c);
+  padding: calc(var(--u) * 1.6) calc(var(--u) * 2); }
+.co b { display: block; font: 800 calc(var(--u) * 3.8) var(--font-head); color: #121722; white-space: nowrap; } .co span { font: 700 calc(var(--u) * 2) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.dk { position: absolute; inset: 0; background: #0b0f17c4; }
+.cbx { position: absolute; box-sizing: border-box; background: #fff; border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 2.4) calc(var(--u) * 3); box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) #0008; }
+.cbx .k { font: 700 calc(var(--u) * 2.2) var(--font-script); color: #59606B; letter-spacing: .14em; }
+.cbx .typ { margin-top: calc(var(--u) * 1.2); font: 900 calc(var(--u) * 13) var(--font-head); color: #E4572E; letter-spacing: -.03em; line-height: 1; min-height: 1em; }
+.cbx .cur { display: inline-block; width: .08em; height: .9em; background: #2F6FDB; vertical-align: -.05em; margin-left: .05em; }
+.lnk { position: absolute; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 1.4); border-radius: 99px; background: #E4572E; color: #fff;
+  font: 800 calc(var(--u) * 4.4) var(--font-head); box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) #0008; }
+.lnk svg { width: calc(var(--u) * 5); height: calc(var(--u) * 5); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, fade, cam, bg, head, ico, chip, rail, railSet } = X, { photo, kb, reveal, hide, big } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tTe = at("ten", .8), tWh = at("who", 1.9), tSx = at("spacex", 2.9), tEi = at("eight", 4.6), tCp = at("comp", 6.0), tMa = at("mars", 7.2), tNu = at("nuc", 9.0),
+        tDt = at("det", 10.4), tCm = at("comm", 11.8), tMo = at("moon", 12.7), tLi = at("link", 15.4);
+
+  /* A: $10B, who got it? 8 companies */
+  const h = head("<em>$10B</em>: WHO GOT IT?", "ఈ 10 billion dollars ఎవరికి ఇచ్చారు?", .1, { kick: "THE COMPETITION" });
+  const N = [["SPACEX", "STARSHIP"], ["BLUE ORIGIN", "BLUE MOON"], ["FIREFLY", "AEROSPACE"], ["INTUITIVE", "MACHINES"], ["LOCKHEED", "MARTIN"], ["NORTHROP", "GRUMMAN"], ["ISPACE-U.S.", "LANDERS"], ["VOYAGER", "TECHNOLOGIES"]];
+  const cw = W * .41, chh = H * .085, tiles = N.map(([a, b], i) => { const e = place(mk("div", "co", undefined, `<b>${a}</b><span>${b}</span>`), W * .07 + (i % 2) * (cw + W * .04), H * .35 + Math.floor(i / 2) * (chh + H * .018), cw, chh);
+    e.style.setProperty("--c", i < 2 ? "#E4572E" : "#2F6FDB"); pop(e, (i < 2 ? tSx + i * .7 : tEi - .4 + (i - 2) * .12), { y: u * 3, opacity: 0, scale: .94 }); return e; });
+  const c8 = chip("8 COMPANIES · 1 RACE", W * .07, H * .74, { ico: "users", solid: true, c: "#121722" }); pop(c8, tCp - .3, { y: u * 2, opacity: 0 });
+
+  /* B: the nuclear rover from Mars spares */
+  [h, ...tiles, c8].forEach((e, i) => out(e, tMa - .7 + i * .02, { y: -u * 3 }));
+  const p = photo("promise2", 0, 0, W, H, { wash: "t", credit: "NASA · ARTIST'S RENDERING OF PROMISE", pos: "55% 50%" }); reveal(p, tMa - .5, "u", .9); kb(p, tMa - .5, D, 104, 116, "55% 50%", "60% 55%");
+  const h2 = head("FULL <em>DETAILS</em>", "Mars spare parts తో build చేస్తున్న nuclear rover", tMa - .3, { kick: "IN THE FULL VIDEO" });
+  const c1 = chip("MARS SPARE PARTS", W * .07, H * .74, { ico: "star", solid: true, c: "#E4572E" }), c2 = chip("NUCLEAR POWERED", W * .07, H * .81, { ico: "bolt", solid: true, c: "#2F6FDB" });
+  pop(c1, tMa + .3, { x: -u * 4, opacity: 0 }); pop(c2, tNu, { x: -u * 4, opacity: 0 });
+
+  /* C: comment MOON -> link */
+  [h2, c1, c2].forEach((e) => out(e, tCm - .6, { y: -u * 3 }));
+  const dk = place(mk("div", "dk"), 0, 0, W, H); dk.style.position = "absolute"; fade(dk, tCm - .5, .6);
+  const hc = head("COMMENT <em>MOON</em>", "కింద comment section లో Moon అని type చేయండి", tCm - .3, { kick: "GET THE LINK", parent: mk("div", "ondark") });
+  const cb = place(mk("div", "cbx", undefined, `<div class="k">ADD A COMMENT...</div><div class="typ"><span></span><i class="cur"></i></div>`), W * .07, H * .42, W * .86); pop(cb, tCm, { y: u * 4, opacity: 0 });
+  const sp = cb.querySelector(".typ span"), o = { v: 0 }; tl.to(o, { v: 4, duration: .8, ease: "none", onUpdate: () => { sp.textContent = "MOON".slice(0, Math.round(o.v)); } }, tMo + .5);
+  const lk = place(mk("div", "lnk", undefined, `${ico("share", "#fff")}FULL VIDEO LINK`), W * .07, H * .66, W * .86, H * .085); pop(lk, tLi - 1.2, { scale: .6, opacity: 0 }, .6, E.pop);
+  tl.to(lk, { scale: 1.06, duration: .3, yoyo: true, repeat: 3, ease: E.soft }, tLi - .4);
+  const rl = rail("NASA", "<b>$10B</b> · 8 COMPANIES", .6);
+  railSet(rl, tMa, "MARS SPARES + <b>NUCLEAR</b> ROVER");
+  railSet(rl, tCm, "COMMENT <b>MOON</b> → FULL VIDEO LINK");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

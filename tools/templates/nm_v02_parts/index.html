@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script>
+<style>/* 07 9:16 V02 (14.5-32.7 s): parts. Curiosity selfie (top) + heading + part tags -> Mark 1 lander portrait full bleed, Blue Origin / end 2028 ->
+   deal value $94M + $140M = up to $234M over the darkened lander */
+.dk { position: absolute; inset: 0; background: linear-gradient(0deg, #0b0f17f0 0%, #0b0f17b8 55%, #0b0f1740 100%); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}"><div id="stage"></div></div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, mk, place, pop, out, fade, cam, bg, head, rehead, chip, rail, railSet } = X, { photo, kb, reveal, hide, big, pill, tag, countTo } = DOC;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tMa = at("mars", .3), tCu = at("cur", 1.2), tEa = at("earth", 2.5), tBo = at("body", 4.1), tPe = at("pers", 5.1), tSp = at("spare", 7.1),
+        tBl = at("blue", 9.3), tMk = at("mark", 10.2), t28 = at("y2028", 11.8), tDe = at("deal", 14.9), tV = at("v234", 15.6);
+
+  /* A: built from Mars hardware */
+  const s = photo("selfie", 0, 0, W, H * .5, { credit: "NASA/JPL-CALTECH · CURIOSITY ON MARS", pos: "62% 45%" }); reveal(s, 0, "d", .8); kb(s, 0, tBl, 108, 120, "62% 45%", "58% 50%");
+  const c0 = chip("CURIOSITY · ON MARS", W * .06, H * .41, { ico: "route", solid: true, c: "#121722" }); pop(c0, tCu - .2, { y: u * 2, opacity: 0 });
+  const h = head("BUILT FROM <em>SPARES</em>", "Mars rovers కోసం వాడిన body + spare parts", tMa, { kick: "PROMISE ROVER", x: W * .07, y: H * .53, w: W * .86, size: 7.6 });
+  const t1 = tag("TEST BODY", "CURIOSITY'S EARTH TEST ROVER", "check", "#121722", W * .07, H * .74); pop(t1, tBo - .3, { x: -u * 4, opacity: 0 });
+  const t2 = tag("SPARE PARTS", "SAVED FOR PERSEVERANCE", "star", "#2F6FDB", W * .07, H * .845); pop(t2, tSp - .4, { x: -u * 4, opacity: 0 });
+
+  /* B: Blue Origin's Mark 1 carries it, end of 2028 */
+  [h, t1, t2, c0].forEach((e) => out(e, tBl - .6, { y: -u * 3 })); hide(s, tBl - .4, "u", .7);
+  const m = photo("mark1v", 0, 0, W, H, { wash: "t", credit: "AI IMAGE · MARK 1 LANDER ILLUSTRATION" }); reveal(m, tBl - .4, "d", .9); kb(m, tBl - .4, D - tBl, 104, 116, "50% 60%", "50% 66%");
+  const h2 = head("RIDES <em>MARK 1</em>", "Blue Origin lander తో చంద్రుడి మీదకు", tBl - .1, { kick: "THE RIDE" });
+  const t3 = tag("BLUE ORIGIN", "MARK 1 LANDER", "up", "#121722", W * .07, H * .62); pop(t3, tMk, { x: -u * 4, opacity: 0 });
+  const t4 = tag("END OF 2028", "PLANNED LAUNCH", "cal", "#E4572E", W * .07, H * .72); pop(t4, t28, { x: -u * 4, opacity: 0 });
+
+  /* C: deal value */
+  [h2, t3, t4].forEach((e) => out(e, tDe - .5, { y: -u * 3 }));
+  const dk = place(mk("div", "dk"), 0, 0, W, H); dk.style.position = "absolute"; fade(dk, tDe - .4, .6);
+  const p1 = pill("DEAL VALUE · <em>UP TO</em>", W * .07, H * .38, { dark: false }); pop(p1, tDe - .2, { y: u * 2, opacity: 0 });
+  const bg2 = big(`$<span>94</span>M`, W * .07, H * .45, 19, "#E4572E"); pop(bg2, tDe, { y: u * 3, opacity: 0 }); countTo(bg2.querySelector("span"), 94, 234, tV - .2, 1.3);
+  const c1 = chip("$94M BASE", W * .07, H * .64, { ico: "dollar", solid: true, c: "#121722" }), c2 = chip("+ $140M OPTION", W * .45, H * .64, { ico: "dollar", solid: true, c: "#2F6FDB" });
+  pop(c1, tV - .3, { y: u * 2, opacity: 0 }); pop(c2, tV + .2, { y: u * 2, opacity: 0 });
+  const rl = rail("PROMISE", "CURIOSITY TEST BODY + <b>PERSEVERANCE SPARES</b>", .6);
+  railSet(rl, tBl, "BLUE ORIGIN <b>MARK 1</b> · LAUNCH <b>END 2028</b>");
+  railSet(rl, tV, "DEAL <b>UP TO $234M</b>");
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>
