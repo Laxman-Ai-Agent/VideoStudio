@@ -12,6 +12,11 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
+## 07_NASA_Moon_Base (2026-11-15) - samples, waiting for the user's look check
+- Done: inputs moved, 16x9 four mp3s merged, voice chain, 1.15x -> `<fmt>/input/audio.mp3`; align_mms -> `input/gemini_corrected.json`; plan.md rev 2 (user brief: image-led light documentary, big / full-screen real photos, not all in cards, 2D/3D, cinematic camera); theme "mission survey" (Unbounded + Hind Guntur + Space Mono, rocket orange / ice blue).
+- New: three.js r147 vendored in `tools/templates/moon_kit` (kit = explainer2 copy + `m3d.js`: hf-seek drawing, `__hf.buildReady`); render copies `params.files` raw (3D models, textures, ungraded). NASA assets in `assets/nasa` (LRO Moon kit, Curiosity glb, photos via `scripts/nasa_get.py`, sources `assets/sources.json`).
+- Samples 480p: `16x9/output/samples/sample_nm_l01_intro.mp4` (3D Moon dive to the south pole), `sample_nm_l11_spares.mp4` (Curiosity selfie -> 3D model with part labels). Next: user look check -> remaining sequences nm_l02..l16, nm_v01..v05, NASA photos + Kaggle gaps.
+
 ## Explainer mode v2 (2026-11-14)
 - User: "explainer" now = the 06_Gemini_Hydrogen look. Recipe `docs/EXPLAINER_STYLE.md`, kit `tools/templates/explainer2_kit` (theme-driven copy of `lab_kit`, `params.motif` hex|ring|square|plus), rule in my-editor rules.md. Old `explainer_kit` only for 04.
 

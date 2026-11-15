@@ -260,3 +260,16 @@ def test_theme_captions_off_drops_captions(tmp_path):
     off = rnd.plan_jobs(_plan(), RESOLVED, brand, "16:9", tmp_path, tmp_path / "o", False, words,
                         theme=ThemeSpec(name="t", colors={}, fonts={}, captions={"style": "off"}))[0]
     assert on.captions and off.captions is None
+
+
+def test_raw_files_copied_ungraded_and_keyed(tmp_path, monkeypatch):
+    monkeypatch.setattr(rnd, "ROOT", tmp_path)
+    (tmp_path / "m.glb").write_bytes(b"glTF-one")
+    plan = _plan()
+    plan.scenes[0].params = {"files": ["m.glb"]}
+    key = lambda: rnd.plan_jobs(plan, RESOLVED, BRAND, "16:9", tmp_path, tmp_path / "o", False)[0]  # noqa: E731
+    job = key()
+    rnd.build(job, tmp_path / "b", job.template)
+    assert (tmp_path / "b" / "m.glb").read_bytes() == b"glTF-one"
+    (tmp_path / "m.glb").write_bytes(b"glTF-two")
+    assert key().key != job.key

@@ -43,6 +43,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | 24 Telugu font families from Google Fonts (`_brand/fonts/<Family>/`, catalog in `_brand/fonts/README.md`) | google/fonts main, 2026-11-07 | SIL OFL 1.1 (free, commercial ok, `OFL.txt` kept per family) | render (`font_css`) | brand fonts loaded by @font-face, no Windows install; git-ignored like the rest of `_brand/` |
 | 13 English font families (Poppins, Montserrat, Inter, Oswald, Bebas Neue, Anton, Archivo Black, Playfair Display, DM Serif Display, Instrument Serif, Caveat, Pacifico, Bangers) | google/fonts main, 2026-11-08 | SIL OFL 1.1 (`OFL.txt` per family) | render (`font_css`) | same folder-per-family store as the Telugu fonts; catalog in `_brand/fonts/README.md` |
 | lottie-web (SVG player, vendored in `tools/templates/lottie/lottie.min.js`) | 5.13.0 | MIT | templates/lottie | plays Lottie JSON frame-exactly from the GSAP timeline | standard player, one file, no npm install |
+| three.js UMD build + GLTFLoader (vendored in `tools/templates/moon_kit/three.min.js`, `GLTFLoader.js`) | 0.147.0 | MIT | templates/moon_kit | 3D scenes (Moon globe, rover glTF, flight paths) rendered per frame from the GSAP timeline | last release with a global UMD build + examples/js loaders (plain script tags, no bundler); user OK 2026-11-15 |
 
 ## Free online sources (no key, no cost)
 | Source | Used for | License of what we fetch |

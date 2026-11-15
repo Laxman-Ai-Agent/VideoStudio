@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="three.min.js"></script><script src="GLTFLoader.js"></script><script src="kit.js"></script><script src="m3d.js"></script>
+<style>/* 07_NASA_Moon_Base L01 (0-18 s): real NASA LRO Moon in 3D, camera dives to the south pole; pin; CLPS-2 / VADR / PROMISE chips wired to it; $10B */
+.halo { position: absolute; border-radius: 50%; background: radial-gradient(circle, #ffffffe6 0%, #ffffff80 38%, #E4572E10 62%, transparent 70%); }
+.pin { position: absolute; width: 0; height: 0; }
+.pin i { position: absolute; left: calc(var(--u) * -1); top: calc(var(--u) * -1); width: calc(var(--u) * 2); height: calc(var(--u) * 2); border-radius: 50%; background: #E4572E; box-shadow: 0 0 0 calc(var(--u) * .5) #fff; }
+.pin s { position: absolute; left: calc(var(--u) * -4); top: calc(var(--u) * -4); width: calc(var(--u) * 8); height: calc(var(--u) * 8); border-radius: 50%; border: calc(var(--u) * .35) solid #E4572E; box-sizing: border-box; }
+.pin b { position: absolute; left: calc(var(--u) * 2.4); top: calc(var(--u) * -1.6); white-space: nowrap; font: 700 calc(var(--u) * 1.9) var(--font-script); letter-spacing: .14em; color: #fff;
+  background: #121722; padding: calc(var(--u) * .35) calc(var(--u) * 1); border-radius: calc(var(--u) * .5); }
+.cc { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.2); background: #fff; border-radius: calc(var(--u) * 1.4); padding: calc(var(--u) * 1) calc(var(--u) * 1.6);
+  box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.4) #12172226; border-left: calc(var(--u) * .7) solid var(--c); }
+.cc .k { font: 800 calc(var(--u) * 3) var(--font-head); color: #121722; letter-spacing: -.01em; }
+.cc .d { font: 700 calc(var(--u) * 1.55) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.cc svg { width: calc(var(--u) * 3.4); height: calc(var(--u) * 3.4); color: var(--c); flex: none; }
+.big { position: absolute; font: 900 calc(var(--u) * 17) var(--font-head); color: #E4572E; letter-spacing: -.04em; line-height: 1; }
+.big small { font-size: .32em; color: #121722; letter-spacing: 0; margin-left: .2em; }
+.q { position: absolute; font: 800 calc(var(--u) * 2.6) var(--font-head); color: #121722; background: #fff; border-radius: 99px; padding: calc(var(--u) * .8) calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 2) #12172222; }
+.q em { font-style: normal; color: #2F6FDB; }
+svg.wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, PAL, tl, E, at, $, mk, place, fade, pop, out, cam, bg, head, rehead, ico, rail, railSet } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("ice");
+  const tN = at("nasa", 2.6), tCl = at("clps", 5.6), tVa = at("vadr", 6.6), tPr = at("prom", 9.6), tTen = at("ten", 12.3), tWho = at("who", 13.6), tBase = at("base", 15.4);
+
+  /* 3D Moon: NASA LRO colour mosaic + LOLA elevation (displacement + bump), key light from the upper left */
+  const halo = place(mk("div", "halo"), W * .67 - H * .62, H * .5 - H * .62, H * 1.24, H * 1.24);
+  const v = M3.view({ fov: 30, exposure: 0.95, amb: 0.18 });
+  v.key.position.set(-5, 1.2, 3.2);
+  v.cam.setViewOffset(W, H, -W * .17, 0, W, H);  // frame centre sits at 67% x: text column on the left
+  const moon = M3.moon(v, "moon_color_2k.jpg", "moon_disp.jpg", 1);
+  const st = { rx: -0.18, ry: -0.4, z: 4.3, look: 0 };
+  tl.to(st, { ry: 0.5, duration: Math.max(D, 1), ease: "none" }, 0);
+  tl.to(st, { rx: -0.95, z: 2.3, look: 0.92, duration: 3.4, ease: E.io }, Math.max(1.8, tN - 0.6));
+  tl.to(st, { z: 1.95, duration: Math.max(1, D - tTen), ease: E.soft }, tTen);
+  tl.to(halo, { scale: 1.5, opacity: .6, duration: 3.4, ease: E.io }, Math.max(1.8, tN - 0.6));
+
+  /* pin on the real south pole, projected from 3D every frame */
+  const pin = mk("div", "pin", undefined, `<s></s><i></i><b>SOUTH POLE</b>`);
+  const pole = new THREE.Vector3(0, -1.004, 0);
+  let P = [W * .7, H * .7];
+  v.update = () => {
+    moon.rotation.set(st.rx, st.ry, 0, "XYZ"); moon.updateMatrixWorld();
+    const tg = moon.localToWorld(pole.clone()).multiplyScalar(st.look);  // camera pans onto the pole while it dives
+    v.cam.position.set(tg.x, tg.y, tg.z + st.z); v.cam.lookAt(tg); v.cam.updateMatrixWorld();
+    P = M3.toScreen(v, moon.localToWorld(pole.clone()));
+    place(pin, P[0], P[1]); wires();
+  };
+  const tPin = Math.max(3.6, tN + 2.2);
+  pop(pin.querySelector("i"), tPin, { scale: 0, opacity: 0 }, 0.5, E.pop);
+  tl.fromTo(pin.querySelector("s"), { scale: .3, opacity: 1 }, { scale: 1.6, opacity: 0, duration: 1.4, ease: "power1.out", repeat: Math.max(1, Math.floor((D - tPin) / 1.4)), immediateRender: true }, tPin);
+  pop(pin.querySelector("b"), tPin + 0.3, { x: -u * 2, opacity: 0 });
+
+  /* heading */
+  const h1 = head("NASA's <em>MOON BASE</em>", "చంద్రుడి మీద శాశ్వత base కోసం కొత్త contracts", 0.3, { kick: "NASA · NOV 2026", w: W * .46, x: W * .05, y: H * .08, size: 5.6 });
+  const rl = rail("MOON BASE", "NASA · ARTEMIS ERA · <b>PERMANENT BASE ON THE MOON</b>", 0.8);
+
+  /* three contracts, wired to the pin */
+  const C3 = [["CLPS-2", "LANDER DELIVERIES", "route", "#E4572E", tCl], ["VADR", "ROCKET LAUNCHES", "up", "#121722", tVa], ["PROMISE", "NUCLEAR ROVER · BLUE ORIGIN", "gauge", "#2F6FDB", tPr]];
+  const wsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); wsvg.setAttribute("class", "wires"); wsvg.setAttribute("width", W); wsvg.setAttribute("height", H); $("stage").append(wsvg);
+  const cards = C3.map(([k, d, ic, c, t], i) => {
+    const e = place(mk("div", "cc", undefined, `${ico(ic)}<div><div class="k">${k}</div><div class="d">${d}</div></div>`), W * .05, H * (.42 + i * .15));
+    e.style.setProperty("--c", c);
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    Object.assign(p.style, { fill: "none", stroke: c, strokeWidth: u * .3, strokeDasharray: `${u * 1.2} ${u * .8}` }); wsvg.append(p);
+    pop(e, t, { x: -u * 4, opacity: 0 }); tl.fromTo(p, { opacity: 0 }, { opacity: 1, duration: .5, immediateRender: true }, t + .25);
+    return { e, p };
+  });
+  function wires() { cards.forEach(({ e, p }) => { const x0 = e.offsetLeft + e.offsetWidth, y0 = e.offsetTop + e.offsetHeight / 2;
+    p.setAttribute("d", `M${x0} ${y0} C${(x0 + P[0]) / 2} ${y0}, ${(x0 + P[0]) / 2} ${P[1]}, ${P[0]} ${P[1]}`); }); }
+  const h2 = rehead(h1, "THREE <em>CONTRACTS</em>", "CLPS-2 · VADR · PROMISE rover", tCl - 0.1, { kick: "WHAT NASA ANNOUNCED", w: W * .46, x: W * .05, y: H * .08, size: 5.6 });
+  railSet(rl, tCl + 0.4, "CLPS-2 · VADR · PROMISE · <b>KENNEDY SPACE CENTER, NOV 7</b>");
+
+  /* $10B, who got it, how it builds a base */
+  cards.forEach(({ e, p }, i) => { out(e, tTen - 0.4 + i * .06, { x: -u * 3 }); out(p, tTen - 0.4); });
+  out(h2, tTen - 0.35, { y: -u * 2 });
+  const big = place(mk("div", "big", undefined, `$<span>0</span><small>BILLION</small>`), W * .05, H * .2);
+  pop(big, tTen, { y: u * 4, opacity: 0, scale: .9 }, .7);
+  const o = { v: 0 }; tl.to(o, { v: 10, duration: 1.1, ease: "power2.out", onUpdate: () => { big.querySelector("span").textContent = Math.round(o.v); } }, tTen);
+  const k1 = place(mk("div", "q", undefined, `WHO <em>GOT</em> THE MONEY?`), W * .05, H * .56);
+  const k2 = place(mk("div", "q", undefined, `HOW DOES IT <em>BUILD A BASE</em>?`), W * .05, H * .68);
+  pop(k1, tWho, { x: -u * 3, opacity: 0 }); pop(k2, tBase, { x: -u * 3, opacity: 0 });
+  railSet(rl, tTen + 0.3, "<b>$10 BILLION</b> · 10 YEARS · 8 COMPANIES");
+  cam(0, Math.max(D, 1), 1.03);
+
+  M3.ready();
+  X.done();
+</script></body></html>

@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="three.min.js"></script><script src="GLTFLoader.js"></script><script src="kit.js"></script><script src="m3d.js"></script>
+<style>/* 07_NASA_Moon_Base L11 (165-181 s): not built new. Full-bleed real Curiosity selfie (Mars) -> shrinks into a corner card; NASA Curiosity
+   3D model turns on a turntable; part labels wired to the model: Earth test body, Curiosity spares, Perseverance spares */
+.ph { position: absolute; background: #000 no-repeat center / cover; overflow: hidden; }
+.ph .sh { position: absolute; inset: 0; background: linear-gradient(90deg, #EEEFEAf2 0%, #EEEFEAc8 34%, #EEEFEA00 62%); }
+.ph .tg { position: absolute; left: calc(var(--u) * 1.2); bottom: calc(var(--u) * 1); font: 700 calc(var(--u) * 1.5) var(--font-script); color: #fff; letter-spacing: .14em; text-shadow: 0 1px 3px #0008; }
+.disc { position: absolute; border-radius: 50%; background: radial-gradient(ellipse at 50% 50%, #12172230 0%, #12172212 45%, transparent 70%); }
+.lab { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * .9); background: #fff; border-radius: calc(var(--u) * 1.1); padding: calc(var(--u) * .8) calc(var(--u) * 1.3);
+  box-shadow: 0 calc(var(--u) * .7) calc(var(--u) * 2) #12172226; border-top: calc(var(--u) * .5) solid var(--c); white-space: nowrap; }
+.lab b { font: 800 calc(var(--u) * 2.1) var(--font-head); color: #121722; }
+.lab span { display: block; font: 700 calc(var(--u) * 1.35) var(--font-script); color: #59606B; letter-spacing: .12em; }
+.dot { position: absolute; width: calc(var(--u) * 1.6); height: calc(var(--u) * 1.6); margin: calc(var(--u) * -.8) 0 0 calc(var(--u) * -.8); border-radius: 50%; background: var(--c); box-shadow: 0 0 0 calc(var(--u) * .4) #fff; }
+.stamp { position: absolute; font: 800 calc(var(--u) * 2.2) var(--font-head); color: #fff; background: #E4572E; padding: calc(var(--u) * .6) calc(var(--u) * 1.4); border-radius: calc(var(--u) * .6); letter-spacing: .02em; }
+svg.wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { S, W, H, D, u, PAL, tl, E, at, $, mk, place, fade, pop, out, move, cam, bg, head, rehead, ico, chip, rail, railSet } = X;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bg("sky");
+  const tPt = at("point", 1.7), tNew = at("new", 3.3), tMa = at("mars", 5.6), tCu = at("cur", 6.5), tEa = at("earth", 8.0), tBo = at("body", 9.8),
+        tC2 = at("cur2", 10.4), tPe = at("pers", 11.2), tSp = at("spare", 12.9), tMj = at("major", 14.5);
+
+  /* 1. the real rover on Mars, full bleed, slow push; text sits in the soft left wash */
+  const ph = place(mk("div", "ph", undefined, `<div class="sh"></div><div class="tg">NASA / JPL-CALTECH · CURIOSITY ON MARS</div>`), 0, 0, W, H);
+  ph.style.backgroundImage = `url(${S.images[0]})`;
+  tl.fromTo(ph, { backgroundSize: "112%", backgroundPosition: "70% 40%" }, { backgroundSize: "124%", backgroundPosition: "62% 45%", duration: tEa, ease: "none", immediateRender: true }, 0);
+  const h1 = head("NOT BUILT <em>NEW</em>", "ఈ rover ని పూర్తిగా కొత్తగా తయారు చేయడం లేదు", 0.2, { kick: "PROMISE ROVER", w: W * .5, x: W * .05, y: H * .1, size: 5.4 });
+  const c1 = chip("ON MARS SINCE 2012", W * .62, H * .7, { ico: "clock", solid: true, c: "#121722" }); pop(c1, tMa, { y: u * 2, opacity: 0 });
+  const st1 = place(mk("div", "stamp", undefined, "CURIOSITY"), W * .62, H * .58); pop(st1, tCu, { scale: .6, opacity: 0 }, .5, E.pop);
+  const rl = rail("PROMISE", "BUILT BY NASA JPL · <b>RIDES BLUE ORIGIN MARK 1</b>", 0.6);
+
+  /* 2. photo shrinks into a corner card (layout morph); the 3D model takes the stage */
+  const tM = tEa - 0.3;
+  out(ph.querySelector(".sh"), tM, { duration: .5 }); out(c1, tM - .2); out(st1, tM - .2);
+  move(ph, tM, W * .03, H * .52, W * .27, H * .3, 1.0, { borderRadius: u * 1.2, boxShadow: `0 ${u}px ${u * 3}px #12172240` });
+  const disc = place(mk("div", "disc"), W * .45, H * .66, W * .46, H * .16); fade(disc, tM + .4, .8);
+  const v = M3.view({ fov: 28, exposure: 1.25, key: 3, amb: .5 });
+  v.cam.setViewOffset(W, H, -W * .17, H * .02, W, H);
+  const rover = M3.gltf(v, "curiosity.glb");
+  const st = { ry: -2.2, y: -1.2, o: 0, z: 6.2 };
+  tl.fromTo(v.c, { opacity: 0 }, { opacity: 1, duration: .6, immediateRender: true }, tM + .2);
+  tl.to(st, { y: 0, duration: 1.2, ease: E.in }, tM + .2);
+  tl.to(st, { ry: 1.1, duration: Math.max(1, D - tM), ease: "none" }, tM);
+  tl.to(st, { z: 5.2, duration: Math.max(1, D - tM), ease: E.soft }, tM);
+  const h2 = rehead(h1, "<em>SPARE</em> PARTS", "Curiosity, Perseverance కోసం దాచిన parts తో", tEa, { kick: "WHAT IT IS MADE OF", w: W * .44, x: W * .05, y: H * .1, size: 5.4 });
+
+  /* 3. labels wired to points on the model (projected every frame) */
+  const L3 = [["TEST BODY", "USED ON EARTH FOR CURIOSITY", "#121722", tBo, [0, .55, 0]], ["CURIOSITY SPARES", "SAVED FLIGHT PARTS", "#E4572E", tC2, [.8, .12, .7]],
+              ["PERSEVERANCE SPARES", "SAVED FLIGHT PARTS", "#2F6FDB", tPe, [-.2, .9, .2]]];
+  const wsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); wsvg.setAttribute("class", "wires"); wsvg.setAttribute("width", W); wsvg.setAttribute("height", H); $("stage").append(wsvg);
+  const labs = L3.map(([t, s, c, at_, f], i) => {
+    const e = place(mk("div", "lab", undefined, `<div><b>${t}</b><span>${s}</span></div>`), W * [.38, .75, .73][i], H * [.8, .78, .09][i]); e.style.setProperty("--c", c);
+    const d = mk("div", "dot"); d.style.setProperty("--c", c);
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); Object.assign(p.style, { fill: "none", stroke: c, strokeWidth: u * .3 }); wsvg.append(p);
+    pop(e, at_, { y: u * 2, opacity: 0 }); pop(d, at_ + .1, { scale: 0, opacity: 0 }, .4, E.pop); tl.fromTo(p, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, at_ + .1);
+    return { e, d, p, f, P: [0, 0] };
+  });
+  let box = null;
+  function wires() { labs.forEach((l) => { place(l.d, l.P[0], l.P[1]); const r = l.e, cx = r.offsetLeft + r.offsetWidth / 2, cy = l.P[1] < r.offsetTop ? r.offsetTop : r.offsetTop + r.offsetHeight;
+    l.p.setAttribute("d", `M${cx} ${cy} L${l.P[0]} ${l.P[1]}`); }); }
+  v.update = () => {
+    rover.rotation.y = st.ry; rover.position.y = st.y; v.cam.position.set(0, 1.4, st.z); v.cam.lookAt(0, 1.05, 0); v.cam.updateMatrixWorld(); rover.updateMatrixWorld();
+    if (box) labs.forEach((l) => { const p = new THREE.Vector3(box.min.x + (l.f[0] + 1) / 2 * (box.max.x - box.min.x), box.min.y + l.f[1] * (box.max.y - box.min.y), box.min.z + (l.f[2] + 1) / 2 * (box.max.z - box.min.z));
+      l.P = M3.toScreen(v, rover.localToWorld(p)); });
+    wires();
+  };
+
+  /* 4. close: count chips + rehead */
+  const cA = chip("NOT NEW: REUSED", W * .05, H * .4, { ico: "check", c: "#1FA971" }), cB = chip("MARS HARDWARE → MOON", W * .05, H * .47, { ico: "route" });
+  pop(cA, tSp, { x: -u * 3, opacity: 0 }); pop(cB, tSp + .4, { x: -u * 3, opacity: 0 });
+  railSet(rl, tMj, "<b>MAJOR PART</b> FROM CURIOSITY TEST BODY + SPARES");
+  cam(0, Math.max(D, 1), 1.025);
+
+  M3.ready(() => { M3.frame(rover, 2.2); rover.updateMatrixWorld(true); box = new THREE.Box3().setFromObject(rover); rover.worldToLocal(box.min); rover.worldToLocal(box.max); });
+  X.done();
+</script></body></html>

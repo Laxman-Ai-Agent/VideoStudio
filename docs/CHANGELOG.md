@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-15
+- 07_NASA_Moon_Base: paired project (16x9 merge of 4 parts, 3 speeds, 1.15x, align_mms), plan rev 2 after the user's image-led light-documentary brief, theme, samples nm_l01 (3D Moon) + nm_l11 (3D Curiosity).
+- 3D: three.js 0.147.0 vendored (`moon_kit`, registered in LIBRARIES.md), `m3d.js` follows the HyperFrames hf-seek / buildReady protocol; render copies `params.files` ungraded and keys the cache on them (test_raw_files_copied_ungraded_and_keyed).
+
 ## 2026-11-14
 - Explainer mode v2 = the 06 look: `explainer2_kit` (colours from theme, background motif per scene), docs/EXPLAINER_STYLE.md, rule + memory; EXPLAINER_PLAN.md marked superseded.
 - 06_Gemini_Hydrogen: paired project (16x9 merge, 3 speeds, 1.15x, align_mms), light-documentary "element lab" look (`lab_kit`: periodic tiles, terminal typing, bar races, info rail, icons), sequences gh_l01-l14 / gh_v01-v05, 8 photorealistic Kaggle Z-Image images, 480p previews + beat-frame QA. Lessons: kit class names clash with studio.css (`.bd`, `.dim`, `.tx`, `.ln`): prefix kit classes; type() must keep numeric entities whole.

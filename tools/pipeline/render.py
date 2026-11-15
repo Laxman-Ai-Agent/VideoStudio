@@ -196,6 +196,9 @@ def plan_jobs(plan: ScenePlan, resolved: Resolved, brand: Brand, fmt: str, root:
         imgs = [root / f for f in s.params.get("images", [])]
         if imgs:  # pictures used inside written scene code: their content is part of the key
             asset_hash += f":g{grade.GRADE_VERSION}:" + ":".join(file_hash(f) if f.exists() else "none" for f in imgs)
+        raw = [root / f for f in s.params.get("files", [])]
+        if raw:  # raw files for written scene code (3D models, textures): copied ungraded, content is part of the key
+            asset_hash += ":raw:" + ":".join(file_hash(f) if f.exists() else "none" for f in raw)
         if s.params.get("kit") and (TEMPLATES / s.params["kit"]).is_dir():  # the video's shared motion kit (tokens + helpers)
             asset_hash += ":kit" + _dir_hash(TEMPLATES / s.params["kit"])
         a2 = root / s.params["image2"] if name == "photo" and s.params.get("image2") else None
@@ -301,6 +304,9 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
             shutil.copy2(g, build_dir / images[-1])
         else:
             images.append("")
+    for src in (ROOT / f for f in job.scene.params.get("files", [])):  # raw files (3D models, textures), not graded
+        if src.exists():
+            shutil.copy2(src, build_dir / src.name)
     asset2 = ""
     if template == "photo" and job.asset2:
         asset2 = "asset2" + job.asset2.suffix.lower()

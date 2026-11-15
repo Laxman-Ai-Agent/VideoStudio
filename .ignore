@@ -4,3 +4,5 @@ lottie.min.js
 package-lock.json
 uv.lock
 tools/tests/fixtures/
+three.min.js
+GLTFLoader.js
