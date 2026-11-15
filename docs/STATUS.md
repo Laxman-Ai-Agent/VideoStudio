@@ -12,13 +12,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 07_NASA_Moon_Base (2026-11-15) - all sequences + 480p previews done, waiting for user notes
+## 07_NASA_Moon_Base (2026-11-15) - closed (finals done)
 - Done: inputs, merge, 1.15x audio, align_mms, plan.md rev 2 (image-led light documentary, user brief + memory light-documentary-image-led), theme "mission survey".
 - 3D: three.js r147 in `tools/templates/moon_kit` (`m3d.js`: hf-seek + `__hf.buildReady`); render copies `params.files` raw. Image-led parts in `moon_kit/doc.js` (photo with inner `.im` cover layer, kb Ken Burns, reveal/hide wipes, big, pill, tag, lab, stat, countTo).
 - Assets: NASA photos `assets/nasa` (`scripts/nasa_get.py <nasa_id> <name>`, sources `assets/sources.json`); note `moon_base.jpg` = NASA "Moon Base June 30 Update" (3 landers, no base render; NASA library has no good base concept). Kaggle `assets/ai` K01-K09 (K03 is upright, unused).
 - Sequences nm_l01-l16 (16x9) + nm_v01-v05 (9x16) written, 480p samples QA'd (`scripts/render_samples.py`, `scripts/qa_sheet.py`); beats in `scripts/make_sequences.py <var>`. Lessons: never use class `.tx` (studio.css `.tx` = absolute inset 0); `place()` overwrites CSS `left` (centre with x = W*.5); beat words match by substring ("land" hits "lander": use (word, nth)).
 - Previews: `studio.cmd run 07/16x9` and `run 07/9x16 --format 9:16` -> `<fmt>/output/preview_<fmt>.mp4` (480p). visual-assets.json written empty (written sequences, no asset stage).
-- NEXT: user notes on the previews; 1080p `--final` only on the user's word; then DarkWorld folder (`scripts/make_darkworld.py`).
+- FINALS DONE 2026-11-15 on the user's go (QA PASS): `16x9/output/07_NASA_Moon_Base_16x9.mp4` (1920x1080, 4:54), `9x16/output/07_NASA_Moon_Base_9x16.mp4` (1080x1920, 1:21); `DarkWorld/README.txt` (user adds thumbnails to `DarkWorld/16X9`, `9X16`, then re-run `scripts/make_darkworld.py`). Theme identity was 40% alike 06 -> fixed in theme.json (transitions cut, text_in mask, title caps, pattern none: the written sequences' real look) -> 23%. Music still `calm/mars_background.mp3`.
 
 ## Explainer mode v2 (2026-11-14)
 - User: "explainer" now = the 06_Gemini_Hydrogen look. Recipe `docs/EXPLAINER_STYLE.md`, kit `tools/templates/explainer2_kit` (theme-driven copy of `lab_kit`, `params.motif` hex|ring|square|plus), rule in my-editor rules.md. Old `explainer_kit` only for 04.
