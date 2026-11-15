@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L09 (146-154 s): twist + CTA. A muscle cell with a glowing "?" teases the next part; like + subscribe buttons spring in. */
+.cta { position: absolute; display: flex; align-items: center; gap: calc(var(--u) * 1.4); padding: calc(var(--u) * 1.4) calc(var(--u) * 2.6); border-radius: 99px;
+       font: 800 calc(var(--u) * 3) var(--font-head); color: #0A0E17; white-space: nowrap; }
+.cta svg { width: calc(var(--u) * 3.6); height: calc(var(--u) * 3.6); }
+.qm { position: absolute; font: 800 calc(var(--u) * 14) var(--font-head); color: #00F0FF; text-shadow: 0 0 calc(var(--u) * 3) #00F0FF; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, ico } = X;
+  const { K, dbg, breathe, badge, cell } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tIn = at("int", 1.2), tUs = at("use", 3.4), tLi = at("like", 5.5), tSu = at("sub", 6.8);
+  head('The <em>interesting</em> part', "అసలు interesting విషయం ఇక్కడే ఉంది", .2, { kick: "BUT HERE IS THE TWIST", w: W * .5, x: W * .05, y: H * .14, size: 6.6 });
+  const ce = cell(W * .72, H * .48, H * .22, { c: K.cyan }); tl.fromTo(ce, { scale: .5, opacity: 0 }, { scale: 1, opacity: 1, duration: .8, ease: E.pop, immediateRender: true }, .3); breathe(ce, 1, u * .6, 3);
+  const q = place(mk("div", "qm", undefined, "?"), W * .69, H * .3); pop(q, tIn, { scale: .3, opacity: 0, rotation: -20 }, .7, E.pop); breathe(q, tIn + .8, u, 2.2);
+  const bM = badge("MUSCLE <b>SECRET</b>", K.cyan, W * .64, H * .8); pop(bM, tIn + .4, { y: u * 2, opacity: 0 }, .45);
+  const like = place(mk("div", "cta", undefined, `${ico("thumb", "#0A0E17")}LIKE`), W * .05, H * .56); like.style.background = K.cyan; like.style.boxShadow = `0 0 ${u * 3}px ${K.cyan}88`;
+  const sub = place(mk("div", "cta", undefined, `${ico("bell", "#fff")}SUBSCRIBE`), W * .05, H * .7); Object.assign(sub.style, { background: K.red, color: "#fff", boxShadow: `0 0 ${u * 3}px ${K.red}88` });
+  pop(like, tLi - .2, { scale: .5, opacity: 0 }, .55, E.pop); pop(sub, tSu - .2, { scale: .5, opacity: 0 }, .55, E.pop);
+  tl.to(like, { scale: 1.12, duration: .18, yoyo: true, repeat: 1 }, tLi + .4); tl.to(sub, { scale: 1.12, duration: .18, yoyo: true, repeat: 1 }, tSu + .4);
+  const bU = badge("USEFUL? <b>LIKE IT</b>", K.green, W * .05, H * .48); pop(bU, tUs, { x: -u * 3, opacity: 0 }, .45);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

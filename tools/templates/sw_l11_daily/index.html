@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L11 (174-193 s): the effect lasts 1-2 days. A 7-day row: one hard workout glows day 1 and fades by day 3;
+   "daily" lights all 7 days green with ticks; then the experts' plan as three glowing cards (150 min / 2-3 strength days / stand every 30 min). */
+.dy { position: absolute; border-radius: calc(var(--u) * 1.4); background: #111827e6; border: 1px solid #ffffff1f; text-align: center; }
+.dy b { display: block; margin-top: 18%; font: 700 calc(var(--u) * 1.6) var(--font-script); color: #8A97AD; letter-spacing: .14em; }
+.dy .gl { position: absolute; inset: 0; border-radius: inherit; }
+.dy .tk { position: absolute; left: 50%; top: 58%; width: 44%; transform: translate(-50%, -50%); }
+.pc { position: absolute; padding: calc(var(--u) * 2) calc(var(--u) * 2.4); border-radius: calc(var(--u) * 1.6); background: #0F1626ee; border: 1px solid var(--c);
+      box-shadow: 0 0 calc(var(--u) * 2.4) color-mix(in srgb, var(--c) 40%, transparent); }
+.pc b { display: block; font: 800 calc(var(--u) * 4.6) var(--font-script); color: var(--c); line-height: 1; }
+.pc span { display: block; margin-top: calc(var(--u) * .8); font: 700 calc(var(--u) * 1.8) var(--font-head); color: #EAF2FF; letter-spacing: .04em; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tEf = at("eff", .9), tDa = at("days", 1.9), tWe = at("week", 4.1), tDl = at("daily", 6.2), tM = at("m150", 9.5), tSt = at("str", 13.4), tHa = at("half", 14.3), tPl = at("plan", 18.0);
+
+  const h1 = head('Effect lasts <em class="a">1-2 days</em>', "ఈ effect ఒకటి రెండు రోజులు మాత్రమే ఉంటుంది", .2, { kick: "THE CATCH", w: W * .6, x: W * .05, y: H * .12, size: 6.2 });
+  const DN = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"], dw = W * .1, gap = W * .022, x0 = W * .05, y0 = H * .5;
+  const days = DN.map((n, i) => { const e = place(mk("div", "dy", undefined, `<div class="gl"></div><b>${n}</b>
+      <svg class="tk" viewBox="0 0 24 24" fill="none" stroke="${K.green}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>`), x0 + i * (dw + gap), y0, dw, dw * 1.1);
+    e.gl = e.querySelector(".gl"); e.tk = e.querySelector(".tk"); gsap.set(e.tk, { opacity: 0, scale: .4 }); pop(e, tEf + i * .08, { y: u * 3, opacity: 0 }, .45); return e; });
+  /* once a week: glow on Monday that fades across Tue, Wed */
+  const glowOn = (d, c, a, t, dur = .4) => tl.to(d.gl, { background: c + Math.round(a * 255).toString(16).padStart(2, "0"), boxShadow: `0 0 ${u * 2.4}px ${c}${Math.round(a * 200).toString(16).padStart(2, "0")}`, duration: dur }, t);
+  glowOn(days[0], K.amber, .55, tDa - .6); glowOn(days[1], K.amber, .3, tDa - .3); glowOn(days[2], K.amber, .08, tDa);
+  const bW = badge("ONCE A WEEK = <b>FADES</b>", K.amber, x0, y0 + dw * 1.25); pop(bW, tWe, { y: u * 2, opacity: 0 }, .45);
+  /* daily: every day lights up green with a tick */
+  days.forEach((d, i) => { glowOn(d, K.green, .28, tDl + i * .12, .3); tl.to(d.tk, { opacity: 1, scale: 1, duration: .35, ease: E.pop }, tDl + i * .12); });
+  out(bW, tDl - .2);
+  const bD = badge("<b>DAILY</b> WINS", K.green, x0, y0 + dw * 1.25); pop(bD, tDl + .9, { y: u * 2, opacity: 0, scale: .9 }, .45, E.pop);
+  const h2 = rehead(h1, 'Walk <em class="g">daily</em>', "వారానికి ఒకసారి గట్టిగా కంటే daily చేయడమే important", tDl, { kick: "THE RULE", w: W * .6, x: W * .05, y: H * .12, size: 6.2 });
+
+  /* the experts' plan: three cards replace the week row */
+  out([...days, bD], tM - .6, { y: u * 3, stagger: .03 });
+  const h3 = rehead(h2, "The experts' <em>plan</em>", "నడక, కండరాల exercise, మధ్య మధ్యలో లేచి నడవడం", tM - .3, { kick: "WEEKLY PLAN", w: W * .6, x: W * .05, y: H * .12, size: 6.2 });
+  const cards = [["150", "MIN / WEEK · BRISK WALK", K.cyan, tM], ["2-3", "DAYS · MUSCLE EXERCISE", K.amber, tSt], ["30", "MIN · STAND UP AND WALK", K.green, tHa]].map(([n, s, c, t], i) => {
+    const e = place(mk("div", "pc", undefined, `<b>${n}</b><span>${s}</span>`), W * (.05 + i * .31), H * .52, W * .28); e.style.setProperty("--c", c);
+    pop(e, t, { y: u * 4, opacity: 0, scale: .9 }, .6, E.pop); breathe(e, t + .7, u * .5, 3 + i * .4); return e; });
+  const bP = badge("EXPERTS' <b>PLAN</b>", K.cyan, W * .05, H * .8); pop(bP, tPl - .3, { y: u * 2, opacity: 0 }, .45);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

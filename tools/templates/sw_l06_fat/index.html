@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L06 (85-107 s): where resistance comes from. Glowing body outline; amber fat blobs grow at belly, liver, muscles;
+   pancreas works harder (keys faster), its battery drains green -> red ("TIRED"); glucose stays in the blood (meter high);
+   Indians: thin but at risk (lower weight, younger age, belly + liver fat). */
+.bat { position: absolute; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, organ, key, meter, spark } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tBe = at("belly", .6), tLv = at("liver", 1.4), tFa = at("fat", 2.8), tPa = at("panc", 5.9), tMo = at("more", 7.0), tTi = at("tired", 10.8),
+        tGl = at("glu", 11.9), tIn = at("ind", 14.2), tLo = at("low", 15.3), tYo = at("young", 16.2), tWh = at("why", 17.6);
+
+  /* body outline (right) */
+  const bh = H * .78, bw = bh * .5, bx = W * .66, by = H * .1;
+  const body = place(mk("div", "b-svg"), bx, by, bw, bh);
+  body.innerHTML = `<svg viewBox="0 0 100 200" width="${bw}" height="${bh}" style="overflow:visible;filter:drop-shadow(0 0 ${u * .8}px ${K.cyan}88)">
+    <circle cx="50" cy="20" r="14" fill="#00F0FF0d" stroke="${K.cyan}" stroke-width="1.6"/>
+    <path d="M30 40 Q50 34 70 40 L76 96 Q78 120 68 128 L66 194 M34 194 L32 128 Q22 120 24 96 Z M30 42 L14 104 M70 42 L86 104" fill="#00F0FF0a" stroke="${K.cyan}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M50 128 L50 194" stroke="${K.cyan}" stroke-width="1.6"/></svg>`;
+  tl.fromTo(body, { opacity: 0, scale: .95 }, { opacity: 1, scale: 1, duration: .7, immediateRender: true }, 0); breathe(body, .5, u * .4, 3.6);
+  const h1 = head('Fat in the <em class="a">wrong place</em>', "పొట్ట చుట్టూ, liver లో, కండరాల్లో కొవ్వు పేరుకుపోయినప్పుడు", .2, { kick: "WHY RESISTANCE", w: W * .5, x: W * .05, y: H * .14, size: 6.2 });
+  const blob = (fx, fy, r, t, lbl, lx, ly) => { const e = place(mk("div", "b-dot"), bx + bw * fx - r, by + bh * fy - r, r * 2, r * 2);
+    Object.assign(e.style, { background: `radial-gradient(circle at 40% 40%, ${K.amber}cc, ${K.amber}44 60%, transparent 72%)`, boxShadow: `0 0 ${u * 2}px ${K.amber}66` });
+    tl.fromTo(e, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4, ease: "elastic.out(1, .6)", immediateRender: true }, t); breathe(e, t + 1.4, u * .3, 2.2);
+    const b = badge(lbl, K.amber, lx, ly); pop(b, t + .2, { x: u * 2, opacity: 0 }, .45); return [e, b]; };
+  const f1 = blob(.5, .5, u * 5, tBe, "BELLY", bx - u * 14, by + bh * .48), f2 = blob(.6, .38, u * 3.4, tLv, "LIVER", bx + bw * .9, by + bh * .34),
+        f3 = blob(.2, .66, u * 2.2, tFa, "MUSCLE", bx - u * 15, by + bh * .66);
+
+  /* pancreas works harder, battery drains */
+  const pa = organ(W * .06, H * .62, u * 7); pop(pa, tPa - .2, { y: u * 3, opacity: 0, scale: .8 }, .6, E.pop);
+  const bat = place(mk("div", "bat"), W * .26, H * .63, u * 10, u * 5);
+  bat.innerHTML = `<svg viewBox="0 0 60 30" width="${u * 10}" height="${u * 5}" style="overflow:visible"><rect x="1" y="1" width="52" height="28" rx="5" fill="none" stroke="#ffffff66" stroke-width="2"/>
+    <rect x="54" y="9" width="5" height="12" rx="2" fill="#ffffff66"/><rect class="lv" x="5" y="5" width="44" height="20" rx="3" fill="${K.green}" style="filter:drop-shadow(0 0 4px ${K.green})"/></svg>`;
+  const lv = bat.querySelector(".lv"); pop(bat, tPa, { y: u * 2, opacity: 0 }, .45);
+  for (let i = 0; i < 6; i++) { const k = key(W * .12, H * .72, u * 2.2), t = tMo + i * .45;
+    tl.fromTo(k, { opacity: 0, x: 0, y: 0 }, { opacity: 1, x: W * .18, y: -H * (.05 + (i % 3) * .06), duration: .9, ease: E.in, immediateRender: true }, t); tl.to(k, { opacity: 0, duration: .3 }, t + .9); }
+  const bM = badge("MORE <b>INSULIN</b>", K.amber, W * .06, H * .53); pop(bM, tMo, { x: -u * 3, opacity: 0 }, .45);
+  tl.to(lv, { attr: { width: 22, fill: K.amber }, duration: 2.5, ease: "none" }, tMo + .2);
+  tl.to(lv, { attr: { width: 6, fill: K.red }, duration: 1, ease: E.io }, tTi - .4);
+  const bT = badge("<b>TIRED</b>", K.red, W * .37, H * .64); pop(bT, tTi, { scale: .6, opacity: 0 }, .45, E.pop); spark(W * .31, H * .68, tTi, K.red);
+  const me = meter(W * .45, H * .3, u * 2.2, H * .4, "BLOOD SUGAR"); tl.fromTo(me, { opacity: 0 }, { opacity: 1, duration: .4, immediateRender: true }, tTi);
+  me.set(tTi, .4, K.amber, "RISING", .4); me.set(tGl, .9, K.red, "STAYS HIGH", 1.1);
+
+  /* Indians: thin but at risk */
+  out([pa, bat, bM, bT, me], tIn - .4); out([f3[1]], tIn - .4);
+  const h2 = rehead(h1, 'Indians: <em class="r">thin but at risk</em>', "తక్కువ బరువులోనే, చిన్న వయసులోనే రావచ్చు", tIn, { kick: "INDIA", w: W * .5, x: W * .05, y: H * .14, size: 6.2 });
+  const c1 = badge("LOWER <b>WEIGHT</b>", K.amber, W * .05, H * .56), c2 = badge("YOUNGER <b>AGE</b>", K.amber, W * .05, H * .64), c3 = badge("BELLY + LIVER <b>FAT</b>", K.red, W * .05, H * .72);
+  pop(c1, tLo, { x: -u * 3, opacity: 0 }, .45); pop(c2, tYo, { x: -u * 3, opacity: 0 }, .45); pop(c3, tWh + .6, { x: -u * 3, opacity: 0 }, .45);
+  tl.to([f1[0], f2[0]], { scale: 1.25, duration: .8, ease: E.io, yoyo: true, repeat: 1 }, tWh + .6);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

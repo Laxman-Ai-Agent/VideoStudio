@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="doc.js"></script><script src="bio.js"></script>
+<style>/* 09_Sugar_Walk L02 (20-42 s): the fear (pill bottles stack "FOR LIFE?", favourite food crossed) -> the scale (100-dot grid:
+   red = 10 crore with sugar, amber = 13 crore borderline, ICMR tag) -> understanding = control (dots turn green). */
+.pb { position: absolute; }
+.gd { position: absolute; display: grid; gap: calc(var(--u) * .9); }
+.gd i { display: block; width: calc(var(--u) * 3); height: calc(var(--u) * 3); border-radius: 50%; background: #ffffff1c; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, cam, head, rehead } = X;
+  const { K, dbg, breathe, badge, glow } = B;
+  document.documentElement.style.setProperty("--u", u + "px");
+  dbg();
+  const tFe = at("fear", 1.5), tLi = at("life", 4.2), tEa = at("eat", 6.5), tIn = at("india", 8.4), tTe = at("ten", 9.8), tTh = at("thir", 12.1),
+        tBo = at("border", 13.1), tIc = at("icmr", 14.3), tBu = at("but", 15.9), tUn = at("und", 18.4), tCt = at("ctrl", 19.5);
+
+  /* 1. fear: pill bottles stack up on the right */
+  const h1 = head('Sugar = <em class="r">fear</em>?', "ఒకసారి వస్తే జీవితాంతం మందులే అనుకుంటారు", .2, { kick: "WHAT PEOPLE THINK", w: W * .44, x: W * .05, y: H * .14, size: 6.4 });
+  const bottle = (c) => `<svg viewBox="0 0 40 60" width="${u * 6}" height="${u * 9}" style="overflow:visible;filter:drop-shadow(0 0 ${u * .7}px ${c}88)"><rect x="9" y="2" width="22" height="9" rx="2" fill="${c}"/>
+    <rect x="5" y="12" width="30" height="46" rx="6" fill="#0F1626" stroke="${c}" stroke-width="2.4"/><rect x="10" y="26" width="20" height="14" rx="2" fill="${c}33"/><path d="M15 33h10M20 28v10" stroke="${c}" stroke-width="2.4"/></svg>`;
+  const bots = [];
+  [[.62, .62], [.69, .62], [.76, .62], [.655, .44], [.725, .44], [.69, .26]].forEach(([x, y], i) => {
+    const b = place(mk("div", "pb", undefined, bottle(i % 2 ? K.amber : K.red)), W * x, H * y); bots.push(b);
+    pop(b, tFe + .2 + i * .25, { y: -u * 10, opacity: 0 }, .6, "bounce.out"); });
+  const bL = badge("<b>FOR LIFE?</b>", K.red, W * .64, H * .84); pop(bL, tLi, { y: u * 2, opacity: 0, scale: .9 }, .5, E.pop);
+  const bN = badge("NO FAVOURITE FOOD?", K.amber, W * .05, H * .5); pop(bN, tEa, { x: -u * 3, opacity: 0 }, .5);
+
+  /* 2. the scale: 100 dots, each = 1% ; red 10 crore, amber 13 crore borderline */
+  out(bots, tIn - .4, { y: u * 4, stagger: .04 }); out(bL, tIn - .4); out(bN, tIn - .4);
+  const h2 = rehead(h1, 'India: <em class="r">10 crore</em>', "India లో దాదాపు 10 crore మందికి sugar, ఇంకో 13 crore border లో", tIn, { kick: "ICMR STUDY", w: W * .44, x: W * .05, y: H * .14, size: 6.4 });
+  const gd = place(mk("div", "gd"), W * .58, H * .16); gd.style.gridTemplateColumns = "repeat(10, auto)";
+  const dots = [...Array(100)].map(() => mk("i", "", gd)); breathe(gd, tIn + 1, u * .5, 3.4);
+  tl.fromTo(dots, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, stagger: { each: .006, from: "start" }, ease: E.pop, immediateRender: true }, tIn + .2);
+  const red = dots.slice(0, 10), amb = dots.slice(10, 23);
+  tl.to(red, { backgroundColor: K.red, boxShadow: `0 0 ${u}px ${K.red}`, duration: .3, stagger: .05 }, tTe);
+  tl.to(amb, { backgroundColor: K.amber, boxShadow: `0 0 ${u}px ${K.amber}`, duration: .3, stagger: .04 }, tTh);
+  const s1 = DOC.stat("10", "CRORE · HAVE SUGAR", W * .05, H * .52, K.red); DOC.countTo(s1.b, 0, 10, tTe, 1, (v) => `${Math.round(v)}<small style="font-size:.4em"> CR</small>`);
+  pop(s1, tTe - .1, { x: -u * 3, opacity: 0 }, .5);
+  const s2 = DOC.stat("13", "CRORE · BORDERLINE", W * .26, H * .52, K.amber); DOC.countTo(s2.b, 0, 13, tTh, 1, (v) => `${Math.round(v)}<small style="font-size:.4em"> CR</small>`);
+  pop(s2, tTh - .1, { x: -u * 3, opacity: 0 }, .5);
+  const bB = badge("<b>BORDER</b> LINE", K.amber, W * .63, H * .74); pop(bB, tBo, { y: u * 2, opacity: 0 }, .45);
+  const bI = badge("SOURCE: <b>ICMR</b>", K.cyan, W * .63, H * .82); pop(bI, tIc, { y: u * 2, opacity: 0 }, .45);
+
+  /* 3. understanding = control: the coloured dots turn green */
+  out([bB, bI], tBu - .2);
+  tl.to([...red, ...amb], { backgroundColor: K.green, boxShadow: `0 0 ${u}px ${K.green}`, duration: .35, stagger: .03 }, tUn);
+  const h3 = rehead(h2, 'Understand it, <em class="g">control</em> it', "ఎలా పనిచేస్తుందో అర్థమైతే control చేయడం కష్టం కాదు", tBu + .2, { kick: "GOOD NEWS", w: W * .46, x: W * .05, y: H * .14, size: 6.4 });
+  out([s1, s2], tBu);
+  const bC = badge("CONTROL = <b>NOT HARD</b>", K.green, W * .05, H * .56); pop(bC, tCt, { x: -u * 3, opacity: 0, scale: .9 }, .5, E.pop); glow(bC, K.green, .4);
+  cam(0, Math.max(D, 1), 1.03);
+  X.done();
+</script></body></html>

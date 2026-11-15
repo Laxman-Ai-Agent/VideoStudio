@@ -1,0 +1,8 @@
+{
+ "name": "sw_l02_fear",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 09_Sugar_Walk 16x9; reuse only when the user asks", "kit": "sugar_kit"},
+ "description": "L02 fear -> scale: pill bottles FOR LIFE, 100-dot grid (10 crore red, 13 crore amber, ICMR), dots turn green = control"
+}
