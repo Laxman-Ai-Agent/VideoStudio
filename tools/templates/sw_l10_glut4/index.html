@@ -44,7 +44,7 @@
   const doors = AN.map((a, i) => { const r = a * Math.PI / 180, d = place(mk("div", "g4"), cx + Math.cos(r) * R * .25, cy + Math.sin(r) * R * .25); d.style.rotate = (a + 90) + "deg";
     tl.fromTo(d, { opacity: 0, scale: .3 }, { opacity: 1, scale: 1, duration: .4, ease: SP, immediateRender: true }, tGl + i * .12);
     tl.to(d, { left: cx + Math.cos(r) * R * .86, top: cy + Math.sin(r) * R * .86, duration: 1.1, ease: SP }, tOu - .2 + i * .1); d.a = r; return d; });
-  const bD = badge("<b>GLUT4</b> DOORS", K.cyan, cx - R * 1.35, cy - R * .95); pop(bD, tDo, { scale: .6, opacity: 0 }, .7, SP);
+  const bD = badge("<b>GLUT4</b> DOORS", K.cyan, W * .05, H * .56); pop(bD, tDo, { scale: .6, opacity: 0 }, .7, SP);
 
   /* no insulin needed: key crossed, glucose pulled in */
   const ky = png("P04_key", W * .2, H * .62, H * .16, { c: K.amber }); pop(ky, tNo - .2, { scale: .4, opacity: 0 }, .7, SP);

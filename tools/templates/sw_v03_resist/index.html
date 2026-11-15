@@ -19,9 +19,9 @@
   const ce = cell(W * .66, H * .42, W * .22, { c: K.green }); tl.fromTo(ce, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, ease: SP, immediateRender: true }, tCe - .3); breathe(ce, tCe + .7, u, 3);
   const dp = ce.doorPt;
   flow([[W * .05, H * .6], [W * .25, H * .52], [dp[0] - u * 3, dp[1]]], 12, tGl, D, { stop: .97, speed: .3, pile: true });
-  const pa = organ(W * .06, H * .22, u * 14); pop(pa, tPa, { scale: .5, opacity: 0 }, .9, SP); breathe(pa, tPa + .8, u * .6, 2.8);
-  const bP = badge("<b>PANCREAS</b>", K.amber, W * .08, H * .33); bP.style.fontSize = u * 3.4 + "px"; pop(bP, tPa + .2, { y: u * 2, opacity: 0 }, .7, SP);
-  const k1 = key(W * .1, H * .36, u * 6); pop(k1, tIn, { scale: .3, opacity: 0 }, .7, SP);
+  const pa = organ(W * .06, H * .3, u * 14); pop(pa, tPa, { scale: .5, opacity: 0 }, .9, SP); breathe(pa, tPa + .8, u * .6, 2.8);
+  const bP = badge("<b>PANCREAS</b>", K.amber, W * .08, H * .41); bP.style.fontSize = u * 3.4 + "px"; pop(bP, tPa + .2, { y: u * 2, opacity: 0 }, .7, SP);
+  const k1 = key(W * .1, H * .46, u * 6); pop(k1, tIn, { scale: .3, opacity: 0 }, .7, SP);
   tl.to(k1, { left: dp[0] - u * 11, top: dp[1] - u * 3, duration: 1.2, ease: "power2.inOut" }, tKe);
   /* fat builds, door jams */
   out([pa, bP], tBu - .2, { scale: .8 });
