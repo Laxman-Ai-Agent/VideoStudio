@@ -299,7 +299,7 @@ def build(job: Job, build_dir: Path, template: str, error: str = "") -> None:
     images = []
     for i, src in enumerate(ROOT / f for f in job.scene.params.get("images", [])):  # written scene code: every picture it shows
         if src.exists():  # graded toward the video palette (colour correction, grade.py)
-            g = grade.graded(src, job.style.colors)
+            g = grade.graded(src, job.style.colors) if job.scene.params.get("grade", True) else src  # params.grade false: picture as is (e.g. studio renders on white)
             images.append(f"img{i}{g.suffix}")
             shutil.copy2(g, build_dir / images[-1])
         else:

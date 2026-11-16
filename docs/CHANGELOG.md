@@ -2,6 +2,7 @@
 
 ## 2026-11-16
 - 10_Diarrhea_ORS: paired project (16x9 merge of 4 parts, voice chain 1.15x only, align_mms), "Health Decode" light clinical mode (user's channel brief): scene plan per 4-7 s beat (`segment.py`, `make_plan.py`), 26 Kaggle 3D renders on #F8FAFC, new kit `decode_kit` (hd.js), sequences hd_l01-l15 / hd_v01-v04, 480p previews QA PASS. Lessons: top-level `const top` clashes with window.top (blank scene); counters must stay hidden until their beat; drawn svgs need clearing at composition changes.
+- render: `params.grade: false` copies a written scene's pictures ungraded (test_grade_false_copies_picture_as_is); 10 finals with whitened renders and an original synthesized music loop (clinical_calm.mp3).
 
 ## 2026-11-15
 - 07_NASA_Moon_Base 1080p finals (QA PASS) after a theme identity fix (40% -> 23% alike 06), DarkWorld/README.txt.

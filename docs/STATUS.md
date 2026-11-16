@@ -12,11 +12,11 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
-## 10_Diarrhea_ORS (2026-11-16) - 480p previews done ("Health Decode" light clinical mode)
+## 10_Diarrhea_ORS (2026-11-16) - finals done ("Health Decode" light clinical mode)
 - Paired topic (diarrhea, ORS): `projects/10_Diarrhea_ORS/{16x9,9x16}`; 16x9 4 mp3s merged, voice chain 1.15x -> `<fmt>/audio.mp3` (+ input/audio.mp3 copy); align_mms -> `input/gemini_corrected.json`.
 - User brief = channel "Health Decode" (memory health-decode-mode): #F8FAFC studio, one 3D medical render per scene + 2D vector overlays. Plan `<fmt>/plan.md` (68 / 15 scenes, scripts/segment.py + make_plan.py), 26 Kaggle renders `assets/3d/Hxx.png` (prompts `work/kaggle_3d.json`, fixes `work/kaggle_3d_fix.json`).
 - New kit `tools/templates/decode_kit` (kit.js core + hd.js: base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum, clear). Sequences hd_l01..l15, hd_v01..v04; `scripts/make_sequences.py` (beats p1..pN = plan scene starts + word beats).
-- Previews `<fmt>/output/preview_<fmt>.mp4` QA PASS. Next: user notes -> finals only on the user's word; then DarkWorld. Lesson: never name a top-level const `top` (window.top) -> whole scene blank.
+- FINALS DONE 2026-11-16 on the user's go (QA PASS): `<fmt>/output/10_Diarrhea_ORS_<fmt>.mp4` (6:00 / 1:23); `DarkWorld/README.txt` (thumbnails pending). Renders whitened (`scripts/whiten.py`) + `params.grade: false` (render.py opt-out: the grade tinted white studio renders warm). Music: original synthesized `_library/music/calm/clinical_calm.mp3` (`scripts/make_music.py`), now the calm default. Lesson: never name a top-level const `top` (window.top) -> whole scene blank.
 
 ## 09_Sugar_Walk (2026-11-15) - finals done (healthcare mode)
 - Paired topic (blood sugar, walk after meals): `projects/09_Sugar_Walk/{16x9,9x16}`; inputs moved, 16x9 3 mp3s merged, 1.15x -> `<fmt>/input/audio.mp3`, align_mms -> `input/gemini_corrected.json`, transcripts done (`scripts/make_transcript.py`).

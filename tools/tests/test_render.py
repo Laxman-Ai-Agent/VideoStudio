@@ -273,3 +273,15 @@ def test_raw_files_copied_ungraded_and_keyed(tmp_path, monkeypatch):
     assert (tmp_path / "b" / "m.glb").read_bytes() == b"glTF-one"
     (tmp_path / "m.glb").write_bytes(b"glTF-two")
     assert key().key != job.key
+
+
+def test_grade_false_copies_picture_as_is(tmp_path, monkeypatch):
+    """10_Diarrhea_ORS: studio renders on white got a warm tint from the grade; params.grade false keeps the bytes."""
+    from PIL import Image
+    monkeypatch.setattr(rnd, "ROOT", tmp_path)
+    Image.new("RGB", (32, 18), (255, 255, 255)).save(tmp_path / "w.png")
+    plan = _plan()
+    plan.scenes[0].params = {"images": ["w.png"], "grade": False}
+    job = rnd.plan_jobs(plan, RESOLVED, BRAND, "16:9", tmp_path, tmp_path / "o", False)[0]
+    rnd.build(job, tmp_path / "b", job.template)
+    assert (tmp_path / "b" / "img0.png").read_bytes() == (tmp_path / "w.png").read_bytes()
