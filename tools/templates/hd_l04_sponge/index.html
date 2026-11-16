@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l04_sponge: ~9 L a day flows into the intestine, small gut absorbs most, colon the rest, the sponge, 3+ watery motions = diarrhea */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 6.7), t3 = p(3, 13.4), t4 = p(4, 19), t5 = p(5, 23.2);
+  /* 1. open intestine; three inflows curve in; litre counter */
+  const it = base("H06", W * .18, H * .2, W * .64, H * .58, { label: "small intestine cut open, fluid inside" });
+  zin(it, 0); push(it, .8, t2, 1.06, -u * 3, 0);
+  const IN = [[K.amber, "FOOD", .22], [K.blue, "WATER", .45], [K.green, "JUICES", .68]];
+  IN.forEach(([c, l, x], i) => { const t = .6 + i * 1.4; draw(`M ${W * x} ${H * .04} C ${W * x} ${H * .2}, ${W * (x + .1)} ${H * .3}, ${W * .5} ${H * .46}`, c, t, .8, { head: true, w: u * .5 });
+    const pl = pill(l, c, W * (x - .04), H * .03); pop(pl, t, { y: -u * 2, opacity: 0 }, .45); out(pl, t2 - .3); });
+  const n = bigNum(W * .76, H * .3, 0, 9, 1.4, 3.5, K.blue, 10, (v) => "~" + Math.round(v) + " L");
+  const nl = pill("EVERY DAY", K.blue, W * .78, H * .46); pop(nl, 2, { y: u * 2, opacity: 0 }, .5);
+  /* 2. most goes back into the blood, the rest to the colon */
+  HD.clear(t2 - .3);
+  [n, nl].forEach((e) => out(e, t2 - .3));
+  push(it, t2 - .2, t3 - t2, 1.15, 0, -H * .03);
+  draw(`M ${W * .1} ${H * .2} L ${W * .9} ${H * .2}`, K.red, t2 + .2, 1, { w: u * 1 });
+  const bl = pill("INTO THE BLOOD", K.red, W * .4, H * .08); pop(bl, t2 + .4, { y: -u * 2, opacity: 0 }, .5);
+  flow(`M ${W * .3} ${H * .55} C ${W * .32} ${H * .4}, ${W * .36} ${H * .3}, ${W * .4} ${H * .2}`, 14, K.blue, t2 + .3, t3, { r: u * .7, speed: .5, jit: 8 });
+  flow(`M ${W * .6} ${H * .55} C ${W * .62} ${H * .4}, ${W * .6} ${H * .3}, ${W * .64} ${H * .2}`, 12, K.blue, t2 + .5, t3, { r: u * .7, speed: .5, jit: 8 });
+  const sm = card(`Small intestine <em>~80%</em><span class="te">చిన్న పేగు రక్తంలోకి పీల్చుకుంటుంది</span>`, W * .05, H * .66, { bar: true, c: K.blue }); pop(sm, t2 + .6, { y: u * 3, opacity: 0 }, .6, E.spring);
+  const lg = card(`Large intestine: <em>the rest</em><span class="te">మిగిలిన నీళ్లు పెద్ద పేగు</span>`, W * .56, H * .66, { bar: true, c: K.green }); pop(lg, t2 + 3, { y: u * 3, opacity: 0 }, .6, E.spring);
+  /* 3. the sponge: intestine steps left, sponge drinks the drops, firm stool tick */
+  HD.clear(t3 - .3);
+  [sm, lg, bl].forEach((e) => out(e, t3 - .3));
+  aside(it, t3 - .3, W * .03, H * .3, W * .26, H * .24, .5);
+  const sp = base("H07", W * .36, H * .1, W * .42, H * .7, { label: "sea sponge soaked with water" });
+  enter(sp, t3 - .2); float(sp, t3 + .8, u * .5, 3.2);
+  const sc = card(`Like a <em>sponge</em><span class="te">sponge లాగా అనుకోండి</span>`, W * .74, H * .12, { bar: true, c: K.blue }); pop(sc, t3 + .2, { x: u * 4, opacity: 0 }, .6, E.spring);
+  flow(`M ${W * .57} ${H * .02} L ${W * .57} ${H * .4}`, 6, K.blue, t3 + .4, t4, { r: u * 1, speed: .6, jit: 6, stop: .92 });
+  tick(W * .82, H * .5, u * 6, t3 + 3.4); const fm = pill("FIRM STOOL", K.green, W * .78, H * .6); pop(fm, t3 + 3.5, { y: u * 2, opacity: 0 }, .5);
+  /* 4. 3+ watery motions a day */
+  HD.clear(t4 - .3);
+  [sc, fm].forEach((e) => out(e, t4 - .3)); tl.to(sp, { opacity: .5, duration: .5 }, t4 - .3);
+  const th = bigNum(W * .66, H * .18, 0, 3, t4, 1.4, K.amber, 16, (v) => Math.floor(v) + "+");
+  [0, 1, 2].forEach((i) => { const d = icon("drop", K.amber, W * (.68 + i * .08), H * .48, u * 6); pop(d, t4 + .4 + i * .45, { scale: .3, opacity: 0 }, .5, E.spring); out(d, t5 - .3); });
+  const pd = pill("WATERY, EVERY DAY", K.amber, W * .67, H * .6); pop(pd, t4 + 1.6, { y: u * 2, opacity: 0 }, .5);
+  /* 5. definition card */
+  HD.clear(t5 - .3);
+  [th, pd].forEach((e) => out(e, t5 - .3)); out(sp, t5 - .3); tl.to(it, { opacity: 0, duration: .4 }, t5 - .3);
+  const g = base("H01", W * .55, H * .1, W * .4, H * .68, { label: "small + large intestine" }); zin(g, t5 - .2, .9); tl.to(g, { opacity: .45, duration: .5 }, t5 + .8);
+  const df = word(`Diarrhea<span class="te">విరేచనాలు = రోజుకి 3+ నీళ్ల motions</span>`, W * .08, H * .3, 10, { c: K.blue });
+  pop(df, t5 + .1, { y: u * 4, opacity: 0 }, .7, E.spring);
+  draw(`M ${W * .08} ${H * .45} L ${W * .45} ${H * .45}`, K.blue, t5 + .6, .6, { w: u * .8 });
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

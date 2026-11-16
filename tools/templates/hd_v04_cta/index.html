@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_v04_cta: danger signs? hospital when? (damaged lining, alarm), full details locked, comment ORS for the link */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 6.1), t3 = p(3, 10.4);
+  const dm = base("H13", W * .02, H * .26, W * .96, H * .38, { label: "damaged lining" }); zin(dm, 0); push(dm, .6, t2, 1.12, 0, 0);
+  const q1 = card(`When to go to <em>hospital</em>?<span class="te">వెంటనే hospital ఎప్పుడు?</span>`, W * .06, H * .05, { bar: true, c: K.red }); pop(q1, .2, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const q2 = card(`Which <em>danger signs</em>?<span class="te">ప్రాణాపాయ స్థితి</span>`, W * .06, H * .15, { bar: true, c: K.red }); pop(q2, 2.2, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const al = icon("alert", K.red, W * .4, H * .66, u * 18); pop(al, 3.2, { scale: .4, opacity: 0 }, .6, E.spring); ring(W * .5, H * .66 + u * 9, K.red, 3.4, { r: u * 20, n: 3 });
+  /* 2. full details locked behind the gut */
+  HD.clear(t2 - .3);
+  [q1, q2, al, dm].forEach((e) => out(e, t2 - .3));
+  const g = base("H01", W * .06, H * .26, W * .88, H * .38, { label: "small + large intestine" }); zin(g, t2 - .2); tl.to(g, { filter: "blur(6px)", opacity: .6, duration: .8 }, t2 + .6);
+  const lk = icon("shield", K.ink, W * .38, H * .36, u * 24); lk.querySelector("svg").innerHTML = '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>';
+  pop(lk, t2 + .8, { scale: .4, opacity: 0 }, .6, E.spring);
+  const fd = card(`Full <em>details</em><span class="te">దీని వెనుక full details</span>`, W * .1, H * .08, { bar: true, c: K.blue }); pop(fd, t2 + .3, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  /* 3. comment ORS */
+  HD.clear(t3 - .3);
+  [g, lk, fd].forEach((e) => out(e, t3 - .3));
+  const o = base("H04", W * .04, H * .3, W * .92, H * .34, { label: "ORS sachet + glass" }); zin(o, t3 - .2);
+  const cb = card(``, W * .08, H * .08, { c: K.blue, w: W * .84 }); cb.style.height = u * 16 + "px"; pop(cb, t3, { y: -u * 3, opacity: 0 }, .55, E.spring);
+  const ty = word("", W * .14, H * .08 + u * 4, 9, { c: K.blue }); ty.style.color = K.blue; const tt = { v: 0 };
+  tl.to(tt, { v: 3, duration: .9, ease: "none", onUpdate: () => { ty.textContent = "ORS".slice(0, Math.round(tt.v)); } }, t3 + .7);
+  const cm = icon("chat", K.blue, W * .7, H * .09, u * 12); pop(cm, t3 + .3, { scale: .4, opacity: 0 }, .5, E.spring);
+  const ln = pill("FULL VIDEO LINK", K.green, W * .22, H * .66, { solid: true }); pop(ln, t3 + 2.2, { y: u * 3, opacity: 0 }, .55, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

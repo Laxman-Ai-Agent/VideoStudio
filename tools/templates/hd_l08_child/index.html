@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l08_child: child warning signs: dry diaper 3 h, no tears, sunken soft spot, drowsy; NIH: one day can be fatal */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 4), t3 = p(3, 9.3);
+  const dp = base("H17", W * .06, H * .14, W * .44, H * .64, { label: "dry diaper + baby bottle" }); zin(dp, 0); push(dp, .8, t3, 1.08, u * 2, 0);
+  const kc = card(`In <em>children</em><span class="te">పిల్లల్లో అయితే</span>`, W * .05, H * .04, { bar: true, c: K.amber }); pop(kc, .1, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  /* clock ring sweeps 0 -> 3 h */
+  const s = HD.svg(), R = u * 7, cx = W * .62, cy = H * .26, C = 2 * Math.PI * R;
+  HD.el("circle", { cx, cy, r: R, fill: "#fff", stroke: "#E2E8F0", "stroke-width": u * 1.2 }, s);
+  const arc = HD.el("circle", { cx, cy, r: R, fill: "none", stroke: K.amber, "stroke-width": u * 1.2, "stroke-linecap": "round", transform: `rotate(-90 ${cx} ${cy})` }, s);
+  arc.style.strokeDasharray = C; arc.style.strokeDashoffset = C; tl.set(s, { opacity: 0 }, 0); tl.set(s, { opacity: 1 }, .4);
+  tl.to(arc.style, { strokeDashoffset: C * .75, duration: 1.6, ease: E.io }, .5);
+  const hr = word("3h+", cx - u * 4.5, cy - u * 2.6, 4.4, {}); hr.style.color = K.amber; pop(hr, .6, { scale: .5, opacity: 0 }, .5);
+  const S1 = card(`Dry diaper <span class="te" style="display:inline">diaper తడవకపోవడం</span>`, W * .72, H * .2, { c: K.amber }); pop(S1, 1.2, { x: u * 4, opacity: 0 }, .55, E.spring);
+  const tr = icon("drop", K.blue, W * .56, H * .46, u * 8); pop(tr, t2 - 1, { scale: .4, opacity: 0 }, .5, E.spring); nope(W * .56 + u * 4, H * .46 + u * 4, u * 5, t2 - .6);
+  const S2 = card(`No tears <span class="te" style="display:inline">కన్నీళ్లు రాకపోవడం</span>`, W * .66, H * .47, { c: K.amber }); pop(S2, t2 - .8, { x: u * 4, opacity: 0 }, .55, E.spring);
+  const bb = icon("baby", K.amber, W * .56, H * .64, u * 8); pop(bb, t2 + .4, { scale: .4, opacity: 0 }, .5, E.spring);
+  const S3 = card(`Sunken soft spot <span class="te" style="display:inline">తల మీద మెత్తటి భాగం</span>`, W * .66, H * .65, { c: K.amber }); pop(S3, t2 + .5, { x: u * 4, opacity: 0 }, .55, E.spring);
+  const zz = icon("zz", K.amber, W * .2, H * .64, u * 8); pop(zz, t2 + 2.6, { scale: .4, opacity: 0 }, .5, E.spring);
+  const S4 = card(`Very drowsy <span class="te" style="display:inline">మత్తుగా పడుకోవడం</span>`, W * .3, H * .65, { c: K.amber }); pop(S4, t2 + 2.7, { y: u * 3, opacity: 0 }, .55, E.spring);
+  [S1, S2, S3, S4].forEach((e) => tl.to(e, { borderColor: K.red, boxShadow: `0 0 0 ${u * .4}px ${K.red}`, duration: .25, yoyo: true, repeat: 1 }, t3 - .8));
+  /* NIH: 24 h countdown over the shrivelled cell */
+  HD.clear(t3 - .3);
+  [S1, S2, S3, S4, tr, bb, zz, hr, s, kc].forEach((e) => out(e, t3 - .3)); out(dp, t3 - .3);
+  const c = base("H15", W * .36, H * .1, W * .58, H * .66, { label: "dehydrated cell" }); zin(c, t3 - .2); push(c, t3 + .5, D - t3, 1.3, -W * .08, 0);
+  const s2 = HD.svg(), R2 = u * 11, x2 = W * .2, y2 = H * .4, C2 = 2 * Math.PI * R2;
+  HD.el("circle", { cx: x2, cy: y2, r: R2, fill: "#fff", stroke: "#FEE2E2", "stroke-width": u * 1.6 }, s2);
+  const a2 = HD.el("circle", { cx: x2, cy: y2, r: R2, fill: "none", stroke: K.red, "stroke-width": u * 1.6, "stroke-linecap": "round", transform: `rotate(-90 ${x2} ${y2})` }, s2);
+  a2.style.strokeDasharray = C2; tl.set(s2, { opacity: 0 }, 0); tl.set(s2, { opacity: 1 }, t3);
+  tl.fromTo(a2.style, { strokeDashoffset: 0 }, { strokeDashoffset: C2, duration: D - t3 - .4, ease: "none" }, t3 + .2);
+  const h24 = word("24h", x2 - u * 7, y2 - u * 4, 7, {}); h24.style.color = K.red; pop(h24, t3 + .1, { scale: .6, opacity: 0 }, .5, E.spring);
+  const ni = pill("NIH", K.ink, W * .14, H * .66); pop(ni, t3 + .5, { y: u * 2, opacity: 0 }, .5);
+  const fd = card(`Can be <em>fatal</em> in a day<span class="te">ఒక్క రోజులోనే ప్రాణం పోవచ్చు</span>`, W * .5, H * .06, { bar: true, c: K.red }); pop(fd, t3 + 1.6, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

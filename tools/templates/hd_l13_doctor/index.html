@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l13_doctor: see a doctor: adults > 2 days, children > 1 day, 6+ a day, high fever; red flags -> hospital route; IV drip, shock */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 4.5), t3 = p(3, 9.4), t4 = p(4, 14.3), t5 = p(5, 19.5);
+  const st = base("H23", W * .5, H * .12, W * .46, H * .64, { label: "stethoscope + thermometer" }); zin(st, 0); push(st, .8, t3, 1.08, u * 2, 0);
+  const R = [["Adults", "&gt; 2 days", "పెద్దవాళ్లకు", .1, 0], ["Children", "&gt; 1 day", "పిల్లలకు", .3, 2.1], ["Motions", "6+ a day", "రోజుకి", .5, t2]];
+  R.forEach(([a, b, te, y, t]) => { const c = card(`${a} <em>${b}</em><span class="te">${te}</span>`, W * .06, H * y, { bar: true, c: K.amber, w: W * .36 }); pop(c, t, { x: -u * 4, opacity: 0 }, .6, E.spring); out(c, t3 - .3); });
+  const th = HD.tank(W * .44, H * .14, W * .04, H * .4, "FEVER"); pop(th, t2 + 1.4, { y: u * 3, opacity: 0 }, .5); gsap.set(th.f, { height: 0 }); th.set(t2 + 1.6, .9, K.red, 1.4); out(th, t3 - .3);
+  const go = pill("SEE A DOCTOR", K.blue, W * .06, H * .7, { solid: true }); pop(go, t3 - 1.6, { y: u * 2, opacity: 0 }, .55, E.spring); out(go, t3 - .3);
+  /* red flags list over the damaged lining */
+  HD.clear(t3 - .3);
+  out(st, t3 - .3);
+  const dm = base("H13", W * .5, H * .1, W * .46, H * .68, { label: "damaged lining" }); zin(dm, t3 - .2); tl.to(dm, { filter: "saturate(1.2)", duration: .5 }, t3);
+  const F = [["Blood / pus in stool", t3 + .2], ["Black stool", t3 + 1.5], ["Vomits everything", t3 + 2.8], ["Severe belly pain", t4], ["Confusion", t4 + 1.4]];
+  const fs = F.map(([l, t], i) => { const c = card(`${l}`, W * .06, H * (.06 + i * .13), { bar: true, c: K.red, w: W * .38 }); pop(c, t, { x: -u * 5, opacity: 0 }, .45, E.spring);
+    ring(W * .06 + u * 2, H * (.06 + i * .13) + u * 3, K.red, t + .1, { r: u * 4, n: 1 }); return c; });
+  const hs = icon("hosp", K.red, W * .86, H * .66, u * 10); pop(hs, t4 + 2.4, { scale: .4, opacity: 0 }, .6, E.spring);
+  draw(`M ${W * .46} ${H * .6} C ${W * .6} ${H * .8}, ${W * .74} ${H * .8}, ${W * .85} ${H * .72}`, K.red, t4 + 2.4, .9, { head: true, dash: true, w: u * .5 });
+  const nd = pill("NO DELAY", K.red, W * .6, H * .84, { solid: true }); pop(nd, t4 + 3, { y: u * 2, opacity: 0 }, .5, E.spring);
+  /* IV drip and shock gauge */
+  HD.clear(t5 - .3);
+  [...fs, hs, nd, dm].forEach((e) => out(e, t5 - .3));
+  const iv = base("H24", W * .06, H * .06, W * .4, H * .74, { label: "IV fluid drip bag" }); zin(iv, t5 - .2); push(iv, t5 + .5, D - t5, 1.08, 0, H * .03);
+  flow(`M ${W * .26} ${H * .4} L ${W * .26} ${H * .6}`, 4, K.blue, t5 + .5, D, { r: u * .7, speed: .8, jit: 0 });
+  const ivc = card(`<em>IV fluids</em><span class="te">తీవ్రమైన dehydration లో</span>`, W * .5, H * .12, { bar: true, c: K.blue }); pop(ivc, t5 + .3, { x: u * 4, opacity: 0 }, .6, E.spring);
+  const sk = HD.tank(W * .58, H * .36, W * .3, H * .07, "RISK"); pop(sk, t5 + 1.6, { y: u * 2, opacity: 0 }, .5); gsap.set(sk.f, { height: "100%", width: "20%", background: K.amber }); sk.v.textContent = "";
+  tl.to(sk.f, { width: "96%", background: K.red, duration: 1.4, ease: E.io }, t5 + 2.2);
+  const sh = pill("SHOCK", K.red, W * .82, H * .5, { solid: true }); pop(sh, t5 + 3.4, { scale: .6, opacity: 0 }, .5, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l15_protect: prevention shield (soap, safe water, clean food, breastfeeding 6 months, rotavirus vaccine), recap, goal switch, no self-medication, share, comment */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 5.8), t3 = p(3, 12), t4 = p(4, 17.3), t5 = p(5, 22.5), t6 = p(6, 29.3), t7 = p(7, 36.4);
+  const so = base("H11", W * .56, H * .14, W * .38, H * .6, { label: "bar of soap with foam" }); zin(so, 0);
+  const sim = word(`Prevention is <em>simple</em>`, W * .06, H * .06, 5.6, { c: K.green }); pop(sim, .2, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const shd = HD.svg(); const spth = HD.el("path", { d: `M ${W * .28} ${H * .2} L ${W * .4} ${H * .25} L ${W * .4} ${H * .46} C ${W * .4} ${H * .62}, ${W * .32} ${H * .7}, ${W * .28} ${H * .74} C ${W * .24} ${H * .7}, ${W * .16} ${H * .62}, ${W * .16} ${H * .46} L ${W * .16} ${H * .25} Z`, fill: "#ECFDF5", stroke: K.green, "stroke-width": u * .6 }, shd);
+  const SL = spth.getTotalLength(); spth.style.strokeDasharray = SL; spth.style.strokeDashoffset = SL; tl.set(shd, { opacity: 0 }, 0); tl.set(shd, { opacity: 1 }, .4); tl.to(spth.style, { strokeDashoffset: SL * .5, duration: 1, ease: E.io }, .4);
+  const P1 = [["soap", "SOAP", .9], ["glass", "SAFE WATER", 2.4], ["plate", "CLEAN FOOD", 3.8]];
+  const parts = P1.map(([k, l, t], i) => { const ic = icon(k, K.green, W * .24, H * (.3 + i * .12), u * 6); pop(ic, t, { scale: .3, opacity: 0, x: -u * 6 }, .55, E.spring);
+    const pl = pill(l, K.green, W * .43, H * (.31 + i * .12)); pop(pl, t + .1, { x: u * 3, opacity: 0 }, .45); return pl; });
+  /* 2. breastfeeding + vaccine complete the shield */
+  out(so, t2 - .3);
+  const v = base("H26", W * .56, H * .14, W * .38, H * .6, { label: "oral rotavirus vaccine vial" }); zin(v, t2 - .2);
+  tl.to(spth.style, { strokeDashoffset: 0, duration: 1.2, ease: E.io }, t2);
+  const bf = pill("BREASTFEED 6 MONTHS", K.green, W * .43, H * .67); pop(bf, t2 + .3, { x: u * 3, opacity: 0 }, .45);
+  const vx = pill("ROTAVIRUS VACCINE", K.green, W * .43, H * .79, { solid: true }); pop(vx, t2 + 2.6, { x: u * 3, opacity: 0 }, .45, E.spring);
+  tl.to(spth, { attr: { fill: "#A7F3D0" }, duration: .6 }, t2 + 3.6); ring(W * .28, H * .46, K.green, t2 + 3.8, { r: u * 18, n: 2 });
+  /* 3. recap: water + salts are the real danger */
+  HD.clear(t3 - .3);
+  [sim, shd, ...parts, bf, vx, v].forEach((e) => out(e, t3 - .3));
+  P1.forEach((_, i) => {}); const ics = [...document.querySelectorAll(".hd-ic")].slice(-3); ics.forEach((e) => out(e, t3 - .3));
+  const dr = base("H02", W * .54, H * .1, W * .4, H * .68, { label: "water droplet + salt crystals" }); zin(dr, t3 - .2);
+  const dd = word(`<span style="text-decoration:line-through;color:#94A3B8">Diarrhea</span>`, W * .06, H * .16, 5, {}); pop(dd, t3, { y: u * 2, opacity: 0 }, .5);
+  const rl = word(`Water + <em>salts</em> lost<span class="te">ఇదే అసలు ప్రమాదం</span>`, W * .06, H * .3, 7, { c: K.red }); pop(rl, t3 + 1.6, { y: u * 3, opacity: 0 }, .6, E.spring);
+  /* 4. goal switch */
+  HD.clear(t4 - .3);
+  [dd, rl, dr].forEach((e) => out(e, t4 - .3));
+  const o = base("H04", W * .58, H * .1, W * .36, H * .68, { label: "ORS sachet + glass" }); zin(o, t4 - .2);
+  const g1 = card(`Stop the motions<span class="te">బలవంతంగా ఆపడం</span>`, W * .06, H * .2, { bar: true, c: K.red, w: W * .42 }); pop(g1, t4, { x: -u * 4, opacity: 0 }, .5);
+  nope(W * .06 + u * 4, H * .2 + u * 4, u * 3.4, t4 + 1.2); tl.to(g1, { x: -W * .5, opacity: 0, duration: .6, ease: E.out }, t4 + 2.2);
+  const g2 = card(`<em>Give the water back</em><span class="te">పోయిన నీళ్లను తిరిగి ఇవ్వడం</span>`, W * .06, H * .2, { bar: true, c: K.green, w: W * .42 }); pop(g2, t4 + 2.5, { x: u * 6, opacity: 0 }, .6, E.spring); tick(W * .44, H * .26, u * 5, t4 + 3);
+  /* 5. no self-medication, see a doctor */
+  HD.clear(t5 - .3);
+  [g1, g2, o].forEach((e) => out(e, t5 - .3));
+  const st = base("H23", W * .56, H * .12, W * .4, H * .64, { label: "stethoscope" }); zin(st, t5 - .2);
+  const pi = icon("pill", K.red, W * .1, H * .14, u * 10); pop(pi, t5 + .4, { scale: .4, opacity: 0 }, .5, E.spring); nope(W * .1 + u * 5, H * .14 + u * 5, u * 7, t5 + 1);
+  const sm = card(`No self-medication<span class="te">సొంతంగా antibiotics, tablets వద్దు</span>`, W * .24, H * .16, { bar: true, c: K.red }); pop(sm, t5 + .8, { x: u * 4, opacity: 0 }, .55, E.spring);
+  draw(`M ${W * .12} ${H * .5} C ${W * .26} ${H * .6}, ${W * .4} ${H * .6}, ${W * .54} ${H * .46}`, K.blue, t5 + 3, .9, { head: true, w: u * .6 });
+  const dg = pill("DANGER SIGNS -> DOCTOR", K.blue, W * .08, H * .62, { solid: true }); pop(dg, t5 + 3.4, { y: u * 2, opacity: 0 }, .5, E.spring);
+  /* 6. share: hearts fly to the family */
+  HD.clear(t6 - .3);
+  [pi, sm, dg, st].forEach((e) => out(e, t6 - .3));
+  const sh = base("H03", W * .06, H * .14, W * .3, H * .6, { label: "child shoes" }); zin(sh, t6 - .2);
+  const sr = icon("share", K.blue, W * .44, H * .3, u * 10); pop(sr, t6 + .2, { scale: .4, opacity: 0 }, .55, E.spring);
+  [.62, .74, .86].forEach((x, i) => { const pp = icon("person", K.ink, W * x, H * .22, u * 8); pop(pp, t6 + .6 + i * .2, { scale: .4, opacity: 0 }, .5, E.spring);
+    const h = icon("heart", K.red, W * .46, H * .32, u * 5); tl.fromTo(h, { opacity: 0 }, { opacity: 1, duration: .2, immediateRender: true }, t6 + 1.4 + i * .3); tl.to(h, { left: W * (x + .01), top: H * .38, duration: .8, ease: E.io }, t6 + 1.4 + i * .3); });
+  const sv = card(`It can <em>save a life</em><span class="te">ఒక ప్రాణాన్ని కాపాడొచ్చు</span>`, W * .44, H * .54, { bar: true, c: K.green }); pop(sv, t6 + 3.4, { y: u * 3, opacity: 0 }, .6, E.spring);
+  /* 7. outro: the gut, comment bubble, like */
+  HD.clear(t7 - .3);
+  tl.to([...document.querySelectorAll("#stage > *")], { opacity: 0, duration: .4 }, t7 - .3);
+  const g = base("H01", W * .3, H * .08, W * .4, H * .72, { label: "small + large intestine" }); zin(g, t7 - .1); tl.to(g, { rotation: 4, duration: D - t7, ease: "none" }, t7);
+  const cm = icon("chat", K.blue, W * .08, H * .16, u * 10); pop(cm, t7 + .3, { scale: .4, opacity: 0 }, .55, E.spring);
+  const cq = card(`What do <em>you</em> do first?<span class="te">comments లో చెప్పండి</span>`, W * .08, H * .36, { bar: true, c: K.blue }); pop(cq, t7 + .5, { y: u * 3, opacity: 0 }, .6, E.spring);
+  const lk = icon("like", K.blue, W * .8, H * .3, u * 10); pop(lk, D - 2.4, { scale: .3, opacity: 0 }, .6, E.spring);
+  const hd = word(`Health <em>Decode</em>`, W * .7, H * .5, 4.4, { c: K.blue }); pop(hd, D - 2, { y: u * 2, opacity: 0 }, .6, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

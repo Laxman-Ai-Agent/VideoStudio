@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l09_turn: turning point: how to give water back (colour returns), subscribe card, doubt: water bounces off the gut wall */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 4.1), t3 = p(3, 8.4);
+  const o = base("H04", W * .3, H * .08, W * .4, H * .72, { label: "ORS sachet + glass" });
+  tl.fromTo(o, { filter: "grayscale(1)", opacity: 0, scale: 1.08 }, { filter: "grayscale(0)", opacity: 1, scale: 1, duration: 1.8, ease: E.io, immediateRender: true }, 0);
+  const q = card(`How to give it <em>back</em>?<span class="te">పోయిన నీళ్లను తిరిగి ఎలా ఇవ్వాలి?</span>`, W * .05, H * .12, { bar: true, c: K.green }); pop(q, .3, { x: -u * 4, opacity: 0 }, .7, E.spring);
+  ring(W * .5, H * .44, K.green, t2 - 1, { r: u * 16, n: 2 });
+  const it = pill("THE INTERESTING PART", K.green, W * .66, H * .14, { solid: true }); pop(it, t2 - .9, { y: -u * 2, opacity: 0 }, .5, E.spring);
+  /* subscribe: the glass slides left, a channel card with like + bell */
+  HD.clear(t2 - .3);
+  [q, it].forEach((e) => out(e, t2 - .3)); aside(o, t2 - .3, W * .06, H * .12, W * .32, H * .62, 1);
+  const sc = card(`<em>Health Decode</em><span class="te">useful అనిపిస్తే subscribe చేయండి</span>`, W * .46, H * .24, { bar: true, c: K.blue }); pop(sc, t2, { x: u * 5, opacity: 0 }, .6, E.spring);
+  const lk = icon("like", K.blue, W * .48, H * .48, u * 9); pop(lk, t2 + 1, { scale: .3, opacity: 0 }, .6, E.spring); tl.to(lk, { y: -u * 2, duration: .2, yoyo: true, repeat: 1 }, t2 + 1.8);
+  const bl = icon("bell", K.amber, W * .6, H * .48, u * 9); pop(bl, t2 + 2, { scale: .3, opacity: 0 }, .6, E.spring); tl.to(bl, { rotation: 18, duration: .1, yoyo: true, repeat: 5 }, t2 + 2.7);
+  /* doubt: open gut, water drops bounce off the wall */
+  HD.clear(t3 - .3);
+  [sc, lk, bl].forEach((e) => out(e, t3 - .3)); out(o, t3 - .3);
+  const gt = base("H06", W * .14, H * .2, W * .72, H * .6, { label: "small intestine cut open" }); zin(gt, t3 - .2);
+  tl.to(gt, { filter: "saturate(.6)", duration: .6 }, t3);
+  [.35, .5, .65].forEach((x, i) => { const d = icon("drop", K.blue, W * x, H * .02, u * 6); tl.fromTo(d, { y: 0, opacity: 0 }, { y: H * .34, opacity: 1, duration: .55, ease: "power2.in", immediateRender: true }, t3 + .4 + i * .4);
+    tl.to(d, { y: H * .12, x: u * (i - 1) * 6, duration: .5, ease: "power2.out" }, t3 + .95 + i * .4); tl.to(d, { y: H * .5, opacity: 0, duration: .5, ease: "power2.in" }, t3 + 1.45 + i * .4); });
+  const dq = card(`Drinking water - <em>any use</em>?<span class="te">నీళ్లు తాగితే ఏం లాభం?</span>`, W * .3, H * .06, { center: true, c: K.amber }); pop(dq, t3 + .3, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "hd_l13_doctor",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "see a doctor: adults > 2 days, children > 1 day, 6+ a day, high fever; red flags -> hospital route; IV drip, shock"
+}

@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l07_dehydration: symptoms around the gut, 5-7 day recovery bar freezes, DEHYDRATION cells, warning-sign checklist */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 6.6), t3 = p(3, 11.1), t4 = p(4, 16.1), t5 = p(5, 20);
+  /* 1. symptom hotspots around the gut */
+  const g = base("H01", W * .3, H * .08, W * .4, H * .74, { label: "small + large intestine" }); zin(g, 0);
+  draw(`M ${W * .46} ${H * .4} a ${u * 4} ${u * 4} 0 1 1 ${u * 6} ${u * 2} a ${u * 2} ${u * 2} 0 1 1 ${-u * 3} ${-u}`, K.amber, .4, 1, { w: u * .5 });
+  const SY = [["PAIN", K.amber, .12, .2, "alert"], ["TOILET", K.amber, .72, .2, "clock"], ["VOMITING", K.red, .12, .52, "drop"], ["FEVER", K.red, .72, .52, "thermo"]];
+  const sy = SY.map(([l, c, x, y, k], i) => { const ic = icon(k, c, W * x, H * y, u * 7); const pl = pill(l, c, W * (x + .06), H * (y + .02));
+    pop(ic, .5 + i * 1.2, { scale: .4, opacity: 0 }, .5, E.spring); pop(pl, .6 + i * 1.2, { x: -u * 2, opacity: 0 }, .5); return [ic, pl]; }).flat();
+  /* 2. 5-7 days timeline, freezes amber on "but" */
+  HD.clear(t2 - .3);
+  sy.forEach((e) => out(e, t2 - .3)); aside(g, t2 - .3, W * .03, H * .22, W * .24, H * .44, .5);
+  const days = [...Array(7)].map((_, i) => { const d = card(`${i + 1}`, W * (.32 + i * .085), H * .36, { center: true, c: K.green, w: W * .07 }); pop(d, t2 + i * .22, { y: u * 2, opacity: 0 }, .4); return d; });
+  days.forEach((d, i) => tl.to(d, { background: i < 4 ? "#ECFDF5" : "#D1FAE5", borderColor: K.green, duration: .3 }, t2 + 1.4 + i * .15));
+  const nh = pill("NHS: 5-7 DAYS", K.green, W * .48, H * .22, { solid: true }); pop(nh, t2 + 1.2, { y: -u * 2, opacity: 0 }, .5);
+  days.forEach((d) => tl.to(d, { background: "#FEF3C7", duration: .3 }, t3 - .6));
+  /* 3. DEHYDRATION: plump vs shrivelled cell, water + salt drain */
+  HD.clear(t3 - .3);
+  [...days, nh].forEach((e) => out(e, t3 - .3)); out(g, t3 - .3);
+  const c = base("H15", W * .2, H * .18, W * .6, H * .6, { label: "hydrated cell vs dehydrated cell" }); zin(c, t3 - .2);
+  push(c, t3 + .6, t4 - t3, 1.12, -W * .05, 0);
+  const dh = word(`DEHYDRATION`, W * .25, H * .04, 8, {}); dh.style.color = K.red; pop(dh, t3 + .2, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  flow(`M ${W * .64} ${H * .46} C ${W * .74} ${H * .46}, ${W * .82} ${H * .5}, ${W * 1.04} ${H * .5}`, 12, K.blue, t3 + .8, t4, { r: u * .7, speed: .45, jit: 4 });
+  const ws = pill("WATER + SALTS LOST", K.red, W * .64, H * .7); pop(ws, t3 + 1.2, { y: u * 2, opacity: 0 }, .5);
+  /* 4-5. warning signs checklist beside the urine cups */
+  HD.clear(t4 - .3);
+  [dh, ws, c].forEach((e) => out(e, t4 - .3));
+  const u2 = base("H16", W * .05, H * .14, W * .42, H * .62, { label: "pale vs dark urine cups" }); enter(u2, t4 - .2, -W * .06);
+  push(u2, t4 + .6, 2.4, 1.12, u * 3, 0);
+  const L = [["Thirst", "బాగా దాహం", t4 + .1], ["Dry mouth", "నోరు ఎండిపోవడం", t4 + 1.2], ["Dark urine", "ముదురు రంగు urine", t4 + 2.4], ["Dizziness", "కళ్లు తిరగడం", t5 + .2], ["Sunken eyes", "కళ్లు లోపలికి", t5 + 1.4]];
+  L.forEach(([en, te, t], i) => { const y = H * (.08 + i * .13); const cd = card(`${en} <span class="te" style="display:inline;margin-left:.6em">${te}</span>`, W * .56, y, { c: K.amber, w: W * .38 });
+    pop(cd, t, { x: u * 4, opacity: 0 }, .5, E.spring); tick(W * .56 + u * 3, y + u * 3.2, u * 3, t + .3, K.amber); });
+  ring(W * .3, H * .5, K.amber, t4 + 2.6, { r: u * 8, n: 2 });
+  const wb = pill("WARNING SIGNS", K.red, W * .12, H * .04, { solid: true }); pop(wb, t5 + 2.4, { x: -u * 4, opacity: 0 }, .55, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

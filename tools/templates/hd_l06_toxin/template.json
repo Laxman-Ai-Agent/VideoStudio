@@ -1,0 +1,8 @@
+{
+ "name": "hd_l06_toxin",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks", "kit": "decode_kit"},
+ "description": "L06 toxins reverse water flow (cholera), wall damage with bleeds, other causes: antibiotics, lactose intolerance, IBS"
+}

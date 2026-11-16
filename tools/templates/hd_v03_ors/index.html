@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_v03_ors: salt + sugar right ratio through the transporter, ORS main treatment, juice / fizzy worsen, keep eating + breastfeeding */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 5.1), t3 = p(3, 10.6), t4 = p(4, 16.4);
+  const m = base("H18", W * .02, H * .26, W * .96, H * .38, { label: "transporter, salt + sugar" }); zin(m, 0); push(m, .8, t2, 1.25, 0, 0);
+  const sa = pill("SALT", K.ink, W * .1, H * .14); pop(sa, 1.4, { x: -u * 3, opacity: 0 }, .5, E.spring);
+  const su = pill("SUGAR", K.amber, W * .5, H * .14); pop(su, 2.6, { x: u * 3, opacity: 0 }, .5, E.spring);
+  const rt = card(`Right <em>ratio</em><span class="te">సరైన నిష్పత్తి</span>`, W * .1, H * .04, { bar: true, c: K.amber }); pop(rt, 3.4, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  flow(`M ${W * .1} ${H * .42} C ${W * .4} ${H * .4}, ${W * .5} ${H * .44}, ${W * .55} ${H * .62}`, 12, K.blue, 2.8, t2, { r: u * 1.1, speed: .5, jit: 3 });
+  /* 2. ORS */
+  HD.clear(t2 - .3);
+  [sa, su, rt, m].forEach((e) => out(e, t2 - .3));
+  const o = base("H04", W * .04, H * .28, W * .92, H * .36, { label: "ORS sachet + glass" }); zin(o, t2 - .2, .9);
+  const ors = word(`ORS`, W * .26, H * .06, 22, { c: K.blue }); ors.style.color = K.blue; pop(ors, t2 + 1.4, { y: u * 4, opacity: 0, scale: .9 }, .7, E.spring);
+  const mt = pill("MAIN TREATMENT", K.green, W * .22, H * .65, { solid: true }); pop(mt, t2 + 3.2, { y: u * 3, opacity: 0 }, .55, E.spring);
+  ring(W * .5, H * .46, K.green, t2 + .4, { r: u * 30, n: 2 });
+  /* 3. juices and fizzy drinks */
+  HD.clear(t3 - .3);
+  [ors, mt, o].forEach((e) => out(e, t3 - .3));
+  const d = base("H19", W * .02, H * .28, W * .96, H * .36, { label: "juice, cola, glucose water, ORS" }); zin(d, t3 - .2);
+  [.14, .34, .52].forEach((x, i) => nope(W * x, H * .46, u * 8, t3 + .6 + i * .5));
+  const up = draw(`M ${W * .1} ${H * .2} L ${W * .4} ${H * .14} L ${W * .55} ${H * .17} L ${W * .85} ${H * .06}`, K.red, t3 + 2.6, .8, { head: true, w: u * 1 });
+  const mo = card(`<em>More</em> motions<span class="te">motions ఇంకా పెరుగుతాయి</span>`, W * .1, H * .66, { bar: true, c: K.red }); pop(mo, t3 + 3, { y: u * 3, opacity: 0 }, .55, E.spring);
+  /* 4. keep eating */
+  HD.clear(t4 - .3);
+  [d, up, mo].forEach((e) => out(e, t4 - .3));
+  const k = base("H21", W * .04, H * .28, W * .92, H * .36, { label: "khichdi, banana, curd" }); zin(k, t4 - .2);
+  const ke = card(`Keep <em>eating</em><span class="te">తినడం ఆపకూడదు</span>`, W * .08, H * .06, { bar: true, c: K.green }); pop(ke, t4 + .2, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const bf = card(`Keep <em>breastfeeding</em><span class="te">తల్లిపాలు అస్సలు ఆపకూడదు</span>`, W * .08, H * .16, { bar: true, c: K.green }); pop(bf, t4 + 2.6, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  tick(W * .84, H * .1, u * 8, t4 + .6);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "hd_l07_dehydration",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "symptoms around the gut, 5-7 day recovery bar freezes, DEHYDRATION cells, warning-sign checklist"
+}

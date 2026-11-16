@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l11_substitutes: juice / cola / glucose water vs ORS split (salt balance scale), juice worsens diarrhea, zinc 10-14 days, -25% days -30% stool */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 7.3), t3 = p(3, 12.8), t4 = p(4, 17.9);
+  const b = base("H19", W * .06, H * .12, W * .88, H * .62, { label: "juice, cola, glucose water | ORS sachet + glass" }); zin(b, 0, 1.05);
+  draw(`M ${W * .58} ${H * .12} L ${W * .58} ${H * .76}`, "#CBD5E1", .5, .5, { w: u * .3 });
+  [.16, .3, .44].forEach((x, i) => nope(W * x, H * .42, u * 5.5, 1 + i * .6));
+  const ns = pill("NOT A SUBSTITUTE", K.red, W * .2, H * .78, { solid: true }); pop(ns, 2.4, { y: u * 2, opacity: 0 }, .5, E.spring);
+  tick(W * .76, H * .42, u * 8, 2.8); const ok = pill("ORS", K.green, W * .72, H * .78, { solid: true }); pop(ok, 2.9, { y: u * 2, opacity: 0 }, .5, E.spring);
+  /* balance beams: wrong on the left, level on the right */
+  const beam = (x, ang, c, t) => { const e = HD.svg(), y = H * .08; HD.el("line", { x1: x - u * 7, y1: y, x2: x + u * 7, y2: y, stroke: c, "stroke-width": u * .6, "stroke-linecap": "round" }, e);
+    HD.el("path", { d: `M ${x} ${y} l ${-u * 2} ${u * 4} h ${u * 4} z`, fill: c }, e); tl.set(e, { opacity: 0 }, 0); tl.set(e, { opacity: 1 }, t);
+    tl.fromTo(e, { rotation: 0, svgOrigin: `${x} ${y}` }, { rotation: ang, svgOrigin: `${x} ${y}`, duration: .9, ease: E.spring }, t + .1); return e; };
+  beam(W * .3, -14, K.red, 4.4); beam(W * .76, 0, K.green, 4.6);
+  const sb = pill("SALT BALANCE", K.ink, W * .44, H * .02); pop(sb, 4.4, { y: -u * 2, opacity: 0 }, .45);
+  /* 2. juice + fizzy make it worse: zoom left, rising arrow */
+  HD.clear(t2 - .3);
+  [ns, ok, sb].forEach((e) => out(e, t2 - .3)); push(b, t2 - .2, .9, 1.35, W * .2, 0, E.io);
+  draw(`M ${W * .2} ${H * .66} L ${W * .36} ${H * .44} L ${W * .46} ${H * .5} L ${W * .62} ${H * .2}`, K.red, t2 + .4, 1, { head: true, w: u * .8 });
+  const wr = card(`<em>More</em> diarrhea<span class="te">విరేచనాలు ఇంకా ఎక్కువ</span>`, W * .66, H * .14, { bar: true, c: K.red }); pop(wr, t2 + 1, { x: u * 4, opacity: 0 }, .6, E.spring);
+  const nh = pill("NHS", K.ink, W * .66, H * .38); pop(nh, t2 + 1.3, { y: u * 2, opacity: 0 }, .45);
+  /* 3. zinc for children: calendar 10 -> 14 days */
+  HD.clear(t3 - .3);
+  [wr, nh].forEach((e) => out(e, t3 - .3)); out(b, t3 - .3);
+  const z = base("H20", W * .52, H * .12, W * .42, H * .62, { label: "zinc tablets blister pack" }); zin(z, t3 - .2); float(z, t3 + .8, u * .5, 3);
+  const zc = card(`<em>Zinc</em> for children<span class="te">doctor సలహాతో</span>`, W * .06, H * .1, { bar: true, c: K.green }); pop(zc, t3, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  const cells = [...Array(14)].map((_, i) => { const c = place(mk("div", "hd-p"), W * (.06 + (i % 7) * .055), H * (.36 + Math.floor(i / 7) * .1), u * 4.6, u * 4.6);
+    c.style.borderRadius = u + "px"; c.style.background = "#fff"; c.style.border = `${u * .25}px solid #CBD5E1`; tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: .2, immediateRender: true }, t3 + .3);
+    tl.to(c, { background: i < 10 ? K.green : "#A7F3D0", borderColor: K.green, duration: .2 }, t3 + .8 + i * .12); return c; });
+  const dd = pill("10-14 DAYS", K.green, W * .1, H * .6, { solid: true }); pop(dd, t3 + 2.4, { y: u * 2, opacity: 0 }, .5, E.spring);
+  /* 4. results: two bars shrink */
+  HD.clear(t4 - .3);
+  [zc, dd, ...cells].forEach((e) => out(e, t4 - .3));
+  const bar = (y, lab, pct, t) => { const e = place(mk("div", "hd-p"), W * .06, y, W * .4, u * 5); e.style.borderRadius = "99px"; e.style.background = K.blue; e.style.transformOrigin = "0 50%";
+    tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: .3, immediateRender: true }, t); tl.to(e, { scaleX: 1 - pct / 100, background: K.green, duration: 1.2, ease: E.io }, t + .4);
+    const l = card(lab, W * .06, y - u * 8.5, { c: K.green }); pop(l, t, { y: u * 2, opacity: 0 }, .5); const n = bigNum(W * .36, y - u * 1.5, 0, pct, t + .4, 1.2, K.green, 6, (v) => "-" + Math.round(v) + "%"); return [e, l, n]; };
+  bar(H * .3, `Days of diarrhea`, 25, t4); bar(H * .58, `Stool volume`, 30, t4 + 2.4);
+  const wo = pill("WHO", K.ink, W * .06, H * .74); pop(wo, t4 + 3.6, { y: u * 2, opacity: 0 }, .45);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

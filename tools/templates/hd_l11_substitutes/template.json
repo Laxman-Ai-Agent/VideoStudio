@@ -1,0 +1,13 @@
+{
+ "name": "hd_l11_substitutes",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "juice / cola / glucose water vs ORS split (salt balance scale), juice worsens diarrhea, zinc 10-14 days, -25% days -30% stool"
+}

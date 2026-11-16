@@ -1,0 +1,13 @@
+{
+ "name": "hd_v04_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 9x16; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "danger signs? hospital when? (damaged lining, alarm), full details locked, comment ORS for the link"
+}

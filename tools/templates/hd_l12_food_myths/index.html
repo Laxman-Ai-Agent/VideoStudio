@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l12_food_myths: myth: stop eating (wrong), keep eating + breastfeeding, avoid spicy oily food, antibiotics myth -> fact, cholera filter, no anti-diarrhea tablets under 12 */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 6.4), t3 = p(3, 10.5), t4 = p(4, 15.5), t5 = p(5, 19.7), t6 = p(6, 24.7);
+  const r = base("H05", W * .1, H * .14, W * .8, H * .6, { label: "rice plate, milk, tablet strip, soft drink" }); zin(r, 0, 1.05);
+  const my = card(`Stop eating?<span class="te">తినడం ఆపేయాలి?</span>`, W * .36, H * .04, { center: true, c: K.amber }); pop(my, .4, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const wr = word(`WRONG`, W * .38, H * .4, 9, {}); wr.style.color = K.red; wr.style.border = `${u * .6}px solid ${K.red}`; wr.style.padding = `${u}px ${u * 3}px`; wr.style.borderRadius = u * 1.4 + "px"; wr.style.background = "#fff";
+  tl.fromTo(wr, { scale: 1.6, rotation: -12, opacity: 0 }, { scale: 1, rotation: -6, opacity: 1, duration: .45, ease: E.pop, immediateRender: true }, t2 - 1.2);
+  /* 2. keep eating, breastfeeding */
+  HD.clear(t2 - .3);
+  [my, wr].forEach((e) => out(e, t2 - .3)); out(r, t2 - .3, { y: H * .1 });
+  const k = base("H21", W * .44, H * .1, W * .5, H * .68, { label: "khichdi bowl, banana, curd" }); zin(k, t2 - .2); push(k, t2 + .6, t3 - t2 + 1, 1.06, -u * 2, 0);
+  const ke = card(`Keep <em>eating</em><span class="te">తినడం continue చేయాలి</span>`, W * .06, H * .12, { bar: true, c: K.green }); pop(ke, t2, { x: -u * 4, opacity: 0 }, .6, E.spring); tick(W * .36, H * .18, u * 5, t2 + .5);
+  const ht = icon("heart", K.red, W * .06, H * .38, u * 8); pop(ht, t2 + 1.6, { scale: .4, opacity: 0 }, .5, E.spring); tl.to(ht, { scale: 1.12, duration: .3, yoyo: true, repeat: 5 }, t2 + 2.2);
+  const bf = card(`Never stop <em>breastfeeding</em><span class="te">తల్లిపాలు ఆపకూడదు</span>`, W * .15, H * .38, { c: K.green }); pop(bf, t2 + 1.7, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  /* 3. avoid spicy, oily */
+  HD.clear(t3 - .3);
+  [ke, bf, ht].forEach((e) => out(e, t3 + .2)); aside(k, t3 + .2, W * .04, H * .5, W * .22, H * .28, .7);
+  const s = base("H22", W * .32, H * .08, W * .5, H * .66, { label: "spicy oily fried snacks" }); enter(s, t3 + .3); tl.to(s, { filter: "saturate(.5)", duration: .8 }, t3 + 2);
+  const av = pill("AVOID FOR A FEW DAYS", K.amber, W * .7, H * .2, { solid: true }); pop(av, t3 + 1, { x: u * 4, opacity: 0 }, .55, E.spring);
+  const oi = icon("drop", K.amber, W * .74, H * .32, u * 8); pop(oi, t3 + 1.3, { scale: .4, opacity: 0 }, .5, E.spring);
+  /* 4. antibiotics: MYTH flips to FACT */
+  HD.clear(t4 - .3);
+  [av, oi, s, k].forEach((e) => out(e, t4 - .3));
+  const c = base("H14", W * .48, H * .1, W * .46, H * .66, { label: "antibiotic capsules + milk" }); zin(c, t4 - .2);
+  const mt = card(`<em>MYTH</em><span class="te">ప్రతి విరేచనానికి antibiotics</span>`, W * .06, H * .16, { bar: true, c: K.amber, w: W * .38 }); pop(mt, t4, { x: -u * 4, opacity: 0 }, .55, E.spring);
+  tl.to(mt, { rotationX: 90, duration: .3, ease: E.out }, t4 + 2.2);
+  const fc = card(`<em>FACT</em><span class="te">చాలా cases లో అవసరం లేదు</span>`, W * .06, H * .16, { bar: true, c: K.green, w: W * .38 }); tl.fromTo(fc, { rotationX: -90, opacity: 0 }, { rotationX: 0, opacity: 1, duration: .35, ease: E.in, immediateRender: true }, t4 + 2.5);
+  /* 5. only specific causes: funnel -> cholera, doctor */
+  HD.clear(t5 - .3);
+  out(fc, t5 - .3);
+  const fn = icon("funnel", K.blue, W * .14, H * .14, u * 12); pop(fn, t5, { scale: .4, opacity: 0 }, .5, E.spring);
+  dots(W * .08, H * .06, 8, 1, u * 3.4, u * .8, "#94A3B8").forEach((d, i) => { tl.fromTo(d, { opacity: 0 }, { opacity: 1, duration: .2, immediateRender: true }, t5 + .1); tl.to(d, { left: W * .2, top: H * .34, opacity: i ? 0 : 1, background: i ? "#94A3B8" : K.red, duration: .8, ease: E.in }, t5 + .6 + i * .05); out(d, t6 - .3); });
+  const chc = card(`Cholera-like causes<span class="te">doctor మాత్రమే ఇస్తారు</span>`, W * .06, H * .42, { bar: true, c: K.blue }); pop(chc, t5 + 1.4, { y: u * 3, opacity: 0 }, .55, E.spring);
+  /* 6. motion-stopping tablets: not under 12 */
+  HD.clear(t6 - .3);
+  [fn, chc, c].forEach((e) => out(e, t6 - .3));
+  const r2 = base("H05", W * .3, H * .1, W * .64, H * .6, { label: "tablet strip" }); zin(r2, t6 - .2); push(r2, t6 + .2, .8, 1.5, -W * .06, 0, E.io);
+  const ag = word(`&lt; 12`, W * .06, H * .14, 11, {}); ag.style.color = K.red; pop(ag, t6 + .6, { scale: .5, opacity: 0 }, .6, E.spring);
+  nope(W * .62, H * .44, u * 9, t6 + 1);
+  const ag2 = card(`No anti-diarrhea tablets<span class="te">12 ఏళ్ల లోపు పిల్లలకు ఇవ్వకూడదు</span>`, W * .06, H * .36, { bar: true, c: K.red }); pop(ag2, t6 + 1.2, { y: u * 3, opacity: 0 }, .55, E.spring);
+  const dq = pill("WHEN TO SEE A DOCTOR?", K.blue, W * .06, H * .62, { solid: true }); pop(dq, D - 2.2, { x: -u * 4, opacity: 0 }, .55, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

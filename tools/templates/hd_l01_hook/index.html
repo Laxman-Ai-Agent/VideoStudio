@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS L01 (0-17 s, plan scenes 01-04): why diarrhea? food / water / germs into the gut -> water + salts drain out -> danger.
+   H01 gut render big at centre, question card springs up; camera pushes into the upper loop while a dashed water path and red germs
+   enter it; the gut slides left and shrinks, H02 (droplet + salt) arrives right, particles stream out of the frame; a tank gauge drains
+   blue -> amber -> red and a danger card lands on the last word. */
+.ic { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px #0F172A1f; border: 3px solid var(--c); }
+.ic svg { width: 56%; height: 56%; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, dots } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const tFo = at("food", 2.4), tWa = at("water", 4.2), tGe = at("germ", 6.4), tBo = at("body", 9.4), tSa = at("salt", 11.2),
+        tOu = at("out", 12.6), tBa = at("back", 13.5), tDa = at("danger", 15.2);
+
+  /* 1. the gut, big and centred; question card springs up */
+  const g = base("H01", W * .26, H * .08, W * .48, H * .78, { label: "small + large intestine" });
+  tl.fromTo(g, { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.1, ease: E.soft2, immediateRender: true }, 0);
+  float(g, 1.1, u * .5, 3.6);
+  const q = card(`Why <em>diarrhea</em>?<span class="te">విరేచనాలు ఎందుకు వస్తాయి?</span>`, W * .05, H * .12, { bar: true, c: K.blue });
+  pop(q, .25, { y: u * 4, opacity: 0, scale: .9 }, .8, E.spring);
+  const ico = (svg, c, x, y, s) => { const e = place(mk("div", "ic", undefined, svg), x, y); e.style.setProperty("--c", c); e.style.setProperty("--s", s + "px"); return e; };
+  const plate = ico(`<svg viewBox="0 0 24 24" fill="none" stroke="${K.amber}" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/></svg>`, K.amber, W * .76, H * .16, u * 9);
+  pop(plate, tFo, { scale: .3, opacity: 0 }, .7, E.spring);
+  const pFo = pill("FOOD", K.amber, W * .765, H * .33); pop(pFo, tFo + .15, { y: u * 2, opacity: 0 }, .5);
+  const glass = ico(`<svg viewBox="0 0 24 24" fill="none" stroke="${K.blue}" stroke-width="2"><path d="M6 4h12l-1.5 16h-9z"/><path d="M7 10h10"/></svg>`, K.blue, W * .76, H * .44, u * 9);
+  pop(glass, tWa, { scale: .3, opacity: 0 }, .7, E.spring);
+  const pWa = pill("WATER", K.blue, W * .76, H * .61); pop(pWa, tWa + .15, { y: u * 2, opacity: 0 }, .5);
+
+  /* 2. push into the upper loop: dashed water path from the glass into the gut, germs ride it */
+  push(g, tWa - .3, 3.6, 1.22, -W * .03, H * .05);
+  const wp = draw(`M ${W * .76} ${H * .52} C ${W * .66} ${H * .5}, ${W * .6} ${H * .34}, ${W * .5} ${H * .32}`, K.blue, tWa + .1, .9, { dash: true, head: true });
+  const pGe = pill("GERMS", K.red, W * .62, H * .2, { solid: true }); pop(pGe, tGe, { scale: .6, opacity: 0 }, .6, E.spring);
+  const gf = flow(`M ${W * .76} ${H * .52} C ${W * .66} ${H * .5}, ${W * .6} ${H * .34}, ${W * .5} ${H * .32}`, 7, K.red, tGe, tBo - .4, { once: true, r: u * .9 });
+  ring(W * .5, H * .32, K.red, tGe + 1.0, { r: u * 7, n: 3 });
+
+  /* 3. the gut steps aside; droplet + salt arrive; water and salts stream out of the body */
+  [q, plate, pFo, glass, pWa, pGe, wp, gf].forEach((e) => out(e, tBo - .5, { y: -u * 2 }));
+  tl.to(g, { left: W * .03, top: H * .3, width: W * .24, height: H * .39, scale: 1, x: 0, y: 0, opacity: .55, duration: 1, ease: E.io }, tBo - .5);
+  const dr = base("H02", W * .3, H * .1, W * .42, H * .7, { label: "water droplet + salt crystals" });
+  tl.fromTo(dr, { x: W * .1, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: E.in, immediateRender: true }, tBo - .3);
+  push(dr, tBo + .7, D - tBo, 1.08, -u * 3, 0);
+  const pW = pill("నీళ్లు", K.blue, W * .36, H * .74); pop(pW, tBo + .4, { y: u * 2, opacity: 0 }, .55, E.spring);
+  const pS = pill("లవణాలు", K.amber, W * .54, H * .74); pop(pS, tSa, { y: u * 2, opacity: 0 }, .55, E.spring);
+  const stream = `M ${W * .5} ${H * .44} C ${W * .62} ${H * .44}, ${W * .7} ${H * .5}, ${W * 1.04} ${H * .46}`;
+  flow(stream, 18, K.blue, tOu - .2, D, { r: u * .8, speed: .35, jit: 3 });
+  flow(stream, 10, "#FFFFFF", tOu, D, { r: u * .6, speed: .3, jit: 3.5, ring: K.mute });
+  const pOut = pill("OUT OF THE BODY", K.red, W * .62, H * .3); pop(pOut, tOu + .1, { x: u * 3, opacity: 0 }, .55);
+
+  /* 4. the body's tank drains; danger card */
+  const tk = tank(W * .84, H * .2, W * .07, H * .46, "BODY WATER");
+  pop(tk, tOu + .2, { y: u * 3, opacity: 0 }, .7, E.soft2);
+  tk.set(tOu + .6, .62, K.amber, 1.6); tk.set(tDa - .4, .32, K.red, 1.2);
+  const dc = card(`<em>Life-threatening</em><span class="te">ప్రాణాపాయం కూడా రావచ్చు</span>`, W * .5, H * .06, { bar: true, c: K.red });
+  pop(dc, tDa, { y: -u * 3, opacity: 0, scale: .92 }, .7, E.spring);
+  ring(W * .875, H * .62, K.red, tDa + .2, { r: u * 6, n: 2 });
+  out(pOut, tDa - .3);
+  cam(0, Math.max(D, 1), 1.025);
+  X.done();
+</script></body></html>

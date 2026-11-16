@@ -1,0 +1,13 @@
+{
+ "name": "hd_l12_food_myths",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "myth: stop eating (wrong), keep eating + breastfeeding, avoid spicy oily food, antibiotics myth -> fact, cholera filter, no anti-diarrhea tablets under 12"
+}

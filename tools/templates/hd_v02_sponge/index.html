@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_v02_sponge: gut as a sponge pulls water into the blood, contaminated water + germs, toxins reverse the flow, severe dehydration 24 h */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 4.4), t3 = p(3, 9.9), t4 = p(4, 15.7);
+  const sp = base("H07", W * .06, H * .28, W * .88, H * .34, { label: "sea sponge" }); zin(sp, 0); float(sp, 1, u * .8, 3);
+  const h = word(`Gut = <em>sponge</em><span class="te">పేగులు sponge లాగా</span>`, W * .07, H * .07, 9, { c: K.blue }); pop(h, .1, { y: -u * 4, opacity: 0 }, .7, E.spring);
+  flow(`M ${W * .5} ${H * .62} L ${W * .5} ${H * .2}`, 10, K.blue, .8, t2, { r: u * 1.3, speed: .6, jit: 10 });
+  const bl = pill("INTO THE BLOOD", K.red, W * .28, H * .64, { solid: true }); pop(bl, 1.8, { y: u * 3, opacity: 0 }, .5, E.spring);
+  /* 2. contaminated water, germs */
+  HD.clear(t2 - .3);
+  [h, bl, sp].forEach((e) => out(e, t2 - .3));
+  const w = base("H08", W * .02, H * .26, W * .96, H * .36, { label: "murky water + street snack" }); zin(w, t2 - .2);
+  const g1 = pill("VIRUSES", K.red, W * .1, H * .14, { solid: true }); pop(g1, t2 + 2.2, { scale: .5, opacity: 0 }, .5, E.spring);
+  const g2 = pill("BACTERIA", K.red, W * .52, H * .14, { solid: true }); pop(g2, t2 + 2.9, { scale: .5, opacity: 0 }, .5, E.spring);
+  ring(W * .3, H * .44, K.red, t2 + 2.4, { r: u * 14, n: 3 });
+  /* 3. toxins reverse */
+  HD.clear(t3 - .3);
+  [g1, g2, w].forEach((e) => out(e, t3 - .3));
+  const c = base("H12", W * .02, H * .28, W * .96, H * .36, { label: "lining cells + toxins" }); zin(c, t3 - .2); push(c, t3 + .5, t4 - t3, 1.2, 0, 0);
+  const xs = [.25, .42, .58, .75];
+  const ins = xs.map((x, i) => draw(`M ${W * x} ${H * .22} L ${W * x} ${H * .4}`, K.blue, t3 + i * .1, .5, { head: true, w: u * 1 }));
+  ins.forEach((s) => out(s, t3 + 2.3));
+  const ou = xs.map((x, i) => draw(`M ${W * x} ${H * .4} L ${W * x} ${H * .22}`, K.red, t3 + 2.4 + i * .1, .5, { head: true, w: u * 1 }));
+  const rv = word(`REVERSE`, W * .1, H * .08, 13, {}); rv.style.color = K.red; pop(rv, t3 + 2.5, { scale: .7, opacity: 0 }, .6, E.spring);
+  /* 4. severe dehydration, 24 h */
+  HD.clear(t4 - .3);
+  [rv, c, ...ou].forEach((e) => out(e, t4 - .3));
+  const dp = base("H17", W * .04, H * .3, W * .92, H * .34, { label: "dry diaper + bottle" }); zin(dp, t4 - .2);
+  const sv = card(`Severe <em>dehydration</em><span class="te">పిల్లలకు ఒక్క రోజులోనే ప్రమాదం</span>`, W * .08, H * .06, { bar: true, c: K.red }); pop(sv, t4, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  const h24 = word("24h", W * .62, H * .2, 14, {}); h24.style.color = K.red; pop(h24, t4 + 1.4, { scale: .5, opacity: 0 }, .6, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

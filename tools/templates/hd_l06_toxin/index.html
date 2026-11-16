@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS L06 (1:50-2:14, plan scenes 22-25): toxins reverse the gut's water flow (cholera), other germs damage the wall
+   (blood), other causes (antibiotics, lactose intolerance, IBS). H12 enterocytes: blue arrows go INTO the cells, toxins pulse amber,
+   on "reverse" the arrows turn red and point out, water pours into the lumen. H13 damaged lining cross-fades in, red rings on the
+   bleeding spots. H13 moves left small, H14 (capsules + milk) enters right, three cause cards stack; lactose chain breaks. */
+.chain { position: absolute; display: flex; gap: 0; }
+.chain i { width: var(--s); height: var(--s); border: 3px solid #D97706; background: #fff; transform: rotate(30deg); border-radius: 22%; display: block; margin-right: calc(var(--s) * -.08); }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, nope, tick } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const tTo = at("tox", .9), tRe = at("rev", 3.7), tCh = at("chol", 6.6), tDm = at("dmg", 9.0), tBl = at("blood", 12.0),
+        tGe = at("germs", 13.5), tAn = at("anti", 14.6), tLa = at("lac", 16.3), tDi = at("dig", 18.9), tIb = at("ibs", 20.2);
+
+  /* 1. enterocytes: normal = water goes in */
+  const c1 = base("H12", W * .2, H * .12, W * .6, H * .72, { label: "intestinal lining cells (microvilli) + toxins" });
+  tl.fromTo(c1, { scale: 1.12, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, ease: E.soft2, immediateRender: true }, 0);
+  push(c1, .9, tCh - .9, 1.18, 0, H * .03);
+  const lumY = H * .2, cellY = H * .58;
+  const xs = [.34, .44, .54, .64];
+  const ins = xs.map((x, i) => draw(`M ${W * x} ${lumY} L ${W * x} ${cellY}`, K.blue, .5 + i * .12, .6, { head: true, w: u * .55 }));
+  const pIn = pill("WATER IN", K.blue, W * .06, H * .3); pop(pIn, .6, { x: -u * 3, opacity: 0 }, .55, E.spring);
+  const pTx = pill("TOXINS", K.amber, W * .76, H * .22, { solid: true }); pop(pTx, tTo, { scale: .6, opacity: 0 }, .6, E.spring);
+  [[.4, .5], [.58, .47], [.5, .62]].forEach(([x, y], i) => ring(W * x, H * y, K.amber, tTo + .2 + i * .25, { r: u * 4.5, n: 2 }));
+
+  /* reverse: blue arrows fade, red arrows point back out, water pours into the lumen */
+  ins.forEach((s) => out(s, tRe - .2, { duration: .3 }));
+  const outs = xs.map((x, i) => draw(`M ${W * x} ${cellY} L ${W * x} ${lumY}`, K.red, tRe + i * .1, .55, { head: true, w: u * .55 }));
+  const pOut = pill("WATER OUT", K.red, W * .06, H * .3, { solid: true });
+  out(pIn, tRe - .2); pop(pOut, tRe, { x: -u * 3, opacity: 0 }, .55, E.spring);
+  const rv = word(`REVERSE`, W * .055, H * .14, 6.4, { c: K.red }); rv.style.color = K.red;
+  pop(rv, tRe + .1, { y: u * 3, opacity: 0, scale: .9 }, .6, E.spring);
+  const wf = flow(`M ${W * .3} ${H * .19} C ${W * .45} ${H * .14}, ${W * .6} ${H * .22}, ${W * .78} ${H * .16}`, 16, K.blue, tRe + .5, tDm, { r: u * .8, speed: .4, jit: 3 });
+  const cc = card(`Cholera<span class="te">కలరా లో జరిగేది ఇదే</span>`, W * .7, H * .62, { bar: true, c: K.red });
+  pop(cc, tCh, { y: u * 3, opacity: 0 }, .7, E.spring);
+
+  /* 2. other germs damage the wall: cross-fade to the damaged lining, red rings on the bleeds */
+  [rv, pOut, pTx, cc, wf, ...outs].forEach((e) => out(e, tDm - .4, { y: -u * 2 }));
+  out(c1, tDm - .3, { duration: .7 });
+  const c2 = base("H13", W * .2, H * .1, W * .6, H * .74, { label: "damaged inflamed lining, small bleeds" });
+  tl.fromTo(c2, { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: .9, ease: E.io, immediateRender: true }, tDm - .3);
+  push(c2, tDm + .6, tGe - tDm, 1.12, -u * 2, 0);
+  const wd = card(`Wall <em>damage</em><span class="te">పేగు గోడ damage</span>`, W * .05, H * .14, { bar: true, c: K.red });
+  pop(wd, tDm, { x: -u * 4, opacity: 0 }, .7, E.spring);
+  [[.42, .46], [.56, .54], [.48, .62]].forEach(([x, y], i) => ring(W * x, H * y, K.red, tBl + i * .3, { r: u * 5, n: 3 }));
+  const pBl = pill("BLOOD IN STOOL", K.red, W * .64, H * .2, { solid: true }); pop(pBl, tBl + .2, { scale: .6, opacity: 0 }, .6, E.spring);
+
+  /* 3. not only germs: the lining steps left, capsules + milk arrive, three cause cards */
+  [wd, pBl].forEach((e) => out(e, tGe - .3));
+  tl.to(c2, { left: W * .03, top: H * .5, width: W * .22, height: H * .27, scale: 1, x: 0, opacity: .6, duration: .9, ease: E.io }, tGe - .3);
+  const pg = pill("NOT ONLY GERMS", K.ink, W * .04, H * .4); pop(pg, tGe, { y: u * 2, opacity: 0 }, .5);
+  const m = base("H14", W * .28, H * .12, W * .4, H * .62, { label: "antibiotic capsules + glass of milk" });
+  tl.fromTo(m, { x: W * .08, opacity: 0 }, { x: 0, opacity: 1, duration: .9, ease: E.in, immediateRender: true }, tGe - .1);
+  float(m, tGe + .8, u * .5, 3.4); push(m, tGe + .8, D - tGe, 1.05, 0, 0);
+  const cx = W * .7, cw = W * .26;
+  const a = card(`Antibiotics<span class="te">కొన్ని మందులు</span>`, cx, H * .1, { bar: true, c: K.amber, w: cw });
+  pop(a, tAn, { x: u * 5, opacity: 0 }, .65, E.spring);
+  const l = card(`Lactose <em>intolerance</em><span class="te">పాలలో చక్కెర digest కాదు</span>`, cx, H * .3, { bar: true, c: K.amber, w: cw });
+  pop(l, tLa, { x: u * 5, opacity: 0 }, .65, E.spring);
+  const ch = place(mk("div", "chain"), W * .46, H * .66); ch.style.setProperty("--s", u * 3.2 + "px"); ch.innerHTML = "<i></i><i></i><i></i><i></i>";
+  pop(ch, tLa + .4, { y: u * 2, opacity: 0 }, .5);
+  const links = [...ch.children];
+  tl.to(links.slice(2), { x: u * 2.6, rotation: 50, duration: .5, ease: E.pop }, tDi);
+  nope(W * .52 + u * 3, H * .66 + u * 1.6, u * 3.4, tDi + .2);
+  const ib = card(`IBS<span class="te">పేగు సమస్యలు</span>`, cx, H * .52, { bar: true, c: K.amber, w: cw });
+  pop(ib, tIb, { x: u * 5, opacity: 0 }, .65, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

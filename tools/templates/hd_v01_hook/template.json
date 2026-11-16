@@ -1,0 +1,13 @@
+{
+ "name": "hd_v01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10_Diarrhea_ORS 9x16; reuse only when the user asks",
+  "kit": "decode_kit"
+ },
+ "description": "hook: diarrhea does not kill, water + salts do (shrivelled cell), 4,44,000 counter over child shoes, home reflexes crossed out, drinks reverse"
+}

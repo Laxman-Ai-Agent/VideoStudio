@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l02_stakes: children lost every year (shoes + dot grid), three questions, ORS hero */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 7.3), t3 = p(3, 13.3);
+  /* 1. empty child shoes right, a field of dots fills, 1 in 3 turns red */
+  const sh = base("H03", W * .52, H * .12, W * .42, H * .66, { label: "empty child shoes" });
+  zin(sh, 0); push(sh, .8, t2, 1.08, -u * 2, 0);
+  const ds = dots(W * .07, H * .22, 12, 6, u * 3.4, u * .9, "#0F172A22");
+  ds.forEach((d, i) => tl.fromTo(d, { scale: 0 }, { scale: 1, duration: .3, ease: E.pop, immediateRender: true }, .3 + d.j * .12 + d.i * .02));
+  ds.filter((d, i) => i % 3 === 0).forEach((d, i) => tl.to(d, { background: K.red, duration: .25 }, 1.6 + i * .03));
+  const c1 = card(`<em>Lakhs</em> of children<span class="te">ప్రతి సంవత్సరం ప్రాణాలు కోల్పోతున్నారు</span>`, W * .06, H * .48, { bar: true, c: K.red });
+  pop(c1, 1.5, { y: u * 3, opacity: 0 }, .7, E.spring);
+  const qq = word(`<em>?</em>`, W * .44, H * .2, 12, { c: K.amber }); pop(qq, t2 - 2, { scale: .4, opacity: 0 }, .6, E.spring);
+  /* 2. three questions stack in from the right, the gut sits behind them */
+  HD.clear(t2 - .3);
+  [c1, qq, ...ds].forEach((e) => out(e, t2 - .4));
+  out(sh, t2 - .4, { x: W * .1 });
+  const g = base("H01", W * .04, H * .1, W * .44, H * .7, { label: "small + large intestine" });
+  enter(g, t2 - .3, -W * .06); tl.to(g, { opacity: .5, duration: .6 }, t2 + .6);
+  const Q = [["home", K.green, "What to do <em>at home</em>?", "ఇంట్లో ఏం చేయాలి?"], ["alert", K.amber, "Which <em>signs</em>?", "ఎలాంటి లక్షణాలు?"], ["hosp", K.red, "When to go to <em>hospital</em>?", "వెంటనే ఆస్పత్రికి ఎప్పుడు?"]];
+  const qs = Q.map(([k, c, en, te], i) => { const y = H * (.12 + i * .2); const ic = icon(k, c, W * .44, y, u * 8);
+    const cd = card(`${en}<span class="te">${te}</span>`, W * .53, y, { c }); pop(ic, t2 + i * 1.3, { scale: .4, opacity: 0 }, .6, E.spring);
+    pop(cd, t2 + .1 + i * 1.3, { x: u * 5, opacity: 0 }, .6, E.spring); return [ic, cd]; }).flat();
+  /* 3. ORS hero: glass centre, green halo, price tag, ORS letters */
+  HD.clear(t3 - .3);
+  [...qs].forEach((e) => out(e, t3 - .4, { x: u * 3 })); out(g, t3 - .4);
+  const o = base("H04", W * .3, H * .08, W * .4, H * .7, { label: "ORS sachet + glass" });
+  zin(o, t3 - .2, .9); push(o, t3 + .8, D - t3, 1.06, 0, 0);
+  ring(W * .5, H * .44, K.green, t3 + .3, { r: u * 18, n: 2 });
+  const ors = word(`ORS`, W * .07, H * .2, 14, { c: K.blue }); ors.style.color = K.blue;
+  pop(ors, t3 + .8, { y: u * 4, opacity: 0, scale: .9 }, .7, E.spring);
+  const pr = pill("LOW COST", K.green, W * .74, H * .24, { solid: true }); pop(pr, t3 + 1.6, { y: -u * 3, opacity: 0, rotation: -8 }, .7, E.spring);
+  const ic2 = icon("coin", K.green, W * .76, H * .34, u * 8); pop(ic2, t3 + 1.8, { scale: .4, opacity: 0 }, .6, E.spring);
+  const dt = card(`<em>In detail</em><span class="te">ఈ video లో చూద్దాం</span>`, W * .07, H * .5, { bar: true, c: K.blue });
+  pop(dt, D - 2.6, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>

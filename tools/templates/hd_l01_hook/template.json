@@ -1,0 +1,8 @@
+{
+ "name": "hd_l01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 10_Diarrhea_ORS 16x9; reuse only when the user asks", "kit": "decode_kit"},
+ "description": "L01 hook: H01 gut + question card, water path and germs into the gut, H02 droplet + salt streaming out, body-water tank drains to red"
+}

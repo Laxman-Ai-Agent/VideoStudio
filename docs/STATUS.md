@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-15. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
+Updated 2026-11-16. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
@@ -11,6 +11,12 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - Not verified by eye: animations / spinner / Play (the browser pane clock is paused when hidden); layer drag, resize, rotate were checked with the save request stubbed, so the full save -> rebuild -> reload round trip is untested by me.
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
+
+## 10_Diarrhea_ORS (2026-11-16) - 480p previews done ("Health Decode" light clinical mode)
+- Paired topic (diarrhea, ORS): `projects/10_Diarrhea_ORS/{16x9,9x16}`; 16x9 4 mp3s merged, voice chain 1.15x -> `<fmt>/audio.mp3` (+ input/audio.mp3 copy); align_mms -> `input/gemini_corrected.json`.
+- User brief = channel "Health Decode" (memory health-decode-mode): #F8FAFC studio, one 3D medical render per scene + 2D vector overlays. Plan `<fmt>/plan.md` (68 / 15 scenes, scripts/segment.py + make_plan.py), 26 Kaggle renders `assets/3d/Hxx.png` (prompts `work/kaggle_3d.json`, fixes `work/kaggle_3d_fix.json`).
+- New kit `tools/templates/decode_kit` (kit.js core + hd.js: base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum, clear). Sequences hd_l01..l15, hd_v01..v04; `scripts/make_sequences.py` (beats p1..pN = plan scene starts + word beats).
+- Previews `<fmt>/output/preview_<fmt>.mp4` QA PASS. Next: user notes -> finals only on the user's word; then DarkWorld. Lesson: never name a top-level const `top` (window.top) -> whole scene blank.
 
 ## 09_Sugar_Walk (2026-11-15) - finals done (healthcare mode)
 - Paired topic (blood sugar, walk after meals): `projects/09_Sugar_Walk/{16x9,9x16}`; inputs moved, 16x9 3 mp3s merged, 1.15x -> `<fmt>/input/audio.mp3`, align_mms -> `input/gemini_corrected.json`, transcripts done (`scripts/make_transcript.py`).

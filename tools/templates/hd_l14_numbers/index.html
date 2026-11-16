@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="kit.js"></script><script src="hd.js"></script>
+<style>/* 10_Diarrhea_ORS hd_l14_numbers: malnutrition <-> diarrhea vicious cycle, WHO: 3rd cause of under-5 deaths, 4,44,000 a year, India 2019 ~55,000, falling trend */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, tl, E, at, mk, place, pop, out, move, cam } = X;
+  const { K, float, bgl, base, push, card, pill, word, draw, ring, flow, tank, nope, tick, dots, icon, aside, enter, zin, bigNum } = HD;
+  document.documentElement.style.setProperty("--u", u + "px");
+  bgl();
+  const p = (i, d) => at("p" + i, d);
+
+  const t2 = p(2, 5.4), t3 = p(3, 10.6), t4 = p(4, 15.2), t5 = p(5, 20.8), t6 = p(6, 25.3);
+  const sh = base("H03", W * .32, H * .1, W * .36, H * .66, { label: "empty child shoes" }); zin(sh, 0); tl.to(sh, { opacity: .45, duration: .6 }, 1.6);
+  const A = card(`Malnutrition<span class="te">పోషకాహార లోపం</span>`, W * .06, H * .3, { bar: true, c: K.amber }); pop(A, .6, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  const B = card(`Diarrhea<span class="te">విరేచనాలు</span>`, W * .72, H * .3, { bar: true, c: K.red }); pop(B, 2.6, { x: u * 4, opacity: 0 }, .6, E.spring);
+  const arcT = draw(`M ${W * .3} ${H * .28} C ${W * .4} ${H * .08}, ${W * .6} ${H * .08}, ${W * .7} ${H * .28}`, K.amber, 3.2, .8, { head: true, w: u * .6 });
+  const bot = draw(`M ${W * .7} ${H * .5} C ${W * .6} ${H * .72}, ${W * .4} ${H * .72}, ${W * .3} ${H * .5}`, K.red, t2, .8, { head: true, w: u * .6 });
+  flow(`M ${W * .3} ${H * .28} C ${W * .4} ${H * .08}, ${W * .6} ${H * .08}, ${W * .7} ${H * .28} L ${W * .7} ${H * .5} C ${W * .6} ${H * .72}, ${W * .4} ${H * .72}, ${W * .3} ${H * .5} Z`, 10, K.red, t2 + .6, t3, { r: u * .8, speed: .6, jit: 0 });
+  const vc = word(`Vicious cycle<span class="te">విష వలయం</span>`, W * .36, H * .36, 5, {}); vc.style.color = K.red; pop(vc, t2 + 2.6, { scale: .7, opacity: 0 }, .6, E.spring);
+  /* WHO rank podium with the globe */
+  HD.clear(t3 - .3);
+  [A, B, arcT, bot, vc, sh].forEach((e) => out(e, t3 - .3));
+  const gl = base("H25", W * .56, H * .08, W * .4, H * .7, { label: "world globe" }); zin(gl, t3 - .2); tl.to(gl, { rotation: 6, duration: D - t3, ease: "none" }, t3);
+  const pod = [[1, .7, "#CBD5E1"], [2, .55, "#CBD5E1"], [3, .42, K.red]].map(([n, h, c], i) => { const e = place(mk("div", "hd-p"), W * (.08 + i * .13), H * (.74 - h * .6), W * .1, H * h * .6);
+    e.style.borderRadius = u + "px"; e.style.background = c; e.style.transformOrigin = "50% 100%"; tl.fromTo(e, { scaleY: 0 }, { scaleY: 1, duration: .6, ease: E.soft2, immediateRender: true }, t3 + .2 + i * .25);
+    const l = word(`#${n}`, W * (.1 + i * .13), H * (.66 - h * .6), 5, {}); l.style.color = n === 3 ? K.red : "#94A3B8"; pop(l, t3 + .5 + i * .25, { y: u * 2, opacity: 0 }, .4); return [e, l]; }).flat();
+  const rk = card(`Under-5 deaths: <em>#3 cause</em><span class="te">WHO లెక్కల ప్రకారం</span>`, W * .08, H * .06, { bar: true, c: K.red }); pop(rk, t3 + 1.4, { y: -u * 3, opacity: 0 }, .6, E.spring);
+  /* 4,44,000 counter */
+  HD.clear(t4 - .3);
+  [...pod, rk].forEach((e) => out(e, t4 - .3));
+  const n = bigNum(W * .06, H * .22, 0, 444000, t4 + .2, 2.6, K.red, 12);
+  const nl = card(`children every year<span class="te">ప్రతి సంవత్సరం</span>`, W * .07, H * .46, { c: K.red }); pop(nl, t4 + .8, { y: u * 3, opacity: 0 }, .55, E.spring);
+  /* India 2019 */
+  HD.clear(t5 - .3);
+  [n, nl].forEach((e) => out(e, t5 - .3)); push(gl, t5 - .3, 1, 1.15, -W * .04, H * .02, E.io);
+  const ind = HD.svg(); const ip = HD.el("path", { d: `M ${W * .2} ${H * .14} l ${u * 6} ${u * 2} l ${u * 4} ${u * 6} l ${-u * 2} ${u * 8} l ${-u * 6} ${u * 12} l ${-u * 4} ${-u * 10} l ${-u * 5} ${-u * 6} l ${u * 2} ${-u * 6} z`, fill: "#E0F2FE", stroke: K.blue, "stroke-width": u * .4 }, ind);
+  const L = ip.getTotalLength(); ip.style.strokeDasharray = L; ip.style.strokeDashoffset = L; tl.set(ind, { opacity: 0 }, 0); tl.set(ind, { opacity: 1 }, t5); tl.to(ip.style, { strokeDashoffset: 0, duration: 1.2, ease: E.io }, t5);
+  const n2 = bigNum(W * .3, H * .2, 0, 55000, t5 + .6, 2, K.red, 9, (v) => "~" + Math.round(v).toLocaleString("en-IN"));
+  const ic = card(`India, 2019<span class="te">ఒక study అంచనా</span>`, W * .31, H * .42, { bar: true, c: K.blue }); pop(ic, t5 + 1, { y: u * 3, opacity: 0 }, .55, E.spring);
+  /* good news: falling line */
+  HD.clear(t6 - .3);
+  [ind, n2, ic].forEach((e) => out(e, t6 - .3));
+  const gn = card(`<em>Good news</em><span class="te">ఈ సంఖ్య తగ్గుతోంది</span>`, W * .06, H * .08, { bar: true, c: K.green }); pop(gn, t6, { x: -u * 4, opacity: 0 }, .6, E.spring);
+  draw(`M ${W * .06} ${H * .34} L ${W * .16} ${H * .38} L ${W * .26} ${H * .48} L ${W * .36} ${H * .54} L ${W * .48} ${H * .66}`, K.green, t6 + .3, 1.6, { w: u * .8 });
+  ring(W * .48, H * .66, K.green, t6 + 1.9, { r: u * 5, n: 2 });
+  cam(0, Math.max(D, 1), 1.02);
+  X.done();
+</script></body></html>
