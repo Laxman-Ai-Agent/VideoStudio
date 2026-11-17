@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2026-11-17
-- 15_Asthma: new "breath lab" kit `tools/templates/breath_kit/bk.js` (airflow canvas with choke, airway cross-section swell / squeeze / mucus / open, bronchial tree, breath meter, inhaler puff, word-rise heads with auto-fit to the frame) + sequences as_l01-l24, as_v01-v07; 16x9 final.
+- 15_Asthma: new "breath lab" kit `tools/templates/breath_kit/bk.js` (airflow canvas with choke, airway cross-section swell / squeeze / mucus / open, bronchial tree, breath meter, inhaler puff, word-rise heads with auto-fit to the frame) + sequences as_l01-l24, as_v01-v07; 16x9 + 9x16 finals.
 - 14_Epilepsy: paired project (16x9 merge of 3 parts, 1.15x, user's gemini.json aligned with align_mms), new "neural storm" cinematic look and kit `storm_kit` (sk.js), 73 Kaggle cinematic stills, sequences ep_l01-l21 / ep_v01-v06 with absolute narration times, 480p QC fixes (small document text, hidden panel from a string selector, empty gaps, leftover lock brackets), 1080p finals on the user's standing go.
 
 ## 2026-11-16
