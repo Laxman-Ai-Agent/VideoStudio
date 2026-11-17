@@ -465,7 +465,8 @@ def main() -> int:
     if a.cmd == "sheet":
         from pipeline.upload_sheet import sync, watch
         if a.watch:
-            watch()
+            watch()  # returns only when another watcher already runs
+            return 0
         try:
             return 0 if sync() else 1
         except Exception as e:
