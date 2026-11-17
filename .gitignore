@@ -28,3 +28,7 @@ kaggle/.work/
 
 # Google Sheet service-account key (upload_sheet)
 tools/.secrets/
+
+# third-party media (screenshots, downloaded clips): never in the public repo
+captures/
+clips/
