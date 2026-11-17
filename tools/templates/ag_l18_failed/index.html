@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="at.js"></script><script src="at2.js"></script>
+<style>/* 13_Aging_150 ag_l18_failed: L18 old anti-aging tries: resveratrol / NAD worked in mice not humans; Unity knee drug no better than placebo */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, ff, paper, photo, enter, morph, wash, panel, head, kick, tel, count, card, chip, flash, cam, stamp, rings,
+          book, scatter, helix, path, arrow, ruler, chart, bars, gauge, dots, lens, toggle } = AT;
+  const tRv = at("resv", 2.6), tPr = at("proof", 7), tUn = at("unity", 9.6), tKn = at("knee", 11);
+  paper();
+  photo("A31", { t: 0, d: tUn + .5, mv: "push", a: .6, in: "fade", box: [W * .5, 0, W * .5, H], until: tUn + .2 });
+  head("Old <em>anti-aging</em> tries", .1, { y: H * .12, size: 6.5, until: tUn });
+  photo("A32", { t: tRv - .3, d: tUn - tRv + 1, mv: "push", a: .5, in: "drop", box: [W * .08, H * .28, W * .2, H * .26], plate: true, fig: "RESVERATROL", rot: -3, until: tUn });
+  chip("NAD BOOSTERS", W * .32, H * .36, tRv + .8, { c: K.vio, size: 2.4, until: tUn });
+  chip("MICE ✔", W * .08, H * .66, tPr - 1.2, { c: K.green, size: 2.8, until: tUn });
+  chip("HUMANS ✘", W * .26, H * .66, tPr, { c: K.warn, size: 2.8, until: tUn });
+  tel("బలమైన proof లేదు", tPr + .4, { x: W * .52, y: H * .66, col: "#fff", shadow: 1, until: tUn });
+  photo("A33", { t: tUn - .2, d: D - tUn + .5, mv: "push", a: .6, in: "page" });
+  wash(tUn, null, { a: .94 });
+  card("Unity Biotechnology", "KNEE PAIN (OSTEOARTHRITIS) TRIAL", W * .06, H * .12, tUn, { c: K.ink });
+  bars([.42, .44], ["DRUG", "PLACEBO"], tKn, { box: [W * .08, H * .34, W * .3, H * .3], cs: [K.vio, K.mute], stag: .3 });
+  stamp("NO BETTER THAN PLACEBO", W * .26, H * .72, tKn + 1.6, { size: 3, c: K.warn });
+  AT.done();
+</script>
+</body></html>

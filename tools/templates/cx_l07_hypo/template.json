@@ -1,0 +1,8 @@
+{
+ "name": "cx_l07_hypo",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": ["motion_graphic"],
+ "params": {"code": "written for 11_Thyroid; reuse only when the user asks", "kit": "cine_kit"},
+ "description": "L07 hypothyroidism: T16 slow clock, HYPOTHYROIDISM slam (teal), SLOW stretch, symptom montage T06 T08 T17 T18 T19 with slam words, 5-way split finale"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "cx_l10_graves",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "L10 Graves: immune attack orbit GRAVES', nodules tags, pills spill TOO MANY TABLETS"
+}

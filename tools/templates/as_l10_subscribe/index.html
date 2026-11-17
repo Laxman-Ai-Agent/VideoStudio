@@ -14,19 +14,19 @@
   const q2 = te("Steroids = <b>ప్రమాదం</b>?", T(193.8), { x: W * .06, y: H * .36, c: K.co, size: 5, until: T(196.3) });
   flow({ n: 120, alpha: .6, band: .7, t: T(196.3) });
   head("THE <b>TRUTH</b>", T(197.4), { y: H * .14, align: "center", size: 7.2, until: T(199) });
-  const cd = place(mk("div", "bk-myth"), W * .22, H * .34, W * .56, H * .3); cd.style.whiteSpace = "normal";
+  const cd = place(mk("div", "bk-myth"), W * .13, H * .3, W * .74, H * .4); cd.style.whiteSpace = "normal";
   cd.innerHTML = `<div style="display:flex;align-items:center;gap:${u * 2}px;height:100%">
-    <div style="width:${u * 12}px;height:${u * 12}px;border-radius:50%;background:linear-gradient(135deg,${K.mt},#2a9d8f);display:flex;align-items:center;justify-content:center;
-      font:800 ${u * 4.4}px var(--font-head);color:${K.bg};flex:none">HD</div>
-    <div style="flex:1"><div style="font:800 ${u * 3.6}px var(--font-head)">Health Decode</div>
-      <div style="font:600 ${u * 1.7}px var(--font-script);color:${K.mute};letter-spacing:.08em">Medical facts in Telugu · New video every week</div>
-      <div style="display:flex;gap:${u * 1.2}px;margin-top:${u * 1.4}px"><div class="lk" style="font:700 ${u * 1.9}px var(--font-script);padding:${u * .5}px ${u * 1.6}px;border-radius:${u * 3}px;background:#ffffff1a">👍 LIKE</div>
-      <div class="sb" style="font:700 ${u * 1.9}px var(--font-script);padding:${u * .5}px ${u * 1.8}px;border-radius:${u * 3}px;background:#e62117;color:#fff;letter-spacing:.1em">SUBSCRIBE</div></div></div></div>`;
+    <div style="width:${u * 17}px;height:${u * 17}px;border-radius:50%;background:linear-gradient(135deg,${K.mt},#2a9d8f);display:flex;align-items:center;justify-content:center;
+      font:800 ${u * 6}px var(--font-head);color:${K.bg};flex:none">HD</div>
+    <div style="flex:1"><div style="font:800 ${u * 5.2}px var(--font-head)">Health Decode</div>
+      <div style="font:600 ${u * 2.4}px var(--font-script);color:${K.mute};letter-spacing:.08em">Medical facts in Telugu · New video every week</div>
+      <div style="display:flex;gap:${u * 1.2}px;margin-top:${u * 1.4}px"><div class="lk" style="font:700 ${u * 2.6}px var(--font-script);padding:${u * .6}px ${u * 2}px;border-radius:${u * 3}px;background:#ffffff1a">👍 LIKE</div>
+      <div class="sb" style="font:700 ${u * 2.6}px var(--font-script);padding:${u * .6}px ${u * 2.2}px;border-radius:${u * 3}px;background:#e62117;color:#fff;letter-spacing:.1em">SUBSCRIBE</div></div></div></div>`;
   show(cd, T(199.0), { opacity: 0, y: u * 8, scale: .9 }, .7, E.snap);
   tl.to(cd.querySelector(".lk"), { background: K.mt, color: K.bg, scale: 1.15, duration: .25, yoyo: true, repeat: 1 }, T(200.3));
   tl.to(cd.querySelector(".sb"), { background: "#3a4a4c", duration: .3 }, T(202.1));
   tl.set(cd.querySelector(".sb"), { innerHTML: "SUBSCRIBED ✓" }, T(202.2));
-  ring(W * .62, H * .56, T(202.1), { r: u * 8, n: 2, c: K.mt });
+  ring(W * .6, H * .58, T(202.1), { r: u * 8, n: 2, c: K.mt });
   BK.done();
 </script>
 </body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "lx_v05_two_sides",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "V05 adjusted +$2.5B, then twin lines: business racing up, costs rising too"
+}

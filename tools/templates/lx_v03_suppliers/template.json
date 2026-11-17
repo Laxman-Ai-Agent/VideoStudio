@@ -1,0 +1,13 @@
+{
+ "name": "lx_v03_suppliers",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "V03 suppliers: five chips stack into the logo, $26B, growth loop"
+}

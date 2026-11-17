@@ -1,0 +1,13 @@
+{
+ "name": "ag_l18_failed",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "L18 old anti-aging tries: resveratrol / NAD worked in mice not humans; Unity knee drug no better than placebo"
+}

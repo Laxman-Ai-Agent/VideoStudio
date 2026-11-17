@@ -1,0 +1,13 @@
+{
+ "name": "lx_l15_loss",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L15 the other side: $17B revenue vs -$0.5B operating loss, Q2 +$974M -> Q3 loss line, why: compute, chips, data centers"
+}

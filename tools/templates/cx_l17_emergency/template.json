@@ -1,0 +1,13 @@
+{
+ "name": "cx_l17_emergency",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "L17 emergency: weak bones, pregnancy TELL YOUR DOCTOR, ambulance THYROID STORM, ER FEVER / RACING HEART / CONFUSION / DROWSY, GO TO HOSPITAL"
+}

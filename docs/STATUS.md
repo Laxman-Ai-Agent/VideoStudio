@@ -12,6 +12,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
+## 15_Asthma (2026-11-17) - 16x9 final done, 9x16 pending (new "breath lab" look)
+- Paired topic (asthma, inhaler myths): `projects/15_Asthma/{16x9,9x16}`; 16x9 = 5 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; gemini.json aligned (align_mms) -> `input/gemini_corrected.json`.
+- Theme "breath lab" (`theme.json`: Syne + Anek Telugu + Rajdhani; slate-teal / mint / coral / honey; 27% max alike 14); kit `tools/templates/breath_kit/bk.js`.
+- Images: 81 Kaggle stills `assets/ai/*.png` (prompts `work/kaggle_breath.json`); A54 came out as an oxygen mask -> B06 used for blue lips.
+- Sequences `scripts/seq_*.py`; `scripts/rebuild.py <fmt>` = seqs + scenes.json + resolved.json + browser preview; `work/sheet.html?s=N&t=..` frame checker (seek(t, false) so counters fire).
+- 16x9 FINAL: `16x9/output/final_16x9.mp4` QA PASS (not yet frame-checked after the fixes). NEXT: 9x16 render (`studio.cmd run 15_Asthma/9x16 --final --format 9:16`) + QC, DarkWorld README.
+
 ## 14_Epilepsy (2026-11-17) - finals (new "neural storm" look)
 - Paired topic (epilepsy / moorchha): `projects/14_Epilepsy/{16x9,9x16}`; 16x9 3 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`; transcripts `scripts/make_transcript.py`.
 - User brief: new cinematic direction, complete creative freedom. User standing go (memory no-render-unless-told): no questions, 480p -> QC -> finals automatically.

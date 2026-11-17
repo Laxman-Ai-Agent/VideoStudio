@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_l14_record: L14 $64B + $26B = ~$90B stack vs the SpaceX IPO record (June) */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tB26 = at("b26", .5), tB90 = at("b90", 3.6), tJu = at("june", 5.4), tSx = at("spacex", 6.2), tRc = at("rec", 7);
+  grid();
+  mono("TOTAL DEAL", .1, { y: H * .08, c: K.gold });
+  const bx = W * .08, bw = W * .2, base = H * .78, k = H * .0062;
+  const b1 = place(mk("div", ""), bx, base - 64 * k, bw, 64 * k), b2 = place(mk("div", ""), bx, base - 90 * k, bw, 26 * k);
+  [[b1, K.coral, .1], [b2, K.green, tB26]].forEach(([b, c, t]) => { Object.assign(b.style, { position: "absolute", background: `linear-gradient(90deg, ${c}, ${c}99)`, transformOrigin: "50% 100%" });
+    tl.fromTo(b, { scaleY: 0 }, { scaleY: 1, duration: .7, ease: E.snap, immediateRender: true }, t); });
+  mono("IPO $64B", .4, { x: bx + bw + u * 2, y: base - 34 * k, size: 2 });
+  mono("SUPPLIERS +$26B", tB26 + .2, { x: bx + bw + u * 2, y: base - 80 * k, size: 2, c: K.green });
+  num(0, 90, tB90 - .2, { x: W * .06, y: H * .12, pre: "~$", unit: "BILLION", size: 10, col: K.gold, c: K.ink, d: .9 });
+  const fb = [W * .52, H * .1, W * .44, H * .58];
+  shot("A16", { t: tJu - .2, d: D, mv: "rise", a: .7, in: "rise", box: fb, framed: true });
+  mono("JUNE · SPACEX IPO", tSx, { x: W * .52, y: H * .72, c: K.mute, size: 1.9 });
+  head("A new <em>record</em>?", tRc, { x: W * .5, y: H * .76, size: 6.5, c: K.gold });
+  LK.done();
+</script>
+</body></html>

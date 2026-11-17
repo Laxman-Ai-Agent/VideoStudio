@@ -1,0 +1,13 @@
+{
+ "name": "cx_v04_salt_twist",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "V04 salt + twist: IODINE salt, 1962 sepia camp, 93% children, flash THE TWIST, immune attack ENEMY"
+}

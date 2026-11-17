@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_l08_ticker: L08 ticker ANT on the LED wall; mistake: $64B raised is not the value; circles 64B vs 1.4T; vault */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tAnt = at("ant", 1.3), tMs = at("mistake", 3), tB = at("b64", 5.2), tVal = at("value", 7.2), tRs = at("raise", 8.6), tT = at("t14", 12.2);
+  shot("A10", { t: 0, d: tMs + .5, mv: "push", a: .8, in: "line", until: tMs + .1 });
+  dim(0, tMs, .5, { bg: "radial-gradient(ellipse at 50% 50%, #07090fcc, #07090f30 70%)" });
+  mono("NASDAQ · TICKER", .2, { align: "center", y: H * .26 });
+  big("ANT", tAnt - .2, { align: "center", y: H * .33, size: 26, until: tMs - .1 });
+  shot("A11", { t: tMs - .1, d: D - tMs, mv: "push", a: .4, in: "fade" });
+  dim(tMs, null, .82, { bg: "#07090f" });
+  grid();
+  stamp("COMMON MISTAKE", W * .5, H * .12, tMs, { size: 3, rot: -3, until: tT - .2 });
+  const L = mk("div", "lk-fx"); place(L, 0, 0, W, H);
+  const c1 = mk("div", "lk-ring", L), c2 = mk("div", "lk-ring", L), r1 = u * 5, r2 = u * 23.5;
+  place(c1, W * .26 - r1, H * .45 - r1, r1 * 2, r1 * 2); c1.style.setProperty("--c", K.coral); c1.style.background = K.coral + "55";
+  place(c2, W * .68 - r2, H * .45 - r2, r2 * 2, r2 * 2); c2.style.setProperty("--c", K.gold); c2.style.background = K.gold + "22";
+  tl.fromTo(c1, { scale: 0 }, { scale: 1, duration: .6, ease: E.pop, immediateRender: true }, tB);
+  tl.fromTo(c2, { scale: 0 }, { scale: 1, duration: .9, ease: E.snap, immediateRender: true }, tT - .3);
+  num(0, 64, tB, { x: W * .12, y: H * .62, pre: "$", unit: "B", size: 7, d: .7 });
+  mono("RAISED IN THE IPO", tRs, { x: W * .1, y: H * .74, size: 1.8 });
+  stamp("≠ VALUE", W * .26, H * .28, tVal, { size: 3.4, c: K.red, rot: 4 });
+  num(0, 1.4, tT - .2, { x: W * .53, y: H * .38, pre: "$", unit: "TRILLION", size: 11, col: K.gold, c: K.ink, fmt: (v) => v.toFixed(1), d: 1 });
+  mono("COMPANY VALUE · REPORTS", tT + .3, { x: W * .55, y: H * .56, c: K.gold, size: 1.8 });
+  out(L, D - .3, .3);
+  LK.done();
+</script>
+</body></html>

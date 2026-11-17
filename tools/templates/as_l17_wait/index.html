@@ -14,11 +14,11 @@
   tl.fromTo(x, { scale: 1.8, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: -6, duration: .45, ease: E.pop, immediateRender: true }, T(294.3)); out(x, T(295.8));
   te("మీరే <b>వాహనం నడపకండి</b>", T(293.4), { y: H * .12, c: K.co, until: T(295.8) });
   shot("A57", { t: T(295.9), d: 6.5, mv: "pull", in: "wipe", box: [W * .04, H * .1, W * .44, H * .66], glass: true, cap: "UNTIL HELP ARRIVES" });
-  doc(`<h3 style="color:#c0392b">ASTHMA ACTION PLAN · RED ZONE</h3><div style="color:#4b5a58">Medical alert · follow while waiting for the ambulance</div><div class="rule"></div>
-    <div class="s" style="padding:.35em .5em;border-radius:.3em">1. Call <b>108</b> for an ambulance now</div>
-    <div class="s" style="padding:.35em .5em;border-radius:.3em">2. <b>Sit upright</b>, do not lie down</div>
-    <div class="s" style="padding:.35em .5em;border-radius:.3em">3. Stay <b>calm</b>, breathe slowly</div>
-    <div class="s" style="padding:.35em .5em;border-radius:.3em">4. Use the <b>reliever</b> as your doctor advised</div>
+  doc(`<h3 style="color:#c0392b;font-size:${u * 3.2}px">ASTHMA ACTION PLAN · RED ZONE</h3><div style="color:#4b5a58">Medical alert · follow while waiting for the ambulance</div><div class="rule"></div>
+    <div class="s" style="padding:.35em .5em;border-radius:.3em;font-size:${u * 2.9}px">1. Call <b>108</b> for an ambulance now</div>
+    <div class="s" style="padding:.35em .5em;border-radius:.3em;font-size:${u * 2.9}px">2. <b>Sit upright</b>, do not lie down</div>
+    <div class="s" style="padding:.35em .5em;border-radius:.3em;font-size:${u * 2.9}px">3. Stay <b>calm</b>, breathe slowly</div>
+    <div class="s" style="padding:.35em .5em;border-radius:.3em;font-size:${u * 2.9}px">4. Use the <b>reliever</b> as your doctor advised</div>
     <div style="margin-top:1em;color:#4b5a58">Do not drive yourself to hospital.</div>`, W * .53, H * .1, W * .42, H * .66, T(296.1), { rot: 3, rest: -1 });
   const s = Array.from(document.querySelectorAll(".bk-doc .s"));
   [[1, 297.0], [2, 298.2], [3, 300.8]].forEach(([i, t]) => tl.to(s[i], { background: "#c9f5e4", duration: .3 }, T(t)));

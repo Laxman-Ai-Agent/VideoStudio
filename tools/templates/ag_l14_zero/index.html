@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="at.js"></script><script src="at2.js"></script>
+<style>/* 13_Aging_150 ag_l14_zero: L14 resilience falls with age; extend the line -> zero between 120 and 150; a math estimate, not a lived age */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, ff, paper, photo, enter, morph, wash, panel, head, kick, tel, count, card, chip, flash, cam, stamp, rings,
+          book, scatter, helix, path, arrow, ruler, chart, bars, gauge, dots, lens, toggle } = AT;
+  const tEx = at("extend", 3.4), tZe = at("zero", 7), tMa = at("math", 11);
+  paper();
+  photo("A24", { t: 0, d: D, mv: "panR", a: .5, in: "fade" });
+  wash(0, null, { bg: `linear-gradient(0deg, ${K.bg}f8 55%, ${K.bg}c0)` });
+  kick("RESILIENCE ↓ WITH AGE", .1, { y: H * .1 });
+  const bx = [W * .08, H * .2, W * .84, H * .44];
+  const band = place(mk("div", ""), bx[0] + bx[2] * 120 / 150, bx[1], bx[2] * 30 / 150, bx[3]);
+  Object.assign(band.style, { position: "absolute", background: K.red + "22", borderLeft: `2px dashed ${K.red}`, borderRight: `2px dashed ${K.red}` });
+  ff(band, tZe - .4, { opacity: 0 }, { opacity: 1 }, .6);
+  chart([[0, .98], [.13, .92], [.27, .84], [.4, .74], [.53, .6], [.6, .5], [.8, .2], [.9, .04], [.93, 0]], .5, { box: bx, c: K.green, dashFrom: 6, dc: K.red, d: 2.2, dt: tEx, dd: 2.2 });
+  const ages = [0, 30, 60, 90, 120, 150];
+  ages.forEach((a, i) => { const l = place(mk("div", "at-k", null, a), bx[0] + bx[2] * a / 150, bx[1] + bx[3] + u * 1.4); l.style.setProperty("--c", K.mute);
+    gsap.set(l, { xPercent: -50 }); ff(l, .5 + i * .2, { opacity: 0 }, { opacity: 1 }, .3); });
+  chip("ZERO · 120–150 YRS", bx[0] + bx[2] * .74, bx[1] - u * 5, tZe, { c: K.red, size: 2.3 });
+  stamp("A MATH ESTIMATE", W * .5, H * .78, tMa, { c: K.vio, size: 4.5, rot: -3 });
+  AT.done();
+</script>
+</body></html>

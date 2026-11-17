@@ -1,0 +1,13 @@
+{
+ "name": "ag_l19_answer",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "L19 the answer: no full answer for 150; AI speeds new drugs + cancer tests; realistic win = more HEALTHY years"
+}

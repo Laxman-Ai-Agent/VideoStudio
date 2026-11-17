@@ -1,0 +1,13 @@
+{
+ "name": "ag_l10_insilico",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "L10 human proof: Insilico AI target + drug, IPF stiff lungs, 71 patients 12 weeks drug up vs placebo down, first step"
+}

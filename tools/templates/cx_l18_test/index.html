@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="cine.js"></script>
+<style>/* 11_Thyroid cx_l18_test: L18 test + CTA: blood draw ONE TSH TEST, doctor NO SELF-TREATMENT, mother ALWAYS TIRED? SHARE, phone COMMENT BELOW / LIKE */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, shot, split, title, te, kick, num, tag, ring, flash, leak, scope, embers, cam, out, arrow, slam } = CX;
+  document.documentElement.style.setProperty("--u", u + "px");
+  shot("T47", { t: 0, d: 7.5, mv: "push", a: .7, in: "fade" });
+  te("అలసట, weight మార్పులు: <b>వదిలేయకండి</b>", .6, { y: H * .12, until: 4.1 });
+  title("ONE <em>TSH</em> TEST", 4.4, { slam: true, y: H * .1, size: 14, until: 7.4 });
+  shot("T36", { t: 7.5, d: 2.7, mv: "push", a: .7, in: "slice" });
+  title("NO <em>SELF</em>-TREATMENT", 7.6, { y: H * .1, size: 10, c: K.red, until: 8.9 });
+  slam("SEE A <em>DOCTOR</em>", 9, 10.2, { align: "center", y: H * .3, size: 14, c: K.teal });
+  shot("T48", { t: 10.2, d: 5.7, mv: "pull", a: .6, in: "iris", fx: .6, fy: .4 });
+  te("అమ్మ, అక్క, భార్య...", 10.8, { y: H * .12, until: 15.8 });
+  title("ALWAYS <em>TIRED?</em>", 12.8, { y: H * .2, size: 12, until: 14.9 });
+  slam("<em>SHARE</em>", 15, 15.9, { align: "center", y: H * .3, size: 18 });
+  const p = shot("T49", { t: 15.9, d: D - 15.9, mv: "push", a: .6, in: "fade" });
+  tl.set(p, { filter: "brightness(.5)" }, 15.9);
+  title("COMMENT <em>BELOW</em>", 18.1, { slam: true, align: "center", y: H * .3, size: 12 });
+  title("<em>LIKE</em>", 20.1, { slam: true, align: "center", y: H * .5, size: 14, c: K.gold });
+  leak(19.9, 1.4); embers(30);
+  CX.done();
+</script>
+</body></html>

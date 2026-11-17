@@ -1,0 +1,13 @@
+{
+ "name": "lx_l16_costs",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L16 costs: $5B short-term compute at a high price, $2B donation-match non-cash charge, adjusted +$2.5B"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "lx_v02_offer",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "V02 offer: $70-$78 bracket, 825M shares = $64B, valuation $1.4T"
+}

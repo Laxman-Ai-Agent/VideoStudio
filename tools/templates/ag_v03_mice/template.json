@@ -1,0 +1,13 @@
+{
+ "name": "ag_v03_mice",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "V03 mice: 3 Yamanaka switches, optic nerve regrows (path), half the sight back gauge, not proven in humans"
+}

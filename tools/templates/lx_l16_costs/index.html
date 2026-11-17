@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_l16_costs: L16 costs: $5B short-term compute at a high price, $2B donation-match non-cash charge, adjusted +$2.5B */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tB5 = at("b5", 3.4), tSh = at("short", 5), tDo = at("donation", 8.6), tB2 = at("b2", 11.6), tNc = at("noncash", 13), tAd = at("adj", 15.4), tB25 = at("b25", 16);
+  shot("A19", { t: 0, d: tDo + .5, mv: "panR", a: .7, in: "whip", until: tDo });
+  dim(0, tDo, .7, { bg: "linear-gradient(90deg, #07090f 35%, #07090f30)" });
+  mono("DEMAND SPIKE", .2, { y: H * .16, c: K.red, until: tDo - .1 });
+  num(0, 5, tB5 - .2, { y: H * .22, pre: "$", unit: "B COMPUTE", size: 14, col: K.red, c: K.ink, d: .7, until: tDo - .1 });
+  stamp("SHORT-TERM · HIGH PRICE", W * .3, H * .6, tSh, { size: 2.4, rot: -3, until: tDo - .1 });
+  grid();
+  const fb = [W * .54, H * .1, W * .42, H * .56];
+  shot("A20", { t: tDo - .1, d: D, mv: "push", a: .6, in: "wipe", dir: -1, box: fb, framed: true, until: tAd - .1 });
+  mono("EMPLOYEE DONATIONS · COMPANY MATCH", tDo + .2, { x: W * .06, y: H * .16, size: 1.8, until: tAd - .1 });
+  num(0, 2, tB2 - .2, { x: W * .06, y: H * .24, pre: "$", unit: "B CHARGE", size: 12, col: K.red, c: K.ink, d: .6, until: tAd - .1 });
+  chip("NON-CASH", W * .06, H * .48, tNc, { c: K.gold, until: tAd - .1 });
+  shot("A19", { t: tAd - .2, d: D - tAd, mv: "pull", a: .5, in: "fade" });
+  dim(tAd, null, .82, { bg: "#07090f" });
+  mono("EXCLUDING BOTH · COMPANY VIEW", tAd, { align: "center", y: H * .22, c: K.green });
+  num(0, 2.5, tB25 - .2, { align: "center", y: H * .3, pre: "+$", unit: "B ADJUSTED PROFIT", size: 14, col: K.green, c: K.ink, fmt: (v) => v.toFixed(1), d: 1 });
+  ring(W * .5, H * .4, tB25 + .6, { c: K.green, r: u * 30, n: 2 });
+  LK.done();
+</script>
+</body></html>

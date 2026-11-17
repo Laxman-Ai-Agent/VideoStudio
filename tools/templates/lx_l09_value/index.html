@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_l09_value: L09 valuation path: May $965B -> now $1.4T -> summer $2T talk (dashed, faded) */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tMay = at("may", .3), tB = at("b965", 3.2), tMore = at("more", 5.6), tSu = at("summer", 7.6), tT2 = at("t2", 8.4);
+  shot("A11", { t: 0, d: D, mv: "push", a: .4, in: "fade" });
+  dim(0, null, .82, { bg: "#07090f" });
+  grid({ a: .7 });
+  mono("VALUATION PATH", .1, { y: H * .08, c: K.gold });
+  const bx = [W * .1, H * .2, W * .8, H * .5];
+  chart([[0, .2], [.5, .5]], tB - .6, { box: bx, c: K.gold, d: 1 });
+  mono("MAY · PRIVATE ROUND", tMay, { x: W * .08, y: H * .74, size: 1.7, c: K.mute });
+  num(0, 965, tB - .2, { x: W * .08, y: H * .62, pre: "$", unit: "B", size: 6, d: .9 });
+  chart([[.5, .5], [.75, .55]], tMore - .3, { box: bx, c: K.green, d: .6 });
+  big("$1.4T", tMore, { x: W * .45, y: H * .3, size: 7, col: K.green });
+  mono("NOW · IPO RANGE", tMore + .2, { x: W * .45, y: H * .24, size: 1.7, c: K.green });
+  const ln = chart([[.75, .55], [1, .95]], tSu, { box: bx, c: K.mute, d: .8 });
+  ln.style.opacity = .6;
+  big("$2T?", tT2, { x: W * .78, y: H * .08, size: 6, col: K.mute });
+  mono("SUMMER TALK", tT2 + .2, { x: W * .78, y: H * .03, size: 1.7, c: K.mute });
+  te("ఎక్కువే ↑  కానీ తక్కువే ↓", tT2 + .8, { x: W * .3, y: H * .05, size: 3.2 });
+  LK.done();
+</script>
+</body></html>

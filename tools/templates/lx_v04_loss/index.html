@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_v04_loss: V04 shock: +$17B revenue vs -$0.5B loss, AI computing costs, chips + data centers, billions on compute */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const t17 = at("b17", 2.6), tLs = at("loss", 7), tCa = at("cause", 10.6), tCh = at("chips", 13.4), tBi = at("bil", 18.4);
+  shot("B04", { t: 0, d: tCa + .5, mv: "crash", a: .6, in: "flash", until: tCa });
+  dim(0, tCa, .65, { bg: "linear-gradient(180deg, #07090fee 30%, #07090f10 70%)" });
+  stamp("SHOCK", W * .5, H * .08, .1, { size: 7, rot: -5 });
+  mono("SAME QUARTER", t17 - .5, { align: "center", y: H * .15, c: K.mute });
+  num(0, 17, t17 - .2, { align: "center", y: H * .18, pre: "+$", unit: "B REVENUE", size: 18, col: K.green, c: K.ink, d: .9 });
+  num(0, .5, tLs - .2, { align: "center", y: H * .3, pre: "−$", unit: "B LOSS", size: 18, col: K.red, c: K.ink, fmt: (v) => v.toFixed(1), d: .8 });
+  shot("B05", { t: tCa - .1, d: tBi - tCa + .5, mv: "push", a: .8, in: "line", until: tBi });
+  dim(tCa, tBi, .55, { bg: "linear-gradient(180deg, #07090fee 25%, #07090f10 60%)" });
+  head("AI computing", tCa + .1, { align: "center", y: H * .1, size: 12, until: tBi - .1 });
+  head("<em>costs</em>", tCa + .4, { align: "center", y: H * .17, size: 14, c: K.red, until: tBi - .1 });
+  chip("CHIPS", W * .18, H * .3, tCh, { c: K.red, size: 3.6, w: W * .3, until: tBi - .1 });
+  chip("DATA CENTERS", W * .5, H * .3, tCh + .5, { c: K.red, size: 3.6, w: W * .36, until: tBi - .1 });
+  shot("B03", { t: tBi - .1, d: D - tBi, mv: "push", a: .8, in: "whip" });
+  dim(tBi, null, .55, { bg: "linear-gradient(180deg, #07090fee 25%, #07090f10 60%)" });
+  head("Billions on", tBi + .1, { align: "center", y: H * .12, size: 12 });
+  head("<em>compute</em>", tBi + .4, { align: "center", y: H * .19, size: 14, c: K.red });
+  LK.done();
+</script>
+</body></html>

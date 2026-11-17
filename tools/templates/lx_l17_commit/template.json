@@ -1,0 +1,13 @@
+{
+ "name": "lx_l17_commit",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L17 $895B compute commitments over a data campus aerial; IPO money -> compute arrow"
+}

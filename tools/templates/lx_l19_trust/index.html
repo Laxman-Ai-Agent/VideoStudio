@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_l19_trust: L19 public benefit corporation, Long-Term Benefit Trust elects the board majority; profit share yes, full control no */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tPb = at("pbc", .9), tTr = at("trust", 3.4), tBd = at("board", 5.6), tMj = at("majority", 6.2), tPf = at("profit", 9.4), tCt = at("control", 11.6);
+  shot("A24", { t: 0, d: D, mv: "push", a: .6, in: "wipe" });
+  dim(0, null, .72, { bg: "linear-gradient(90deg, #07090f 40%, #07090f40)" });
+  logo("anthropic_logo_w", [W * .06, H * .08, W * .22, H * .04], 0);
+  head("Public Benefit <em>Corporation</em>", tPb, { y: H * .16, size: 6.5 });
+  chip("LONG-TERM BENEFIT TRUST", W * .06, H * .32, tTr, { c: K.gold, size: 2.4 });
+  mono("ELECTS THE BOARD MAJORITY", tBd - .2, { y: H * .44, c: K.mute, size: 1.8 });
+  for (let i = 0; i < 5; i++) { const d = place(mk("div", "lk-dot"), W * .07 + i * u * 6, H * .5, u * 4, u * 4); d.style.setProperty("--c", i < 3 ? K.gold : K.mute);
+    tl.fromTo(d, { scale: 0 }, { scale: 1, duration: .3, ease: E.pop, immediateRender: true }, (i < 3 ? tMj : tBd) + i * .1); }
+  chip("✓ PROFIT SHARE", W * .06, H * .64, tPf, { c: K.green, size: 2.6 });
+  chip("✕ FULL CONTROL", W * .3, H * .64, tCt, { c: K.red, size: 2.6 });
+  mono("SHAREHOLDERS · PER ANALYSTS", tCt + .4, { y: H * .76, c: K.mute, size: 1.6 });
+  LK.done();
+</script>
+</body></html>

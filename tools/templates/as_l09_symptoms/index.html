@@ -29,7 +29,7 @@
   pn.innerHTML = `<div style="position:absolute;left:${u * 2}px;top:${u * 1.6}px;font:800 ${u * 2.6}px var(--font-head)">SYMPTOM DIARY</div>
     <div style="position:absolute;right:${u * 2}px;top:${u * 1.8}px;font:600 ${u * 1.6}px var(--font-script);letter-spacing:.15em;color:${K.mute}">3 WEEKS · COUGH + WHEEZE SCORE</div>` +
     vals.map((v, i) => `<div class="bar" style="position:absolute;bottom:${u * 4}px;left:${u * 3 + i * (W * .8 - u * 6) / vals.length}px;width:${(W * .8 - u * 6) / vals.length * .6}px;
-      height:${Math.max(.4, v) * u * 2.6}px;border-radius:${u * .4}px;background:${v > 4 ? K.co : v > 1 ? K.hn : K.mt};transform-origin:50% 100%"></div>`).join("") +
+      height:${Math.max(.4, v) * u * 4.4}px;border-radius:${u * .4}px;background:${v > 4 ? K.co : v > 1 ? K.hn : K.mt};transform-origin:50% 100%"></div>`).join("") +
     ["WEEK 1", "WEEK 2", "WEEK 3"].map((w, i) => `<div style="position:absolute;bottom:${u * 1.2}px;left:${u * 3 + i * (W * .8 - u * 6) / 3}px;font:600 ${u * 1.5}px var(--font-script);color:${K.mute};letter-spacing:.12em">${w}</div>`).join("");
   show(pn, T(180.3), { opacity: 0, y: u * 6 }, .6, E.snap);
   tl.fromTo(pn.querySelectorAll(".bar"), { scaleY: 0 }, { scaleY: 1, duration: .5, ease: E.pop, stagger: .1, immediateRender: true }, T(182.8));

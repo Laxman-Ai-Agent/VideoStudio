@@ -1,0 +1,13 @@
+{
+ "name": "lx_l02_myths",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L02 myths: IPO = profit? / buy ANT now? panels stamped MYTH, velvet rope not on sale yet, red loss quarter"
+}

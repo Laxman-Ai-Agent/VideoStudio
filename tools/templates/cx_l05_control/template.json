@@ -1,0 +1,13 @@
+{
+ "name": "cx_l05_control",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "L05 control: meal energy, accelerator pedal WHO CONTROLS IT?, pituitary tag + TSH signal, split brain / gland TSH up"
+}

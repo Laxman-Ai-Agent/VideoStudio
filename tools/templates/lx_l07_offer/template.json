@@ -1,0 +1,13 @@
+{
+ "name": "lx_l07_offer",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L07 offer 87.5-103.7 s: certificate, 825M Class A shares, $70-78 bracket, x top price = $64B, +124M greenshoe bars"
+}

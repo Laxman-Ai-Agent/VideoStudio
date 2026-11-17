@@ -1,0 +1,13 @@
+{
+ "name": "lx_v01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "V01 hook: towers look-up, logo goes public, $90B raise; twist: chip makers become shareholders"
+}

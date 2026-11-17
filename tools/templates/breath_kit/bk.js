@@ -47,7 +47,7 @@
   .bk-focus .lab { position: absolute; white-space: nowrap; font: 700 ${u * (V ? 2.7 : 1.8)}px var(--font-script); letter-spacing: .16em; color: ${K.bg}; background: var(--c, ${K.mt});
     padding: ${u * .3}px ${u * 1}px; border-radius: ${u * 3}px; text-transform: uppercase; }
   .bk-myth { position: absolute; padding: ${u * 1.6}px ${u * 2.4}px; background: ${K.panel}; border-radius: ${u * 1.4}px; border: ${Math.max(1, u * .1)}px solid #ffffff22;
-    font: 400 ${u * (V ? 4.4 : 3.3)}px var(--font); color: ${K.ink}; white-space: nowrap; box-shadow: 0 ${u}px ${u * 4}px #00000090; }
+    font: 400 ${u * (V ? 5.4 : 4.8)}px var(--font); color: ${K.ink}; white-space: nowrap; box-shadow: 0 ${u}px ${u * 4}px #00000090; }
   .bk-myth .ln { position: absolute; left: ${u * 1.8}px; right: ${u * 1.8}px; top: 52%; height: ${u * .45}px; background: ${K.co}; transform-origin: 0 50%; border-radius: ${u}px; }
   .bk-stamp { position: absolute; font: 800 ${u * (V ? 5.4 : 4.2)}px var(--font-head); color: var(--c, ${K.co}); border: ${u * .45}px solid var(--c, ${K.co}); padding: ${u * .15}px ${u * 1.4}px;
     letter-spacing: .06em; border-radius: ${u * 5}px; white-space: nowrap; background: #071216cc; }
@@ -60,8 +60,8 @@
   .bk-phone .scr { position: relative; width: 100%; height: 100%; border-radius: ${u * 3}px; overflow: hidden; background: linear-gradient(165deg, #12292b, #070f11);
     font-family: var(--font-script); color: ${K.ink}; }
   .bk-doc { position: absolute; background: #F5F3EC; color: #15201f; border-radius: ${u * .5}px; padding: ${u * 2.2}px ${u * 2.6}px; box-shadow: 0 ${u * 2}px ${u * 6}px #000000c0;
-    font: 500 ${u * (V ? 2.3 : 1.6)}px var(--font-script); line-height: 1.45; overflow: hidden; }
-  .bk-doc h3 { margin: 0 0 ${u * .5}px; font: 800 ${u * (V ? 3.2 : 2.4)}px var(--font-head); letter-spacing: -.01em; }
+    font: 500 ${u * (V ? 2.8 : 2.15)}px var(--font-script); line-height: 1.42; overflow: hidden; }
+  .bk-doc h3 { margin: 0 0 ${u * .5}px; font: 800 ${u * (V ? 3.4 : 2.7)}px var(--font-head); letter-spacing: -.01em; }
   .bk-doc .rule { height: ${u * .3}px; background: #15201f; margin: ${u * .6}px 0 ${u * 1}px; }
   .bk-dot { position: absolute; border-radius: 50%; }
   .bk-ring { position: absolute; border-radius: 50%; border: ${u * .25}px solid var(--c, ${K.mt}); }
@@ -269,7 +269,7 @@
     const e = place(mk("div", "bk-myth", o.parent, html), o.x ?? W * .06, o.y ?? H * .2); e.style.zIndex = 12;
     show(e, t, { opacity: 0, y: u * 4 }, .55, E.snap);
     const ln = mk("div", "ln", e); tl.fromTo(ln, { scaleX: 0 }, { scaleX: 1, duration: .35, ease: E.io, immediateRender: true }, ts);
-    const s = mk("div", "bk-stamp", e, o.stamp || "MYTH"); s.style.right = -u * 3 + "px"; s.style.top = -u * 3.6 + "px"; if (o.sc) s.style.setProperty("--c", o.sc);
+    const s = mk("div", "bk-stamp", e, o.stamp || "MYTH"); s.style.right = -u * 1.5 + "px"; s.style.bottom = -u * (V ? 6.4 : 5.2) + "px"; if (o.sc) s.style.setProperty("--c", o.sc);
     tl.fromTo(s, { scale: 1.8, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -7, duration: .45, ease: E.pop, immediateRender: true }, ts + .1);
     if (o.until) out(e, o.until); return e;
   }

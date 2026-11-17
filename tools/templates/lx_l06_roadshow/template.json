@@ -1,0 +1,13 @@
+{
+ "name": "lx_l06_roadshow",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L06 roadshow: Nov 10 start, route between investor rooms, banks collect orders, demand sets the price"
+}

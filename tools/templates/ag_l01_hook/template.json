@@ -1,0 +1,13 @@
+{
+ "name": "ag_l01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "L01 hook: old hands + 150 counter, cake split, AI + gene editing helix, old mouse plate + lens, decode"
+}

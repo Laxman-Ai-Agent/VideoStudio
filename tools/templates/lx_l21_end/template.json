@@ -1,0 +1,13 @@
+{
+ "name": "lx_l21_end",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L21 one line: suppliers -> shareholders, money in, compute cost up; when does revenue win; market decides; not advice; buy or wait; comment"
+}

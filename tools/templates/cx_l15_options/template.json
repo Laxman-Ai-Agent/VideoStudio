@@ -1,0 +1,13 @@
+{
+ "name": "cx_l15_options",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "L15 hyper options: 4-way split beta-blockers / anti-thyroid / radioactive iodine / surgery with labels, DOCTOR DECIDES"
+}

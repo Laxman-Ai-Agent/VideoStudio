@@ -13,10 +13,10 @@
   head("<b>DANGER</b> SIGNS", T(274.5), { y: H * .4, align: "center", size: 9, c: K.co, until: T(278.3) });
   list([["ఆయాసం <b>పెరుగుతూ</b> ఉండటం", T(278.4), false], ["Reliever తో <b>ఉపశమనం లేదు</b>", T(280.5), false],
         ["మాట్లాడటానికి <b>ఊపిరి చాలదు</b>", T(283.4), false], ["పెదాలు <b>నీలం</b> రంగు", T(285.9), false]], W * .04, H * .2, { until: T(289) });
-  const sh = [["A44", 278.4], ["A47", 280.5], ["A23", 283.4], ["A54", 285.9]];
+  const sh = [["A44", 278.4], ["A47", 280.5], ["A23", 283.4], ["B06", 285.9]];
   sh.forEach(([k, t], i) => shot(k, { t: T(t), d: 3, mv: i % 2 ? "pull" : "push", in: i ? "wipeL" : "rise", box: [W * .5, H * .1, W * .46, H * .66], glass: true, c: K.co,
     until: i < 3 ? T(sh[i + 1][1]) + .3 : T(289) }));
-  focus(W * .73, H * .52, u * 8, T(286.6), { label: "BLUE LIPS", side: -1, c: K.co, until: T(289) });
+  focus(W * .73, H * .56, u * 8, T(286.6), { label: "BLUE LIPS", side: -1, c: K.co, until: T(289) });
   shot("A56", { t: T(289.0), d: 3.9, mv: "push", a: .7, in: "mist", c: K.co });
   head("DON'T <b>WAIT</b>", T(289.6), { x: W * .06, y: H * .14, size: 7.4, c: K.co });
   phone(`<div style="padding:30% 8% 0;text-align:center"><div style="font:600 ${u * 1.5}px var(--font-script);letter-spacing:.2em;color:${K.mute}">CALLING…</div>

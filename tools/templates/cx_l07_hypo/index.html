@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="cine.js"></script>
+<style>/* 11_Thyroid L07 (95-114 s): hormones drop = hypothyroidism -> the whole body slows -> fatigue, weight, cold, dry skin, hair fall,
+   low mood, periods. T16 slow clock pushes in, HYPOTHYROIDISM slams (teal = cold / slow), SLOW stretches out while the frame drains
+   of colour; then a symptom storm: each symptom its own image + entrance + slam word; ends on a 5-way split of the slowed body. */
+.slow { position: absolute; left: 0; width: 100%; text-align: center; font: 800 calc(var(--u) * 26) var(--font-head); color: #2DD4BF; letter-spacing: .02em;
+        text-shadow: 0 0 calc(var(--u) * 4) #000; white-space: nowrap; }
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, K, tl, E, at, $, mk, place, shot, split, title, te, kick, num, tag, ring, flash, leak, scope, embers, cam, out } = CX;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const tHy = at("hypo", 3.7), tSl = at("slow", 7), tTi = at("tired", 8.1), tWe = at("weight", 8.8), tCo = at("cold", 9.9), tSk = at("skin", 10.5),
+        tHa = at("hair", 11.8), tMo = at("mood", 13.7), tWo = at("women", 15.2);
+
+  /* 1. the clock slows; HYPOTHYROIDISM */
+  const clk = shot("T16", { t: 0, d: tTi, mv: "push", a: .9, in: "fade", fx: .5, fy: .45 });
+  kick("THE PROBLEM STARTS", .3, { y: H * .12, c: K.teal, until: tHy - .3 });
+  title("HORMONES <em>DROP</em>", 1.7, { y: H * .2, c: K.teal, until: tHy - .3 });
+  title("HYPO<em>THYROIDISM</em>", tHy - .1, { align: "center", y: H * .34, size: 17, slam: true, c: K.teal, until: tSl - .3 });
+  te("శరీరం మొత్తం <b>slow</b> అయిపోతుంది", tHy + 1.6, { align: "center", y: H * .56, c: K.teal, until: tSl - .3 });
+
+  /* 2. SLOW stretches out while the frame drains of colour */
+  const s = mk("div", "slow", undefined, "SLOW"); s.style.top = H * .3 + "px";
+  tl.fromTo(s, { opacity: 0, letterSpacing: "0em", scale: 1.1 }, { opacity: 1, letterSpacing: ".5em", scale: 1, duration: tTi - tSl + .4, ease: "power1.out", immediateRender: true }, tSl - .2);
+  tl.to(clk, { filter: "saturate(.15) brightness(.75)", duration: 1, ease: "none" }, tSl - .2);
+  out(s, tTi - .15, .2);
+
+  /* 3. symptom storm: one image, one entrance, one word each */
+  const word = (txt, t, until, o = {}) => title(txt, t, { slam: true, c: K.teal, y: o.y ?? H * .62, x: o.x, align: o.align, size: o.size ?? 15, until });
+  shot("T06", { t: tTi - .1, d: 1.9, mv: "push", a: .7, in: "whip" });
+  word("<em>FATIGUE</em>", tTi, tWe - .1);
+  word("WEIGHT <em>UP</em>", tWe, tCo - .15);
+  shot("T08", { t: tCo - .1, d: 1, mv: "panL", a: .8, in: "shutter" });
+  word("<em>COLD</em>", tCo, tSk - .1, { align: "center" });
+  shot("T17", { t: tSk - .1, d: 1.5, mv: "crash", a: .4, in: "zoom" });
+  word("DRY <em>SKIN</em>", tSk, tHa - .1);
+  shot("T18", { t: tHa - .1, d: 2, mv: "panR", a: .8, in: "slice" });
+  word("HAIR <em>FALL</em>", tHa, tMo - .1, { x: W * .5 });
+  shot("T19", { t: tMo - .1, d: 2, mv: "rise", a: .8, in: "iris", fx: .4, fy: .4 });
+  word("LOW <em>MOOD</em>", tMo, tWo - .1);
+  leak(tMo - .4, 1.2);
+
+  /* 4. pull out: the five slowed-down signs side by side; periods note for women */
+  const t5 = tWo - .2;
+  split(["T06", "T08", "T17", "T18", "T19"], t5, { d: D - t5, stag: .12, mvs: ["push", "sink", "push", "rise", "push"] });
+  kick("WOMEN · IRREGULAR PERIODS", tWo + .4, { align: "center", y: H * .16, c: K.teal });
+  te("ఆడవాళ్లలో periods సరిగ్గా రాకపోవడం", tWo + .9, { align: "center", y: H * .22 });
+  embers(18, K.teal);
+  CX.done();
+</script>
+</body></html>

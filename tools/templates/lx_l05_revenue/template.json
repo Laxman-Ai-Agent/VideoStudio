@@ -1,0 +1,13 @@
+{
+ "name": "lx_l05_revenue",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 12_Anthropic_IPO; reuse only when the user asks",
+  "kit": "ledger_kit"
+ },
+ "description": "L05 revenue: bars 2025 vs 2026 (x7, SiliconANGLE), Jul-Sep $17B on the money machine, now the news"
+}

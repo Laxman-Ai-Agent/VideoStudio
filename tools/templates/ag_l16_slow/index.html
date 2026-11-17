@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="at.js"></script><script src="at2.js"></script>
+<style>/* 13_Aging_150 ag_l16_slow: L16 Olshansky 2024: gains slowing curve, reaching 100 = women <=15 / men <=5 of 100 dot grids, hard without slowing aging */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, ff, paper, photo, enter, morph, wash, panel, head, kick, tel, count, card, chip, flash, cam, stamp, rings,
+          book, scatter, helix, path, arrow, ruler, chart, bars, gauge, dots, lens, toggle } = AT;
+  const tOl = at("olsh", .8), tHu = at("hundred", 6.3), tMe = at("men", 10), tCe = at("century", 13.5);
+  paper();
+  photo("A27", { t: 0, d: tHu + .5, mv: "push", a: .6, in: "fade", until: tHu + .2 });
+  wash(0, tHu, { bg: `linear-gradient(90deg, ${K.bg}f5 30%, ${K.bg}e0)` });
+  kick("2024 STUDY", .2, { y: H * .12, until: tHu });
+  card("S. Jay Olshansky", "LONGEVITY RESEARCHER", W * .06, H * .18, tOl, { c: K.vio, until: tHu });
+  chart([[0, .1], [.25, .45], [.5, .7], [.75, .8], [1, .84]], tOl + 1, { box: [W * .5, H * .16, W * .42, H * .44], c: K.vio, d: 2, until: tHu });
+  tel("ఆయుష్షు పెరగడం <b>slow</b> అవుతోంది", tOl + 2.2, { y: H * .5, size: 3.4, c: K.vio, until: tHu });
+  kick("WHO REACHES 100? (MAX, PER 100 PEOPLE)", tHu, { y: H * .1, c: K.ink, until: tCe });
+  dots(100, 15, [W * .1, H * .17, W * .24], tHu + .3, { cols: 10, c: K.red, d: 1, until: tCe });
+  dots(100, 5, [W * .58, H * .17, W * .24], tMe - .3, { cols: 10, c: K.vio, d: 1, until: tCe });
+  chip("WOMEN · 15%", W * .15, H * .63, tHu + .8, { c: K.red, size: 2.6, until: tCe });
+  chip("MEN · 5%", W * .65, H * .63, tMe, { c: K.vio, size: 2.6, until: tCe });
+  photo("A24", { t: tCe - .2, mv: "push", a: .6, in: "blinds" });
+  wash(tCe, null, { a: .92 });
+  head("No aging slowdown =<br><em>no big jump</em> this century", tCe, { y: H * .2, size: 7 });
+  AT.done();
+</script>
+</body></html>

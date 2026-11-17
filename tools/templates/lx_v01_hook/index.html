@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="lk.js"></script>
+<style>/* 12_Anthropic_IPO lx_v01_hook: V01 hook: towers look-up, logo goes public, $90B raise; twist: chip makers become shareholders */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, src, out, grid, shot, ticks, enter, morph, head, te, mono, num, tape, chart, bars, bracket, chip, logo, pages, ring, flash, scan, cam, dim, stamp, arrow, big } = LK;
+  document.documentElement.style.setProperty("--u", u + "px");
+  const t90 = at("b90", 3), tTw = at("twist", 7.6), tCh = at("chips", 10), tSh = at("share", 12.4);
+  shot("B01", { t: 0, d: tTw + .5, mv: "rise", a: .8, in: "line", until: tTw });
+  dim(0, tTw, .6, { bg: "linear-gradient(180deg, #07090fee 15%, #07090f20 60%)" });
+  logo("anthropic_logo_w", [W * .12, H * .1, W * .76, H * .035], .3, { in: "wipe" });
+  head("goes <em>public</em>", 1.2, { align: "center", y: H * .16, size: 13 });
+  mono("IPO · UP TO", t90 - .4, { align: "center", y: H * .3, c: K.green });
+  num(0, 90, t90 - .2, { align: "center", y: H * .33, pre: "$", unit: "B", size: 28, col: K.green, c: K.ink, d: 1 });
+  shot("B02", { t: tTw - .1, d: D - tTw, mv: "orbit", a: .8, in: "whip" });
+  dim(tTw, null, .6, { bg: "linear-gradient(180deg, #07090fee 20%, #07090f10 60%)" });
+  stamp("THE TWIST", W * .5, H * .1, tTw, { size: 6, c: K.gold, rot: -4 });
+  head("Chip <em>makers</em>", tCh - .2, { align: "center", y: H * .2, size: 13 });
+  head("become <em>owners</em>", tSh - .3, { align: "center", y: H * .28, size: 13, c: K.green });
+  LK.done();
+</script>
+</body></html>

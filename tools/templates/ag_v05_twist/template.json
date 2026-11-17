@@ -1,0 +1,13 @@
+{
+ "name": "ag_v05_twist",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 13_Aging_150; reuse only when the user asks",
+  "kit": "atlas_kit"
+ },
+ "description": "V05 twist: no proof for 150; Jeanne Calment 122 on a ruler; can AI extend life or is it nature's limit?"
+}

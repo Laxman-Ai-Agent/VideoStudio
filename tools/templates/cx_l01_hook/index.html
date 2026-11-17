@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="cine.js"></script>
+<style>/* 11_Thyroid L01 (0-14 s): a small gland in the neck decides every organ's speed -> that is the thyroid -> 4 crore+ Indians.
+   T01 neck: crash-in on the glowing gland, tag on "gland"; T02 gland model orbits in through an iris, SPEED CONTROL slams on
+   "speed", THYROID fills the frame on "thyroid"; whip to T03 India crowd with letterbox bars, 4 CRORE+ counts up on "crore". */
+</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, u, K, tl, E, at, shot, title, te, kick, num, tag, ring, flash, leak, scope, embers, cam, out } = CX;
+  const tGl = at("gland", 2), tSp = at("speed", 5.1), tTh = at("thy", 7.5), tIn = at("india", 8.8), tCr = at("crore", 10.3), tEx = at("exp", 12.6);
+
+  /* 1. neck, crash in; the gland glows; tag lands on "gland" */
+  shot("T01", { t: 0, d: 3.6, mv: "crash", a: .5, in: "fade", fx: .5, fy: .55 });
+  kick("ONE SMALL GLAND", .4, { y: H * .12, until: 3.4 });
+  tag("THYROID <small>మెడ ముందు భాగం</small>", W * .5, H * .5, W * .68, H * .3, tGl, { until: 3.5 });
+
+  /* 2. the gland model orbits in; SPEED CONTROL, then THYROID fills the frame */
+  const g = shot("T02", { t: 3.6, d: tIn - 3.6, mv: "pull", a: .45, in: "iris", fx: .5, fy: .5 });
+  leak(3.4, 1.4);
+  title("<em>SPEED</em> CONTROL", tSp - .15, { y: H * .1, slam: true, until: tTh - .4 });
+  te("ప్రతి అవయవం <b>ఎంత speed</b> గా పనిచేయాలో", tSp + .4, { y: H * .3, until: tTh - .4 });
+  cam(tTh - .3, .5, { scale: 1.06 });
+  flash(tTh - .05, .3);
+  title("THYROID", tTh - .05, { align: "center", y: H * .3, size: 24, slam: true, until: tIn - .2 });
+  ring(W * .5, H * .5, tTh, { r: u * 30, n: 3, d: 1.6 });
+
+  /* 3. whip to India: wide crowd pulls out, bars close in, the counter climbs */
+  cam(tIn - .2, .01, { scale: 1 });
+  shot("T03", { t: tIn - .1, d: D - tIn, mv: "pull", a: 1, in: "whip" });
+  scope(tIn, true);
+  kick("INDIA", tIn + .2, { align: "center", y: H * .2 });
+  num(0, 4, tCr - .2, { align: "center", y: H * .3, size: 26, unit: "CRORE+", d: 1.3 });
+  te("మందికి పైగా thyroid సమస్యలు", tCr + .8, { align: "center", y: H * .6 });
+  kick("EXPERTS ESTIMATE", tEx, { align: "center", y: H * .72, c: K.mute });
+  embers(30);
+  CX.done();
+</script>
+</body></html>

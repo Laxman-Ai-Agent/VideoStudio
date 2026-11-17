@@ -1,0 +1,13 @@
+{
+ "name": "cx_l16_myths",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 11_Thyroid; reuse only when the user asks",
+  "kit": "cine_kit"
+ },
+ "description": "L16 myths + risk: cabbage MYTH -> OK, scale NOT ALL THYROID, ECG UNTREATED HYPER, STROKE / HEART FAILURE"
+}
