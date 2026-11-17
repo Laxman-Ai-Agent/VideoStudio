@@ -67,7 +67,11 @@ def previous(project: Path, n: int = LOOKBACK) -> list[tuple[str, ThemeSpec]]:
     import re
     if re.match(r"^\d+x\d+$", project.name):
         project = project.parent
-    root = project.parent.parent if project.parent.name in CHANNELS else project.parent  # channel folder -> projects/
+    root = project.parent  # projects/ itself, or a channel / group folder inside it
+    if root.name in CHANNELS:
+        root = root.parent
+    elif root.parent.name in CHANNELS:
+        root = root.parent.parent
     out = []
     for d in sorted((x for x in project_dirs(root) if x.name < project.name), key=lambda x: x.name, reverse=True):
         f = next((g for g in [d / "work" / "theme.json", *sorted(d.glob("*x*/work/theme.json"))] if g.exists()), None)

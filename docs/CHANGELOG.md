@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-17
+- Group folder: `projects/The Dark World/AI_Doctor/` holds 01_AI_Doctor and 02-AI_Doctor_5min (same topic). `project_dirs()` now scans channel and group folders (max 2 deep); `identity.previous()` climbs out of a group folder too. Tests: `test_group_folder_inside_channel_is_searched`, `test_previous_inside_a_group_folder_in_a_channel`. Suite: 160 passed.
 - Previews: a final that passes QA deletes its format's 480p previews (`output/preview_<fmt>.mp4` and `work/assembled/preview_<fmt>.mp4`) via `pipeline/project.py` `remove_previews_after_final`, called from `studio.py`. Test: `test_final_removes_only_its_formats_previews`.
 - Layout: projects moved into channel folders `projects/The Dark World/` (03, 04, 05, 06, 07, 12) and `projects/Health Decode/` (09, 10, 11, 13-17); 01 and 02 stay at root. `project.py` `project_dirs()` (used by `next_number`, `find_project`) and `identity.previous()` now see one level down (`CHANNELS` in config.py). Bug test: `test_channel_folders_are_searched_and_numbered`, `test_previous_sees_projects_in_other_channel_folders`. Full suite 157 passed.
 - 17_Sleep_Apnea: new "night watch" kit (tools/templates/night_kit: breath trace, SpO2, 2D airway, night strip, AHI ruler, blink transition), sequences sa_l01-l23 + sa_v01-v07, 78 Kaggle stills, finals both formats (QA PASS).

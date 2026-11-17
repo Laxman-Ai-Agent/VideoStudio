@@ -99,6 +99,14 @@ def test_final_removes_only_its_formats_previews(tmp_path):
     assert (p / "output" / "final_16x9.mp4").exists()            # final kept
 
 
+def test_group_folder_inside_channel_is_searched(tmp_path):
+    g = tmp_path / "The Dark World" / "AI_Doctor"
+    (g / "01_AI_Doctor").mkdir(parents=True)
+    (g / "02-AI_Doctor_5min").mkdir()
+    assert find_project("02", tmp_path) == g / "02-AI_Doctor_5min"
+    assert next_number(tmp_path) == 3
+
+
 def test_channel_folders_are_searched_and_numbered(tmp_path):
     """Bug 2026-11-17: moving projects into 'The Dark World/' hid them from find_project and next_number."""
     (tmp_path / "01_First").mkdir()

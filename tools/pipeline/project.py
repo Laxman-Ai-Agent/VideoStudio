@@ -41,18 +41,21 @@ NUMBERED = re.compile(r"(\d+)[_-]")  # 03_Topic, 11-AI_doctor
 
 
 def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
-    """Numbered project folders: projects/NN_x, and projects/<channel>/NN_x one level down.
-    Skips _deleted and dot folders. Channel folders are any other non-numbered folder."""
-    if not projects_dir.is_dir():
-        return []
+    """Numbered project folders: projects/NN_x, projects/<channel>/NN_x and projects/<channel>/<group>/NN_x.
+    Skips _deleted and dot folders. Any other non-numbered folder is a channel or group folder (max 2 deep)."""
     out = []
-    for d in sorted(projects_dir.iterdir()):
-        if not d.is_dir() or d.name.startswith(("_", ".")):
-            continue
-        if NUMBERED.match(d.name):
-            out.append(d)
-        else:
-            out += [c for c in sorted(d.iterdir()) if c.is_dir() and NUMBERED.match(c.name)]
+
+    def walk(folder: Path, depth: int) -> None:
+        for d in sorted(folder.iterdir()):
+            if not d.is_dir() or d.name.startswith(("_", ".")):
+                continue
+            if NUMBERED.match(d.name):
+                out.append(d)
+            elif depth < 2:
+                walk(d, depth + 1)
+
+    if projects_dir.is_dir():
+        walk(projects_dir, 0)
     return out
 
 

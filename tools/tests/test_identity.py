@@ -45,6 +45,14 @@ def test_previous_videos_are_the_style_memory(tmp_path):
     assert idt.identity_check(me, new, BT).status == "ok"
 
 
+def test_previous_inside_a_group_folder_in_a_channel(tmp_path):
+    grp = tmp_path / "The Dark World" / "AI_Doctor"
+    (grp / "01_g" / "work").mkdir(parents=True)
+    (grp / "01_g" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
+    (grp / "02_h").mkdir()
+    assert [n for n, _ in idt.previous(grp / "02_h")] == ["01_g"]
+
+
 def test_previous_sees_projects_in_other_channel_folders(tmp_path):
     """Bug 2026-11-17: after the move, earlier videos sit in channel folders; the look memory must still find them."""
     (tmp_path / "The Dark World" / "01_a" / "work").mkdir(parents=True)
