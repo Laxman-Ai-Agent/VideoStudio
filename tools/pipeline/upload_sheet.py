@@ -12,12 +12,13 @@ from .config import PROJECTS, SHEET_ID, SHEET_KEY, SHEET_SKIP, SHEET_TABS
 from .project import PROJECT, project_dirs, project_order, variations
 
 NOT_FOUND = "Not found"
-WIDTH = 22  # A..V (S = the Refresh dropdown, carried with its row)
+WIDTH = 23  # A..W (S = the Refresh dropdown, carried with its row)
 COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
 PATH_COLS = (2, 3, 4, 8, 9, 10)
 TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
 SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17,  # O P Q R, one per project
           "facebook_post": 21}  # V: Facebook long-video post caption (P is the Reel caption)
+SHORTS_PIN = 22  # W: the 9x16 file's pinned_comment (R is the long video's)
 PRODUCT_LINKS = 20  # U: affiliate links the user gives, one per line, same order as the products
 TITLE_OPTIONS = 19  # T: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
 METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
@@ -70,7 +71,9 @@ def _metadata(path: Path, fmt: str) -> dict[int, str]:
         print(f"  sheet: WARNING {path}: {problem}")
     join = lambda v: ", ".join(v) if isinstance(v, list) else (v or "")
     got = {c: join(m.get(k)) for c, k in zip(TEXT_COLS[fmt], ("title", "description", "tags"))}
-    got.update({c: join(m.get(k)) for k, c in SHARED.items()})
+    got.update({c: join(m.get(k)) for k, c in SHARED.items() if not (fmt == "9x16" and k == "pinned_comment")})
+    if fmt == "9x16" and m.get("pinned_comment"):
+        got[SHORTS_PIN] = m["pinned_comment"]
     for c, k in ((14, "products"), (PRODUCT_LINKS, "product_links")):  # one per line: easy to copy one by one
         if isinstance(m.get(k), list) and m[k]:
             got[c] = "\n".join(m[k])
@@ -85,7 +88,7 @@ def _order(name: str) -> tuple:
 
 
 def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list[list[str]]:
-    """Sheet rows (A2:V, as read) + scanned projects -> the rows to write back."""
+    """Sheet rows (A2:W, as read) + scanned projects -> the rows to write back."""
     rows = {}
     for r in existing:
         r = (list(r) + [""] * WIDTH)[:WIDTH]
@@ -142,12 +145,12 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
     for tab, scanned in channel_projects(projects_dir).items():
         rng = lambda a: quote(f"'{tab}'!{a}", safe="")
-        got = _ok(s.get(api + rng("A2:V")))
+        got = _ok(s.get(api + rng("A2:W")))
         rows = merge(got.json().get("values", []), scanned)
         if rows:
-            _ok(s.put(api + rng(f"A2:V{len(rows) + 1}"), params={"valueInputOption": "RAW"},
+            _ok(s.put(api + rng(f"A2:W{len(rows) + 1}"), params={"valueInputOption": "RAW"},
                   json={"values": rows}))
-        _ok(s.post(api + rng(f"A{len(rows) + 2}:V") + ":clear"))
+        _ok(s.post(api + rng(f"A{len(rows) + 2}:W") + ":clear"))
         print(f"  sheet: {tab} {len(rows)} rows")
     return True
 

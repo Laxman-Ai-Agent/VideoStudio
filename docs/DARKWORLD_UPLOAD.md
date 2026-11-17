@@ -70,9 +70,18 @@ Sheet only, never posted to the channel by Claude.
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question that invites answers +
-  the same question in English + "📚 Sources & chapters are in the description." (+ "Educational only, not medical
-  advice." on health-related topics). 2-3 lines, no links unless known.
+- Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
+  `pinned_comment` in the 9x16 metadata.json -> column W (Shorts).
+  1. The question first, in Telugu (only the first 1-2 lines show).
+  2. The same question the video asks at its end, so the comment continues the video.
+  3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").
+  4. One "Next ఏ topic కావాలి? Comments లో చెప్పండి" line (ideas for the next videos).
+  5. Long video: one key-moment timestamp ("... 1:10 దగ్గర చూడండి"); timestamps in comments are clickable.
+  6. Later changes go in as a "📌 Update: ..." line (the user edits the pinned comment on YouTube).
+  7. Ends with "ℹ️ Educational only. Sources in the description." (+ "not medical advice" on health-related topics).
+  8. 3-4 lines, no links (spam filter), no subscribe link.
+  9. Shorts pinned comment: the question + "Full video: Short పైన ఉన్న related video link నొక్కండి 🔗" (remind the
+     user to set the Short's Related video in YouTube Studio) + the short disclaimer.
 - Advertiser-friendly: facts, not rumours; company results stated as their own announcements; no defamation, no
   graphic or fear words in titles. Health-related topics: the "not medical advice" line in the disclaimer.
 - Realistic AI images: the AI-visuals line, and remind the user to tick YouTube's "Altered or synthetic content".

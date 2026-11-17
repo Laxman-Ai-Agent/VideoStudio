@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Pinned comments: 9 rules per channel; R renamed "Pinned Comment (16x9)", new W "Pinned Comment (Shorts)" from the 9x16 file; sync reads / writes A..W. Aging_150 both.
 - Instagram: 9 caption rules per channel (hook ~50 chars, keywords in the caption, 3-5 hashtags, send-to-a-friend line, link in bio, health line). Aging_150 caption rewritten.
 - Facebook: 9 caption rules per channel; two captions: P renamed "Facebook Reel Caption (9x16)" (`facebook`), new V "Facebook Post Caption (16x9)" (`facebook_post`); sync reads / writes A..V. Aging_150 both captions.
 - Products: 8 product rules per channel; products one per line in column O; new column U "Product Links" (`product_links`, only links the user gives); sync reads / writes A..U. Dark World template got the affiliate line. Aging_150 products rewritten.

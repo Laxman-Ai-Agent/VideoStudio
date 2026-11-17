@@ -77,9 +77,20 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Always end with "ℹ️ సమాచారం కోసం మాత్రమే, doctor సలహా తీసుకోండి." (Instagram health policy).
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question about the viewer's own
-  experience or a myth + the same in English + "⚠️ Educational only, not medical advice. Please consult your doctor."
-  (+ "Tele-MANAS 14416" on sensitive topics). 2-3 lines; never ask viewers to share personal medical details.
+- Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
+  `pinned_comment` in the 9x16 metadata.json -> column W (Shorts).
+  1. The question first, in Telugu (only the first 1-2 lines show).
+  2. The same question the video asks at its end, so the comment continues the video.
+  3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").
+  4. One "Next ఏ topic కావాలి? Comments లో చెప్పండి" line (ideas for the next videos).
+  5. Long video: one key-moment timestamp ("... 1:10 దగ్గర చూడండి"); timestamps in comments are clickable.
+  6. Later changes go in as a "📌 Update: ..." line (the user edits the pinned comment on YouTube).
+  7. Never ask viewers for personal medical details; sensitive topics add "మీ symptoms comments లో చెప్పకండి,
+     doctor ని కలవండి". Ends with "⚠️ Educational only, not medical advice. Please consult your doctor."
+     (+ "Tele-MANAS 14416" on sensitive topics).
+  8. 3-4 lines, no links (spam filter), no subscribe link.
+  9. Shorts pinned comment: the question + "Full video: Short పైన ఉన్న related video link నొక్కండి 🔗" (remind the
+     user to set the Short's Related video in YouTube Studio) + the short disclaimer.
 - YouTube medical misinformation + advertiser-friendly rules: no cure claims ("100% cure"), no "stop your medicine",
   no home remedy promoted as a treatment, no fear words ("maranam", "danger") in titles; facts in line with
   WHO / ICMR / NIH; first ~150 characters = Telugu question + English question with the main keyword; keywords in

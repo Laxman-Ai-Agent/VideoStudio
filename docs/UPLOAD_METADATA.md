@@ -2,7 +2,7 @@
 
 After every passed final, Claude reads `<fmt>/output/script.txt` (+ `work/scenes.json` for chapter times) and
 writes `<fmt>/output/metadata.json`, then runs `studio.cmd sheet`. The sheet sync puts it in columns F-H / L-N
-(per format) and O-R (products, Facebook, Instagram, pinned comment; from either file) and T (title options, 16x9), U (product links), V (Facebook post caption) but only into EMPTY cells, so the user's own
+(per format) and O-R (products, Facebook, Instagram, pinned comment; from either file) and T (title options, 16x9), U (product links), V (Facebook post caption), W (Shorts pinned comment, from the 9x16 file) but only into EMPTY cells, so the user's own
 edits in the sheet stay. Sheet only: Claude never posts to the channels.
 
 ## Rules: one file per channel
