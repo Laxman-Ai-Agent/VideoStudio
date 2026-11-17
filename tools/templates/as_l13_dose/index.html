@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_l13_dose: L13 inhaled steroids are not addictive; dose far lower than steroid tablets (dose columns) */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 239.4);
+  shot("A49", { t: 0, d: 3, mv: "push", in: "mist", until: T(242.4) });
+  myth("Inhaled Steroids = <b>అలవాటు</b>", T(239.8), T(241.2), { x: W * .08, y: H * .62, until: T(242.3) });
+  shot("A50", { t: T(242.3), d: 6, mv: "drift", in: "wipe", box: [W * .04, H * .12, W * .4, H * .58], glass: true, cap: "TABLETS VS INHALER", c: K.hn });
+  const bx = W * .52, base = H * .78, col = (x, hh, c, lab, val, t) => {
+    const b = place(mk("div", "bk-fx"), x, base - hh, W * .14, hh); b.style.background = `linear-gradient(0deg, ${c}, ${c}55)`; b.style.borderRadius = u + "px"; b.style.transformOrigin = "50% 100%";
+    tl.fromTo(b, { scaleY: 0 }, { scaleY: 1, duration: 1, ease: E.io, immediateRender: true }, t);
+    const v = place(mk("div", "bk-num"), x, base - hh - u * 9, W * .2); v.style.fontSize = u * 6 + "px"; v.innerHTML = val; show(v, t + .6, { opacity: 0, y: u * 2 }, .5);
+    tag(lab, t, { x, y: base + u * 1.6, c }); };
+  col(bx, H * .5, K.co, "STEROID TABLET", "40<small>mg</small>", T(244.3));
+  col(bx + W * .22, H * .012, K.mt, "INHALED", "0.4<small>mg</small>", T(246.7));
+  te("సాధారణ <b>రోజువారీ మోతాదు</b> (ఉదాహరణ)", T(243.0), { x: W * .52, y: H * .06, size: 3.2 });
+  BK.done();
+</script>
+</body></html>

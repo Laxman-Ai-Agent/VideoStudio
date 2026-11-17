@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_l09_symptoms: L09 symptoms: night cough (phone 3 AM), chest tightness, breathless, wheeze, come and go diary, ignored */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 168.7);
+  flow({ n: 100, alpha: .45, band: .8, until: T(171.1) });
+  head("<b>SYMPTOMS</b>", T(168.9), { y: H * .38, align: "center", size: 9.5, until: T(171) });
+  shot("A42", { t: T(171.0), d: 3.6, mv: "push", in: "mist", fx: .4, until: T(174.7) });
+  phone(`<div style="padding:22% 10% 0;text-align:center"><div style="font:600 ${u * 1.6}px var(--font-script);letter-spacing:.2em;color:${K.mute}">TUESDAY, 14 NOV</div>
+    <div style="font:700 ${u * 7.6}px var(--font-head);margin:${u * .6}px 0">3:12</div>
+    <div style="margin-top:${u * 4}px;background:#ffffff14;border-radius:${u * 1.2}px;padding:${u * 1.1}px;text-align:left;font-size:${u * 1.5}px">
+    <b style="color:${K.hn}">SLEEP</b><br>Woken up 3 times · coughing<br><span style="color:${K.mute}">Last night: 4 h 10 min</span></div></div>`,
+    W * .72, H * .1, H * .64, T(171.6), { rot: 6, until: T(174.6) });
+  te("<b>రాత్రి / తెల్లవారుజామున</b> దగ్గు", T(172.4), { y: H * .8, until: T(174.6) });
+  shot("A43", { t: T(174.6), d: 2.2, mv: "push", in: "wipe", until: T(176.8) });
+  focus(W * .5, H * .58, u * 9, T(175.0), { label: "CHEST TIGHTNESS", c: K.co, until: T(176.7) });
+  shot("A44", { t: T(176.7), d: 3.7, mv: "drift", in: "iris" , until: T(180.4) });
+  tag("BREATHLESS", T(176.9), { c: K.hn, until: T(180.3) });
+  ring(W * .45, H * .35, T(178.8), { r: u * 14, n: 4, c: K.hn });
+  tag("WHEEZE", T(178.9), { y: H * .2, c: K.hn, until: T(180.3) });
+  const vals = [2, 6, 7, 3, 1, 1, 0, 0, 4, 8, 6, 2, 1, 0, 0, 1, 5, 7, 3, 1, 0], pn = place(mk("div", "bk-myth"), W * .1, H * .14, W * .8, H * .56);
+  pn.style.padding = 0; pn.style.whiteSpace = "normal";
+  pn.innerHTML = `<div style="position:absolute;left:${u * 2}px;top:${u * 1.6}px;font:800 ${u * 2.6}px var(--font-head)">SYMPTOM DIARY</div>
+    <div style="position:absolute;right:${u * 2}px;top:${u * 1.8}px;font:600 ${u * 1.6}px var(--font-script);letter-spacing:.15em;color:${K.mute}">3 WEEKS · COUGH + WHEEZE SCORE</div>` +
+    vals.map((v, i) => `<div class="bar" style="position:absolute;bottom:${u * 4}px;left:${u * 3 + i * (W * .8 - u * 6) / vals.length}px;width:${(W * .8 - u * 6) / vals.length * .6}px;
+      height:${Math.max(.4, v) * u * 2.6}px;border-radius:${u * .4}px;background:${v > 4 ? K.co : v > 1 ? K.hn : K.mt};transform-origin:50% 100%"></div>`).join("") +
+    ["WEEK 1", "WEEK 2", "WEEK 3"].map((w, i) => `<div style="position:absolute;bottom:${u * 1.2}px;left:${u * 3 + i * (W * .8 - u * 6) / 3}px;font:600 ${u * 1.5}px var(--font-script);color:${K.mute};letter-spacing:.12em">${w}</div>`).join("");
+  show(pn, T(180.3), { opacity: 0, y: u * 6 }, .6, E.snap);
+  tl.fromTo(pn.querySelectorAll(".bar"), { scaleY: 0 }, { scaleY: 1, duration: .5, ease: E.pop, stagger: .1, immediateRender: true }, T(182.8));
+  te("ఎప్పుడూ <b>ఒకేలా ఉండవు</b>", T(181.5), { y: H * .76, align: "center", until: T(185.3) });
+  out(pn, T(185.3));
+  shot("A45", { t: T(185.3), d: 4.8, mv: "push", a: .7, in: "mist" });
+  te("<b>సాధారణ దగ్గు</b> అనుకుని...", T(186.6), { y: H * .14, until: T(190) });
+  const st = mk("div", "bk-stamp", null, "IGNORED"); place(st, W * .62, H * .62); st.style.setProperty("--c", K.hn);
+  tl.fromTo(st, { scale: 1.8, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -7, duration: .45, ease: E.pop, immediateRender: true }, T(189.1));
+  BK.done();
+</script>
+</body></html>

@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_l03_breathe: L03 how we breathe: nose -> windpipe -> branches like a tree -> airways, muscle + lining, open flow */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 42.3);
+  const lung = shot("A10", { t: 0, d: 6.4, mv: "drift", a: .7, in: "fade" });
+  tag("NOSE · MOUTH", T(42.7), { until: T(48.6) });
+  head("ONE BIG <b>PIPE</b>", T(45.5), { y: H * .62, size: 6.6, until: T(48.6) });
+  te("గాలి → <b>ఊపిరితిత్తుల</b> వైపు", T(46.7), { y: H * .76, until: T(48.6) });
+  flow({ n: 70, alpha: .7, band: .08, cx: .5, cy: .5, dir: 1, box: [W * .44, 0, W * .12, H * .55], t: T(43.2), until: T(48.6) });
+  tl.to(lung, { opacity: .25, duration: .6 }, T(48.6));
+  shot("A13", { t: T(48.7), d: 5.5, mv: "rise", in: "rise", box: [W * .05, H * .12, W * .42, H * .64], glass: true, cap: "TREE BRANCHES", c: K.hn, until: T(54.2) });
+  tree(W * .73, H * .08, H * .74, T(50.4), { d: 2.6, until: T(54.2) });
+  te("చెట్టు <b>కొమ్మల్లా</b>", T(51.2), { x: W * .07, y: H * .8, c: K.hn, until: T(54.1) });
+  te("ఎన్నో <b>చిన్న గొట్టాలు</b>", T(52.3), { x: W * .55, y: H * .84, until: T(54.1) });
+  tl.to(lung, { opacity: 0, duration: .3 }, T(54.1));
+  shot("A11", { t: T(54.2), d: 2.2, mv: "dive", a: .5, in: "mist", until: T(56.3) });
+  head("<b>AIRWAYS</b>", T(54.8), { y: H * .4, align: "center", size: 10 , until: T(56.2) });
+  shot("A12", { t: T(56.2), d: 11, mv: "push", a: .5, in: "slide", box: [W * .56, H * .12, W * .4, H * .6], glass: true, cap: "HEALTHY AIRWAY" });
+  airway(W * .27, H * .44, u * 15, T(56.2), { id: "h", labels: [["MUSCLE", -2.4, 1.02, T(57.0), K.co], ["LINING", 2.5, .7, T(58.2), "#f4c6bc"], ["OPEN", -.3, .45, T(61.4), K.mt]] });
+  te("చుట్టూ <b>కండరాలు</b>, లోపల <b>మెత్తటి పొర</b>", T(57.4), { x: W * .06, y: H * .82, until: T(60.2) });
+  flow({ n: 150, alpha: .75, band: .14, cy: .44, t: T(61.6), z: 9 });
+  head("<b>OPEN</b> · FREE FLOW", T(61.6), { x: W * .56, y: H * .76, size: 4.6 });
+  te("<b>లోపలికి</b>, <b>బయటికి</b> సులభంగా", T(64.6), { x: W * .06, y: H * .82 });
+  BK.done();
+</script>
+</body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "as_l03_breathe",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 15_Asthma; reuse only when the user asks",
+  "kit": "breath_kit"
+ },
+ "description": "L03 how we breathe: nose -> windpipe -> branches like a tree -> airways, muscle + lining, open flow"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "as_v05_inhaler",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 15_Asthma; reuse only when the user asks",
+  "kit": "breath_kit"
+ },
+ "description": "V05 inhaler fear (for life? steroid danger?) -> inhaled steroids don't cause habit, reduce swelling; reliever vs preventer; never stop on your own"
+}

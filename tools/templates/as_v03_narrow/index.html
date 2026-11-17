@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_v03_narrow: V03 swelling, muscles tighten, mucus -> narrow airway; symptoms cough, chest tightness, breathless, wheeze */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 28.1);
+  const aw = airway(W * .5, H * .3, u * 28, 0, { id: "n", swell: T(29.7), squeeze: T(31.6), mucus: T(32.7), until: T(37.5) });
+  list([["లోపల <b>వాపు</b>", T(29.6), false], ["కండరాలు <b>బిగుసుకుంటాయి</b>", T(31.2), false], ["<b>జిగట</b> పెరుగుతుంది", T(32.7), null]], W * .08, H * .58, { until: T(34.2) });
+  flow({ n: 150, alpha: .8, band: .3, cy: .3, t: T(34.2), choke: [[T(34.3), T(37.5), .9]], z: 9, until: T(37.5) });
+  head("<b>NARROW</b>", T(35.9), { y: H * .62, align: "center", size: 12, c: K.co, until: T(37.4) });
+  head("AIRWAY", T(36.2), { y: H * .7, align: "center", size: 9, until: T(37.4) });
+  shot("B05", { t: T(37.5), d: 6.3, mv: "push", a: .6, in: "mist" });
+  list([["<b>దగ్గు</b>", T(38.1), null], ["ఛాతీ <b>బిగుసుకుపోవడం</b>", T(38.9), null], ["<b>ఆయాసం</b>", T(40.1), null], ["<b>ఈల</b> లాంటి శబ్దం", T(42.1), null]], W * .08, H * .5);
+  ring(W * .5, H * .3, T(42.2), { r: u * 22, n: 4, c: K.hn });
+  tag("SYMPTOMS", T(37.8), { align: "center", y: H * .07, c: K.hn });
+  BK.done();
+</script>
+</body></html>

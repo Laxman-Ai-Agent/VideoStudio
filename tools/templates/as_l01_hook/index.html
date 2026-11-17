@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_l01_hook: L01 hook: breathless night, cold air, inhaler habit?, danger, questions -> decoded */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 0.0);
+  flow({ n: 120, breathe: 4, alpha: .5, band: .9, until: T(19.3) });
+  shot("A01", { t: 0, d: 4.6, mv: "dive", a: .5, in: "mist", fx: .45, fy: .4, until: T(4.8) });
+  head("WHY <b>ASTHMA</b>?", .3, { y: H * .12, align: "center", size: 8 , until: T(4.6) });
+  te("ఊపిరితిత్తుల్లో <b>ఏం మార్పులు</b> జరుగుతాయి?", T(2.3), { y: H * .74, align: "center", until: T(4.6) });
+  shot("A02", { t: T(4.7), d: 2.6, mv: "panR", in: "wipe", until: T(7.4) });
+  tag("COLD AIR", T(4.9), { c: K.hn, until: T(7.2) });
+  te("<b>చల్లటి గాలి</b> వల్ల పెరుగుతుందా?", T(5.3), { y: H * .74, c: K.hn, until: T(7.2) });
+  const inh = shot("A03", { t: T(7.2), d: 2.8, mv: "push", in: "rise", box: [W * .5, H * .1, W * .44, H * .7], glass: true, cap: "INHALER", until: T(9.9) });
+  puff(W * .66, H * .38, T(7.7), { ang: 200, len: u * 30 });
+  head("<b>HABIT</b>", T(8.8), { x: W * .07, y: H * .3, size: 9, c: K.hn, until: T(9.8) });
+  head("FORMING?", T(9.0), { x: W * .07, y: H * .42, size: 6, until: T(9.8) });
+  shot("A05", { t: T(9.9), d: 2.7, mv: "push", in: "iris", c: K.co, until: T(12.7) });
+  head("WHEN IS IT <b>DANGEROUS</b>?", T(10.6), { y: H * .14, align: "center", size: 5.6, c: K.co, until: T(12.6) });
+  const q = [["A01", "BREATHLESS"], ["A03", "INHALER"], ["A17", "AIRWAY"]].map(([k, c], i) =>
+    shot(k, { t: T(12.7) + i * .25, d: 5, mv: i % 2 ? "pull" : "push", in: "rise", box: [W * (.05 + i * .31), H * .2, W * .28, H * .44], glass: true, cap: c, until: T(17.2) }));
+  te("ఎన్నో <b>సందేహాలు</b>", T(13.9), { y: H * .07, align: "center", until: T(17.1) });
+  te("ఇప్పుడే <b>సమాధానాలు</b>", T(15.4), { y: H * .7, align: "center", c: K.hn, until: T(17.1) });
+  q.forEach((e, i) => tl.to(e, { y: -u * 2 * (i - 1), duration: 2, ease: E.soft }, T(14.5)));
+  shot("A10", { t: T(17.2), d: 2.4, mv: "dive", a: .4, in: "mist" });
+  head("ASTHMA <b>DECODED</b>", T(17.5), { y: H * .4, align: "center", size: 8.4 });
+  tag("IN DETAIL · THIS VIDEO", T(18.1), { align: "center", y: H * .56 });
+  BK.done();
+</script>
+</body></html>

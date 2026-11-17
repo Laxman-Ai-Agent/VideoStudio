@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_v05_inhaler: V05 inhaler fear (for life? steroid danger?) -> inhaled steroids don't cause habit, reduce swelling; reliever vs preventer; never stop on your own */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 56.8);
+  shot("B10", { t: 0, d: 6, mv: "push", a: .6, in: "mist", until: T(62.9) });
+  te("Inhaler అంటే <b>భయం</b>", T(59.2), { y: H * .1, align: "center", c: K.hn, until: T(62.8) });
+  head("FOR <b>LIFE</b>?", T(61.4), { y: H * .7, align: "center", size: 11, c: K.hn, until: T(62.8) });
+  doc(`<h3>BUDESONIDE INHALER</h3><div style="color:#4b5a58">Patient information leaflet · 200 mcg / dose</div><div class="rule"></div>
+    <b>What it contains</b><br>Each puff contains <span style="background:#ffd9cf;padding:0 .2em">budesonide, a corticosteroid (steroid)</span>.<br><br>
+    <b>What it is used for</b><br>To prevent asthma symptoms by reducing swelling in the airways.`, W * .08, H * .14, W * .84, H * .4, T(62.8), { until: T(65.2) });
+  te("<b>Steroids</b> ప్రమాదకరమా?", T(63.4), { y: H * .62, align: "center", c: K.co, until: T(65.1) });
+  flow({ n: 100, alpha: .45, band: .7, t: T(65.1), until: T(72.5) });
+  myth("Inhaled Steroids = <b>అలవాటు</b>", T(65.3), T(67.1), { x: W * .08, y: H * .12, until: T(72.4) });
+  airway(W * .5, H * .5, u * 22, T(68.0), { id: "i", swell: T(68.2), open: T(69.6), until: T(72.5) });
+  te("వాపును <b>తగ్గిస్తాయి</b>", T(69.4), { y: H * .72, align: "center", until: T(72.4) });
+  tag("ASTHMA IN CONTROL", T(71.0), { align: "center", y: H * .8, until: T(72.4) });
+  shot("A47", { t: T(72.5), d: 5.7, mv: "push", in: "rise", box: [W * .06, H * .08, W * .88, W * .88 * 9 / 16], glass: true, cap: "RELIEVER" });
+  shot("A46", { t: T(73.7), d: 4.5, mv: "drift", in: "rise", fx: .7, box: [W * .06, H * .4, W * .88, W * .88 * 9 / 16], glass: true, cap: "PREVENTER", c: K.hn });
+  te("రెండింటి <b>పని వేరు</b>", T(75.0), { y: H * .72, align: "center" });
+  const st = mk("div", "bk-stamp", null, "DON'T STOP ON YOUR OWN"); place(st, W * .5, H * .82); st.style.transform = "translateX(-50%)"; st.style.zIndex = 16; st.style.fontSize = u * 4.6 + "px";
+  tl.fromTo(st, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: .45, ease: E.pop, immediateRender: true }, T(76.8));
+  BK.done();
+</script>
+</body></html>

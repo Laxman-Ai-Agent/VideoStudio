@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="bk.js"></script>
+<style>/* 15_Asthma as_l04_sensitive: L04 sensitive airways: dust, smoke, immune system overreacts by mistake, three changes */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, svg, shot, enter, morph, flow, airway, tree, meter, puff, head, te, tag, num, focus, myth, list, phone, doc, dots, ring, mist, cam } = BK;
+  const T = (x) => Math.max(0, x - 67.3);
+  airway(W * .5, H * .44, u * 16, 0, { id: "s", until: T(72.4) });
+  ring(W * .5, H * .44, T(70.6), { r: u * 26, n: 3, c: K.co });
+  head("TOO <b>SENSITIVE</b>", T(70.5), { y: H * .78, align: "center", size: 6, c: K.co, until: T(72.4) });
+  te("ఆస్తమా ఉన్నవాళ్లలో <b>గాలి గొట్టాలు</b>", T(68.2), { y: H * .07, align: "center", until: T(72.4) });
+  const du = shot("A14", { t: T(72.4), d: 3.4, mv: "drift", in: "mist", until: T(75.7) });
+  focus(W * .5, H * .42, u * 9, T(73.0), { label: "DUST", c: K.hn, until: T(75.6) });
+  shot("A15", { t: T(73.5), d: 2.2, mv: "rise", in: "slide", box: [W * .6, H * .14, W * .34, H * .56], glass: true, cap: "SMOKE", c: K.co, until: T(75.7) });
+  shot("A16", { t: T(75.6), d: 7, mv: "orbit", a: .8, in: "iris" });
+  head("IMMUNE SYSTEM", T(76.2), { y: H * .12, size: 5.4 });
+  head("<b>OVERREACTS</b>", T(77.1), { y: H * .22, size: 7.4, c: K.co });
+  tag("= BODY'S DEFENCE FORCE", T(79.4), { y: H * .36, until: T(82.4) });
+  te("అనారోగ్యం నుంచి కాపాడే <b>రక్షణ వ్యవస్థ</b>", T(80.0), { y: H * .74, until: T(82.4) });
+  myth("దుమ్ము = <b style='color:#FF6A4D'>ప్రమాదం</b>?", T(82.6), T(84.8), { x: W * .55, y: H * .6, stamp: "FALSE ALARM", sc: K.hn, until: T(86.6) });
+  num(0, 3, T(86.6), { x: W * .08, y: H * .56, size: 22, unit: "CHANGES", c: K.co, d: .7 });
+  BK.done();
+</script>
+</body></html>
