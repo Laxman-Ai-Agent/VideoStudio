@@ -8,7 +8,8 @@ Sheet only, never posted to the channel by Claude.
 - Title (16x9): main keyword first, Telugu + English mix (how people search), 60-70 chars, curiosity without false
   claims. Shorts title: short hook + `#shorts`.
 - Description: the templates below (long and Shorts).
-- Tags: 10-16, English + Telugu + Tenglish, under 500 chars, ending with "The Dark World".
+- Tags: NO Telugu letters (user, 2026-11-18): English + Tenglish only, 500 characters max as YouTube counts
+  them (commas count, a tag with spaces counts 2 more), ending with "The Dark World".
 - Products: safe, topic-related things (books on the topic, gadgets, devices). Never medicines or supplements.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.

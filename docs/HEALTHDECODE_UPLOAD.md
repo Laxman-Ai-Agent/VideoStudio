@@ -9,9 +9,9 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   name + one of these words first, Telugu + English, 60-70 chars. Say "control / manage", never "cure"; no fear words.
   Shorts title: short hook + `#shorts`.
 - Description: the templates below (long and Shorts).
-- Tags: 10-16 in three kinds: Telugu script ("థైరాయిడ్ లక్షణాలు"), English ("thyroid symptoms"), and Tenglish /
-  common misspellings people type ("thairoid telugu", "thyroid symptoms telugu"); under 500 chars, ending with
-  "Health Decode".
+- Tags: NO Telugu letters (user, 2026-11-18): English ("thyroid symptoms") + Tenglish / misspellings people type
+  ("thyroid lakshanalu", "thairoid telugu"), 500 characters max as YouTube counts them (commas count, a tag with
+  spaces counts 2 more), ending with "Health Decode".
 - Products: safe health devices and aids only (glucometer, BP monitor, pulse oximeter, ORS packets, books).
   Never medicines, prescription drugs or supplements. When the products get affiliate links, the description gets
   the affiliate line (template) - India ASCI and YouTube rules.
