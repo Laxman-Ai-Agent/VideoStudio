@@ -12,22 +12,23 @@ from .config import PROJECTS, SHEET_ID, SHEET_KEY, SHEET_SKIP, SHEET_TABS
 from .project import PROJECT, project_dirs, project_order, variations
 
 NOT_FOUND = "Not found"
-WIDTH = 25  # A..Y (S = the Refresh dropdown, carried with its row)
+WIDTH = 25  # A..Y (Y = the Refresh dropdown, last column, carried with its row)
+REFRESH, REFRESH_COL = 24, "Y"  # moved to the end on the user's request (2026-11-18)
 COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
 PATH_COLS = (2, 3, 4, 8, 9, 10)
 TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
 SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17,  # O P Q R, one per project
-          "facebook_post": 21}  # V: Facebook long-video post caption (P is the Reel caption)
-SHORTS_PIN = 22  # W: the 9x16 file's pinned_comment (R is the long video's)
-THUMB_TEXT = {"16x9": 23, "9x16": 24}  # X / Y: thumbnail text options (main, sub, highlight, visual idea)
+          "facebook_post": 20}  # U: Facebook long-video post caption (P is the Reel caption)
+SHORTS_PIN = 21  # V: the 9x16 file's pinned_comment (R is the long video's)
+THUMB_TEXT = {"16x9": 22, "9x16": 23}  # W / X: thumbnail text options (main, sub, highlight, visual idea)
 
 
 def thumbnail_cell(options: list[dict]) -> str:
     """Thumbnail text options as one readable cell: number + main line, sub line, highlight + visual idea."""
     return "\n\n".join(f"{i}. {o.get('main', '')}\n   {o.get('sub', '')}\n   Highlight: {o.get('highlight', '')}"
                        f" · Visual: {o.get('visual', '')}" for i, o in enumerate(options, 1))
-PRODUCT_LINKS = 20  # U: affiliate links the user gives, one per line, same order as the products
-TITLE_OPTIONS = 19  # T: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
+PRODUCT_LINKS = 19  # T: affiliate links the user gives, one per line, same order as the products
+TITLE_OPTIONS = 18  # S: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
 METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
 IMAGES = {".png", ".jpg", ".jpeg", ".webp"}
 
@@ -174,29 +175,29 @@ def sync_safe() -> bool:
 
 
 WATCHED = IMAGES | {".mp4", ".txt", ".json"}
-# Column S dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
+# Refresh column (Y) dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
 # RUNNING while it syncs, then DONE, or ASK when the sync failed (ask Claude).
 RUN, START, RUNNING, DONE, ASK = "▶ RUN", "▶ START", "⏳ RUNNING", "✅ DONE", "❌ ASK"
 
 
 def run_rows(column: list[list[str]]) -> list[int]:
-    """Sheet row numbers (2-based) whose column S cell asks for a refresh (S2:S as read)."""
+    """Sheet row numbers (2-based) whose Refresh cell (column Y) asks for a refresh (Y2:Y as read)."""
     return [i for i, c in enumerate(column, 2)
             if c and any(w in c[0].upper().split() for w in ("RUN", "START"))]
 
 
 def install_buttons(s=None) -> None:
-    """Column S on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
+    """The Refresh column (Y, last) on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
     s = s or _session()
     meta = _ok(s.get(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}",
                      params={"fields": "sheets.properties"})).json()
     ids = {sh["properties"]["title"]: sh["properties"]["sheetId"] for sh in meta["sheets"]}
     reqs = []
     for tab in SHEET_TABS.values():
-        col = {"sheetId": ids[tab], "startColumnIndex": 18, "endColumnIndex": 19}
+        col = {"sheetId": ids[tab], "startColumnIndex": REFRESH, "endColumnIndex": REFRESH + 1}
         reqs += [
             {"updateCells": {"rows": [{"values": [{"userEnteredValue": {"stringValue": "▶ Refresh"}}]}],
-                             "fields": "userEnteredValue", "start": {"sheetId": ids[tab], "rowIndex": 0, "columnIndex": 18}}},
+                             "fields": "userEnteredValue", "start": {"sheetId": ids[tab], "rowIndex": 0, "columnIndex": REFRESH}}},
             {"setDataValidation": {"range": {**col, "startRowIndex": 1}, "rule": {
                 "condition": {"type": "ONE_OF_LIST", "values": [{"userEnteredValue": v} for v in (RUN, START, RUNNING, DONE, ASK)]},
                 "showCustomUi": True, "strict": False}}},
@@ -210,12 +211,12 @@ def install_buttons(s=None) -> None:
 
 def _requests(s) -> dict[str, list[int]]:
     api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
-    return {tab: run_rows(_ok(s.get(api + quote(f"'{tab}'!S2:S", safe=""))).json().get("values", []))
+    return {tab: run_rows(_ok(s.get(api + quote(f"'{tab}'!{REFRESH_COL}2:{REFRESH_COL}", safe=""))).json().get("values", []))
             for tab in SHEET_TABS.values()}
 
 
 def _mark(s, asked: dict[str, list[int]], word: str) -> None:
-    data = [{"range": f"'{tab}'!S{r}", "values": [[word]]} for tab, rows in asked.items() for r in rows]
+    data = [{"range": f"'{tab}'!{REFRESH_COL}{r}", "values": [[word]]} for tab, rows in asked.items() for r in rows]
     if data:
         _ok(s.post(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values:batchUpdate",
                    json={"valueInputOption": "RAW", "data": data}))
@@ -237,7 +238,7 @@ def signature(projects_dir: Path = PROJECTS) -> tuple:
 
 
 def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
-    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's column S says
+    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's Refresh cell (column Y) says
     RUN (both checked every 30 s); asked rows are set to DONE after the sync.
     ponytail: polling, no OS file events; 15 projects scan in milliseconds, add watchdog only if that changes."""
     import msvcrt
@@ -266,7 +267,7 @@ def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
                 ok = sync_safe()
                 _mark(s, asked, DONE if ok else ASK)
             except Exception as e:
-                print(f"  sheet: could not update column S ({e})")
+                print(f"  sheet: could not update the Refresh column ({e})")
             print(flush=True)  # the log is a file: show the sync result now, not when the buffer fills
             last = now
         time.sleep(every)

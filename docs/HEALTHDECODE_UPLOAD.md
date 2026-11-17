@@ -17,7 +17,7 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   5. Pairs with the thumbnail: never repeat the thumbnail text; thumbnail = the shock, title = the question.
   6. Clean: no ALL CAPS, no "!!!", at most one emoji (usually none); no fear words, no "cure".
   7. Shorts title: hook under 40 characters + " #shorts".
-  8. Three options: `title_options` (3 titles, the first = `title`) in the 16x9 metadata.json -> sheet column T,
+  8. Three options: `title_options` (3 titles, the first = `title`) in the 16x9 metadata.json -> sheet column S,
      for YouTube Studio "Test & Compare" or for the user to pick.
 - Description: the templates below (long and Shorts).
 - Tags: NO Telugu letters (user, 2026-11-18): English ("thyroid symptoms") + Tenglish / misspellings people type
@@ -44,7 +44,7 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
      exists (e.g. "pulse oximeter ISI certified"); books. Never medicines, prescription drugs, supplements,
      "Ayurvedic cure" products or diet pills.
   6. Names close to the Flipkart catalog wording, so YouTube Shopping (India) tagging finds them.
-  7. Column U "Product Links" (`product_links`, one per line, same order): only links the user gives; never
+  7. Column T "Product Links" (`product_links`, one per line, same order): only links the user gives; never
      invent one. When links are there, the description gets the affiliate line (ASCI / YouTube rules):
      "Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you."
   8. Anything the video itself names (a device, a book) comes first.
@@ -53,7 +53,7 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
 - Sensitive topics (mental health, suicide, cancer, epilepsy / seizures, addiction): add the Tele-MANAS line (India
   government's free 24x7 mental health helpline, 14416 or 1-800-891-4416) next to 108.
 - Facebook (user rules 2026-11-18): two captions. `facebook` = Reel caption (9x16 clip, sheet column P);
-  `facebook_post` = long-video post caption (16x9, sheet column V). Both in the 16x9 metadata.json.
+  `facebook_post` = long-video post caption (16x9, sheet column U). Both in the 16x9 metadata.json.
   1. The strongest line first, under ~80 characters (mobile shows 2-3 lines before "See more").
   2. Mostly Telugu (the Facebook audience reads Telugu), English only for key words.
   3. No link in the caption (Facebook cuts the reach of link posts): the video is uploaded to Facebook itself and
@@ -77,8 +77,8 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Always end with "ℹ️ సమాచారం కోసం మాత్రమే, doctor సలహా తీసుకోండి." (Instagram health policy).
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column X;
-  in the 9x16 file = 2 options (Shorts cover) -> column Y. Each option:
+- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column W;
+  in the 9x16 file = 2 options (Shorts cover) -> column X. Each option:
   `{"main": "...", "sub": "...", "highlight": "<one word of main>", "visual": "<one-line image idea>"}`.
   1. main = line 1: 2-4 words, big Telugu letters, a number or a shock word; `highlight` = the one word to color.
   2. sub = line 2: 3-6 words, smaller, curiosity or an English keyword.
@@ -89,7 +89,7 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
      promises.
   7. `visual` = one line the user can turn into the image (subject, one prop, mood), clean light clinical look, glossy 3D organ / body detail.
 - Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
-  `pinned_comment` in the 9x16 metadata.json -> column W (Shorts).
+  `pinned_comment` in the 9x16 metadata.json -> column V (Shorts).
   1. The question first, in Telugu (only the first 1-2 lines show).
   2. The same question the video asks at its end, so the comment continues the video.
   3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").

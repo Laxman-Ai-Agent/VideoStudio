@@ -52,8 +52,8 @@ def test_metadata_fills_only_empty_text_cells(tmp_path):
     touch(p / "9x16" / "output" / "x_9x16.mp4")
     (p / "9x16" / "output" / "metadata.json").write_text(json.dumps({"title": "T9", "tags": [], "pinned_comment": "PIN9"}), "utf-8")
     found = scan(p)
-    assert found[5] == "T16" and found[6] == "D16" and found[7] == "a, b" and found[14] == "book\nkit" and found[20] == "https://x/1"
-    assert found[15] == "FB" and found[21] == "FBP" and found[17] == "PIN" and found[19] == "1. A\n2. B\n3. C" and found[11] == "T9" and found[22] == "PIN9" and found[17] == "PIN" and 13 not in found and 16 not in found
+    assert found[5] == "T16" and found[6] == "D16" and found[7] == "a, b" and found[14] == "book\nkit" and found[19] == "https://x/1"
+    assert found[15] == "FB" and found[20] == "FBP" and found[17] == "PIN" and found[18] == "1. A\n2. B\n3. C" and found[11] == "T9" and found[21] == "PIN9" and found[17] == "PIN" and 13 not in found and 16 not in found
     rows = merge([["1", p.name, "", "", "", "My own title"]], {p.name: found})
     assert rows[0][5] == "My own title" and rows[0][6] == "D16" and rows[0][11] == "T9"
 
@@ -90,5 +90,5 @@ def test_thumbnail_text_goes_to_x_and_y(tmp_path):
         opts = [{"main": f"M{i}", "sub": f"S{i}", "highlight": f"M{i}", "visual": f"V{i}"} for i in range(n)]
         (p / fmt / "output" / "metadata.json").write_text(json.dumps({"thumbnail_text": opts}), "utf-8")
     found = scan(p)
-    assert found[23].count("Visual:") == 5 and found[24].count("Visual:") == 2
+    assert found[22].count("Visual:") == 5 and found[23].count("Visual:") == 2
     assert thumbnail_cell([{"main": "A", "sub": "B", "highlight": "A", "visual": "C"}]) == "1. A\n   B\n   Highlight: A · Visual: C"
