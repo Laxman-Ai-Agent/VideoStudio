@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from pipeline.upload_sheet import NOT_FOUND, channel_projects, check_tags, merge, run_rows, scan, signature, youtube_tag_chars
+from pipeline.upload_sheet import (COLS, NOT_FOUND, PRODUCT_LINKS, SHARED, SHORTS_PIN, TEXT_COLS, THUMB_TEXT,
+                                   TITLE_OPTIONS, WIDTH, channel_projects, check_tags, merge, run_rows, scan, signature, youtube_tag_chars)
+V16, S16, T16 = COLS["16x9"]
+V9, S9, T9 = COLS["9x16"]
+TI16, DE16, TG16 = TEXT_COLS["16x9"]
+TI9, DE9, TG9 = TEXT_COLS["9x16"]
 
 
 def touch(p: Path) -> Path:
@@ -18,21 +23,23 @@ def test_scan_takes_output_finals_and_input_thumbnail(tmp_path):
     touch(p / "16x9" / "input" / "audio.mp3")
     v9 = touch(p / "9x16" / "output" / "final_9x16.mp4")  # no script, no thumbnail yet
     got = scan(p)
-    assert got == {2: str(v16), 3: str(s16), 4: str(t16), 8: str(v9)}
+    assert got == {V16: str(v16), S16: str(s16), T16: str(t16), V9: str(v9)}
 
 
 def test_merge_keeps_user_columns_and_paths_sorts_by_date():
-    existing = [["1", "03__11-NOV-2026__B", "old.mp4", "", "kept_thumb.png", "My title", "Desc", "", NOT_FOUND],
-                ["2", "02__10-NOV-2026__A", "a.mp4"]]
-    rows = merge(existing, {"03__11-NOV-2026__B": {2: "new.mp4", 8: "b9.mp4"},
-                            "01__12-NOV-2026__C": {2: "c.mp4"}})
+    b_row = [""] * WIDTH
+    b_row[:2] = ["1", "03__11-NOV-2026__B"]
+    b_row[V16], b_row[T16], b_row[TI16], b_row[DE16], b_row[V9] = "old.mp4", "kept_thumb.png", "My title", "Desc", NOT_FOUND
+    a_row = ["2", "02__10-NOV-2026__A", "a.mp4"]
+    rows = merge([b_row, a_row], {"03__11-NOV-2026__B": {V16: "new.mp4", V9: "b9.mp4"},
+                                  "01__12-NOV-2026__C": {V16: "c.mp4"}})
     assert [r[1] for r in rows] == ["01__12-NOV-2026__C", "03__11-NOV-2026__B", "02__10-NOV-2026__A"]  # newest first
     assert [r[0] for r in rows] == [1, 2, 3]
     b = rows[1]
-    assert b[2] == "new.mp4" and b[4] == "kept_thumb.png" and b[5:7] == ["My title", "Desc"]
-    assert b[3] == NOT_FOUND and b[8] == "b9.mp4"
-    assert rows[2][2] == "a.mp4" and rows[2][3] == ""  # projects not scanned this run stay as they were
-    assert all(len(r) == 24 for r in rows)
+    assert b[V16] == "new.mp4" and b[T16] == "kept_thumb.png" and (b[TI16], b[DE16]) == ("My title", "Desc")
+    assert b[S16] == NOT_FOUND and b[V9] == "b9.mp4"
+    assert rows[2][V16] == "a.mp4" and rows[2][S16] == ""  # projects not scanned this run stay as they were
+    assert all(len(r) == WIDTH for r in rows)
 
 
 def test_channel_projects_needs_a_final_and_a_channel(tmp_path):
@@ -52,10 +59,15 @@ def test_metadata_fills_only_empty_text_cells(tmp_path):
     touch(p / "9x16" / "output" / "x_9x16.mp4")
     (p / "9x16" / "output" / "metadata.json").write_text(json.dumps({"title": "T9", "tags": [], "pinned_comment": "PIN9"}), "utf-8")
     found = scan(p)
-    assert found[5] == "T16" and found[6] == "D16" and found[7] == "a, b" and found[14] == "book\nkit" and found[19] == "https://x/1"
-    assert found[15] == "FB" and found[17] == "PIN" and found[18] == "1. A\n2. B\n3. C" and found[11] == "T9" and found[20] == "PIN9" and found[17] == "PIN" and 13 not in found and 16 not in found
-    rows = merge([["1", p.name, "", "", "", "My own title"]], {p.name: found})
-    assert rows[0][5] == "My own title" and rows[0][6] == "D16" and rows[0][11] == "T9"
+    assert found[TI16] == "T16" and found[DE16] == "D16" and found[TG16] == "a, b"
+    assert found[SHARED["products"]] == "book\nkit" and found[PRODUCT_LINKS] == "https://x/1"
+    assert found[SHARED["facebook"]] == "FB" and found[SHARED["pinned_comment"]] == "PIN" and found[SHORTS_PIN] == "PIN9"
+    assert found[TITLE_OPTIONS] == "1. A\n2. B\n3. C" and found[TI9] == "T9"
+    assert TG9 not in found and SHARED["instagram"] not in found
+    own = [""] * WIDTH
+    own[:2], own[TI16] = ["1", p.name], "My own title"
+    rows = merge([own], {p.name: found})
+    assert rows[0][TI16] == "My own title" and rows[0][DE16] == "D16" and rows[0][TI9] == "T9"
 
 
 def test_signature_changes_when_a_thumbnail_lands_in_input(tmp_path):
@@ -90,7 +102,7 @@ def test_thumbnail_text_goes_to_x_and_y(tmp_path):
         opts = [{"main": f"M{i}", "sub": f"S{i}", "highlight": f"M{i}", "visual": f"V{i}"} for i in range(n)]
         (p / fmt / "output" / "metadata.json").write_text(json.dumps({"thumbnail_text": opts}), "utf-8")
     found = scan(p)
-    assert found[21].count("Visual:") == 5 and found[22].count("Visual:") == 2
+    assert found[THUMB_TEXT["16x9"]].count("Visual:") == 5 and found[THUMB_TEXT["9x16"]].count("Visual:") == 2
     assert thumbnail_cell([{"main": "A", "sub": "B", "highlight": "A", "visual": "C"}]) == "1. A\n   B\n   Highlight: A · Visual: C"
 
 

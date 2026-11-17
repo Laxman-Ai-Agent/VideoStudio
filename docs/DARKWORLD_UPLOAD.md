@@ -16,7 +16,7 @@ Sheet only, never posted to the channel by Claude.
   5. Pairs with the thumbnail: never repeat the thumbnail text; thumbnail = the shock, title = the question.
   6. Clean: no ALL CAPS, no "!!!", at most one emoji (usually none).
   7. Shorts title: hook under 40 characters + " #shorts".
-  8. Three options: `title_options` (3 titles, the first = `title`) in the 16x9 metadata.json -> sheet column S,
+  8. Three options: `title_options` (3 titles, the first = `title`) in the 16x9 metadata.json -> sheet column G,
      for YouTube Studio "Test & Compare" or for the user to pick.
 - Description: the templates below (long and Shorts).
 - Tags: NO Telugu letters (user, 2026-11-18): English + Tenglish only, 500 characters max as YouTube counts
@@ -32,7 +32,7 @@ Sheet only, never posted to the channel by Claude.
   7. 15-25 tags, each about 30 characters or less, total 400-480 (room under 500).
   8. Shorts: 8-10 tags only: main keyword, 2-3 variations, "shorts", the channel name.
   `pipeline/upload_sheet.check_tags` prints a warning on Telugu letters or more than 500.
-- Products (sheet column O, `products` in the 16x9 file; user rules 2026-11-18):
+- Products (sheet column V, `products` in the 16x9 file; user rules 2026-11-18):
   1. Written the way people type in the Amazon / Flipkart search box, so pasting it finds the right item
      ("fitness band with heart rate monitor", not "fitness band").
   2. One product per line in the cell (the sync joins the list with new lines).
@@ -41,12 +41,12 @@ Sheet only, never posted to the channel by Claude.
   5. The Dark World: books, science kits, gadgets that fit the topic (space -> "beginner telescope", AI ->
      "AI book for beginners"). Never medicines or supplements.
   6. Names close to the Flipkart catalog wording, so YouTube Shopping (India) tagging finds them.
-  7. Column T "Product Links" (`product_links`, one per line, same order): only links the user gives; never
+  7. Column W "Product Links" (`product_links`, one per line, same order): only links the user gives; never
      invent one. When links are there, the description gets the affiliate line (ASCI / YouTube rules):
      "Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you."
   8. Anything the video itself names (a device, a book) comes first.
 - Facebook (user rules 2026-11-18): Facebook and Instagram get the Short (9x16 Reel) only; the long video is
-  YouTube only. `facebook` = the Reel caption (sheet column P), in the 16x9 metadata.json.
+  YouTube only. `facebook` = the Reel caption (sheet column T), in the 16x9 metadata.json.
   1. The strongest line first, under ~80 characters (mobile shows 2-3 lines before "See more").
   2. Mostly Telugu (the Facebook audience reads Telugu), English only for key words.
   3. No link in the caption (Facebook cuts the reach of link posts): the video is uploaded to Facebook itself and
@@ -57,7 +57,7 @@ Sheet only, never posted to the channel by Claude.
   7. 2-3 hashtags only: topic + channel (#TheDarkWorld).
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. Short: hook, 3 bullets, question, link line, hashtags. Written fresh for each video.
-- Instagram (the Reel caption, sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
+- Instagram (the Reel caption, sheet column U, `instagram` in the 16x9 file; user rules 2026-11-18):
   1. Hook in the first line, about 50 characters (Instagram cuts at ~125 with "more").
   2. English search keywords inside a natural sentence (Instagram search reads captions more than hashtags),
      e.g. "aging reverse science in Telugu".
@@ -69,8 +69,8 @@ Sheet only, never posted to the channel by Claude.
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column V;
-  in the 9x16 file = 2 options (Shorts cover) -> column W. Each option:
+- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column K;
+  in the 9x16 file = 2 options (Shorts cover) -> column S. Each option:
   `{"main": "...", "sub": "...", "highlight": "<one word of main>", "visual": "<one-line image idea>"}`.
   1. main = line 1: 2-4 words, big Telugu letters, a number or a shock word; `highlight` = the one word to color.
   2. sub = line 2: 3-6 words, smaller, curiosity or an English keyword.
@@ -79,8 +79,8 @@ Sheet only, never posted to the channel by Claude.
   5. The 5 options take different angles: number, emotion, science, mystery, contrast.
   6. Only what the video delivers (no fake claims, no real person shown doing something they did not do).
   7. `visual` = one line the user can turn into the image (subject, one prop, mood), photoreal, cinematic, dark background.
-- Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
-  `pinned_comment` in the 9x16 metadata.json -> column U (Shorts).
+- Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column J (long video);
+  `pinned_comment` in the 9x16 metadata.json -> column R (Shorts).
   1. The question first, in Telugu (only the first 1-2 lines show).
   2. The same question the video asks at its end, so the comment continues the video.
   3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").

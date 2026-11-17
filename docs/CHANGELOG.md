@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Sheet columns grouped (user): C-K YouTube long, L-S YouTube Shorts, T Facebook, U Instagram, V-W products, X Refresh. Data moved cell by cell (0 changes), restyled; code constants and tests now use column names.
 - Sheet design: category colors per column (`pipeline/upload_sheet_style.py`), frozen header + project name, widths, one-line rows, "Not found" red. Test: `test_style_covers_every_column_once`.
 - Sheet rows: newest project first (user), S.No 1 = latest.
 - Facebook / Instagram = Shorts only (user): column U "Facebook Post Caption" deleted, `facebook_post` dropped; now S title options, T product links, U Shorts pin, V / W thumbnail text, X Refresh.

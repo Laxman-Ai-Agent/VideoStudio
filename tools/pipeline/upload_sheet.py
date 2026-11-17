@@ -14,21 +14,23 @@ from .project import PROJECT, project_dirs, project_order, variations
 NOT_FOUND = "Not found"
 WIDTH = 24  # A..X (X = the Refresh dropdown, last column, carried with its row)
 REFRESH, REFRESH_COL = 23, "X"  # moved to the end on the user's request (2026-11-18)
-COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
-PATH_COLS = (2, 3, 4, 8, 9, 10)
-TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
-# O P Q R, one per project. Facebook and Instagram get the Short (Reel) only (user, 2026-11-18).
-SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17}
-SHORTS_PIN = 20  # U: the 9x16 file's pinned_comment (R is the long video's)
-THUMB_TEXT = {"16x9": 21, "9x16": 22}  # V / W: thumbnail text options (main, sub, highlight, visual idea)
+# Column layout (user, 2026-11-18): every group side by side. 0-based indexes.
+#   A-B project | C-K YouTube long (16x9) | L-S YouTube Shorts (9x16) | T Facebook | U Instagram | V-W products | X Refresh
+COLS = {"16x9": (2, 3, 4), "9x16": (11, 12, 13)}  # video, script, thumbnail path (C D E, L M N)
+PATH_COLS = (2, 3, 4, 11, 12, 13)
+TEXT_COLS = {"16x9": (5, 7, 8), "9x16": (14, 15, 16)}  # title, description, tags (F H I, O P Q)
+# Facebook and Instagram get the Short (Reel) only (user, 2026-11-18).
+SHARED = {"pinned_comment": 9, "facebook": 19, "instagram": 20, "products": 21}  # J (16x9 pin), T, U, V
+SHORTS_PIN = 17  # R: the 9x16 file's pinned_comment
+THUMB_TEXT = {"16x9": 10, "9x16": 18}  # K / S: thumbnail text options (main, sub, highlight, visual idea)
 
 
 def thumbnail_cell(options: list[dict]) -> str:
     """Thumbnail text options as one readable cell: number + main line, sub line, highlight + visual idea."""
     return "\n\n".join(f"{i}. {o.get('main', '')}\n   {o.get('sub', '')}\n   Highlight: {o.get('highlight', '')}"
                        f" · Visual: {o.get('visual', '')}" for i, o in enumerate(options, 1))
-PRODUCT_LINKS = 19  # T: affiliate links the user gives, one per line, same order as the products
-TITLE_OPTIONS = 18  # S: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
+PRODUCT_LINKS = 22  # W: affiliate links the user gives, one per line, same order as the products
+TITLE_OPTIONS = 6  # G: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
 METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
 IMAGES = {".png", ".jpg", ".jpeg", ".webp"}
 
@@ -84,7 +86,7 @@ def _metadata(path: Path, fmt: str) -> dict[int, str]:
         got[SHORTS_PIN] = m["pinned_comment"]
     if m.get("thumbnail_text"):
         got[THUMB_TEXT[fmt]] = thumbnail_cell(m["thumbnail_text"])
-    for c, k in ((14, "products"), (PRODUCT_LINKS, "product_links")):  # one per line: easy to copy one by one
+    for c, k in ((SHARED["products"], "products"), (PRODUCT_LINKS, "product_links")):  # one per line: easy to copy one by one
         if isinstance(m.get(k), list) and m[k]:
             got[c] = "\n".join(m[k])
     if fmt == "16x9" and m.get("title_options"):
@@ -128,7 +130,7 @@ def channel_projects(projects_dir: Path = PROJECTS) -> dict[str, dict[str, dict[
     for p in project_dirs(projects_dir):
         tab = SHEET_TABS.get(p.relative_to(projects_dir).parts[0])
         found = scan(p)
-        if tab and p.name not in SHEET_SKIP and any(c in found for c in (2, 8)):
+        if tab and p.name not in SHEET_SKIP and any(c in found for c in (COLS["16x9"][0], COLS["9x16"][0])):
             tabs[tab][p.name] = found
     return tabs
 

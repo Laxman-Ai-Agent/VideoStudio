@@ -6,16 +6,15 @@ from .upload_sheet import _ok, _session
 
 # category: (header color, column tint, column indexes)
 CATEGORIES = {
-    "project": ("#37474F", "#ECEFF1", (0, 1)),
-    "youtube_long": ("#C62828", "#FDECEA", (2, 3, 4, 5, 6, 7, 17, 18)),   # C-H, R pinned, S title options
-    "youtube_shorts": ("#EF6C00", "#FFF3E0", (8, 9, 10, 11, 12, 13, 20)),  # I-N, U pinned (Shorts)
-    "products": ("#2E7D32", "#E8F5E9", (14, 19)),                          # O names, T links
-    "facebook": ("#1565C0", "#E3F2FD", (15,)),                             # P
-    "instagram": ("#AD1457", "#FCE4EC", (16,)),                            # Q
-    "thumbnail": ("#F57F17", "#FFFDE7", (21, 22)),                          # V, W
-    "refresh": ("#00695C", "#B7E1CD", (23,)),                               # X
+    "project": ("#37474F", "#ECEFF1", (0, 1)),                                   # A-B
+    "youtube_long": ("#C62828", "#FDECEA", tuple(range(2, 11))),                  # C-K
+    "youtube_shorts": ("#EF6C00", "#FFF3E0", tuple(range(11, 19))),               # L-S
+    "facebook": ("#1565C0", "#E3F2FD", (19,)),                                   # T
+    "instagram": ("#AD1457", "#FCE4EC", (20,)),                                  # U
+    "products": ("#2E7D32", "#E8F5E9", (21, 22)),                                # V-W
+    "refresh": ("#00695C", "#B7E1CD", (23,)),                                    # X
 }
-WIDTHS = {0: 50, 1: 230, 5: 280, 6: 320, 11: 260, 12: 300, 23: 120}  # others: DEFAULT_WIDTH
+WIDTHS = {0: 50, 1: 230, 5: 280, 6: 300, 7: 320, 14: 260, 15: 300, 23: 120}  # titles, title options, descriptions
 DEFAULT_WIDTH = 220
 LAST = 24  # A..X
 
