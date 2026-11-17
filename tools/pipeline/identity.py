@@ -8,7 +8,9 @@ User rule 2026-11-10: a new video is at most ~30% alike the previous videos; var
 import colorsys
 from pathlib import Path
 
+from .config import CHANNELS
 from .contracts import QACheck, ScenePlan, ThemeSpec
+from .project import project_dirs
 from .theme import MOTION_DEFAULT, _rgb
 
 MAX_SIMILAR = 0.30  # max share of look features in common with any of the previous videos
@@ -65,8 +67,9 @@ def previous(project: Path, n: int = LOOKBACK) -> list[tuple[str, ThemeSpec]]:
     import re
     if re.match(r"^\d+x\d+$", project.name):
         project = project.parent
+    root = project.parent.parent if project.parent.name in CHANNELS else project.parent  # channel folder -> projects/
     out = []
-    for d in sorted((x for x in project.parent.iterdir() if x.is_dir() and x.name < project.name), reverse=True):
+    for d in sorted((x for x in project_dirs(root) if x.name < project.name), key=lambda x: x.name, reverse=True):
         f = next((g for g in [d / "work" / "theme.json", *sorted(d.glob("*x*/work/theme.json"))] if g.exists()), None)
         if f:
             try:

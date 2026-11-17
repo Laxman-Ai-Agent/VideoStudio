@@ -81,3 +81,14 @@ def test_find_project_accepts_hyphen_folder(tmp_path):
     d.mkdir()
     assert find_project("11", tmp_path) == d
     assert next_number(tmp_path) == 12
+
+
+def test_channel_folders_are_searched_and_numbered(tmp_path):
+    """Bug 2026-11-17: moving projects into 'The Dark World/' hid them from find_project and next_number."""
+    (tmp_path / "01_First").mkdir()
+    ch = tmp_path / "The Dark World"
+    (ch / "03_Third").mkdir(parents=True)
+    (tmp_path / "_deleted" / "09_old-20261111").mkdir(parents=True)  # trash is never a project
+    assert next_number(tmp_path) == 4
+    assert find_project("3", tmp_path) == ch / "03_Third"
+    assert find_project("01", tmp_path) == tmp_path / "01_First"

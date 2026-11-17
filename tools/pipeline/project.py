@@ -37,9 +37,27 @@ def slug(name: str) -> str:
     return s
 
 
+NUMBERED = re.compile(r"(\d+)[_-]")  # 03_Topic, 11-AI_doctor
+
+
+def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
+    """Numbered project folders: projects/NN_x, and projects/<channel>/NN_x one level down.
+    Skips _deleted and dot folders. Channel folders are any other non-numbered folder."""
+    if not projects_dir.is_dir():
+        return []
+    out = []
+    for d in sorted(projects_dir.iterdir()):
+        if not d.is_dir() or d.name.startswith(("_", ".")):
+            continue
+        if NUMBERED.match(d.name):
+            out.append(d)
+        else:
+            out += [c for c in sorted(d.iterdir()) if c.is_dir() and NUMBERED.match(c.name)]
+    return out
+
+
 def next_number(projects_dir: Path = PROJECTS) -> int:
-    nums = [int(m.group(1)) for p in projects_dir.glob("*")
-            if p.is_dir() and (m := re.match(r"(\d+)[_-]", p.name))]
+    nums = [int(m.group(1)) for p in project_dirs(projects_dir) if (m := NUMBERED.match(p.name))]
     return max(nums, default=0) + 1
 
 
@@ -90,9 +108,9 @@ def find_project(ref: str, projects_dir: Path = PROJECTS) -> Path:
         if is_variation(v) and v.is_dir():
             return v
         raise FileNotFoundError(f"variation not found: {ref}")
-    for d in sorted(projects_dir.glob("*")):
-        m = re.match(r"(\d+)[_-]", d.name)
-        if d.is_dir() and (d.name == ref or (m and ref.isdigit() and int(m.group(1)) == int(ref))):
+    for d in project_dirs(projects_dir):
+        m = NUMBERED.match(d.name)
+        if d.name == ref or (m and ref.isdigit() and int(m.group(1)) == int(ref)):
             return d
     raise FileNotFoundError(f"project not found: {ref}")
 

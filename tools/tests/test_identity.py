@@ -45,6 +45,17 @@ def test_previous_videos_are_the_style_memory(tmp_path):
     assert idt.identity_check(me, new, BT).status == "ok"
 
 
+def test_previous_sees_projects_in_other_channel_folders(tmp_path):
+    """Bug 2026-11-17: after the move, earlier videos sit in channel folders; the look memory must still find them."""
+    (tmp_path / "The Dark World" / "01_a" / "work").mkdir(parents=True)
+    (tmp_path / "The Dark World" / "01_a" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
+    (tmp_path / "Health Decode" / "02_b" / "work").mkdir(parents=True)
+    (tmp_path / "Health Decode" / "02_b" / "work").joinpath("theme.json").write_text(B.model_dump_json(), "utf-8")
+    me = tmp_path / "Health Decode" / "03_c"
+    me.mkdir()
+    assert [n for n, _ in idt.previous(me)] == ["02_b", "01_a"]
+
+
 def test_variety_flags_three_in_a_row():
     ok = _plan(["photo", "photo", "chart", "photo"])
     assert idt.variety_check(ok, rnd.transitions(ok, BRAND.model_copy(update={"transitions": ["dip", "blur"]}))).status == "ok"
