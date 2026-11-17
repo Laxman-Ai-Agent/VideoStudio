@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Titles: 8 title rules per channel; new sheet column T "Title Options (16x9)" from `title_options` (3 titles); sync now reads / writes A..T so the S Refresh state moves with its row. Aging_150: 3 options, Shorts title under 40.
 - Tags: no Telugu letters, 500 max (YouTube count), 8 build rules per channel; `check_tags` warns during sync. Aging_150 tags rewritten (22 / 10). Test: `test_check_tags_flags_telugu_letters_and_the_500_limit`.
 - Sheet button: column S "Refresh" dropdown (RUN, START, RUNNING, DONE, ASK) on both tabs; the watcher reads it every 30 s, syncs and marks DONE. Test: `test_run_rows_finds_only_run_cells`.
 - Sheet watcher: `studio.cmd sheet --watch` / `sheet_watch.vbs` (hidden) syncs within ~30 s of a change in input/ or output/ (polling, `upload_sheet.signature`). Test: `test_signature_changes_when_a_thumbnail_lands_in_input`.

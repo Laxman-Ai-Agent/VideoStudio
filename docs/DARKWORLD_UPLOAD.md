@@ -7,6 +7,17 @@ Sheet only, never posted to the channel by Claude.
 ## Rules
 - Title (16x9): main keyword first, Telugu + English mix (how people search), 60-70 chars, curiosity without false
   claims. Shorts title: short hook + `#shorts`.
+  Title rules (user, 2026-11-18), both formats:
+  1. The main keyword inside the first 40 characters (mobile cuts the rest).
+  2. A number or a specific fact when the video has one ("150 ఏళ్లు", "122 ఏళ్ల record"), not vague words like "interesting facts".
+  3. Curiosity (a question or a contrast, "...సాధ్యమా?", "అసలు నిజం") but only what the video really delivers:
+     no clickbait, no false promise (YouTube misleading-metadata rules; viewers leave and reach drops).
+  4. Telugu for the feeling, English for the search keyword; "in Telugu" at the end.
+  5. Pairs with the thumbnail: never repeat the thumbnail text; thumbnail = the shock, title = the question.
+  6. Clean: no ALL CAPS, no "!!!", at most one emoji (usually none).
+  7. Shorts title: hook under 40 characters + " #shorts".
+  8. Three options: `title_options` (3 titles, the first = `title`) in the 16x9 metadata.json -> sheet column T,
+     for YouTube Studio "Test & Compare" or for the user to pick.
 - Description: the templates below (long and Shorts).
 - Tags: NO Telugu letters (user, 2026-11-18): English + Tenglish only, 500 characters max as YouTube counts
   them (commas count, a tag with spaces counts 2 more), ending with "The Dark World".
