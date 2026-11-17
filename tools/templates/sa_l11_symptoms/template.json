@@ -1,0 +1,13 @@
+{
+ "name": "sa_l11_symptoms",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L11 symptoms: loud snoring, choking, pauses (partner notices first); morning headache, daytime sleepiness despite 7-8 h, poor focus, irritability; night urination; only a sleep problem?"
+}

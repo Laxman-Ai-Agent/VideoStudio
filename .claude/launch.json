@@ -24,6 +24,18 @@
         "projects/16_Lung_Cancer"
       ],
       "port": 8798
+    },
+    {
+      "name": "sleep-check",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8797",
+        "--directory",
+        "projects/17_Sleep_Apnea"
+      ],
+      "port": 8797
     }
   ]
 }

@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_l03_crore: L03 AIIMS Delhi study: ~10 crore working-age Indians, most do not know; first a normal night */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 52.3);
+  shot("A07", { t: 0, d: 7.6, mv: "panL", a: .6, in: "wipe", until: T(59.9) });
+  tag("AIIMS · NEW DELHI", T(52.6), { until: T(59.8) });
+  doc(`<h3>Obstructive sleep apnea in India</h3><div style="color:#6d6378">Study estimate · AIIMS New Delhi</div><div class="rule"></div>
+    Working-age Indian adults likely to have OSA:<br><span class="hl"><b>about 10 crore people</b></span><br><br>
+    Men: <b>~13%</b> &nbsp;·&nbsp; Women: <b>~5%</b><br><br><span style="color:#6d6378">Most cases are never diagnosed.</span>`,
+    W * .5, H * .12, W * .42, H * .58, T(53.6), { until: T(57.3) });
+  shot("A08", { t: T(57.3), d: 2.8, mv: "push", in: "rise", box: [W * .5, H * .1, W * .44, H * .6], win: true, bar: "WORKING-AGE INDIA", until: T(59.9) });
+  num(0, 10, T(57.4), { x: W * .06, y: H * .36, unit: "crore", d: 1.2, c: K.co, until: T(59.9) });
+  te("పనిచేసే వయసులో ఉన్నవారు", T(56.0), { x: W * .06, y: H * .24, size: 3.2, until: T(59.9) });
+  shot("A67", { t: T(60.0), d: 3.7, mv: "drift", in: "dim", until: T(63.7) });
+  focus(W * .62, H * .42, u * 6, T(61.3), { c: K.lil, label: "?", until: T(63.6) });
+  focus(W * .3, H * .5, u * 5, T(61.8), { c: K.lil, until: T(63.6) });
+  head("MOST <b>DON'T KNOW</b>", T(62.4), { y: H * .7, size: 6.6, until: T(63.6) });
+  shot("A54", { t: T(63.7), d: 3.4, mv: "breathe", in: "blink" });
+  tag("FIRST: A NORMAL NIGHT", T(64.4), { c: K.mint, y: H * .12 });
+  te("మన శరీరంలో <b>normal</b> గా ఏం జరుగుతుంది?", T(65.2), { y: H * .74 });
+  NW.done();
+</script>
+</body></html>

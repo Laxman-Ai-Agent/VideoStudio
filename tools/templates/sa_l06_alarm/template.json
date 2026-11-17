@@ -1,0 +1,13 @@
+{
+ "name": "sa_l06_alarm",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L06 brain notices, wakes you for a split second, muscles tighten, airway opens; too short to remember; the cycle repeats all night"
+}

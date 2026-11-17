@@ -1,0 +1,13 @@
+{
+ "name": "sa_v05_danger",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "V05 the real danger if ignored: high BP, heart disease, stroke, type 2 diabetes"
+}

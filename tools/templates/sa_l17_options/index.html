@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_l17_options: L17 dental device (jaw forward), tonsil surgery, hypoglossal nerve stimulation; USA 2024: FDA approved tirzepatide for sleep apnea with obesity */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 333.2);
+  shot("A48", { t: 0, d: 4.4, mv: "push", in: "slide", dir: -1, box: [0, 0, W * .5, H], until: T(338.4) });
+  tag("DENTAL DEVICE", T(335.0), { x: W * .04, y: H * .1, c: K.mint, until: T(338.3) });
+  te("దవడను <b>ముందుకు</b>", T(334.0), { x: W * .04, y: H * .78, until: T(338.3) });
+  shot("A49", { t: T(336.2), d: 2.6, mv: "push", in: "slide", box: [W * .5, 0, W * .5, H], until: T(338.4) });
+  tag("TONSIL SURGERY", T(337.3), { x: W * .54, y: H * .1, c: K.mint, until: T(338.3) });
+  shot("A50", { t: T(338.4), d: 7.2, mv: "push", a: .8, in: "iris", until: T(345.6) });
+  focus(W * .5, H * .5, u * 9, T(340.6), { c: K.mint, label: "NERVE STIMULATOR", until: T(345.5) });
+  te("<b>నాలుక</b> కండరాలు", T(339.3), { y: H * .12, c: K.mint, until: T(345.5) });
+  head("HYPOGLOSSAL NERVE <b>STIMULATION</b>", T(342.2), { y: H * .74, size: 4.6, c: K.mint, until: T(345.5) });
+  shot("A51", { t: T(345.6), d: 9, mv: "drift", a: .5, in: "dim" });
+  tag("USA · 2024", T(346.5), { c: K.moon });
+  doc(`<h3>FDA approves first medication for obstructive sleep apnea</h3><div style="color:#6d6378">U.S. Food and Drug Administration · December 2024</div><div class="rule"></div>
+    <b>Tirzepatide</b> approved for <span class="hl">moderate to severe obstructive sleep apnea</span> in adults <b>with obesity</b>,
+    together with diet and exercise.<br><br><span style="color:#6d6378">Prescription only · use under a doctor's care.</span>`,
+    W * .46, H * .14, W * .46, H * .56, T(348.3), { rot: 3 });
+  head("<b>TIRZEPATIDE</b>", T(351.1), { x: W * .06, y: H * .74, size: 5.6, c: K.mint });
+  NW.done();
+</script>
+</body></html>

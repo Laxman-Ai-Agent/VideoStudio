@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_l08_types: L08 obstructive sleep apnea (most common) vs central (airway open, brain does not send the signal); who is at risk? */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 156.05);
+  const a = shot("A12", { t: 0, d: 6, mv: "push", in: "iris", box: [W * .04, H * .16, W * .44, H * .56], win: true, bar: "TYPE 1 · OBSTRUCTIVE", c: K.co });
+  head("<b>OBSTRUCTIVE</b>", T(156.8), { x: W * .04, y: H * .78, size: 5 });
+  tag("MOST COMMON", T(159.4), { x: W * .04, y: H * .07, c: K.mint });
+  airway(W * .52, H * .16, W * .44, H * .34, T(157.4), { g: [[0, .6], [T(158.2), 0]], m: "THROAT BLOCKED", until: T(162.1) });
+  te("గొంతు దారి <b>మూసుకుపోతుంది</b>", T(158.4), { x: W * .52, y: H * .56, size: 3.4, c: K.co, until: T(162.1) });
+  shot("A20", { t: T(162.2), d: 4.6, mv: "push", in: "rise", box: [W * .52, H * .16, W * .44, H * .56], win: true, bar: "TYPE 2 · CENTRAL", c: K.lil, until: T(166.9) });
+  head("<b>CENTRAL</b>", T(163.1), { x: W * .52, y: H * .78, size: 5, c: K.lil, until: T(166.8) });
+  tag("AIRWAY STAYS OPEN", T(165.4), { x: W * .52, y: H * .07, c: K.lil, until: T(166.8) });
+  out(a, T(166.8)); tl.to($("stage").querySelectorAll(".nw-en, .nw-tag"), { autoAlpha: 0, duration: .3 }, T(166.8));
+  shot("A20", { t: T(166.9), d: 4, mv: "dive", a: .4, in: "fade", until: T(170.9) });
+  trace(W * .52, H * .62, W * .42, H * .2, T(167.3), { ev: [[0, T(168.6), "calm"], [T(168.6), T(180), "apnea"]], label: "BREATHING EFFORT", warn: "NO EFFORT" , until: T(170.8) });
+  head("NO <b>SIGNAL</b> TO BREATHE", T(169.5), { x: W * .06, y: H * .14, size: 5.8, c: K.lil, until: T(170.8) });
+  dust({ t: T(170.9) });
+  shot("A29", { t: T(170.9), d: 3.4, mv: "pull", in: "blink" });
+  head("WHO IS AT <b>RISK</b>?", T(172.0), { y: H * .68, size: 6.6 });
+  NW.done();
+</script>
+</body></html>

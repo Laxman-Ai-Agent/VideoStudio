@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_v04_signs: V04 symptoms: loud snoring, choking, morning headache, daytime sleepiness, poor concentration; risks: weight, neck fat, big tonsils, smoking, alcohol */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 49.6);
+  shot("B07", { t: 0, d: 8.3, mv: "push", a: .5, in: "dim", until: T(57.9) });
+  tag("THE SIGNS", T(49.9), { c: K.moon, until: T(57.8) });
+  list([["గట్టిగా గురక", T(50.9), null], ["నిద్రలో ఉక్కిరిబిక్కిరి", T(52.1), null], ["ఉదయం తలనొప్పి", T(53.8), null],
+        ["పగలంతా నిద్రమత్తు", T(55.0), null], ["Concentration తగ్గడం", T(56.5), null]], W * .08, H * .16, { size: 4.2, until: T(57.8) });
+  shot("B13", { t: T(57.9), d: 5.9, mv: "push", a: .6, in: "blink" });
+  tag("RISK FACTORS", T(58.0), { c: K.co });
+  [["WEIGHT", 57.9], ["NECK FAT", 58.9], ["BIG TONSILS", 60.2], ["SMOKING", 61.4], ["ALCOHOL", 62.2]].forEach(([l, t0], i) =>
+    tag(l, T(t0), { x: W * (i % 2 ? .52 : .08), y: H * (.5 + Math.floor(i / 2) * .06), c: K.co }));
+  head("RISK <b>↑</b>", T(62.9), { y: H * .7, size: 10 });
+  NW.done();
+</script>
+</body></html>

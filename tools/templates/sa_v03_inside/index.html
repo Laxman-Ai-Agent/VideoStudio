@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_v03_inside: V03 at night throat muscles relax, in some the airway closes fully, oxygen falls, brain alarm wakes you, breathing restarts; many times a night = obstructive sleep apnea */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 30.4);
+  shot("B01", { t: 0, d: 4.6, mv: "breathe", in: "dim", until: T(35.0) });
+  airway(W * .05, H * .12, W * .9, H * .26, T(31.0), { g: [[0, 1], [T(33.5), 1], [T(34.4), .6], [T(35.6), .6], [T(36.6), 0], [T(42.7), 0], [T(43.4), 1]], until: T(44.3) });
+  head("MUSCLES <b>RELAX</b>", T(33.9), { y: H * .44, size: 7.4, c: K.lil, until: T(34.9) });
+  shot("B03", { t: T(35.0), d: 4, mv: "push", in: "fade", until: T(39.0) });
+  head("FULLY <b>CLOSED</b>", T(36.3), { y: H * .44, size: 7.4, until: T(38.9) });
+  spo2(W * .2, H * .56, T(37.2), [[0, 96], [T(37.6), 96], [T(38.8), 84]], { until: T(38.9) });
+  shot("B04", { t: T(39.0), d: 1.9, mv: "push", a: 1, in: "cut", until: T(40.7) });
+  ring(W * .5, H * .5, T(39.4), { r: u * 30, n: 3 });
+  head("BRAIN <b>ALARM</b>", T(39.5), { y: H * .44, size: 9, until: T(40.6) });
+  shot("B02", { t: T(40.7), d: 3.6, mv: "push", in: "blink", until: T(44.3) });
+  trace(W * .05, H * .44, W * .9, H * .14, T(41.0), { ev: [[0, T(42.7), "apnea"], [T(42.7), T(43.6), "gasp"], [T(43.6), T(60), "calm"]], label: "BREATHING RESTARTS", until: T(44.2) });
+  shot("B14", { t: T(44.3), d: 5.3, mv: "push", a: .4, in: "dim" });
+  night(W * .05, H * .4, W * .9, T(44.6), { n: 30, d: 2.6 });
+  head("OBSTRUCTIVE", T(47.9), { y: H * .14, size: 8.6, nodot: true });
+  head("SLEEP <b>APNEA</b>", T(48.6), { y: H * .21, size: 8.6, nodot: true });
+  NW.done();
+</script>
+</body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "sa_l18_habits",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L18 only with doctor's advice; daily habits help: lose weight, sleep on the side, exercise, quit smoking, no alcohol before bed, fixed bedtime; no sleeping pills; habits are not a replacement"
+}

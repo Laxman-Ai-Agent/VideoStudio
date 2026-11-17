@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="nw.js"></script><script src="nw2.js"></script>
+<style>/* 17_Sleep_Apnea sa_v07_cta: V07 snoring + pauses: do not ignore, ask a doctor about a sleep study; comment SLEEP for the full video link */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, blink, dust, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, trace, spo2, airway, night, ahi, tank, mult, clock } = NW;
+  const T = (x) => Math.max(0, x - 82.95);
+  shot("B05", { t: 0, d: 3.9, mv: "push", a: .6, in: "cut", until: T(86.9) });
+  trace(W * .05, H * .44, W * .9, H * .14, T(83.2), { ev: [[0, T(84.6), "snore"], [T(84.6), T(90), "apnea"]], label: "SNORING + PAUSES", until: T(86.8) });
+  head("DON'T <b>IGNORE</b>", T(85.6), { y: H * .1, size: 9, until: T(86.8) });
+  shot("B10", { t: T(86.9), d: 2.5, mv: "push", in: "iris", until: T(89.4) });
+  tag("ASK ABOUT A SLEEP STUDY", T(87.6), { y: H * .1, c: K.mint, until: T(89.3) });
+  dust({ t: T(89.4), dens: [[0, 1]] });
+  shot("B14", { t: T(89.4), d: 9.6, mv: "drift", a: .4, in: "dim" });
+  te("కారణాలు · ప్రమాదాలు · <b>treatment</b>", T(90.6), { y: H * .1, size: 4.2, until: T(94.4) });
+  const p = phone(`<div style="padding:${u * 4}px ${u * 3}px;font-size:${u * 3}px">
+    <div style="font-size:${u * 2.4}px;color:${K.mute};letter-spacing:.15em">COMMENTS · 1.2K</div>
+    <div style="margin:${u * 2.4}px 0;padding:${u * 2}px;border-radius:${u * 2}px;background:#ffffff10">Health Decode<br><span style="color:${K.mute}">Type SLEEP for the full video 👇</span></div>
+    <div style="display:flex;align-items:center;gap:${u * 1.6}px;padding:${u * 2}px;border-radius:${u * 6}px;background:#ffffff14;border:${u * .3}px solid ${K.mint}">
+    <span class="ty" style="font-weight:700;color:${K.mint};letter-spacing:.1em"></span><span style="margin-left:auto;color:${K.mint}">➤</span></div>
+    <div class="rp" style="margin-top:${u * 2.4}px;padding:${u * 2}px;border-radius:${u * 2}px;background:#6FF0B422;opacity:0">🔗 Full video: Sleep Apnea Decoded</div></div>`,
+    W * .17, H * .22, H * .62, T(93.6), { rot: -3 });
+  const ty = p.querySelector(".ty"), k = { n: 0 };
+  tl.fromTo(k, { n: 0 }, { n: 5, duration: .9, ease: "none", immediateRender: true, onUpdate: () => { ty.textContent = "SLEEP".slice(0, Math.round(k.n)); } }, T(95.6));
+  tl.to(p.querySelector(".rp"), { opacity: 1, duration: .4 }, T(97.4));
+  head("COMMENT <b>SLEEP</b>", T(95.7), { y: H * .1, size: 9 });
+  tag("FULL VIDEO LINK →", T(97.9), { align: "center", y: H * .88, c: K.mint });
+  NW.done();
+</script>
+</body></html>

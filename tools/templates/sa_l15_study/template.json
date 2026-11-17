@@ -1,0 +1,13 @@
+{
+ "name": "sa_l15_study",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L15 one night in hospital: breathing, blood oxygen, heart, brain waves recorded = polysomnography; home sleep test for some"
+}

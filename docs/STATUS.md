@@ -12,6 +12,13 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
+## 17_Sleep_Apnea (2026-11-17) - finals done (new "night watch" look)
+- Paired topic (sleep apnea, snoring = warning): `projects/17_Sleep_Apnea/{16x9,9x16}`; 16x9 = 5 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`; transcripts `scripts/make_transcript.py`.
+- User brief: new cinematic direction, complete creative freedom; standing go: no questions, 480p -> QC -> finals.
+- Theme "night watch" (Sora + Hind Guntur + Lexend; plum-black / monitor mint / alarm coral / moon gold; max 23% alike 15); kit `tools/templates/night_kit/{nw.js,nw2.js}` (breath trace, SpO2, 2D airway, night strip, AHI ruler, blink transition).
+- Images: Kaggle `work/kaggle_sleep.json` (78) -> `assets/ai`. Sequences sa_l01..l23 + sa_v01..v07 (`scripts/seq_*.py`), `scripts/rebuild.py <fmt>`, checks `<fmt>/work/check.html`, `sheet.html?s=N&t=..`. Music: brand calm (clinical_calm, original synth).
+- FINALS DONE 2026-11-17: `<fmt>/output/17_Sleep_Apnea_<fmt>.mp4` (7:59 / 1:39), QA PASS + frame QC; `DarkWorld/README.txt` (thumbnails pending).
+
 ## 16_Lung_Cancer (2026-11-17) - finals done (new "lightbox & ember" look)
 - Paired topic (lung cancer, TB confusion, never-smokers): `projects/16_Lung_Cancer/{16x9,9x16}`; 16x9 = 4 mp3s merged, 9x16 = user's replacement ElevenLabs audio (old files in `9x16/input/replaced/`), 1.15x -> `<fmt>/audio.mp3`.
 - User's gemini.json: 16x9 had a stale duplicate scene 48 + words lists cut short -> `scripts/fix_gemini.py <fmt>` -> `input/gemini_fixed.json` -> align_mms -> `input/gemini_corrected.json`.

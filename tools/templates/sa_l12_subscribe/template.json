@@ -1,0 +1,13 @@
+{
+ "name": "sa_l12_subscribe",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L12 subscribe to Health Decode, like the video"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "sa_l14_stroke",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L14 untreated severe sleep apnea: ~2.5x stroke risk (a review); daytime sleepiness -> driving accidents; the sleep study finds it"
+}

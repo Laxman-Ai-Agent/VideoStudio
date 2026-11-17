@@ -1,0 +1,13 @@
+{
+ "name": "sa_v03_inside",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "V03 at night throat muscles relax, in some the airway closes fully, oxygen falls, brain alarm wakes you, breathing restarts; many times a night = obstructive sleep apnea"
+}

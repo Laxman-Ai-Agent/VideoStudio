@@ -1,0 +1,13 @@
+{
+ "name": "sa_v01_hook",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "V01 breathing stops again and again every night, dangerous for the heart; AIIMS Delhi: ~10 crore Indians"
+}

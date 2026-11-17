@@ -1,0 +1,13 @@
+{
+ "name": "sa_l13_heart",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 17_Sleep_Apnea; reuse only when the user asks",
+  "kit": "night_kit"
+ },
+ "description": "L13 the real danger: oxygen falls and the brain alarms every night -> strain on heart and vessels; high BP, heart disease, atrial fibrillation, stroke, type 2 diabetes"
+}
