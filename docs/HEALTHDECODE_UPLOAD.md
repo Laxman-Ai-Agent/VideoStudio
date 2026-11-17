@@ -4,12 +4,21 @@ Only for Health Decode projects (The Dark World has its own: `docs/DARKWORLD_UPL
 Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to the channel by Claude.
 
 ## Rules
-- Title (16x9): main health keyword first (symptoms / causes / care), Telugu + English mix, 60-70 chars, curiosity
-  without fear or cure claims. Shorts title: short hook + `#shorts`.
+- Title (16x9): the words Telugu viewers search with: "లక్షణాలు" (symptoms), "కారణాలు" (causes), "ఎలా
+  తగ్గించుకోవాలి / control" (care), e.g. "థైరాయిడ్ లక్షణాలు & కారణాలు | Thyroid Symptoms in Telugu". Disease
+  name + one of these words first, Telugu + English, 60-70 chars. Say "control / manage", never "cure"; no fear words.
+  Shorts title: short hook + `#shorts`.
 - Description: the templates below (long and Shorts).
-- Tags: 10-16, English + Telugu + Tenglish (e.g. "thyroid symptoms telugu"), under 500 chars, ending with "Health Decode".
+- Tags: 10-16 in three kinds: Telugu script ("థైరాయిడ్ లక్షణాలు"), English ("thyroid symptoms"), and Tenglish /
+  common misspellings people type ("thairoid telugu", "thyroid symptoms telugu"); under 500 chars, ending with
+  "Health Decode".
 - Products: safe health devices and aids only (glucometer, BP monitor, pulse oximeter, ORS packets, books).
-  Never medicines, prescription drugs or supplements.
+  Never medicines, prescription drugs or supplements. When the products get affiliate links, the description gets
+  the affiliate line (template) - India ASCI and YouTube rules.
+- Myths vs Facts: 2-3 common beliefs about the topic, each with the fact (from the script or WHO / ICMR / NIH).
+- "Last reviewed: [Mon YYYY]" = the month of the final render.
+- Sensitive topics (mental health, suicide, cancer, epilepsy / seizures, addiction): add the Tele-MANAS line (India
+  government's free 24x7 mental health helpline, 14416 or 1-800-891-4416) next to 108.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #healthdecode.
 - YouTube medical misinformation + advertiser-friendly rules: no cure claims ("100% cure"), no "stop your medicine",
@@ -42,6 +51,11 @@ In this video, we explore the science behind [TOPIC] through simple explanations
 • [Warning sign 2]
 • [Warning sign 3]
 
+❌ MYTHS vs ✅ FACTS
+❌ [Common belief 1] → ✅ [Fact 1]
+❌ [Common belief 2] → ✅ [Fact 2]
+[❌ belief 3 → ✅ fact 3, optional]
+
 ⏱️ CHAPTERS
 0:00 [chapter]
 [m:ss chapter ... from work/scenes.json; first 0:00, each >= 10 s, at least 3]
@@ -61,8 +75,11 @@ The information presented is based on available scientific research and publicly
 Always consult a qualified healthcare professional for personal medical concerns. Never ignore professional medical advice, delay medical treatment, or change prescribed medications based on information presented in this video.
 Individual health conditions and medical needs may vary. This content does not guarantee any specific health outcome.
 In a medical emergency, call 108 immediately.
+[Sensitive topics only: Need someone to talk to? Call Tele-MANAS 14416 (free, 24x7, Government of India).]
 ఈ వీడియో అవగాహన కోసం మాత్రమే, ఇది వైద్య సలహా కాదు. మందులు మొదలుపెట్టే / ఆపే ముందు మీ డాక్టర్‌ను సంప్రదించండి.
 [AI-visuals line when it applies]
+[Affiliate links only: Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you.]
+Last reviewed: [Mon YYYY]
 
 📌 STAY CONNECTED
 Subscribe to Health Decode for more educational videos about health, medical science, diseases, nutrition, and the mysteries of the human body.
@@ -76,6 +93,6 @@ Subscribe to Health Decode for more educational videos about health, medical sci
 ```
 [Telugu hook question]? [English hook sentence with the main health keyword].
 👉 Full video: [link]   (if known; otherwise: Comment "[keyword]" for the full video link.)
-⚠️ Educational only, not medical advice. Consult your doctor. Emergency: 108.[ Some visuals are AI-generated.]
+⚠️ Educational only, not medical advice. Consult your doctor. Emergency: 108.[ Tele-MANAS: 14416.][ Some visuals are AI-generated.]
 #shorts #[TopicKeyword] #HealthDecode
 ```
