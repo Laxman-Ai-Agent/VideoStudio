@@ -112,3 +112,13 @@ def test_style_covers_every_column_once():
     cols = sorted(c for _, _, cs in CATEGORIES.values() for c in cs)
     assert cols == list(range(LAST)) and LAST == WIDTH
     assert rgb("#FF8000") == {"red": 1.0, "green": 128 / 255, "blue": 0.0}
+
+
+def test_backup_build_pads_rows_and_keeps_headers():
+    from pipeline.upload_sheet_backup import build
+    snap = build({"Dark_World": [["S.No", "Project Name"], ["1", "09__16-NOV-2026__X", "a.mp4"]], "Health_Decode": []},
+                 when="2026-11-18T10:00:00")
+    dw = snap["tabs"]["Dark_World"]
+    assert dw["headers"][:2] == ["S.No", "Project Name"] and len(dw["headers"]) == WIDTH
+    assert dw["rows"] == [["1", "09__16-NOV-2026__X", "a.mp4"] + [""] * (WIDTH - 3)]
+    assert snap["tabs"]["Health_Decode"] == {"headers": [], "rows": []} and snap["saved"] == "2026-11-18T10:00:00"

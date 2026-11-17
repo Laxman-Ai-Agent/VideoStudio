@@ -32,3 +32,8 @@ products green, Facebook blue, Instagram pink, thumbnail yellow, Refresh teal), 
 header + project name, sets widths and one-line rows, and shows "Not found" in red. Values are never touched.
 Re-run after a column change: `tools\.venv\Scripts\python.exe -c "from pipeline.upload_sheet_style import style; style()"`
 (from `tools`).
+
+## Copy on disk (backup)
+After every sync the sheet as it stands (the user's edits included) is saved to `projects/upload_sheet.json`
+(`pipeline/upload_sheet_backup.py`). The sheet stays the place to edit; the JSON is a copy. To put the copy back
+into the sheet (e.g. after an accident): `studio.cmd sheet --restore` (asks, type yes).

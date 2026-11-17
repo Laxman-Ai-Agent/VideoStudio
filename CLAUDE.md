@@ -21,7 +21,7 @@ Talk to the user in Telugu (technical terms in English). Docs and code stay in E
 - `studio.cmd new "Name"`: new project in `projects/`
 - `studio.cmd status 01`: stage checkpoints
 - `studio.cmd theme 01 [--preset NAME | --auto]`: show / pin / re-pick the video's visual theme (no render)
-- `studio.cmd sheet` (or double-click `sheet.cmd`; `sheet_watch.vbs` = hidden auto-refresh watcher, `--watch`): update the upload-path Google Sheet from output/ (also runs after every final; key setup `docs/SHEET_SETUP.md`). After every passed final write `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`; rules per channel: `docs/DARKWORLD_UPLOAD.md`, `docs/HEALTHDECODE_UPLOAD.md`), then run it again
+- `studio.cmd sheet` (or double-click `sheet.cmd`; `sheet_watch.vbs` = hidden auto-refresh watcher, `--watch`; copy in `projects/upload_sheet.json`, `--restore` puts it back): update the upload-path Google Sheet from output/ (also runs after every final; key setup `docs/SHEET_SETUP.md`). After every passed final write `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`; rules per channel: `docs/DARKWORLD_UPLOAD.md`, `docs/HEALTHDECODE_UPLOAD.md`), then run it again
 - `studio.cmd ui`: Visual Assets dashboard (http://127.0.0.1:8790): see assets, copy / edit prompts, upload / replace files
 - `studio.cmd assets 01`: after dropping generated files named by asset id (A012.png) into drop/: match, process, validate, update visual-assets.json (no render)
 - New video: after scenes.json the run stops once more; read `work/assets_brief.md` and write `visual-assets.json` (every asset, exact prompts)

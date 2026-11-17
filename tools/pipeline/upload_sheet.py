@@ -165,6 +165,9 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
                   json={"values": rows}))
         _ok(s.post(api + rng(f"A{len(rows) + 2}:X") + ":clear"))
         print(f"  sheet: {tab} {len(rows)} rows")
+    from .upload_sheet_backup import SNAPSHOT, save
+    save(s)  # the sheet as it stands now, the user's edits included -> projects/upload_sheet.json
+    print(f"  sheet: copy saved to {SNAPSHOT}")
     return True
 
 

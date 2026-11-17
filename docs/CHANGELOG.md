@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Sheet copy on disk (option B): every sync saves the sheet to `projects/upload_sheet.json`; `studio.cmd sheet --restore` writes it back (asks first). Test: `test_backup_build_pads_rows_and_keeps_headers`.
 - Sheet columns grouped (user): C-K YouTube long, L-S YouTube Shorts, T Facebook, U Instagram, V-W products, X Refresh. Data moved cell by cell (0 changes), restyled; code constants and tests now use column names.
 - Sheet design: category colors per column (`pipeline/upload_sheet_style.py`), frozen header + project name, widths, one-line rows, "Not found" red. Test: `test_style_covers_every_column_once`.
 - Sheet rows: newest project first (user), S.No 1 = latest.

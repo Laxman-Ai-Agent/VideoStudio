@@ -442,6 +442,7 @@ def main() -> int:
     mc.add_argument("--apply", action="store_true")
     sh = sub.add_parser("sheet", help="update the upload-path Google Sheet from every project's output/ (Run button)")
     sh.add_argument("--watch", action="store_true", help="keep running: sync whenever input/ or output/ files change")
+    sh.add_argument("--restore", action="store_true", help="write projects/upload_sheet.json back into the sheet (asks first)")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
@@ -464,6 +465,9 @@ def main() -> int:
             return 1
     if a.cmd == "sheet":
         from pipeline.upload_sheet import sync, watch
+        if a.restore:
+            from pipeline.upload_sheet_backup import restore
+            return 0 if restore() else 1
         if a.watch:
             watch()  # returns only when another watcher already runs
             return 0
