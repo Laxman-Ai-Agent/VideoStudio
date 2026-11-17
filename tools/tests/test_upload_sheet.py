@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, scan, signature
+from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, run_rows, scan, signature
 
 
 def touch(p: Path) -> Path:
@@ -67,3 +67,8 @@ def test_signature_changes_when_a_thumbnail_lands_in_input(tmp_path):
     assert signature(tmp_path) == before
     touch(p / "16x9" / "input" / "thumb_16x9.png")
     assert signature(tmp_path) != before
+
+
+def test_run_rows_finds_only_run_cells():
+    col = [["▶ RUN"], [], ["✅ DONE"], ["run"], [""], ["⏳ RUNNING"], ["▶ START"], ["❌ ASK"]]
+    assert run_rows(col) == [2, 5, 8]

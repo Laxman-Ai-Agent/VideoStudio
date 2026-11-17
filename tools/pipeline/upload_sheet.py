@@ -129,15 +129,61 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     return True
 
 
-def sync_safe() -> None:
+def sync_safe() -> bool:
     """After a final: a sheet problem (no internet, no key) never fails the render."""
     try:
-        sync()
+        return sync()
     except Exception as e:
         print(f"  sheet: not updated ({type(e).__name__}: {e}); run `studio.cmd sheet` later")
+        return False
 
 
 WATCHED = IMAGES | {".mp4", ".txt", ".json"}
+# Column S dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
+# RUNNING while it syncs, then DONE, or ASK when the sync failed (ask Claude).
+RUN, START, RUNNING, DONE, ASK = "▶ RUN", "▶ START", "⏳ RUNNING", "✅ DONE", "❌ ASK"
+
+
+def run_rows(column: list[list[str]]) -> list[int]:
+    """Sheet row numbers (2-based) whose column S cell asks for a refresh (S2:S as read)."""
+    return [i for i, c in enumerate(column, 2)
+            if c and any(w in c[0].upper().split() for w in ("RUN", "START"))]
+
+
+def install_buttons(s=None) -> None:
+    """Column S on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
+    s = s or _session()
+    meta = _ok(s.get(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}",
+                     params={"fields": "sheets.properties"})).json()
+    ids = {sh["properties"]["title"]: sh["properties"]["sheetId"] for sh in meta["sheets"]}
+    reqs = []
+    for tab in SHEET_TABS.values():
+        col = {"sheetId": ids[tab], "startColumnIndex": 18, "endColumnIndex": 19}
+        reqs += [
+            {"updateCells": {"rows": [{"values": [{"userEnteredValue": {"stringValue": "▶ Refresh"}}]}],
+                             "fields": "userEnteredValue", "start": {"sheetId": ids[tab], "rowIndex": 0, "columnIndex": 18}}},
+            {"setDataValidation": {"range": {**col, "startRowIndex": 1}, "rule": {
+                "condition": {"type": "ONE_OF_LIST", "values": [{"userEnteredValue": v} for v in (RUN, START, RUNNING, DONE, ASK)]},
+                "showCustomUi": True, "strict": False}}},
+            {"repeatCell": {"range": col, "cell": {"userEnteredFormat": {
+                "backgroundColor": {"red": 0.72, "green": 0.88, "blue": 0.8},
+                "textFormat": {"bold": True}, "horizontalAlignment": "CENTER"}},
+                "fields": "userEnteredFormat.backgroundColor,userEnteredFormat.textFormat.bold,userEnteredFormat.horizontalAlignment"}},
+        ]
+    _ok(s.post(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}:batchUpdate", json={"requests": reqs}))
+
+
+def _requests(s) -> dict[str, list[int]]:
+    api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
+    return {tab: run_rows(_ok(s.get(api + quote(f"'{tab}'!S2:S", safe=""))).json().get("values", []))
+            for tab in SHEET_TABS.values()}
+
+
+def _mark(s, asked: dict[str, list[int]], word: str) -> None:
+    data = [{"range": f"'{tab}'!S{r}", "values": [[word]]} for tab, rows in asked.items() for r in rows]
+    if data:
+        _ok(s.post(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values:batchUpdate",
+                   json={"valueInputOption": "RAW", "data": data}))
 
 
 def signature(projects_dir: Path = PROJECTS) -> tuple:
@@ -156,7 +202,8 @@ def signature(projects_dir: Path = PROJECTS) -> tuple:
 
 
 def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
-    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes (checked every 30 s).
+    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's column S says
+    RUN (both checked every 30 s); asked rows are set to DONE after the sync.
     ponytail: polling, no OS file events; 15 projects scan in milliseconds, add watchdog only if that changes."""
     import msvcrt
     import time
@@ -168,12 +215,23 @@ def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
     except OSError:
         print("sheet watcher already running", flush=True)
         return
-    last = None
+    last, s = None, None
     while True:
-        now = signature(projects_dir)
-        if now != last:
-            print(time.strftime("%Y-%m-%d %H:%M:%S"), "change seen, syncing", flush=True)
-            sync_safe()
+        now, asked = signature(projects_dir), {}
+        try:
+            s = s or _session()
+            asked = _requests(s)
+        except Exception as e:  # offline for a moment: file changes still sync when it is back
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), f"sheet not reachable ({type(e).__name__})", flush=True)
+        if now != last or any(asked.values()):
+            why = "RUN in sheet" if any(asked.values()) else "change seen"
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), why + ", syncing", flush=True)
+            try:
+                _mark(s, asked, RUNNING)
+                ok = sync_safe()
+                _mark(s, asked, DONE if ok else ASK)
+            except Exception as e:
+                print(f"  sheet: could not update column S ({e})")
             print(flush=True)  # the log is a file: show the sync result now, not when the buffer fills
             last = now
         time.sleep(every)

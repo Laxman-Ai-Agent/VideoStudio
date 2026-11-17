@@ -21,3 +21,7 @@ captions come from `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`) and 
 ~30 s whenever a file in a channel project's input/ or output/ changes (new thumbnail, new final, metadata.json).
 Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `sheet_watch.vbs` in the Startup folder
 (Win+R, `shell:startup`). Stop: Task Manager > python.exe. `sheet.cmd` stays the manual Run button.
+
+Button in the sheet: column S "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";
+the running watcher shows "RUNNING", syncs within ~30 s and sets "DONE" ("ASK" = the sync failed, ask Claude). If it stays RUN, the watcher is not running
+(double-click `sheet_watch.vbs`).
