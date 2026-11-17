@@ -12,11 +12,12 @@ from .config import PROJECTS, SHEET_ID, SHEET_KEY, SHEET_SKIP, SHEET_TABS
 from .project import PROJECT, project_dirs, project_order, variations
 
 NOT_FOUND = "Not found"
-WIDTH = 21  # A..U (S = the Refresh dropdown, carried with its row)
+WIDTH = 22  # A..V (S = the Refresh dropdown, carried with its row)
 COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
 PATH_COLS = (2, 3, 4, 8, 9, 10)
 TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
-SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17}  # O P Q R, one per project
+SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17,  # O P Q R, one per project
+          "facebook_post": 21}  # V: Facebook long-video post caption (P is the Reel caption)
 PRODUCT_LINKS = 20  # U: affiliate links the user gives, one per line, same order as the products
 TITLE_OPTIONS = 19  # T: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
 METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
@@ -84,7 +85,7 @@ def _order(name: str) -> tuple:
 
 
 def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list[list[str]]:
-    """Sheet rows (A2:U, as read) + scanned projects -> the rows to write back."""
+    """Sheet rows (A2:V, as read) + scanned projects -> the rows to write back."""
     rows = {}
     for r in existing:
         r = (list(r) + [""] * WIDTH)[:WIDTH]
@@ -141,12 +142,12 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
     for tab, scanned in channel_projects(projects_dir).items():
         rng = lambda a: quote(f"'{tab}'!{a}", safe="")
-        got = _ok(s.get(api + rng("A2:U")))
+        got = _ok(s.get(api + rng("A2:V")))
         rows = merge(got.json().get("values", []), scanned)
         if rows:
-            _ok(s.put(api + rng(f"A2:U{len(rows) + 1}"), params={"valueInputOption": "RAW"},
+            _ok(s.put(api + rng(f"A2:V{len(rows) + 1}"), params={"valueInputOption": "RAW"},
                   json={"values": rows}))
-        _ok(s.post(api + rng(f"A{len(rows) + 2}:U") + ":clear"))
+        _ok(s.post(api + rng(f"A{len(rows) + 2}:V") + ":clear"))
         print(f"  sheet: {tab} {len(rows)} rows")
     return True
 

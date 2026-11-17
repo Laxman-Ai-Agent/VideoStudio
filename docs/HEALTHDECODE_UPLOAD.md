@@ -52,7 +52,19 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
 - "Last reviewed: [Mon YYYY]" = the month of the final render.
 - Sensitive topics (mental health, suicide, cancer, epilepsy / seizures, addiction): add the Tele-MANAS line (India
   government's free 24x7 mental health helpline, 14416 or 1-800-891-4416) next to 108.
-- Facebook: 2-3 line hook + one question for comments + 3 hashtags.
+- Facebook (user rules 2026-11-18): two captions. `facebook` = Reel caption (9x16 clip, sheet column P);
+  `facebook_post` = long-video post caption (16x9, sheet column V). Both in the 16x9 metadata.json.
+  1. The strongest line first, under ~80 characters (mobile shows 2-3 lines before "See more").
+  2. Mostly Telugu (the Facebook audience reads Telugu), English only for key words.
+  3. No link in the caption (Facebook cuts the reach of link posts): the video is uploaded to Facebook itself and
+     the YouTube link goes in the first comment; the caption says "Full video link comments లో 👇".
+  4. One question that is easy to answer ("Avunu / Kaadu", "1 leka 2").
+  5. No engagement bait ("like cheyandi", "10 mandiki share"); a soft "useful అనిపిస్తే family తో share చేయండి" is fine.
+  6. 2-3 short bullet lines with ✅ / ❌ / 👉 so the content is clear at a glance.
+  7. 2-3 hashtags only: topic + channel (#HealthDecode).
+  8. Always end with "ℹ️ సమాచారం కోసం మాత్రమే, doctor సలహా తీసుకోండి." (Facebook health policy).
+  9. The Reel caption is short (hook, 3 bullets, question, link line, hashtags); the post caption tells a bit more
+     (what the full video covers, its length) with the same rules. Written fresh for each video.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #healthdecode.
 - Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question about the viewer's own
   experience or a myth + the same in English + "⚠️ Educational only, not medical advice. Please consult your doctor."

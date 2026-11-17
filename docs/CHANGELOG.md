@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Facebook: 9 caption rules per channel; two captions: P renamed "Facebook Reel Caption (9x16)" (`facebook`), new V "Facebook Post Caption (16x9)" (`facebook_post`); sync reads / writes A..V. Aging_150 both captions.
 - Products: 8 product rules per channel; products one per line in column O; new column U "Product Links" (`product_links`, only links the user gives); sync reads / writes A..U. Dark World template got the affiliate line. Aging_150 products rewritten.
 - Titles: 8 title rules per channel; new sheet column T "Title Options (16x9)" from `title_options` (3 titles); sync now reads / writes A..T so the S Refresh state moves with its row. Aging_150: 3 options, Shorts title under 40.
 - Tags: no Telugu letters, 500 max (YouTube count), 8 build rules per channel; `check_tags` warns during sync. Aging_150 tags rewritten (22 / 10). Test: `test_check_tags_flags_telugu_letters_and_the_500_limit`.
