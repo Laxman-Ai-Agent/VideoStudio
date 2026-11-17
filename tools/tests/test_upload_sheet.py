@@ -32,7 +32,7 @@ def test_merge_keeps_user_columns_and_paths_sorts_by_date():
     assert b[2] == "new.mp4" and b[4] == "kept_thumb.png" and b[5:7] == ["My title", "Desc"]
     assert b[3] == NOT_FOUND and b[8] == "b9.mp4"
     assert rows[0][2] == "a.mp4" and rows[0][3] == ""  # projects not scanned this run stay as they were
-    assert all(len(r) == 23 for r in rows)
+    assert all(len(r) == 25 for r in rows)
 
 
 def test_channel_projects_needs_a_final_and_a_channel(tmp_path):
@@ -79,3 +79,16 @@ def test_check_tags_flags_telugu_letters_and_the_500_limit():
     assert check_tags(["thyroid lakshanalu", "thyroid telugu"]) == []
     assert check_tags(["థైరా"])[0].startswith("Telugu letters")
     assert "500" in check_tags(["x" * 30] * 17)[0]  # 17*30 + 16 commas = 526
+
+
+def test_thumbnail_text_goes_to_x_and_y(tmp_path):
+    import json
+    from pipeline.upload_sheet import thumbnail_cell
+    p = tmp_path / "Healthdecode" / "01__15-NOV-2026__W"
+    for fmt, n in (("16x9", 5), ("9x16", 2)):
+        touch(p / fmt / "output" / f"w_{fmt}.mp4")
+        opts = [{"main": f"M{i}", "sub": f"S{i}", "highlight": f"M{i}", "visual": f"V{i}"} for i in range(n)]
+        (p / fmt / "output" / "metadata.json").write_text(json.dumps({"thumbnail_text": opts}), "utf-8")
+    found = scan(p)
+    assert found[23].count("Visual:") == 5 and found[24].count("Visual:") == 2
+    assert thumbnail_cell([{"main": "A", "sub": "B", "highlight": "A", "visual": "C"}]) == "1. A\n   B\n   Highlight: A · Visual: C"

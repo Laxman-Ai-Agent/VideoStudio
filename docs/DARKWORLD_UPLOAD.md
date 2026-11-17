@@ -70,6 +70,16 @@ Sheet only, never posted to the channel by Claude.
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
+- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column X;
+  in the 9x16 file = 2 options (Shorts cover) -> column Y. Each option:
+  `{"main": "...", "sub": "...", "highlight": "<one word of main>", "visual": "<one-line image idea>"}`.
+  1. main = line 1: 2-4 words, big Telugu letters, a number or a shock word; `highlight` = the one word to color.
+  2. sub = line 2: 3-6 words, smaller, curiosity or an English keyword.
+  3. Never repeats the title: title = the question, thumbnail = the shock or the contrast.
+  4. Under 8 words in all, readable at a glance on a phone.
+  5. The 5 options take different angles: number, emotion, science, mystery, contrast.
+  6. Only what the video delivers (no fake claims, no real person shown doing something they did not do).
+  7. `visual` = one line the user can turn into the image (subject, one prop, mood), photoreal, cinematic, dark background.
 - Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
   `pinned_comment` in the 9x16 metadata.json -> column W (Shorts).
   1. The question first, in Telugu (only the first 1-2 lines show).
