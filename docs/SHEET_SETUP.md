@@ -14,7 +14,7 @@ after every final and when `sheet.cmd` (or `studio.cmd sheet`) runs. It needs a 
 What it writes: tab per channel (`SHEET_TABS`). Paths only from `output/` (final videos, `script.txt`);
 thumbnails from `input/` (an image whose name has 16x9 / 9x16 wins). New projects are added, empty or
 "Not found" path cells are filled, a path already in the sheet is never erased. Titles, descriptions, tags,
-captions come from `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`) and only fill empty cells. Rows sort by project date. `SHEET_SKIP` lists projects the user removed.
+captions come from `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`) and only fill empty cells. Rows sort newest project first. `SHEET_SKIP` lists projects the user removed.
 
 ## Automatic refresh (watcher)
 `sheet_watch.vbs` (double-click, no window) runs `studio.cmd sheet --watch`: it syncs once, then again within

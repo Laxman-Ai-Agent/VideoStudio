@@ -3,7 +3,7 @@
 Paths come only from output/ (final videos, output/script.txt); thumbnails from input/ (the user puts them there).
 Runs after every final and from `studio.cmd sheet` (the Run button, sheet.cmd): new projects are added, empty or
 "Not found" path cells are filled, a path already in the sheet is never erased. Titles, descriptions, tags,
-products and captions come from output/metadata.json and only fill empty cells (the user's edits stay). Rows are sorted by project date, S.No renumbered."""
+products and captions come from output/metadata.json and only fill empty cells (the user's edits stay). Rows are sorted newest project first, S.No renumbered."""
 import json
 from pathlib import Path
 from urllib.parse import quote
@@ -93,8 +93,9 @@ def _metadata(path: Path, fmt: str) -> dict[int, str]:
 
 
 def _order(name: str) -> tuple:
+    """Newest project first (user, 2026-11-18): date and serial descending; names without a date go last."""
     o = project_order(Path(name)) if PROJECT.match(name) else None
-    return (0, *o, name) if o else (1, 0, 0, 0, 0, name)
+    return (0, *(-x for x in o), name) if o else (1, 0, 0, 0, 0, name)
 
 
 def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list[list[str]]:

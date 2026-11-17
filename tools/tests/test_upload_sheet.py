@@ -26,12 +26,12 @@ def test_merge_keeps_user_columns_and_paths_sorts_by_date():
                 ["2", "02__10-NOV-2026__A", "a.mp4"]]
     rows = merge(existing, {"03__11-NOV-2026__B": {2: "new.mp4", 8: "b9.mp4"},
                             "01__12-NOV-2026__C": {2: "c.mp4"}})
-    assert [r[1] for r in rows] == ["02__10-NOV-2026__A", "03__11-NOV-2026__B", "01__12-NOV-2026__C"]
+    assert [r[1] for r in rows] == ["01__12-NOV-2026__C", "03__11-NOV-2026__B", "02__10-NOV-2026__A"]  # newest first
     assert [r[0] for r in rows] == [1, 2, 3]
     b = rows[1]
     assert b[2] == "new.mp4" and b[4] == "kept_thumb.png" and b[5:7] == ["My title", "Desc"]
     assert b[3] == NOT_FOUND and b[8] == "b9.mp4"
-    assert rows[0][2] == "a.mp4" and rows[0][3] == ""  # projects not scanned this run stay as they were
+    assert rows[2][2] == "a.mp4" and rows[2][3] == ""  # projects not scanned this run stay as they were
     assert all(len(r) == 24 for r in rows)
 
 
