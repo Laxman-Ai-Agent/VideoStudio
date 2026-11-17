@@ -12,6 +12,17 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
 - Tags: NO Telugu letters (user, 2026-11-18): English ("thyroid symptoms") + Tenglish / misspellings people type
   ("thyroid lakshanalu", "thairoid telugu"), 500 characters max as YouTube counts them (commas count, a tag with
   spaces counts 2 more), ending with "Health Decode".
+  How to build them (both formats):
+  1. Order: the exact main keyword from the title first, then its variations, broad words last (the first tags
+     weigh most).
+  2. Telugu words written in English letters, as people type them ("thyroid lakshanalu", "sugar vyadhi", "kidney rallu").
+  3. The main keyword twice: "... telugu" and "... in telugu".
+  4. 2-3 question tags people search ("what causes thyroid", "how to control sugar").
+  5. Common misspellings people type: "thairoid", "diabetis", "epilapsy", "astma".
+  6. Only what the video is really about: no trending names or other topics (YouTube "misleading metadata" = spam).
+  7. 15-25 tags, each about 30 characters or less, total 400-480 (room under 500).
+  8. Shorts: 8-10 tags only: main keyword, 2-3 variations, "shorts", the channel name.
+  `pipeline/upload_sheet.check_tags` prints a warning on Telugu letters or more than 500.
 - Products: safe health devices and aids only (glucometer, BP monitor, pulse oximeter, ORS packets, books).
   Never medicines, prescription drugs or supplements. When the products get affiliate links, the description gets
   the affiliate line (template) - India ASCI and YouTube rules.

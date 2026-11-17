@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, run_rows, scan, signature
+from pipeline.upload_sheet import NOT_FOUND, channel_projects, check_tags, merge, run_rows, scan, signature, youtube_tag_chars
 
 
 def touch(p: Path) -> Path:
@@ -72,3 +72,10 @@ def test_signature_changes_when_a_thumbnail_lands_in_input(tmp_path):
 def test_run_rows_finds_only_run_cells():
     col = [["▶ RUN"], [], ["✅ DONE"], ["run"], [""], ["⏳ RUNNING"], ["▶ START"], ["❌ ASK"]]
     assert run_rows(col) == [2, 5, 8]
+
+
+def test_check_tags_flags_telugu_letters_and_the_500_limit():
+    assert youtube_tag_chars(["a b", "cd"]) == 3 + 2 + 2 + 1
+    assert check_tags(["thyroid lakshanalu", "thyroid telugu"]) == []
+    assert check_tags(["థైరా"])[0].startswith("Telugu letters")
+    assert "500" in check_tags(["x" * 30] * 17)[0]  # 17*30 + 16 commas = 526

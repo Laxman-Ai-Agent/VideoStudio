@@ -46,10 +46,25 @@ def scan(project: Path) -> dict[int, str]:
     return found
 
 
+def youtube_tag_chars(tags: list[str]) -> int:
+    """Characters as YouTube counts the 500 limit: commas between tags, a tag with a space counts its quotes too."""
+    return sum(len(t) + (2 if " " in t else 0) for t in tags) + max(len(tags) - 1, 0)
+
+
+def check_tags(tags: list[str]) -> list[str]:
+    """User rules (2026-11-18): no Telugu letters in tags, 500 characters max."""
+    bad = [f"Telugu letters in tag {t!r}" for t in tags if any("ఀ" <= ch <= "౿" for ch in t)]
+    if (n := youtube_tag_chars(tags)) > 500:
+        bad.append(f"tags are {n} characters (YouTube max 500)")
+    return bad
+
+
 def _metadata(path: Path, fmt: str) -> dict[int, str]:
     if not path.is_file():
         return {}
     m = json.loads(path.read_text("utf-8"))
+    for problem in check_tags(m.get("tags") or []):
+        print(f"  sheet: WARNING {path}: {problem}")
     join = lambda v: ", ".join(v) if isinstance(v, list) else (v or "")
     got = {c: join(m.get(k)) for c, k in zip(TEXT_COLS[fmt], ("title", "description", "tags"))}
     got.update({c: join(m.get(k)) for k, c in SHARED.items()})

@@ -10,6 +10,17 @@ Sheet only, never posted to the channel by Claude.
 - Description: the templates below (long and Shorts).
 - Tags: NO Telugu letters (user, 2026-11-18): English + Tenglish only, 500 characters max as YouTube counts
   them (commas count, a tag with spaces counts 2 more), ending with "The Dark World".
+  How to build them (both formats):
+  1. Order: the exact main keyword from the title first, then its variations, broad words last (the first tags
+     weigh most).
+  2. Telugu words written in English letters, as people type them ("ayushu", "musalitanam").
+  3. The main keyword twice: "... telugu" and "... in telugu".
+  4. 2-3 question tags people search ("can humans live 150 years", "how to slow aging").
+  5. Common other spellings / names of the topic when people use them (e.g. "AI doctor", "artificial intelligence doctor").
+  6. Only what the video is really about: no trending names or other topics (YouTube "misleading metadata" = spam).
+  7. 15-25 tags, each about 30 characters or less, total 400-480 (room under 500).
+  8. Shorts: 8-10 tags only: main keyword, 2-3 variations, "shorts", the channel name.
+  `pipeline/upload_sheet.check_tags` prints a warning on Telugu letters or more than 500.
 - Products: safe, topic-related things (books on the topic, gadgets, devices). Never medicines or supplements.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.
