@@ -36,3 +36,9 @@ def setup_env() -> None:
     for key, path in CACHE_ENV.items():
         path.mkdir(parents=True, exist_ok=True)
         os.environ[key] = str(path)
+
+# Upload-path sheet (Google Sheet "Video_Upload_Path"): filled after every final and by `studio.cmd sheet`.
+SHEET_ID = "1kiKduIc6uF2qPiBXFTxvQiVQqCvalPuJ1eXIWqWaGXo"
+SHEET_TABS = {"The Dark World": "Dark_World", "Healthdecode": "Health_Decode"}  # channel folder -> tab
+SHEET_KEY = TOOLS / ".secrets" / "google_sheet_key.json"  # service-account key; the sheet is shared with its email
+SHEET_SKIP = {"01__10-NOV-2026__AI_Doctor"}  # projects the user removed from the sheet (2026-11-17)

@@ -24,6 +24,7 @@ Evaluation checklist for a new library: license (MIT/Apache/BSD ok; AGPL/custom 
 | onnxruntime (via faster-whisper) | 1.31.1 | MIT | transcribe, prepare | inference for VAD and rembg | already installed, rembg needs no extra |
 | remotion, @remotion/bundler, @remotion/renderer | 4.0.541 | Remotion License: free for individuals and companies of up to 3 people; bigger companies need a paid company license (remotion.dev/license) | engines/remotion | second render engine (React -> MP4) | isolated in `tools/engines/remotion` with its own lockfile; renders with system Chrome (`chromeMode: chrome-for-testing`), no browser download |
 | react, react-dom | 19.3.1 | MIT | engines/remotion | Remotion components | required by Remotion |
+| google-auth (+ cryptography, pyasn1; requests already installed) | 2.62.2 | Apache-2.0 | upload_sheet | service-account login + HTTP session for the Google Sheets API (upload-path sheet) | official Google auth library; no extra Sheets client needed, the API is two REST calls |
 | esbuild (via @remotion/bundler) | 0.28.1 | MIT | engines/remotion | bundler internals | own copy, never shared with HyperFrames |
 
 ## External tools (system-wide)

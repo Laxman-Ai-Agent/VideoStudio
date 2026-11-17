@@ -3,6 +3,10 @@
 Updated 2026-11-17. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
+## Upload-path sheet (2026-11-17)
+- Sheet filled once by hand (browser): Health_Decode 7 rows, Dark_World 8 rows (AI_Doctor_5min first, 01_AI_Doctor removed).
+- Auto update built (`pipeline/upload_sheet.py`, `sheet.cmd`). PENDING: user creates the service-account key (`docs/SHEET_SETUP.md`); until then the sync prints "no key" and skips.
+
 ## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
 - Dashboard (`/`, `ui/frontend/index.html`, `styles/app.css`, `src/app.js`): no sidebar; centred page buttons Projects / Assets / Timeline, a smaller row with Prepare + Total / Found / Missing; Projects table (S.No, title, duration, assets n/n, Missing, Preview, Render ticks, View / Delete icons; Delete = move to `projects/_deleted/`, red popup); tiles: status icon only + `Scene-NN`, 9:16 projects get portrait tiles.
 - Timeline (`/timeline.html`, `timeline*.js`, `timeline.css`, `motion.css`): page tabs on top; under them `Video Preview | Timeline` live in the right options box (ratio, quality 1080p / 480p, output size, `Default` = reset all manual edits (backup `edits.reset-<time>.json`), Render). Timeline view = tracks with Play / Stop + a gallery of scene tiles (`Edit` opens one). Editor = big live preview + one right card: `All scenes | Save | Reset`, every element as a grid, edit controls of the picked element under it. Scene Details / Animation / Effects panes were read-only and are gone.

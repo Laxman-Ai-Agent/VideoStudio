@@ -25,3 +25,6 @@ kaggle/kaggle.json
 kaggle/access_token
 kaggle/.venv/
 kaggle/.work/
+
+# Google Sheet service-account key (upload_sheet)
+tools/.secrets/

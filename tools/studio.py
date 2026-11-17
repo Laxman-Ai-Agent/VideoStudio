@@ -284,6 +284,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
               extra=mode + "|" + "|".join(x.model_dump_json() for x in looks))
     report = QAReport.model_validate_json(qa_json.read_text("utf-8"))
     qa_failed = False
+    exported = False
     for f in report.files:
         src = p / f.file
         dest = p / "output" / src.name
@@ -292,6 +293,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
             export_final(src, dest)  # moved, not copied: work/ keeps no second copy of a final
             remove_previews_after_final(p, src.name)  # the final of this format is out: its previews go
             mark_final(p)  # starts the 24 h clock for prune_scene_cache
+            exported = True
         elif not final:  # previews are copied (work/ keeps them for the next preview run)
             if not dest.exists() or dest.stat().st_mtime_ns < src.stat().st_mtime_ns:
                 dest.parent.mkdir(exist_ok=True)
@@ -302,6 +304,9 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         print(f"    -> {dest}" if dest.exists() and (f.passed or not final) else "", end="")
         print()
     print(f"  credits: {credits_txt}")
+    if exported:
+        from pipeline.upload_sheet import sync_safe
+        sync_safe()  # upload-path sheet gets the new final's paths
     if failed:
         print(f"  NOTE: {failed} scene clip(s) are placeholders (see work/scenes/*/report.json)")
     return 1 if final and qa_failed else 0
@@ -435,6 +440,7 @@ def main() -> int:
     mc = sub.add_parser("match", help="keep the drop/ files that fit the scene plan (CLIP, local): report, --apply moves the rest to drop/_unused")
     mc.add_argument("project")
     mc.add_argument("--apply", action="store_true")
+    sub.add_parser("sheet", help="update the upload-path Google Sheet from every project's output/ (Run button)")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
@@ -455,6 +461,9 @@ def main() -> int:
         except Exception as e:  # run_stage already logged the traceback to work/logs/<stage>.log
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
+    if a.cmd == "sheet":
+        from pipeline.upload_sheet import sync
+        return 0 if sync() else 1
     if a.cmd == "match":
         from pipeline.clipmatch import match
         match(find_project(a.project), a.apply)

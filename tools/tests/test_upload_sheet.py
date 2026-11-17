@@ -1,0 +1,43 @@
+from pathlib import Path
+
+from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, scan
+
+
+def touch(p: Path) -> Path:
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(b"x")
+    return p
+
+
+def test_scan_takes_output_finals_and_input_thumbnail(tmp_path):
+    p = tmp_path / "Healthdecode" / "01__15-NOV-2026__Walk"
+    v16 = touch(p / "16x9" / "output" / "09_Walk_16x9.mp4")
+    touch(p / "16x9" / "output" / "preview_16x9.mp4")
+    s16 = touch(p / "16x9" / "output" / "script.txt")
+    t16 = touch(p / "16x9" / "input" / "Thumb 16X9.png")
+    touch(p / "16x9" / "input" / "audio.mp3")
+    v9 = touch(p / "9x16" / "output" / "final_9x16.mp4")  # no script, no thumbnail yet
+    got = scan(p)
+    assert got == {2: str(v16), 3: str(s16), 4: str(t16), 8: str(v9)}
+
+
+def test_merge_keeps_user_columns_and_paths_sorts_by_date():
+    existing = [["1", "03__11-NOV-2026__B", "old.mp4", "", "kept_thumb.png", "My title", "Desc", "", NOT_FOUND],
+                ["2", "02__10-NOV-2026__A", "a.mp4"]]
+    rows = merge(existing, {"03__11-NOV-2026__B": {2: "new.mp4", 8: "b9.mp4"},
+                            "01__12-NOV-2026__C": {2: "c.mp4"}})
+    assert [r[1] for r in rows] == ["02__10-NOV-2026__A", "03__11-NOV-2026__B", "01__12-NOV-2026__C"]
+    assert [r[0] for r in rows] == [1, 2, 3]
+    b = rows[1]
+    assert b[2] == "new.mp4" and b[4] == "kept_thumb.png" and b[5:7] == ["My title", "Desc"]
+    assert b[3] == NOT_FOUND and b[8] == "b9.mp4"
+    assert rows[0][2] == "a.mp4" and rows[0][3] == ""  # projects not scanned this run stay as they were
+    assert all(len(r) == 17 for r in rows)
+
+
+def test_channel_projects_needs_a_final_and_a_channel(tmp_path):
+    touch(tmp_path / "The Dark World" / "02__10-NOV-2026__X" / "output" / "final_16x9.mp4")
+    touch(tmp_path / "The Dark World" / "03__11-NOV-2026__Y" / "16x9" / "output" / "preview_16x9.mp4")
+    touch(tmp_path / "01__09-NOV-2026__Z" / "output" / "final_16x9.mp4")  # not in a channel folder
+    tabs = channel_projects(tmp_path)
+    assert list(tabs["Dark_World"]) == ["02__10-NOV-2026__X"] and tabs["Health_Decode"] == {}
