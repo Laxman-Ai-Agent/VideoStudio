@@ -15,3 +15,9 @@ What it writes: tab per channel (`SHEET_TABS`). Paths only from `output/` (final
 thumbnails from `input/` (an image whose name has 16x9 / 9x16 wins). New projects are added, empty or
 "Not found" path cells are filled, a path already in the sheet is never erased. Titles, descriptions, tags,
 captions come from `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`) and only fill empty cells. Rows sort by project date. `SHEET_SKIP` lists projects the user removed.
+
+## Automatic refresh (watcher)
+`sheet_watch.vbs` (double-click, no window) runs `studio.cmd sheet --watch`: it syncs once, then again within
+~30 s whenever a file in a channel project's input/ or output/ changes (new thumbnail, new final, metadata.json).
+Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `sheet_watch.vbs` in the Startup folder
+(Win+R, `shell:startup`). Stop: Task Manager > python.exe. `sheet.cmd` stays the manual Run button.

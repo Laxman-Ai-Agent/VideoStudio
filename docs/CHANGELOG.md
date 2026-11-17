@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Sheet watcher: `studio.cmd sheet --watch` / `sheet_watch.vbs` (hidden) syncs within ~30 s of a change in input/ or output/ (polling, `upload_sheet.signature`). Test: `test_signature_changes_when_a_thumbnail_lands_in_input`.
 - Upload sheet: new column R "Pinned Comment" (both tabs), from `pinned_comment` in the 16x9 `metadata.json`; rules per channel. Aging_150 filled.
 
 ## 2026-11-17

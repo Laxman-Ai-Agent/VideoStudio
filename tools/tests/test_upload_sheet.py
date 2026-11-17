@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, scan
+from pipeline.upload_sheet import NOT_FOUND, channel_projects, merge, scan, signature
 
 
 def touch(p: Path) -> Path:
@@ -56,3 +56,14 @@ def test_metadata_fills_only_empty_text_cells(tmp_path):
     assert found[15] == "FB" and found[17] == "PIN" and found[11] == "T9" and 13 not in found and 16 not in found
     rows = merge([["1", p.name, "", "", "", "My own title"]], {p.name: found})
     assert rows[0][5] == "My own title" and rows[0][6] == "D16" and rows[0][11] == "T9"
+
+
+def test_signature_changes_when_a_thumbnail_lands_in_input(tmp_path):
+    p = tmp_path / "Healthdecode" / "01__15-NOV-2026__Walk"
+    touch(p / "16x9" / "output" / "w_16x9.mp4")
+    touch(p / "16x9" / "work" / "scene.png")
+    before = signature(tmp_path)
+    touch(p / "16x9" / "work" / "other.png")  # work/ is not watched
+    assert signature(tmp_path) == before
+    touch(p / "16x9" / "input" / "thumb_16x9.png")
+    assert signature(tmp_path) != before

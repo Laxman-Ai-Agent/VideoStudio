@@ -135,3 +135,45 @@ def sync_safe() -> None:
         sync()
     except Exception as e:
         print(f"  sheet: not updated ({type(e).__name__}: {e}); run `studio.cmd sheet` later")
+
+
+WATCHED = IMAGES | {".mp4", ".txt", ".json"}
+
+
+def signature(projects_dir: Path = PROJECTS) -> tuple:
+    """What the sheet depends on: files in every channel project's input/ and output/ (name, size, mtime).
+    A new thumbnail in input/ or a new final / metadata.json in output/ changes it."""
+    sig = []
+    for p in project_dirs(projects_dir):
+        if p.relative_to(projects_dir).parts[0] not in SHEET_TABS:
+            continue
+        for d in [p] + variations(p):
+            for sub in ("input", "output"):
+                if (d / sub).is_dir():
+                    sig += [(str(f), f.stat().st_size, f.stat().st_mtime_ns) for f in (d / sub).iterdir()
+                            if f.is_file() and f.suffix.lower() in WATCHED]
+    return tuple(sorted(sig))
+
+
+def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
+    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes (checked every 30 s).
+    ponytail: polling, no OS file events; 15 projects scan in milliseconds, add watchdog only if that changes."""
+    import msvcrt
+    import time
+    from .config import CACHE
+    CACHE.mkdir(parents=True, exist_ok=True)
+    lock = open(CACHE / "sheet_watch.lock", "w")  # held while this watcher lives; Windows frees it on exit
+    try:
+        msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+    except OSError:
+        print("sheet watcher already running", flush=True)
+        return
+    last = None
+    while True:
+        now = signature(projects_dir)
+        if now != last:
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "change seen, syncing", flush=True)
+            sync_safe()
+            print(flush=True)  # the log is a file: show the sync result now, not when the buffer fills
+            last = now
+        time.sleep(every)

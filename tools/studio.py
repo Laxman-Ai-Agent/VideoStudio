@@ -440,7 +440,8 @@ def main() -> int:
     mc = sub.add_parser("match", help="keep the drop/ files that fit the scene plan (CLIP, local): report, --apply moves the rest to drop/_unused")
     mc.add_argument("project")
     mc.add_argument("--apply", action="store_true")
-    sub.add_parser("sheet", help="update the upload-path Google Sheet from every project's output/ (Run button)")
+    sh = sub.add_parser("sheet", help="update the upload-path Google Sheet from every project's output/ (Run button)")
+    sh.add_argument("--watch", action="store_true", help="keep running: sync whenever input/ or output/ files change")
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--final", action="store_true", help="full resolution (default: 480p preview)")
@@ -462,7 +463,9 @@ def main() -> int:
             print(f"  FAILED: {type(e).__name__}: {e}")
             return 1
     if a.cmd == "sheet":
-        from pipeline.upload_sheet import sync
+        from pipeline.upload_sheet import sync, watch
+        if a.watch:
+            watch()
         try:
             return 0 if sync() else 1
         except Exception as e:
