@@ -58,7 +58,18 @@ Sheet only, never posted to the channel by Claude.
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. The Reel caption is short (hook, 3 bullets, question, link line, hashtags); the post caption tells a bit more
      (what the full video covers, its length) with the same rules. Written fresh for each video.
-- Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.
+- Instagram (sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
+  1. Hook in the first line, about 50 characters (Instagram cuts at ~125 with "more").
+  2. English search keywords inside a natural sentence (Instagram search reads captions more than hashtags),
+     e.g. "aging reverse science in Telugu".
+  3. 3-5 hashtags only (Instagram's new limit is 5): 1 topic, 1-2 niche, 1 channel (#thedarkworld).
+  4. A "send to a friend who..." line (DM shares weigh most), Save CTA optional.
+  5. No link (not clickable): "full video link bio లో 🔗", or "Comment <KEYWORD>, link DM చేస్తాం" (the user sends
+     the DM by hand until an automation exists).
+  6. Short paragraphs, one point per line, emojis as bullets that fit the point.
+  7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
+  8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
+  9. Telugu for the feeling, a few more English keywords than Facebook (search).
 - Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question that invites answers +
   the same question in English + "📚 Sources & chapters are in the description." (+ "Educational only, not medical
   advice." on health-related topics). 2-3 lines, no links unless known.
