@@ -1,0 +1,13 @@
+{
+ "name": "ep_l05_define",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L05 one seizure is not epilepsy; WHO: 2 or more unprovoked seizures"
+}

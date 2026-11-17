@@ -1,0 +1,13 @@
+{
+ "name": "ep_l04_wiring",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L04 wiring analogy: current in order -> fan, light; high voltage -> chaos; seizure = brain storm"
+}

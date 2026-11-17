@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l08_types: L08 seizure types: tonic-clonic stages, children blank stare for seconds */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 119.0);
+  hud("SEIZURE TYPES · 01", .1, { until: T(127.2) });
+  head("NOT ALL <b>THE SAME</b>", T(119.0), { y: H * .4, align: "center", size: 7, until: T(120.8) });
+  shot("E02", { t: T(120.8), d: 6.5, mv: "orbit", a: .7, in: "flash", until: T(127.2) });
+  head("TONIC<b>-</b>CLONIC", T(122.0), { y: H * .1, size: 7, c: K.mg, until: T(127.2) });
+  const st = [["స్పృహ కోల్పోవడం", 123.5], ["శరీరం <b>బిగుసుకుపోవడం</b>", 125.0], ["<b>కొట్టుకోవడం</b>", 126.3]];
+  st.forEach(([h, t], i) => te(`<span style="font-family:var(--font-script);color:${K.mg}">0${i + 1}</span> ${h}`, T(t), { y: H * (.46 + i * .1), c: K.mg, size: 3.6, until: T(127.2) }));
+  eeg(T(125.0), { box: [W * .45, H * .5, W * .5, H * .2], d: 2, spike: [[.6, 2]], c: K.mg, until: T(127.2) });
+  const bg = shot("E25", { t: T(127.3), d: 6.5, mv: "drift", in: "fade" }); tl.to(bg.im, { filter: "blur(8px) brightness(.4)", duration: .5 }, T(127.4));
+  const g = shot("F06", { t: T(127.4), d: 6.5, mv: "push", a: .5, in: "scan", box: [W * .56, H * .06, H * .5, H * .86], glass: true, cap: "BLANK STARE", c: K.am });
+  hud("CHILDREN", T(127.9), { c: K.am });
+  num(0, 10, T(128.8), { x: W * .06, y: H * .18, unit: "SEC", c: K.am, d: 2.2, size: 12, fmt: (v) => String(Math.round(v)).padStart(2, "0") });
+  lock(W * .6, H * .16, H * .4, H * .3, T(130.9), { c: K.am, label: "EYES · NO RESPONSE" });
+  te("ఇదీ <b>seizure</b> నే", T(132.7), { y: H * .7, c: K.am });
+  SK.done();
+</script>
+</body></html>

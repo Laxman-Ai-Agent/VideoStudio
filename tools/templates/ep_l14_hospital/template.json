@@ -1,0 +1,13 @@
+{
+ "name": "ep_l14_hospital",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L14 go to hospital when: over 5 min, back to back, breathing, not waking, injury, in water, pregnant, first seizure"
+}

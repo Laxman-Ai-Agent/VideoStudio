@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_v03_causes: V03 50% unknown; India: unwashed vegetables, undercooked pork tapeworm eggs -> brain cysts; silent seizure in children */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 31.5);
+  hud("CAUSE?", .1, { until: T(37.2) });
+  dots(100, 50, 10, [W * .14, H * .12, W * .72, H * .34], T(33.8), { c: K.mg, lag: .5, until: T(37.2) });
+  num(0, 50, T(34.1), { x: 0, y: H * .5, align: "center", unit: "% UNKNOWN", c: K.mg, size: 20, until: T(37.2) });
+  hud("INDIA", T(38.1), { c: K.am });
+  shot("F04", { t: T(37.3), d: 4, mv: "push", in: "slide", box: [W * .06, H * .1, W * .42, H * .34], glass: true, cap: "VEGETABLES", c: K.am, until: T(44.5) });
+  shot("E20", { t: T(41.6), d: 3, mv: "push", in: "slide", dir: -1, box: [W * .52, H * .1, W * .42, H * .34], glass: true, cap: "UNDERCOOKED PORK", c: K.am, until: T(44.5) });
+  te("<b>tapeworm</b> గుడ్లు", T(43.5), { y: H * .5, align: "center", c: K.am, until: T(44.5) });
+  shot("F05", { t: T(44.6), d: 3.4, mv: "push", in: "through", until: T(48.0) });
+  lock(W * .36, H * .26, W * .2, H * .1, T(45.4), { c: K.mg, label: "CYSTS", until: T(47.9) });
+  shot("F06", { t: T(48.0), d: 7.6, mv: "push", a: .6, in: "iris" });
+  hud("CHILDREN", T(48.9), { c: K.am, y: H * .08 });
+  num(0, 10, T(49.7), { x: W * .07, y: H * .14, unit: "SEC", c: K.am, size: 16, d: 2.4, fmt: (v) => String(Math.round(v)).padStart(2, "0") });
+  head("<b>SILENT</b> SEIZURE", T(54.2), { y: H * .56, align: "center", c: K.am, size: 8 });
+  SK.done();
+</script>
+</body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "ep_v04_aid",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "V04 first aid: don't hold, nothing in mouth, turn on side; over 5 minutes -> hospital"
+}

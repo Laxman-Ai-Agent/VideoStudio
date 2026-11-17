@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-11-16. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
+Updated 2026-11-17. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
 ## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
@@ -11,6 +11,35 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - Not verified by eye: animations / spinner / Play (the browser pane clock is paused when hidden); layer drag, resize, rotate were checked with the save request stubbed, so the full save -> rebuild -> reload round trip is untested by me.
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
+
+## 14_Epilepsy (2026-11-17) - finals (new "neural storm" look)
+- Paired topic (epilepsy / moorchha): `projects/14_Epilepsy/{16x9,9x16}`; 16x9 3 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`; transcripts `scripts/make_transcript.py`.
+- User brief: new cinematic direction, complete creative freedom. User standing go (memory no-render-unless-told): no questions, 480p -> QC -> finals automatically.
+- Theme "neural storm" (`theme.json`: Unbounded + Mandali + Chakra Petch; navy / cyan / magenta / amber; max 29% alike 11), new kit `tools/templates/storm_kit/sk.js` (glass panels, neuron canvas + lightning storm, EEG, type-on heads, HUD, lock brackets, myth stamps, lists, phone / document screens with real content, dot fields).
+- Images: 73 Kaggle stills `assets/ai` (prompts `work/kaggle_storm.json`; E44 VNS came out as a pill -> VNS info document instead; F07 looked like CPR -> E35 recovery position).
+- Sequences ep_l01..l21 + ep_v01..v06 (`scripts/seq_*.py`, absolute narration times via T(x)); `scripts/make_sequences.py <fmt>` takes pictures from the code. QC `scripts/qa_sheet.py <fmt> [ids]`.
+- Lesson: gsap string selectors in scene code (".sk-shot .sk-im") hit later shots too -> use element refs (bg.im).
+
+## 13_Aging_150 (2026-11-16) - finals done (new "cell atlas" light look)
+- Paired topic (can humans live to 150?): `projects/13_Aging_150/{16x9,9x16}`; 1.15x audio `<fmt>/audio.mp3`, align_mms -> `input/gemini_corrected.json`, transcripts via `scripts/make_transcript.py`.
+- User brief: light documentary, image-led (many big photos, splits, plates, 2D/3D motion). Theme "cell atlas" (`theme.json`: DM Serif Display + Ramabhadra + Jost; sage paper / vermilion / green / violet; 9% max alike), new kit `tools/templates/atlas_kit` (at.js core, at2.js: 3D book + ribbons, 3D helix, ruler, chart, bars, gauge, dots, lens, toggles). Plans `<fmt>/plan.md`.
+- Images: 45 Kaggle bright photoreal `assets/ai` (prompts `work/kaggle_age.json`), real `assets/real` (Altman CC BY, AlphaFold CC BY; `assets/sources.json`); people without free photos = name cards.
+- Sequences ag_l01..l20 + ag_v01..v06 from `scripts/seq_*.py` (seqlib.py); `scripts/make_sequences.py <fmt>` -> scenes.json.
+- FINALS DONE 2026-11-16 (user's standing go for 13): `<fmt>/output/13_Aging_150_<fmt>.mp4` (5:27 / 1:31), QA PASS; `DarkWorld/README.txt` (thumbnails pending). Known minor: A19 looks like a CT scanner (mammography line).
+
+## 12_Anthropic_IPO (2026-11-16) - finals done (new "prospectus noir" look)
+- Paired topic (Anthropic IPO): `projects/12_Anthropic_IPO/{16x9,9x16}`; 16x9 3 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; align_mms -> `input/gemini_corrected.json`; transcripts `scripts/make_transcript.py`.
+- User brief: new cinematic direction, complete creative freedom, smart visual mix -> theme.json "prospectus noir" (Instrument Serif + Anek Telugu + Space Mono; ink / coral / green / red; max 15% alike), new kit `tools/templates/ledger_kit/lk.js` (shots + framed panels, serif heads, mono counters, tape, chart, bars, bracket, chips, pages, stamp, arrow, big). Plans `<fmt>/plan.md`.
+- Images: 37 Kaggle stills `assets/ai` (prompts `work/kaggle_ipo.json`), real `assets/real` (Dario CC BY, Anthropic/Claude logos PD, anthropic.com screenshot COPYRIGHT credit; `assets/sources.json`); suppliers as typeset chips.
+- Sequences lx_l01..l21 + lx_v01..v06 (`scripts/seq_*.py` via seqlib.py; beats in `make_sequences.py`, exact-token match first; QC `scripts/qa_sheet.py <fmt> [ids]`).
+- FINALS DONE 2026-11-16 on the user's go (QA PASS): `<fmt>/output/12_Anthropic_IPO_<fmt>.mp4` (4:51 / 1:31); `DarkWorld/README.txt` (thumbnails pending: user adds to DarkWorld/16X9, 9X16, then re-run scripts/make_darkworld.py).
+
+## 11_Thyroid (2026-11-16) - finals done (new cinematic look)
+- Paired topic (thyroid): `projects/11_Thyroid/{16x9,9x16}`; 16x9 3 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; align_mms -> `input/gemini_corrected.json`; transcripts via `scripts/make_transcript.py`.
+- User brief: NEW cinematic direction, complete creative freedom (not Health Decode): theme "thermostat noir" (`theme.json`: Big Shoulders Display + NTR + Manrope, obsidian / amber / teal / crimson), new kit `tools/templates/cine_kit/cine.js`. Plans `<fmt>/plan.md`.
+- Images: 59 Kaggle cinematic photoreal `assets/cine/<id>.jpg` (prompts `work/kaggle_cine.json`, fixes T02 / T39 `work/kaggle_cine_fix.json`).
+- Sequences cx_l01..l18 + cx_v01..v05: l01 / l07 hand-written, the rest generated by `scripts/seq_l02_l09.py`, `seq_l10_l18.py`, `seq_v01_v05.py` (seqlib.py writes tools/templates/<code>); edit those scripts, then re-run them. `scripts/make_sequences.py <fmt>` -> scenes.json; previews `studio.cmd run 11_Thyroid/<fmt> --format <ratio>` -> `<fmt>/output/preview_<fmt>.mp4`.
+- FINALS DONE 2026-11-16 on the user's go (QA PASS): `<fmt>/output/11_Thyroid_<fmt>.mp4` (5:03 / 1:15); `DarkWorld/README.txt` (thumbnails pending: user adds to DarkWorld/16X9, 9X16, then re-run scripts/make_darkworld.py). Music: auto-picked clinical_calm.
 
 ## 10_Diarrhea_ORS (2026-11-16) - finals done ("Health Decode" light clinical mode)
 - Paired topic (diarrhea, ORS): `projects/10_Diarrhea_ORS/{16x9,9x16}`; 16x9 4 mp3s merged, voice chain 1.15x -> `<fmt>/audio.mp3` (+ input/audio.mp3 copy); align_mms -> `input/gemini_corrected.json`.

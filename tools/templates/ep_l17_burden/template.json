@@ -1,0 +1,13 @@
+{
+ "name": "ep_l17_burden",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L17 50 million people; 3 of 4 untreated in poor countries; India villages rarely see a doctor; injuries; WHO 3x death risk"
+}

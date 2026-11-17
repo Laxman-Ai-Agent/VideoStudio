@@ -1,0 +1,13 @@
+{
+ "name": "ep_l18_prevent",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L18 WHO: 25% preventable: helmet, pregnancy and birth care, child fever, BP and sugar, wash vegetables, cook meat, clean hands"
+}

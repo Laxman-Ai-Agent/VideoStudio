@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l12_firstaid: L12 CDC first aid: calm, clear objects, turn on side, saliva / breathing, soft under head, loosen collar */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 158.8);
+  net({ n: 50, alpha: .25 });
+  doc(`<div style="font-size:${u * 2.1}px;line-height:1.45"><h3 style="font-size:${u * 3}px">Seizure First Aid</h3><div style="opacity:.6">CDC · Centers for Disease Control and Prevention</div><div class="rule"></div>
+    <b>1.</b> Stay with the person. Stay calm.<br><b>2.</b> Move hard or sharp objects away.<br><b>3.</b> Turn the person gently onto one side.<br>
+    <b>4.</b> Put something soft under the head.<br><b>5.</b> Loosen anything tight around the neck.<br><b>6.</b> Time the seizure.</div>`, W * .06, H * .14, W * .36, H * .56, T(159.0), { until: T(162.2) });
+  hud("CDC · FIRST AID", T(159.0), { c: K.cy, x: W * .5, y: H * .2, until: T(162.2) });
+  head("STAY <b>CALM</b>", T(160.9), { x: W * .5, y: H * .34, size: 6.4, until: T(162.2) });
+  const a = shot("E34", { t: T(162.2), d: 3, mv: "panR", in: "through", until: T(165.0) });
+  head("CLEAR <b>AROUND</b>", T(162.3), { y: H * .12, size: 6.4, until: T(165.0) });
+  lock(W * .2, H * .3, W * .26, H * .36, T(163.3), { label: "HARD OBJECTS" });
+  const s = shot("E35", { t: T(165.0), d: 6.8, mv: "push", a: .6, in: "flash" });
+  head("ON THE <b>SIDE</b>", T(165.6), { y: H * .1, size: 7.5 });
+  lock(W * .42, H * .44, W * .14, H * .16, T(168.3), { label: "SALIVA OUT · AIRWAY OPEN" });
+  ring(W * .49, H * .52, T(170.2), { r: u * 10 });
+  tl.to(".sk-en", { autoAlpha: 0, duration: .3 }, T(171.8));
+  morph(s, T(171.8), [W * .03, H * .08, W * .46, H * .66]); tl.to(s, { borderRadius: u * 1.2, duration: .5 }, T(171.8));
+  shot("E36", { t: T(171.9), d: 2.4, mv: "push", in: "slide", box: [W * .51, H * .08, W * .46, H * .32], glass: true, cap: "SOFT UNDER THE HEAD" });
+  shot("E37", { t: T(174.3), d: 1.8, mv: "push", in: "slide", box: [W * .51, H * .42, W * .46, H * .32], glass: true, cap: "LOOSEN THE COLLAR" });
+  te("తల కింద <b>మెత్తటిది</b>, మెడ దగ్గర <b>వదులు</b>", T(172.6), { y: H * .78, size: 3.8 });
+  SK.done();
+</script>
+</body></html>

@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_v04_aid: V04 first aid: don't hold, nothing in mouth, turn on side; over 5 minutes -> hospital */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 55.6);
+  shot("E35", { t: 0, d: 9, mv: "push", in: "fade", fx: .5, until: T(64.5) });
+  hud("IF IT HAPPENS IN FRONT OF YOU", .1, { y: H * .06, until: T(64.5) });
+  list([["గట్టిగా <b style='color:" + K.mg + "'>పట్టుకోకండి</b>", T(58.9), false], ["నోట్లో <b style='color:" + K.mg + "'>ఏమీ</b> పెట్టకండి", T(60.5), false],
+        ["<b style='color:" + K.cy + "'>పక్కకి</b> తిప్పి పడుకోబెట్టండి", T(62.9), true]], W * .07, H * .14, { until: T(64.5) });
+  lock(W * .3, H * .38, W * .4, H * .2, T(63.3), { label: "ON THE SIDE", until: T(64.5) });
+  const ph = phone(`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding-top:${u * 5}px">
+  <div style="font-size:${u * 2}px;opacity:.6;letter-spacing:.2em">STOPWATCH</div>
+  <div id="sw" style="font:700 ${u * 8}px var(--font-script);margin-top:${u * 5}px">04:55</div>
+  <div style="font-size:${u * 2}px;color:${K.mg};margin-top:${u * 2}px">over 5:00 → hospital</div></div>`, W * .2, H * .1, H * .5, T(64.6), { rot: -4 });
+  const sw = ph.querySelector("#sw"), v = { s: 295 };
+  tl.fromTo(v, { s: 295 }, { s: 302, duration: 2.6, ease: "none", immediateRender: true, onUpdate: () => { const n = Math.floor(v.s); sw.textContent = "0" + Math.floor(n / 60) + ":" + String(n % 60).padStart(2, "0"); } }, T(65.0));
+  tl.to(sw, { color: K.mg, duration: .2 }, T(66.0));
+  shot("F08", { t: T(67.5), d: 2, mv: "dive", a: .5, in: "flash" });
+  head("<b>HOSPITAL</b>", T(68.0), { y: H * .5, align: "center", c: K.mg, size: 11 });
+  SK.done();
+</script>
+</body></html>

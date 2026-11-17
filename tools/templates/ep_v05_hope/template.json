@@ -1,0 +1,13 @@
+{
+ "name": "ep_v05_hope",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "V05 70% normal life with medicines; but superstition keeps many from treatment"
+}

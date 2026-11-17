@@ -1,0 +1,13 @@
+{
+ "name": "ep_l09_absence",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L09 absence seizure mistaken for daydreaming; focal: one arm, strange smell or feeling"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "ep_l21_share",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 14_Epilepsy; reuse only when the user asks",
+  "kit": "storm_kit"
+ },
+ "description": "L21 share with friends and family; knowing can save a life; question: seen keys used? comment, like"
+}

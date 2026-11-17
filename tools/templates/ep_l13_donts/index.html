@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l13_donts: L13 time it (stopwatch phone); don'ts: nothing in mouth, no holding, no water or food; keys / sandal useless */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 176.0);
+  shot("E33", { t: 0, d: 13, mv: "drift", in: "fade" }); tl.to(".sk-shot .sk-im", { filter: "brightness(.45) blur(6px)", duration: .6 }, .3);
+  const ph = phone(`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding-top:${u * 4}px">
+  <div style="font-size:${u * 1.3}px;opacity:.6;letter-spacing:.2em">STOPWATCH</div>
+  <div id="sw" style="font:700 ${u * 6}px var(--font-script);margin-top:${u * 4}px">00:00</div>
+  <div style="font-size:${u * 1.2}px;opacity:.6;margin-top:${u}px">seizure started</div>
+  <div style="display:flex;gap:${u * 2}px;margin-top:${u * 4}px"><div style="width:${u * 7}px;height:${u * 7}px;border-radius:50%;background:#ffffff22;display:flex;align-items:center;justify-content:center;font-size:${u * 1.3}px">Lap</div>
+  <div style="width:${u * 7}px;height:${u * 7}px;border-radius:50%;background:${K.mg};display:flex;align-items:center;justify-content:center;font-size:${u * 1.3}px">Stop</div></div>
+  <div id="warn" style="margin-top:${u * 3}px;font-size:${u * 1.3}px;color:${K.am};opacity:0">5:00 → call for help</div></div>`, W * .64, H * .07, H * .84, 0, { rot: -5 });
+  const sw = ph.querySelector("#sw"), v = { s: 0 };
+  tl.fromTo(v, { s: 0 }, { s: 13, duration: 13, ease: "none", immediateRender: true, onUpdate: () => { sw.textContent = "00:" + String(Math.floor(v.s)).padStart(2, "0"); } }, 0);
+  head("TIME <b>IT</b>", T(177.5), { y: H * .12, size: 7 });
+  list([["నోట్లో <b style='color:" + K.mg + "'>ఏమీ</b> పెట్టకూడదు", T(178.6), false], ["గట్టిగా <b style='color:" + K.mg + "'>పట్టుకుని</b> ఆపకూడదు", T(180.3), false],
+        ["మెలకువ వచ్చే వరకు <b style='color:" + K.mg + "'>నీళ్లు, ఆహారం</b> వద్దు", T(184.0), false],
+        ["<b style='color:" + K.mg + "'>తాళాలు, చెప్పు</b>: లాభం లేదు", T(186.1), false]], W * .06, H * .32);
+  hud("DON'T", T(178.6), { c: K.mg, y: H * .26 });
+  SK.done();
+</script>
+</body></html>

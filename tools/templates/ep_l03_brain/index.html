@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l03_brain: L03 how the brain works: neurons, signals, move / speak / see, house wiring */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 39.4);
+  const nt = net({ n: 90, alpha: .55, t: 0 });
+  const b = shot("E06", { t: 0, d: 6, mv: "orbit", a: .6, in: "through", box: [W * .2, H * .06, W * .6, H * .72], glass: true, cap: "THE BRAIN · NORMAL" });
+  hud("STEP 1 · NORMAL BRAIN", .2, { until: T(44.4) });
+  te("మెదడు <b>normal</b> గా ఎలా పనిచేస్తుంది?", T(41.6), { y: H * .82, align: "center", until: T(44.4) });
+  morph(b, T(44.6), [W * .03, H * .08, W * .44, H * .58]);
+  head("<b>BILLIONS</b>", T(45.3), { x: W * .52, y: H * .14, size: 7.5 });
+  head("OF NERVE CELLS", T(46.0), { x: W * .52, y: H * .26, size: 4.4 });
+  const n2 = shot("E07", { t: T(47.1), d: 4, mv: "push", in: "scan", box: [W * .52, H * .38, W * .44, H * .36], glass: true, cap: "ELECTRIC SIGNALS" });
+  ring(W * .74, H * .56, T(48.0), { r: u * 9 });
+  te("ఒకదానితో ఒకటి <b>మాట్లాడుకుంటాయి</b>", T(49.2), { x: W * .52, y: H * .78, size: 3.6, until: T(50.9) });
+  [b, n2].forEach((e) => out(e, T(50.8), .4)); tl.to(".sk-en", { autoAlpha: 0, duration: .3 }, T(50.8));
+  const acts = [["E08", "MOVE", 51.0], ["E62", "SPEAK", 52.1], ["E25", "SEE", 53.1]];
+  acts.forEach(([k, lab, t], i) => shot(k, { t: T(t), d: 3, mv: i % 2 ? "rise" : "sink", in: "lift", box: [W * (.04 + i * .32), H * .12, W * .28, H * .56], glass: true, cap: lab, until: T(55.9) }));
+  head("ALL = <b>SIGNALS</b>", T(54.6), { y: H * .76, align: "center", size: 5.6, until: T(55.9) });
+  shot("E09", { t: T(56.0), d: 3, mv: "push", in: "iris", fx: .5, fy: .5 });
+  head("HOUSE <b>WIRING</b>", T(57.2), { y: H * .58, c: K.am, size: 8 });
+  SK.done();
+</script>
+</body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l01_hook: L01 hook: storm brain, questions, collapse, crowd, hospital */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 0.0);
+  net({ n: 80, alpha: .9, storm: [[T(4.1), T(6.9)]] });
+  shot("E12", { t: 0, d: 7, mv: "dive", a: .6, in: "fade", until: T(7.4) });
+  hud("CASE FILE · EPILEPSY", .3, { until: T(7.2) });
+  head("WHY <b>MOORCHHA</b>?", .5, { y: H * .38, align: "center", size: 8.4, until: T(3.4) });
+  head("ELECTRICAL <b>SIGNALS</b>", T(4.1), { y: H * .38, align: "center", c: K.mg, until: T(7.2) });
+  eeg(T(4.0), { box: [0, H * .56, W, H * .12], d: 3, spike: [[1, 2.6]], until: T(7.3) });
+  bolt(W * .2, H * .1, W * .45, H * .5, T(4.6)); bolt(W * .8, H * .15, W * .55, H * .45, T(5.6));
+  shot("E01", { t: T(7.4), d: 4, mv: "orbit", a: .8, in: "flash", until: T(11.1) });
+  te("శరీరం ఎలా <b>react</b> అవుతుంది?", T(8.5), { y: H * .14, until: T(11) });
+  const p1 = shot("E02", { t: T(11.1), d: 3, mv: "push", in: "through", box: [W * .05, H * .14, W * .44, H * .6], glass: true, cap: "WHAT TO DO", until: T(14) });
+  const p2 = shot("E05", { t: T(12.9), d: 2, mv: "pull", in: "slide", box: [W * .51, H * .14, W * .44, H * .6], glass: true, cap: "WHAT NOT TO DO", c: K.mg, until: T(14) });
+  head("DO <b>/</b> DON'T", T(11.6), { y: H * .78, align: "center", size: 6, until: T(14) });
+  shot("E40", { t: T(14), d: 3.4, mv: "panL", in: "scan", until: T(18.6) });
+  head("<b>HOSPITAL</b> WHEN?", T(14.8), { y: H * .58, size: 7.5, c: K.mg, until: T(16.6) });
+  head("FULL <b>CONTROL</b>?", T(17.3), { y: H * .58, size: 7.5, c: K.am, until: T(18.8) });
+  shot("E06", { t: T(18.7), d: 4, mv: "dive", a: .5, in: "through" });
+  hud("IN DETAIL · THIS VIDEO", T(19.2), { align: "center", y: H * .74 });
+  ring(W / 2, H * .45, T(21), { r: u * 26, n: 3 });
+  SK.done();
+</script>
+</body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l17_burden: L17 50 million people; 3 of 4 untreated in poor countries; India villages rarely see a doctor; injuries; WHO 3x death risk */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 231.8);
+  const c = shot("E47", { t: 0, d: 6, mv: "pull", in: "fade", until: T(236.0) });
+  hud("WORLD · WHO", T(232.4), { until: T(236.0) });
+  num(0, 50, T(233.5), { x: 0, y: H * .3, align: "center", unit: "MILLION", size: 20, d: 1.2, until: T(236.0) });
+  te("మందికి <b>మూర్ఛ వ్యాధి</b>", T(234.3), { y: H * .62, align: "center", until: T(236.0) });
+  hud("LOW-INCOME COUNTRIES", T(236.2), { c: K.mg, until: T(241.0) });
+  const P = mk("div", "sk-fx"); place(P, W * .16, H * .26, W * .68, H * .36); P.style.zIndex = 6;
+  for (let i = 0; i < 4; i++) { const f = place(mk("div", "", P), i * W * .17 + W * .02, 0, W * .13, H * .36); f.style.position = "absolute";
+    f.innerHTML = `<svg viewBox="0 0 40 80" width="100%" height="100%"><circle cx="20" cy="12" r="10" fill="currentColor"/><path d="M4 30 Q20 22 36 30 L33 78 L7 78 Z" fill="currentColor"/></svg>`;
+    f.style.color = K.cy; tl.fromTo(f, { opacity: 0, y: u * 4 }, { opacity: 1, y: 0, duration: .4, ease: E.snap, immediateRender: true }, T(237.8) + i * .12);
+    if (i > 0) tl.to(f, { color: "#3a3f5c", duration: .3 }, T(238.7) + i * .15); }
+  te("ప్రతి 4 లో <b>3 గురికి</b> treatment అందడం లేదు", T(238.7), { y: H * .7, align: "center", c: K.mg, until: T(241.0) });
+  out(P, T(241.0), .3);
+  shot("E46", { t: T(241.0), d: 3, mv: "panR", in: "scan", box: [W * .04, H * .1, W * .44, H * .6], glass: true, cap: "VILLAGES · INDIA", until: T(247.0) });
+  shot("E48", { t: T(244.0), d: 3, mv: "push", in: "slide", box: [W * .52, H * .1, W * .44, H * .6], glass: true, cap: "FEW SEE A DOCTOR", c: K.mg, until: T(247.0) });
+  te("<b>studies</b> చెప్తున్నాయి", T(245.8), { y: H * .76, align: "center", until: T(247.0) });
+  head("<b>NEGLECT</b> =", T(247.2), { y: H * .08, size: 6, c: K.mg, until: T(253.6) });
+  const R = [["E01", "FALLS · INJURY", 248.3], ["E49", "BURNS", 249.7], ["E50", "DROWNING", 250.9]];
+  R.forEach(([k, lab, t], i) => shot(k, { t: T(t), d: 3, mv: "push", in: "lift", box: [W * (.04 + i * .32), H * .24, W * .28, H * .48], glass: true, cap: lab, c: K.mg, until: T(253.6) }));
+  shot("E18", { t: T(253.6), d: 6, mv: "push", a: .5, in: "flash" });
+  hud("WHO · EARLY DEATH RISK", T(253.8), { c: K.mg });
+  num(0, 3, T(256.6), { x: W * .06, y: H * .22, unit: "× RISK", c: K.mg, size: 22, d: .8 });
+  te("చాలా వరకు <b>ఆపగలిగేవే</b>", T(258.1), { y: H * .66, c: K.cy });
+  SK.done();
+</script>
+</body></html>

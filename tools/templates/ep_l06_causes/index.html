@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sk.js"></script>
+<style>/* 14_Epilepsy ep_l06_causes: L06 causes: birth injury, head injury, stroke, meningitis, tumour, genetic; half unknown */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, at, $, mk, place, out, show, shot, enter, morph, net, eeg, head, te, hud, num, lock, myth, list, phone, doc, dots, bolt, ring, flash, cam } = SK;
+  const T = (x) => Math.max(0, x - 85.5);
+  net({ n: 60, alpha: .4 });
+  hud("WHY THE HIGH VOLTAGE?", .1, { until: T(89.2) });
+  head("NOT ONE <b>CAUSE</b>", T(87.7), { y: H * .42, align: "center", size: 8, until: T(89.3) });
+  const C = [["E15", "BIRTH INJURY", 89.4], ["E16", "HEAD INJURY", 91.5], ["E18", "STROKE", 92.5], ["E17", "MENINGITIS", 93.3], ["E17", "BRAIN TUMOUR", 95.4], ["E19", "GENETIC", 96.5]];
+  const cw = W * .29, ch = H * .3;
+  C.forEach(([k, lab, t], i) => { const x = W * (.04 + (i % 3) * .32), y = H * (.08 + Math.floor(i / 3) * .36);
+    const e = shot(k, { t: T(t), d: 4, mv: i % 2 ? "push" : "panR", in: i % 2 ? "scan" : "lift", box: [x, y, cw, ch], glass: true, cap: lab, c: i > 3 ? K.am : K.mg, fx: i === 4 ? .3 : .5 });
+    out(e, T(99.0), .35, { scale: .85 }); });
+  te("ఇవన్నీ <b>కారణాలు</b> కావచ్చు", T(97.7), { y: H * .8, align: "center", until: T(99.1) });
+  head("<b>SURPRISE</b>", T(99.6), { y: H * .1, align: "center", c: K.am, size: 6, until: D });
+  dots(100, 50, 20, [W * .2, H * .28, W * .6, H * .42], T(100.6), { c: K.mg, lag: .7 });
+  num(0, 50, T(101.3), { x: 0, y: H * .72, align: "center", unit: "% CASES · CAUSE UNKNOWN", c: K.mg, size: 9 });
+  SK.done();
+</script>
+</body></html>
