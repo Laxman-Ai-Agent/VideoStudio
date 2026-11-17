@@ -32,7 +32,19 @@ Sheet only, never posted to the channel by Claude.
   7. 15-25 tags, each about 30 characters or less, total 400-480 (room under 500).
   8. Shorts: 8-10 tags only: main keyword, 2-3 variations, "shorts", the channel name.
   `pipeline/upload_sheet.check_tags` prints a warning on Telugu letters or more than 500.
-- Products: safe, topic-related things (books on the topic, gadgets, devices). Never medicines or supplements.
+- Products (sheet column O, `products` in the 16x9 file; user rules 2026-11-18):
+  1. Written the way people type in the Amazon / Flipkart search box, so pasting it finds the right item
+     ("fitness band with heart rate monitor", not "fitness band").
+  2. One product per line in the cell (the sync joins the list with new lines).
+  3. 3-5 products, the most relevant first.
+  4. Generic names, no brands (a brand reads as an endorsement); books as "<title> by <author>".
+  5. The Dark World: books, science kits, gadgets that fit the topic (space -> "beginner telescope", AI ->
+     "AI book for beginners"). Never medicines or supplements.
+  6. Names close to the Flipkart catalog wording, so YouTube Shopping (India) tagging finds them.
+  7. Column U "Product Links" (`product_links`, one per line, same order): only links the user gives; never
+     invent one. When links are there, the description gets the affiliate line (ASCI / YouTube rules):
+     "Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you."
+  8. Anything the video itself names (a device, a book) comes first.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.
 - Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question that invites answers +
@@ -93,6 +105,7 @@ The information presented is based on available research, publicly accessible so
 Where topics involve ongoing events, scientific debates, or differing perspectives, the information should be understood in its appropriate context.
 This content is not intended to mislead, defame, or promote harmful activities.
 [Health line / AI-visuals line when they apply]
+[Affiliate links only: Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you.]
 
 📌 STAY CONNECTED
 Subscribe to The Dark World for more fascinating stories, discoveries, facts, and educational documentaries.

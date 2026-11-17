@@ -34,9 +34,20 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   7. 15-25 tags, each about 30 characters or less, total 400-480 (room under 500).
   8. Shorts: 8-10 tags only: main keyword, 2-3 variations, "shorts", the channel name.
   `pipeline/upload_sheet.check_tags` prints a warning on Telugu letters or more than 500.
-- Products: safe health devices and aids only (glucometer, BP monitor, pulse oximeter, ORS packets, books).
-  Never medicines, prescription drugs or supplements. When the products get affiliate links, the description gets
-  the affiliate line (template) - India ASCI and YouTube rules.
+- Products (sheet column O, `products` in the 16x9 file; user rules 2026-11-18):
+  1. Written the way people type in the Amazon / Flipkart search box, so pasting it finds the right item
+     ("fitness band with heart rate monitor", not "fitness band").
+  2. One product per line in the cell (the sync joins the list with new lines).
+  3. 3-5 products, the most relevant first.
+  4. Generic names, no brands (a brand reads as an endorsement); books as "<title> by <author>".
+  5. Health Decode: devices and aids only, with "ISI certified" in the search name where such a standard
+     exists (e.g. "pulse oximeter ISI certified"); books. Never medicines, prescription drugs, supplements,
+     "Ayurvedic cure" products or diet pills.
+  6. Names close to the Flipkart catalog wording, so YouTube Shopping (India) tagging finds them.
+  7. Column U "Product Links" (`product_links`, one per line, same order): only links the user gives; never
+     invent one. When links are there, the description gets the affiliate line (ASCI / YouTube rules):
+     "Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you."
+  8. Anything the video itself names (a device, a book) comes first.
 - Myths vs Facts: 2-3 common beliefs about the topic, each with the fact (from the script or WHO / ICMR / NIH).
 - "Last reviewed: [Mon YYYY]" = the month of the final render.
 - Sensitive topics (mental health, suicide, cancer, epilepsy / seizures, addiction): add the Tele-MANAS line (India
