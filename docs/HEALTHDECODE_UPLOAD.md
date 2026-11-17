@@ -33,6 +33,16 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
 - The Telugu disclaimer line and 108 (India emergency number) are always in the long description.
 - Realistic AI images: the AI-visuals line, and remind the user to tick YouTube's "Altered or synthetic content".
 
+## Not a routine template (user, 2026-11-18)
+The templates below are a base, not a form to copy. Every video gets its own writing, shaped by its content:
+- Write the hook, questions, bullets, myths, chapters titles, captions and pinned comment fresh for each video;
+  never reuse the same sentences or the same hook pattern video after video.
+- Claude may change the structure when the content needs it: add a section (e.g. a timeline for a history topic,
+  "key numbers" for a data-heavy one, a comparison for "X vs Y"), drop one that does not fit, reorder, pick other
+  emojis and hashtags.
+- Kept word for word: the About block and the disclaimer text the user wrote (plus the safety lines these rules add).
+- The safety rules above never change with the content.
+
 ## Description templates
 Fill the [brackets]; keep the fixed lines.
 
