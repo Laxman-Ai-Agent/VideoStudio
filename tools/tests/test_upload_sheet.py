@@ -122,3 +122,30 @@ def test_backup_build_pads_rows_and_keeps_headers():
     assert dw["headers"][:2] == ["S.No", "Project Name"] and len(dw["headers"]) == WIDTH
     assert dw["rows"] == [["1", "09__16-NOV-2026__X", "a.mp4"] + [""] * (WIDTH - 3)]
     assert snap["tabs"]["Health_Decode"] == {"headers": [], "rows": []} and snap["saved"] == "2026-11-18T10:00:00"
+
+
+def test_sync_writes_json_first_then_sheet_and_refills_an_empty_tab(tmp_path, monkeypatch):
+    import json
+    import pipeline.upload_sheet as us
+    import pipeline.upload_sheet_backup as bk
+    order, written = [], {}
+    snap_path = tmp_path / "upload_sheet.json"
+    saved_row = ["1", "01__09-NOV-2026__Old", "old.mp4"] + [""] * (WIDTH - 3)
+    snap_path.write_text(json.dumps({"saved": "x", "tabs": {"Health_Decode": {"headers": ["S.No"] + [""] * (WIDTH - 1),
+                                                                               "rows": [saved_row]}}}), "utf-8")
+    key = tmp_path / "key.json"
+    key.write_text("{}")
+    monkeypatch.setattr(us, "SHEET_KEY", key)
+    monkeypatch.setattr(us, "_session", lambda: None)
+    monkeypatch.setattr(bk, "SNAPSHOT", snap_path)
+    monkeypatch.setattr(bk, "load", lambda path=snap_path: json.loads(snap_path.read_text("utf-8")))
+    monkeypatch.setattr(bk, "read_tab", lambda s, tab: [])  # both tabs empty in the sheet
+    real_save = bk.save
+    monkeypatch.setattr(bk, "save", lambda snap, path=snap_path: (order.append("json"), real_save(snap, snap_path)))
+    monkeypatch.setattr(bk, "write_sheet", lambda s, snap: (order.append("sheet"), written.update(snap["tabs"])))
+    touch(tmp_path / "Healthdecode" / "02__10-NOV-2026__New" / "output" / "final_16x9.mp4")
+    assert us.sync(tmp_path)
+    assert order == ["json", "sheet"]
+    names = [r[1] for r in written["Health_Decode"]["rows"]]
+    assert names == ["02__10-NOV-2026__New", "01__09-NOV-2026__Old"]  # the emptied tab came back from the JSON
+    assert json.loads(snap_path.read_text("utf-8"))["tabs"]["Health_Decode"]["rows"] == written["Health_Decode"]["rows"]

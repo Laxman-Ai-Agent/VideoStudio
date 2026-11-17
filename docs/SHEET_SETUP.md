@@ -33,7 +33,8 @@ header + project name, sets widths and one-line rows, and shows "Not found" in r
 Re-run after a column change: `tools\.venv\Scripts\python.exe -c "from pipeline.upload_sheet_style import style; style()"`
 (from `tools`).
 
-## Copy on disk (backup)
-After every sync the sheet as it stands (the user's edits included) is saved to `projects/upload_sheet.json`
-(`pipeline/upload_sheet_backup.py`). The sheet stays the place to edit; the JSON is a copy. To put the copy back
-into the sheet (e.g. after an accident): `studio.cmd sheet --restore` (asks, type yes).
+## Data flow: project files -> JSON -> sheet
+`projects/upload_sheet.json` sits between the project files and the sheet (user, 2026-11-18). Every sync:
+reads the sheet (the user's own edits), merges the project files in, writes the JSON first, then makes the sheet
+exactly the JSON (`pipeline/upload_sheet_backup.py`). A tab that was emptied by accident is filled again from the
+JSON. `studio.cmd sheet --restore` writes the JSON to the sheet on its own (asks, type yes).

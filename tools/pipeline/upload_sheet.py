@@ -154,20 +154,21 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     if not SHEET_KEY.is_file():
         print(f"  sheet: no key at {SHEET_KEY} (setup: docs/SHEET_SETUP.md); sheet not updated")
         return False
-    s = _session()
-    api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
+    from .upload_sheet_backup import SNAPSHOT, build, load, read_tab, save, write_sheet
+    s, saved = _session(), load()
+    values = {}
     for tab, scanned in channel_projects(projects_dir).items():
-        rng = lambda a: quote(f"'{tab}'!{a}", safe="")
-        got = _ok(s.get(api + rng("A2:X")))
-        rows = merge(got.json().get("values", []), scanned)
-        if rows:
-            _ok(s.put(api + rng(f"A2:X{len(rows) + 1}"), params={"valueInputOption": "RAW"},
-                  json={"values": rows}))
-        _ok(s.post(api + rng(f"A{len(rows) + 2}:X") + ":clear"))
-        print(f"  sheet: {tab} {len(rows)} rows")
-    from .upload_sheet_backup import SNAPSHOT, save
-    save(s)  # the sheet as it stands now, the user's edits included -> projects/upload_sheet.json
-    print(f"  sheet: copy saved to {SNAPSHOT}")
+        got = read_tab(s, tab)  # the sheet now, with the user's own edits
+        kept = (saved or {}).get("tabs", {}).get(tab, {})
+        headers = got[0] if got else kept.get("headers", [])
+        base = got[1:] if len(got) > 1 else kept.get("rows", [])  # an emptied tab comes back from the JSON
+        values[tab] = [headers] + merge(base, scanned)
+    snap = build(values)
+    save(snap)  # 1. project files -> projects/upload_sheet.json
+    write_sheet(s, snap)  # 2. JSON -> Google Sheet
+    for tab, v in snap["tabs"].items():
+        print(f"  sheet: {tab} {len(v['rows'])} rows")
+    print(f"  sheet: data in {SNAPSHOT}")
     return True
 
 
