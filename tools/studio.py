@@ -23,7 +23,8 @@ from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcr
 from pipeline.ingest import AmbiguousInput, ingest, ingest_shared
 from pipeline.plan import RULES, validate, write_brief
 from pipeline.project import (atomic_write, ensure_layout, export_final, find_project, is_variation, load_state,
-                              new_project, remove_previews_after_final, run_stage, upload_target,
+                              mark_final, new_project, prune_scene_cache, remove_previews_after_final, run_stage,
+                              upload_target,
                               variations)
 
 from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
@@ -45,6 +46,8 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         print(f"  STOP: {p.name} has variations; run one of: {', '.join(f'{p.name}/{v.name}' for v in vs)}")
         return NEEDS_USER
     ensure_layout(p)  # a folder the user made by hand has no drop/, work/ ...
+    if prune_scene_cache(p):
+        print("  scene cache removed (final over 24 h old, no changes since); a new edit re-renders every scene")
     if is_variation(p):
         for src, dest in ingest_shared(p.parent):
             print(f"  ingest (shared drop): {src.name} -> {dest.relative_to(p.parent).as_posix()}")
@@ -288,6 +291,7 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
         if final and f.passed:
             export_final(src, dest)  # moved, not copied: work/ keeps no second copy of a final
             remove_previews_after_final(p, src.name)  # the final of this format is out: its previews go
+            mark_final(p)  # starts the 24 h clock for prune_scene_cache
         elif not final:  # previews are copied (work/ keeps them for the next preview run)
             if not dest.exists() or dest.stat().st_mtime_ns < src.stat().st_mtime_ns:
                 dest.parent.mkdir(exist_ok=True)

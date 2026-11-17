@@ -113,6 +113,41 @@ def remove_previews_after_final(project: Path, final_file: str) -> list[Path]:
     return removed
 
 
+FINAL_MARK = "final_done.json"  # written when a final passes QA; its mtime is the final's time
+CHECKPOINT_NAMES = {"state.json", "qa.json", FINAL_MARK}
+
+
+def mark_final(variation: Path) -> None:
+    atomic_write(variation / "work" / FINAL_MARK, datetime.now().isoformat())
+
+
+def _is_checkpoint(rel: tuple[str, ...]) -> bool:
+    """Files the pipeline writes itself (outputs, caches, logs, checkpoints): not a user change."""
+    if "output" in rel:
+        return True
+    if any(pair in {("work", "scenes"), ("work", "assembled"), ("work", "logs")} for pair in zip(rel, rel[1:])):
+        return True
+    return len(rel) >= 2 and rel[-2] == "work" and rel[-1] in CHECKPOINT_NAMES
+
+
+def prune_scene_cache(variation: Path, hours: float = 24, now: float | None = None) -> bool:
+    """Delete variation/work/scenes once its final is `hours` old and nothing changed since (no edit to the
+    topic's inputs, plan, theme or assets). A later edit then re-renders every scene. Returns True if deleted.
+    Finals made before this rule have no marker, so they are never pruned automatically."""
+    scenes, mark = variation / "work" / "scenes", variation / "work" / FINAL_MARK
+    if not scenes.is_dir() or not mark.is_file():
+        return False
+    since = mark.stat().st_mtime
+    if (time.time() if now is None else now) - since < hours * 3600:
+        return False
+    root = variation.parent if is_variation(variation) else variation
+    for f in root.rglob("*"):
+        if f.is_file() and f.stat().st_mtime > since and not _is_checkpoint(f.relative_to(root).parts):
+            return False  # a user change after the final: keep the cache
+    shutil.rmtree(scenes)
+    return True
+
+
 def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
     project = projects_dir / f"{next_number(projects_dir):02d}_{slug(name)}"
     ensure_layout(project)

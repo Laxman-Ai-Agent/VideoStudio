@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-17
+- Scene cache: `work/final_done.json` marks a passed final (`mark_final`). `prune_scene_cache` (run start in studio.py) deletes `work/scenes/` 24 h after the final if no user input changed since. Finals without the marker are never pruned. Tests: `test_scene_cache_*` (3). Suite: 164 passed.
 - Export: a passed final is MOVED from work/assembled/ to output/ (`pipeline/project.py` `export_final`), so only one copy stays on disk. Previews are still copied. A later final run re-assembles from cached scene clips (no re-render). Test: `test_export_final_moves_and_replaces_older_output`. Suite: 161 passed.
 - Group folder: `projects/The Dark World/AI_Doctor/` holds 01_AI_Doctor and 02-AI_Doctor_5min (same topic). `project_dirs()` now scans channel and group folders (max 2 deep); `identity.previous()` climbs out of a group folder too. Tests: `test_group_folder_inside_channel_is_searched`, `test_previous_inside_a_group_folder_in_a_channel`. Suite: 160 passed.
 - Previews: a final that passes QA deletes its format's 480p previews (`output/preview_<fmt>.mp4` and `work/assembled/preview_<fmt>.mp4`) via `pipeline/project.py` `remove_previews_after_final`, called from `studio.py`. Test: `test_final_removes_only_its_formats_previews`.

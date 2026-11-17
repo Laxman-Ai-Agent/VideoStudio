@@ -99,6 +99,52 @@ def test_final_removes_only_its_formats_previews(tmp_path):
     assert (p / "output" / "final_16x9.mp4").exists()            # final kept
 
 
+def _finished_variation(tmp_path, final_age_h: float):
+    """Topic 03_T with a 16x9 variation: final made final_age_h hours ago, scene cache present."""
+    import os
+    import time
+    from pipeline.project import mark_final
+    topic = tmp_path / "03_T"
+    var = topic / "16x9"
+    (topic / "input").mkdir(parents=True)
+    (topic / "theme.json").write_text("{}")
+    (var / "output").mkdir(parents=True)
+    (var / "output" / "final_16x9.mp4").write_text("final")
+    (var / "work" / "scenes" / "16x9").mkdir(parents=True)
+    (var / "work" / "scenes" / "16x9" / "scene_001.mp4").write_text("clip")
+    mark_final(var)
+    past = time.time() - final_age_h * 3600
+    os.utime(var / "work" / "final_done.json", (past, past))
+    for f in (topic / "theme.json", var / "output" / "final_16x9.mp4"):
+        os.utime(f, (past, past))
+    return topic, var
+
+
+def test_scene_cache_pruned_after_24h_without_changes(tmp_path):
+    from pipeline.project import prune_scene_cache
+    topic, var = _finished_variation(tmp_path, final_age_h=25)
+    assert prune_scene_cache(var) is True
+    assert not (var / "work" / "scenes").exists()
+    assert (var / "output" / "final_16x9.mp4").exists()          # the final is never touched
+
+
+def test_scene_cache_kept_when_recent_or_changed(tmp_path):
+    from pipeline.project import prune_scene_cache
+    topic, var = _finished_variation(tmp_path, final_age_h=2)
+    assert prune_scene_cache(var) is False                        # under 24 h
+    topic, var = _finished_variation(tmp_path / "b", final_age_h=25)
+    (topic / "input" / "script.txt").write_text("edited")         # a user change after the final
+    assert prune_scene_cache(var) is False
+    assert (var / "work" / "scenes").exists()
+
+
+def test_scene_cache_without_marker_is_never_pruned(tmp_path):
+    from pipeline.project import prune_scene_cache
+    topic, var = _finished_variation(tmp_path, final_age_h=25)
+    (var / "work" / "final_done.json").unlink()                   # a final from before this rule
+    assert prune_scene_cache(var) is False
+
+
 def test_export_final_moves_and_replaces_older_output(tmp_path):
     from pipeline.project import export_final
     src, dest = tmp_path / "work" / "final_16x9.mp4", tmp_path / "output" / "final_16x9.mp4"
