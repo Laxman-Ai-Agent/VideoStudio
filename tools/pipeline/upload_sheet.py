@@ -86,6 +86,13 @@ def _session():
     return AuthorizedSession(creds)
 
 
+def _ok(r):
+    """Google's own error message (API off, sheet not shared) instead of a bare 403."""
+    if not r.ok:
+        raise RuntimeError(f"Google {r.status_code}: {r.json().get('error', {}).get('message', r.text)[:300]}")
+    return r
+
+
 def sync(projects_dir: Path = PROJECTS) -> bool:
     if not SHEET_KEY.is_file():
         print(f"  sheet: no key at {SHEET_KEY} (setup: docs/SHEET_SETUP.md); sheet not updated")
@@ -94,13 +101,12 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
     for tab, scanned in channel_projects(projects_dir).items():
         rng = lambda a: quote(f"'{tab}'!{a}", safe="")
-        got = s.get(api + rng("A2:Q"))
-        got.raise_for_status()
+        got = _ok(s.get(api + rng("A2:Q")))
         rows = merge(got.json().get("values", []), scanned)
         if rows:
-            s.put(api + rng(f"A2:Q{len(rows) + 1}"), params={"valueInputOption": "RAW"},
-                  json={"values": rows}).raise_for_status()
-        s.post(api + rng(f"A{len(rows) + 2}:Q") + ":clear").raise_for_status()
+            _ok(s.put(api + rng(f"A2:Q{len(rows) + 1}"), params={"valueInputOption": "RAW"},
+                  json={"values": rows}))
+        _ok(s.post(api + rng(f"A{len(rows) + 2}:Q") + ":clear"))
         print(f"  sheet: {tab} {len(rows)} rows")
     return True
 

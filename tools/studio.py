@@ -463,7 +463,11 @@ def main() -> int:
             return 1
     if a.cmd == "sheet":
         from pipeline.upload_sheet import sync
-        return 0 if sync() else 1
+        try:
+            return 0 if sync() else 1
+        except Exception as e:
+            print(f"  sheet: not updated ({e})")
+            return 1
     if a.cmd == "match":
         from pipeline.clipmatch import match
         match(find_project(a.project), a.apply)
