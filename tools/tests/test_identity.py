@@ -31,14 +31,14 @@ def test_same_look_scores_high_and_a_new_direction_scores_low():
 
 
 def test_previous_videos_are_the_style_memory(tmp_path):
-    for name, t in (("01__10-Nov__a", A), ("02__10-Nov__b", B), ("03__10-Nov__c", None)):
+    for name, t in (("01__10-NOV-2026__a", A), ("02__10-NOV-2026__b", B), ("03__10-NOV-2026__c", None)):
         (tmp_path / name / "work").mkdir(parents=True)
         if t:
             (tmp_path / name / "work" / "theme.json").write_text(t.model_dump_json(), "utf-8")
-    me = tmp_path / "03__10-Nov__c"
-    assert [n for n, _ in idt.previous(me)] == ["02__10-Nov__b", "01__10-Nov__a"]
+    me = tmp_path / "03__10-NOV-2026__c"
+    assert [n for n, _ in idt.previous(me)] == ["02__10-NOV-2026__b", "01__10-NOV-2026__a"]
     assert "Mandali" in idt.memory_md(me, BT)
-    assert idt.identity_check(me, A, BT).status == "warn"           # same as 01__10-Nov__a
+    assert idt.identity_check(me, A, BT).status == "warn"           # same as 01__10-NOV-2026__a
     assert idt.identity_check(me, A, BT, final=True).status == "fail"
     new = B.model_copy(update={"fonts": {"heading": "Oswald", "body": "Mallanna"}, "colors": {"background": "#2A0E0E",
                        "accent": "#9BE15D"}, "motion": {"text_in": "rise", "camera": "tilt", "transitions": ["circle"]}})
@@ -47,21 +47,21 @@ def test_previous_videos_are_the_style_memory(tmp_path):
 
 def test_previous_inside_a_group_folder_in_a_channel(tmp_path):
     grp = tmp_path / "The Dark World" / "AI_Doctor"
-    (grp / "01__10-Nov__g" / "work").mkdir(parents=True)
-    (grp / "01__10-Nov__g" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
-    (grp / "02__10-Nov__h").mkdir()
-    assert [n for n, _ in idt.previous(grp / "02__10-Nov__h")] == ["01__10-Nov__g"]
+    (grp / "01__10-NOV-2026__g" / "work").mkdir(parents=True)
+    (grp / "01__10-NOV-2026__g" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
+    (grp / "02__10-NOV-2026__h").mkdir()
+    assert [n for n, _ in idt.previous(grp / "02__10-NOV-2026__h")] == ["01__10-NOV-2026__g"]
 
 
 def test_previous_sees_projects_in_other_channel_folders(tmp_path):
     """Bug 2026-11-17: after the move, earlier videos sit in channel folders; the look memory must still find them."""
-    (tmp_path / "The Dark World" / "01__10-Nov__a" / "work").mkdir(parents=True)
-    (tmp_path / "The Dark World" / "01__10-Nov__a" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
-    (tmp_path / "Healthdecode" / "02__10-Nov__b" / "work").mkdir(parents=True)
-    (tmp_path / "Healthdecode" / "02__10-Nov__b" / "work").joinpath("theme.json").write_text(B.model_dump_json(), "utf-8")
-    me = tmp_path / "Healthdecode" / "03__10-Nov__c"
+    (tmp_path / "The Dark World" / "01__10-NOV-2026__a" / "work").mkdir(parents=True)
+    (tmp_path / "The Dark World" / "01__10-NOV-2026__a" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
+    (tmp_path / "Healthdecode" / "02__10-NOV-2026__b" / "work").mkdir(parents=True)
+    (tmp_path / "Healthdecode" / "02__10-NOV-2026__b" / "work").joinpath("theme.json").write_text(B.model_dump_json(), "utf-8")
+    me = tmp_path / "Healthdecode" / "03__10-NOV-2026__c"
     me.mkdir()
-    assert [n for n, _ in idt.previous(me)] == ["02__10-Nov__b", "01__10-Nov__a"]
+    assert [n for n, _ in idt.previous(me)] == ["02__10-NOV-2026__b", "01__10-NOV-2026__a"]
 
 
 def test_variety_flags_three_in_a_row():

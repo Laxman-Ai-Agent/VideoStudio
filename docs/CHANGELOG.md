@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2026-11-17
-- Project names: `NN__DD-Mon__Name` (NN = serial per channel by creation date, e.g. `01__15-Nov__Sugar_Walk`; year left out on request, so `identity.previous` ordering is only right within one year). Lookup accepts the full folder name or the key `15-Nov__Sugar_Walk`; a bare number is not an id. `pipeline/project.py`: `PROJECT`, `project_key`, `project_order`, `project_dirs`, `next_project_name`; `identity.previous` sorts by date; the dashboard lists and resolves by the same keys. Suite: 164 passed.
+- Project names: `NN__DD-MON-YYYY__Name` (NN = serial per channel by creation date, e.g. `01__15-NOV-2026__Sugar_Walk`). Lookup accepts the full folder name or the key `15-NOV-2026__Sugar_Walk`; a bare number is not an id. `pipeline/project.py`: `PROJECT`, `project_key`, `project_order`, `project_dirs`, `next_project_name`; `identity.previous` sorts by date; the dashboard lists and resolves by the same keys. Suite: 164 passed.
 - Folder rename: `projects/Health Decode/` is now `projects/Healthdecode/` (`CHANNELS` in config.py and the identity test updated). On-screen brand text in templates is unchanged.
 - Scene cache: `work/final_done.json` marks a passed final (`mark_final`). `prune_scene_cache` (run start in studio.py) deletes `work/scenes/` 24 h after the final if no user input changed since. Finals without the marker are never pruned. Tests: `test_scene_cache_*` (3). Suite: 164 passed.
 - Export: a passed final is MOVED from work/assembled/ to output/ (`pipeline/project.py` `export_final`), so only one copy stays on disk. Previews are still copied. A later final run re-assembles from cached scene clips (no re-render). Test: `test_export_final_moves_and_replaces_older_output`. Suite: 161 passed.

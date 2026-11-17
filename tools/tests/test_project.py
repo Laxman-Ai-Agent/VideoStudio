@@ -146,7 +146,7 @@ def _today_key():
     from datetime import datetime
     from pipeline.project import MONTHS
     now = datetime.now()
-    return f"{now.day:02d}-{MONTHS[now.month - 1]}__"
+    return f"{now.day:02d}-{MONTHS[now.month - 1]}-{now.year}__"
 
 
 def test_new_project_is_named_by_serial_and_date(tmp_path):
@@ -160,11 +160,11 @@ def test_new_project_is_named_by_serial_and_date(tmp_path):
 
 def test_find_project_by_key_and_full_name(tmp_path):
     from datetime import datetime
-    d = tmp_path / "01__10-Nov__AI_doctor"
+    d = tmp_path / "01__10-NOV-2026__AI_doctor"
     d.mkdir()
-    assert find_project("10-Nov__AI_doctor", tmp_path) == d
+    assert find_project("10-NOV-2026__AI_doctor", tmp_path) == d
     assert find_project(d.name, tmp_path) == d
-    assert next_project_name(tmp_path, "X", datetime(2026, 11, 10)) == "02__10-Nov__X"
+    assert next_project_name(tmp_path, "X", datetime(2026, 11, 10)) == "02__10-NOV-2026__X"
     with pytest.raises(FileNotFoundError):
         find_project("01", tmp_path)                        # a bare serial is not a project id
 
@@ -172,17 +172,17 @@ def test_find_project_by_key_and_full_name(tmp_path):
 def test_channel_folders_are_searched_and_sequenced(tmp_path):
     """Bug 2026-11-17: moving projects into 'The Dark World/' hid them from find_project and the numbering."""
     from datetime import datetime
-    (tmp_path / "01__15-Nov__First").mkdir()
+    (tmp_path / "01__15-NOV-2026__First").mkdir()
     ch = tmp_path / "The Dark World"
-    (ch / "01__16-Nov__Third").mkdir(parents=True)
-    (tmp_path / "_deleted" / "09__09-Nov__old-20261111").mkdir(parents=True)  # trash is never a project
-    assert next_project_name(tmp_path, "N", datetime(2026, 11, 16)) == "02__16-Nov__N"
-    assert find_project("16-Nov__Third", tmp_path) == ch / "01__16-Nov__Third"
-    assert find_project("15-Nov__First", tmp_path) == tmp_path / "01__15-Nov__First"
+    (ch / "01__16-NOV-2026__Third").mkdir(parents=True)
+    (tmp_path / "_deleted" / "09__09-NOV-2026__old-20261111").mkdir(parents=True)  # trash is never a project
+    assert next_project_name(tmp_path, "N", datetime(2026, 11, 16)) == "02__16-NOV-2026__N"
+    assert find_project("16-NOV-2026__Third", tmp_path) == ch / "01__16-NOV-2026__Third"
+    assert find_project("15-NOV-2026__First", tmp_path) == tmp_path / "01__15-NOV-2026__First"
 
 
 def test_group_folder_inside_channel_is_searched(tmp_path):
-    g = tmp_path / "The Dark World" / "10-Nov__AI_Doctor"
-    (g / "01__10-Nov__AI_Doctor").mkdir(parents=True)
-    (g / "02__10-Nov__AI_Doctor_5min").mkdir()
-    assert find_project("10-Nov__AI_Doctor_5min", tmp_path) == g / "02__10-Nov__AI_Doctor_5min"
+    g = tmp_path / "The Dark World" / "10-NOV-2026__AI_Doctor"
+    (g / "01__10-NOV-2026__AI_Doctor").mkdir(parents=True)
+    (g / "02__10-NOV-2026__AI_Doctor_5min").mkdir()
+    assert find_project("10-NOV-2026__AI_Doctor_5min", tmp_path) == g / "02__10-NOV-2026__AI_Doctor_5min"

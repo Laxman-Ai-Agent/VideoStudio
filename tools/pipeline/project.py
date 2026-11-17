@@ -38,24 +38,24 @@ def slug(name: str) -> str:
     return s
 
 
-MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-# 01__15-Nov__Sugar_Walk: serial (per channel, by creation date), day-Mon-year, name.
-# The key used in commands and the dashboard is the folder name without the serial: "15-Nov__Sugar_Walk".
-PROJECT = re.compile(r"^(\d{2})__(\d{2})-([A-Za-z]{3})__(.+)$")
+MONTHS = ("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+# 01__15-NOV-2026__Sugar_Walk: serial (per channel, by creation date), day-MON-year, name.
+# The key used in commands and the dashboard is the folder name without the serial: "15-NOV-2026__Sugar_Walk".
+PROJECT = re.compile(r"^(\d{2})__(\d{2})-([A-Za-z]{3})-(\d{4})__(.+)$")
 
 
 def project_key(p: Path) -> str | None:
     m = PROJECT.match(p.name)
-    return f"{m.group(2)}-{m.group(3)}__{m.group(4)}" if m else None
+    return f"{m.group(2)}-{m.group(3).upper()}-{m.group(4)}__{m.group(5)}" if m else None
 
 
-def project_order(p: Path) -> tuple[int, int, int] | None:
-    """(month, day, serial) for sorting projects by creation date; None for a folder without this name.
-    Year is not in the name, so order is only right within one year."""
+def project_order(p: Path) -> tuple[int, int, int, int] | None:
+    """(year, month, day, serial) for sorting projects by creation date; None for a folder without this name."""
     m = PROJECT.match(p.name)
-    if not m or m.group(3) not in MONTHS:
+    mon = m.group(3).upper() if m else ""
+    if mon not in MONTHS:
         return None
-    return MONTHS.index(m.group(3)) + 1, int(m.group(2)), int(m.group(1))
+    return int(m.group(4)), MONTHS.index(mon) + 1, int(m.group(2)), int(m.group(1))
 
 
 def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
@@ -78,10 +78,10 @@ def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
 
 
 def next_project_name(projects_dir: Path, name: str, when: datetime | None = None) -> str:
-    """Next serial in this folder (01, 02, ...) plus today's date: 03__16-Nov__Name."""
+    """Next serial in this folder (01, 02, ...) plus today's date: 03__16-NOV-2026__Name."""
     when = when or datetime.now()
     serial = 1 + sum(1 for p in project_dirs(projects_dir) if p.parent == projects_dir)
-    return f"{serial:02d}__{when.day:02d}-{MONTHS[when.month - 1]}__{slug(name)}"
+    return f"{serial:02d}__{when.day:02d}-{MONTHS[when.month - 1]}-{when.year}__{slug(name)}"
 
 
 VARIATION = re.compile(r"^\d+x\d+$")  # projects/03_Topic/16x9: one video of a topic, the drop folder is shared
