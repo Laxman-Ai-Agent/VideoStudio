@@ -99,6 +99,19 @@ def test_final_removes_only_its_formats_previews(tmp_path):
     assert (p / "output" / "final_16x9.mp4").exists()            # final kept
 
 
+def test_export_final_moves_and_replaces_older_output(tmp_path):
+    from pipeline.project import export_final
+    src, dest = tmp_path / "work" / "final_16x9.mp4", tmp_path / "output" / "final_16x9.mp4"
+    src.parent.mkdir(parents=True)
+    dest.parent.mkdir(parents=True)
+    src.write_text("new")
+    dest.write_text("old")
+    export_final(src, dest)
+    assert dest.read_text() == "new" and not src.exists()        # one copy only, output replaced
+    export_final(src, dest)                                      # src already moved: no error, no change
+    assert dest.read_text() == "new"
+
+
 def test_group_folder_inside_channel_is_searched(tmp_path):
     g = tmp_path / "The Dark World" / "AI_Doctor"
     (g / "01_AI_Doctor").mkdir(parents=True)

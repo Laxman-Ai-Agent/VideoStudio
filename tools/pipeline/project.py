@@ -2,6 +2,7 @@
 import hashlib
 import os
 import re
+import shutil
 import time
 import traceback
 from collections.abc import Callable
@@ -90,6 +91,14 @@ def ensure_layout(project: Path) -> None:
     for d in PROJECT_DIRS:
         if not (d == "drop" and is_variation(project)):  # one drop/ for the whole topic, in the parent
             (project / d).mkdir(parents=True, exist_ok=True)
+
+
+def export_final(src: Path, dest: Path) -> None:
+    """Move a passed final from work/assembled/ to output/, so only one copy stays on disk.
+    An older file in output/ is replaced. Nothing to do if src is already gone (moved by an earlier run)."""
+    if src.is_file():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), str(dest))
 
 
 def remove_previews_after_final(project: Path, final_file: str) -> list[Path]:
