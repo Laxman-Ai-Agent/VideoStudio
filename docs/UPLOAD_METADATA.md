@@ -12,8 +12,9 @@ title / description / tags. Products and captions go in the 16x9 file.
 ## Rules
 - Title: main keyword first, Telugu + English mix (how people search), 60-70 chars, curiosity without false claims.
   Shorts: short hook + `#shorts`.
-- Description (long), The Dark World: the user's fixed template `docs/DARKWORLD_DESCRIPTION.md` (no chapters,
-  no sources list; its own disclaimer).
+- Description, The Dark World (long and Shorts): the user's templates in `docs/DARKWORLD_DESCRIPTION.md`
+  (long: Telugu+English hook, chapters, sources, About, disclaimer; Shorts: 4-line version). Sheet only, never
+  posted to the channel by Claude.
 - Description (long), Health Decode: 2-line hook with keywords; "ఈ video లో" bullets; chapters from scenes.json (first 0:00, each
   >= 10 s); sources that the script really used (never invented); disclaimer; 3 hashtags at the end.
 - Description (short): 2-3 lines, CTA to the full video (comment keyword), short disclaimer, `#shorts` + 2 hashtags.
