@@ -2,8 +2,9 @@
 
 Paths come only from output/ (final videos, output/script.txt); thumbnails from input/ (the user puts them there).
 Runs after every final and from `studio.cmd sheet` (the Run button, sheet.cmd): new projects are added, empty or
-"Not found" path cells are filled, a path already in the sheet is never erased, and the columns the user types
-(titles, descriptions, tags, captions) are never touched. Rows are sorted by project date, S.No renumbered."""
+"Not found" path cells are filled, a path already in the sheet is never erased. Titles, descriptions, tags,
+products and captions come from output/metadata.json and only fill empty cells (the user's edits stay). Rows are sorted by project date, S.No renumbered."""
+import json
 from pathlib import Path
 from urllib.parse import quote
 
@@ -14,6 +15,9 @@ NOT_FOUND = "Not found"
 WIDTH = 17  # A..Q
 COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
 PATH_COLS = (2, 3, 4, 8, 9, 10)
+TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
+SHARED = {"products": 14, "facebook": 15, "instagram": 16}  # O P Q, one per project
+METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
 IMAGES = {".png", ".jpg", ".jpeg", ".webp"}
 
 
@@ -38,7 +42,18 @@ def scan(project: Path) -> dict[int, str]:
             pics = [f for f in pics if fmt in f.name.lower()] or pics
             if pics:
                 found[ct] = str(pics[0])
+            found.update(_metadata(out / METADATA, fmt))
     return found
+
+
+def _metadata(path: Path, fmt: str) -> dict[int, str]:
+    if not path.is_file():
+        return {}
+    m = json.loads(path.read_text("utf-8"))
+    join = lambda v: ", ".join(v) if isinstance(v, list) else (v or "")
+    got = {c: join(m.get(k)) for c, k in zip(TEXT_COLS[fmt], ("title", "description", "tags"))}
+    got.update({c: join(m.get(k)) for k, c in SHARED.items()})
+    return {c: v for c, v in got.items() if v}
 
 
 def _order(name: str) -> tuple:
@@ -61,6 +76,9 @@ def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list
                 r[c] = found[c]
             elif r[c] in ("", NOT_FOUND):
                 r[c] = NOT_FOUND
+        for c, v in found.items():
+            if c not in PATH_COLS and not r[c]:  # text the user already has in the sheet is never replaced
+                r[c] = v
     out = sorted(rows.values(), key=lambda r: _order(r[1]))
     for i, r in enumerate(out, 1):
         r[0] = i

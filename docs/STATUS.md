@@ -5,7 +5,7 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 
 ## Upload-path sheet (2026-11-17)
 - Sheet filled once by hand (browser): Health_Decode 7 rows, Dark_World 8 rows (AI_Doctor_5min first, 01_AI_Doctor removed).
-- Auto update built (`pipeline/upload_sheet.py`, `sheet.cmd`). PENDING: user creates the service-account key (`docs/SHEET_SETUP.md`); until then the sync prints "no key" and skips.
+- Auto update live (`pipeline/upload_sheet.py`, `sheet.cmd`, key in `tools/.secrets/`). Metadata (titles etc.): only Aging_150 has `metadata.json` so far; the rest of the projects are not written yet (user asked for one first). Rules: `docs/UPLOAD_METADATA.md`.
 
 ## UI session 2026-11-10 (dashboard + timeline redesign) - read this first for UI work
 - Dashboard (`/`, `ui/frontend/index.html`, `styles/app.css`, `src/app.js`): no sidebar; centred page buttons Projects / Assets / Timeline, a smaller row with Prepare + Total / Found / Missing; Projects table (S.No, title, duration, assets n/n, Missing, Preview, Render ticks, View / Delete icons; Delete = move to `projects/_deleted/`, red popup); tiles: status icon only + `Scene-NN`, 9:16 projects get portrait tiles.

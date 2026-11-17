@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-17
+- Upload metadata: sheet sync also fills Title / Description / Tags (per format), Products, Facebook, Instagram from `<fmt>/output/metadata.json`, empty cells only. Rules in `docs/UPLOAD_METADATA.md`; first one: Aging_150 (approved). Service-account key live, sheet synced (Dark_World 8, Health_Decode 7). Test: `test_metadata_fills_only_empty_text_cells`.
 - Upload-path sheet: `pipeline/upload_sheet.py` updates Google Sheet "Video_Upload_Path" (tabs Dark_World / Health_Decode) after every passed final and via `studio.cmd sheet` / `sheet.cmd` (Run button). Paths only from output/, thumbnails from input/, user-typed columns and existing paths kept, rows sorted by date. Needs a service-account key: `docs/SHEET_SETUP.md`. New library google-auth. Tests: `test_upload_sheet.py` (3).
 - Project names: `NN__DD-MON-YYYY__Name` (NN = serial per channel by creation date, e.g. `01__15-NOV-2026__Sugar_Walk`). Lookup accepts the full folder name or the key `15-NOV-2026__Sugar_Walk`; a bare number is not an id. `pipeline/project.py`: `PROJECT`, `project_key`, `project_order`, `project_dirs`, `next_project_name`; `identity.previous` sorts by date; the dashboard lists and resolves by the same keys. Suite: 164 passed.
 - Folder rename: `projects/Health Decode/` is now `projects/Healthdecode/` (`CHANNELS` in config.py and the identity test updated). On-screen brand text in templates is unchanged.

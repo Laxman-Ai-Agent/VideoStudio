@@ -41,3 +41,18 @@ def test_channel_projects_needs_a_final_and_a_channel(tmp_path):
     touch(tmp_path / "01__09-NOV-2026__Z" / "output" / "final_16x9.mp4")  # not in a channel folder
     tabs = channel_projects(tmp_path)
     assert list(tabs["Dark_World"]) == ["02__10-NOV-2026__X"] and tabs["Health_Decode"] == {}
+
+
+def test_metadata_fills_only_empty_text_cells(tmp_path):
+    import json
+    p = tmp_path / "The Dark World" / "02__10-NOV-2026__X"
+    touch(p / "16x9" / "output" / "x_16x9.mp4")
+    (p / "16x9" / "output" / "metadata.json").write_text(json.dumps(
+        {"title": "T16", "description": "D16", "tags": ["a", "b"], "products": ["book"], "facebook": "FB"}), "utf-8")
+    touch(p / "9x16" / "output" / "x_9x16.mp4")
+    (p / "9x16" / "output" / "metadata.json").write_text(json.dumps({"title": "T9", "tags": []}), "utf-8")
+    found = scan(p)
+    assert found[5] == "T16" and found[6] == "D16" and found[7] == "a, b" and found[14] == "book"
+    assert found[15] == "FB" and found[11] == "T9" and 13 not in found and 16 not in found
+    rows = merge([["1", p.name, "", "", "", "My own title"]], {p.name: found})
+    assert rows[0][5] == "My own title" and rows[0][6] == "D16" and rows[0][11] == "T9"
