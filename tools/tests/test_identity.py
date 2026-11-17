@@ -57,9 +57,9 @@ def test_previous_sees_projects_in_other_channel_folders(tmp_path):
     """Bug 2026-11-17: after the move, earlier videos sit in channel folders; the look memory must still find them."""
     (tmp_path / "The Dark World" / "01_a" / "work").mkdir(parents=True)
     (tmp_path / "The Dark World" / "01_a" / "work" / "theme.json").write_text(A.model_dump_json(), "utf-8")
-    (tmp_path / "Health Decode" / "02_b" / "work").mkdir(parents=True)
-    (tmp_path / "Health Decode" / "02_b" / "work").joinpath("theme.json").write_text(B.model_dump_json(), "utf-8")
-    me = tmp_path / "Health Decode" / "03_c"
+    (tmp_path / "Healthdecode" / "02_b" / "work").mkdir(parents=True)
+    (tmp_path / "Healthdecode" / "02_b" / "work").joinpath("theme.json").write_text(B.model_dump_json(), "utf-8")
+    me = tmp_path / "Healthdecode" / "03_c"
     me.mkdir()
     assert [n for n, _ in idt.previous(me)] == ["02_b", "01_a"]
 

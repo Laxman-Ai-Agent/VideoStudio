@@ -5,7 +5,7 @@ from pathlib import Path
 TOOLS = Path(__file__).resolve().parent.parent
 ROOT = TOOLS.parent
 PROJECTS = ROOT / "projects"
-CHANNELS = ("The Dark World", "Health Decode")  # channel folders inside projects/ that hold moved projects
+CHANNELS = ("The Dark World", "Healthdecode")  # channel folders inside projects/ that hold moved projects
 LIBRARY = ROOT / "_library"
 BRAND = ROOT / "_brand"
 CACHE = TOOLS / ".cache"
