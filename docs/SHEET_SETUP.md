@@ -25,3 +25,10 @@ Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `shee
 Button in the sheet: the last column X "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";
 the running watcher shows "RUNNING", syncs within ~30 s and sets "DONE" ("ASK" = the sync failed, ask Claude). If it stays RUN, the watcher is not running
 (double-click `sheet_watch.vbs`).
+
+## Look
+`pipeline/upload_sheet_style.py` colors the header by category (project grey, YouTube long red, Shorts orange,
+products green, Facebook blue, Instagram pink, thumbnail yellow, Refresh teal), tints each column, freezes the
+header + project name, sets widths and one-line rows, and shows "Not found" in red. Values are never touched.
+Re-run after a column change: `tools\.venv\Scripts\python.exe -c "from pipeline.upload_sheet_style import style; style()"`
+(from `tools`).

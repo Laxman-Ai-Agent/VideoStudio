@@ -92,3 +92,11 @@ def test_thumbnail_text_goes_to_x_and_y(tmp_path):
     found = scan(p)
     assert found[21].count("Visual:") == 5 and found[22].count("Visual:") == 2
     assert thumbnail_cell([{"main": "A", "sub": "B", "highlight": "A", "visual": "C"}]) == "1. A\n   B\n   Highlight: A · Visual: C"
+
+
+def test_style_covers_every_column_once():
+    from pipeline.upload_sheet import WIDTH
+    from pipeline.upload_sheet_style import CATEGORIES, LAST, rgb
+    cols = sorted(c for _, _, cs in CATEGORIES.values() for c in cs)
+    assert cols == list(range(LAST)) and LAST == WIDTH
+    assert rgb("#FF8000") == {"red": 1.0, "green": 128 / 255, "blue": 0.0}
