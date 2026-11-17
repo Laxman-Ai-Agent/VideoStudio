@@ -89,6 +89,18 @@ def ensure_layout(project: Path) -> None:
             (project / d).mkdir(parents=True, exist_ok=True)
 
 
+def remove_previews_after_final(project: Path, final_file: str) -> list[Path]:
+    """A final for one format passed QA (final_16x9.mp4): its 480p previews (preview_16x9.mp4, in output/ and
+    work/assembled/) are no longer needed. Other formats and the finals stay."""
+    suffix = final_file.removeprefix("final_")
+    removed = []
+    for p in (project / "output" / f"preview_{suffix}", project / "work" / "assembled" / f"preview_{suffix}"):
+        if p.is_file():
+            p.unlink()
+            removed.append(p)
+    return removed
+
+
 def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
     project = projects_dir / f"{next_number(projects_dir):02d}_{slug(name)}"
     ensure_layout(project)

@@ -83,6 +83,22 @@ def test_find_project_accepts_hyphen_folder(tmp_path):
     assert next_number(tmp_path) == 12
 
 
+def test_final_removes_only_its_formats_previews(tmp_path):
+    from pipeline.project import remove_previews_after_final
+    p = tmp_path / "01_x"
+    for d in ("output", "work/assembled"):
+        (p / d).mkdir(parents=True)
+        for name in ("preview_16x9.mp4", "preview_9x16.mp4"):
+            (p / d / name).write_text("x")
+    (p / "output" / "final_16x9.mp4").write_text("final")
+    removed = remove_previews_after_final(p, "final_16x9.mp4")
+    assert sorted(x.name for x in removed) == ["preview_16x9.mp4", "preview_16x9.mp4"]
+    assert not (p / "output" / "preview_16x9.mp4").exists()
+    assert not (p / "work" / "assembled" / "preview_16x9.mp4").exists()
+    assert (p / "output" / "preview_9x16.mp4").exists()          # other format kept
+    assert (p / "output" / "final_16x9.mp4").exists()            # final kept
+
+
 def test_channel_folders_are_searched_and_numbered(tmp_path):
     """Bug 2026-11-17: moving projects into 'The Dark World/' hid them from find_project and next_number."""
     (tmp_path / "01_First").mkdir()

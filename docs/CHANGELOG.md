@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-17
+- Previews: a final that passes QA deletes its format's 480p previews (`output/preview_<fmt>.mp4` and `work/assembled/preview_<fmt>.mp4`) via `pipeline/project.py` `remove_previews_after_final`, called from `studio.py`. Test: `test_final_removes_only_its_formats_previews`.
 - Layout: projects moved into channel folders `projects/The Dark World/` (03, 04, 05, 06, 07, 12) and `projects/Health Decode/` (09, 10, 11, 13-17); 01 and 02 stay at root. `project.py` `project_dirs()` (used by `next_number`, `find_project`) and `identity.previous()` now see one level down (`CHANNELS` in config.py). Bug test: `test_channel_folders_are_searched_and_numbered`, `test_previous_sees_projects_in_other_channel_folders`. Full suite 157 passed.
 - 17_Sleep_Apnea: new "night watch" kit (tools/templates/night_kit: breath trace, SpO2, 2D airway, night strip, AHI ruler, blink transition), sequences sa_l01-l23 + sa_v01-v07, 78 Kaggle stills, finals both formats (QA PASS).
 - 16_Lung_Cancer: paired project (16x9 merge of 4 parts, 9x16 audio replaced by the user, 1.15x; user's gemini.json had a stale duplicate scene and cut words lists -> scripts/fix_gemini.py, then align_mms), new "lightbox & ember" look and kit `tools/templates/smoke_kit` (sm.js core: shots, lightbox film + scan beam, smoke canvas, slide-in heads; sm2.js: X-ray lungs with tumour, body spread map, cells renew / chaos, DNA snap, people icons, donut, calendar, dials), 83 Kaggle stills, sequences lc_l01-l24 / lc_v01-v07, 480p QC fixes, 1080p finals on the standing go.

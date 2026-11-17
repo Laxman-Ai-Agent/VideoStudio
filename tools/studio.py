@@ -22,8 +22,8 @@ from pipeline.config import BRAND, LIBRARY, ROOT, setup_env
 from pipeline.contracts import Brand, RenderReport, Resolved, ScenePlan, Transcript
 from pipeline.ingest import AmbiguousInput, ingest, ingest_shared
 from pipeline.plan import RULES, validate, write_brief
-from pipeline.project import (atomic_write, ensure_layout, find_project, is_variation, load_state, new_project, run_stage,
-                              upload_target,
+from pipeline.project import (atomic_write, ensure_layout, find_project, is_variation, load_state, new_project,
+                              remove_previews_after_final, run_stage, upload_target,
                               variations)
 
 from pipeline.transcribe import MODEL as WHISPER_MODEL  # light import; faster-whisper loads lazily
@@ -289,6 +289,8 @@ def run_project(p: Path, final: bool = False, workers: int = 4, review: bool = F
             if not dest.exists() or dest.stat().st_mtime_ns < src.stat().st_mtime_ns:
                 dest.parent.mkdir(exist_ok=True)
                 shutil.copy2(src, dest)
+        if final and f.passed:
+            remove_previews_after_final(p, src.name)  # the final of this format is out: its previews go
         qa_failed |= not f.passed
         print(f"  qa {src.name}: {'PASS' if f.passed else 'FAIL'}" + (f" ({'; '.join(bad)})" if bad else "")
               + ("" if f.passed or not final else " -> NOT exported"))
