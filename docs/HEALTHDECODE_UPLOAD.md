@@ -21,6 +21,9 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   government's free 24x7 mental health helpline, 14416 or 1-800-891-4416) next to 108.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #healthdecode.
+- Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question about the viewer's own
+  experience or a myth + the same in English + "⚠️ Educational only, not medical advice. Please consult your doctor."
+  (+ "Tele-MANAS 14416" on sensitive topics). 2-3 lines; never ask viewers to share personal medical details.
 - YouTube medical misinformation + advertiser-friendly rules: no cure claims ("100% cure"), no "stop your medicine",
   no home remedy promoted as a treatment, no fear words ("maranam", "danger") in titles; facts in line with
   WHO / ICMR / NIH; first ~150 characters = Telugu question + English question with the main keyword; keywords in

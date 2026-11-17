@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-18
+- Upload sheet: new column R "Pinned Comment" (both tabs), from `pinned_comment` in the 16x9 `metadata.json`; rules per channel. Aging_150 filled.
+
 ## 2026-11-17
 - Upload metadata: sheet sync also fills Title / Description / Tags (per format), Products, Facebook, Instagram from `<fmt>/output/metadata.json`, empty cells only. Rules in `docs/UPLOAD_METADATA.md`; first one: Aging_150 (approved). Service-account key live, sheet synced (Dark_World 8, Health_Decode 7). Test: `test_metadata_fills_only_empty_text_cells`.
 - Upload-path sheet: `pipeline/upload_sheet.py` updates Google Sheet "Video_Upload_Path" (tabs Dark_World / Health_Decode) after every passed final and via `studio.cmd sheet` / `sheet.cmd` (Run button). Paths only from output/, thumbnails from input/, user-typed columns and existing paths kept, rows sorted by date. Needs a service-account key: `docs/SHEET_SETUP.md`. New library google-auth. Tests: `test_upload_sheet.py` (3).

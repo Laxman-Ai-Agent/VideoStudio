@@ -12,6 +12,9 @@ Sheet only, never posted to the channel by Claude.
 - Products: safe, topic-related things (books on the topic, gadgets, devices). Never medicines or supplements.
 - Facebook: 2-3 line hook + one question for comments + 3 hashtags.
 - Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.
+- Pinned comment (sheet column R, `pinned_comment` in the 16x9 file): Telugu question that invites answers +
+  the same question in English + "📚 Sources & chapters are in the description." (+ "Educational only, not medical
+  advice." on health-related topics). 2-3 lines, no links unless known.
 - Advertiser-friendly: facts, not rumours; company results stated as their own announcements; no defamation, no
   graphic or fear words in titles. Health-related topics: the "not medical advice" line in the disclaimer.
 - Realistic AI images: the AI-visuals line, and remind the user to tick YouTube's "Altered or synthetic content".
