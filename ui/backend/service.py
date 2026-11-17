@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from pipeline import visual  # noqa: E402
 from pipeline.contracts import Resolved, ScenePlan, Transcript  # noqa: E402
-from pipeline.project import is_variation, ref, variations  # noqa: E402
+from pipeline.project import is_variation, project_dirs, project_key, project_order, ref, variations  # noqa: E402
 
 PROJECTS = ROOT / "projects"
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
@@ -66,8 +66,7 @@ def project_dir(pid: str, projects: Path | None = None) -> Path:
         if not (is_variation(v) and v.is_dir()):
             raise NotFound(pid)
         return v
-    hits = [d for d in base.iterdir() if d.is_dir() and (d.name == pid or d.name.split("_")[0] == pid)] \
-        if base.is_dir() else []
+    hits = [d for d in project_dirs(base) if d.name == pid or project_key(d) == pid]
     if len(hits) != 1:
         raise NotFound(pid)
     return hits[0]
@@ -163,18 +162,16 @@ def delete_project(pid: str) -> dict:
 
 def list_projects() -> list[dict]:
     out = []
-    for d in sorted(PROJECTS.iterdir()) if PROJECTS.is_dir() else []:
-        if not d.is_dir() or d.name.startswith("_"):
-            continue
+    for d in sorted(project_dirs(PROJECTS), key=project_order):
         for v in variations(d):  # one row per variation of a topic: 03~16x9, 03~9x16
             va = visual.load(v) if visual.path(v).exists() else None
-            out.append({"id": f"{d.name.split('_')[0]}~{v.name}", "name": f"{d.name}/{v.name}", "topic": d.name, "variation": v.name,
+            out.append({"id": f"{project_key(d)}~{v.name}", "name": f"{d.name}/{v.name}", "topic": d.name, "variation": v.name,
                         "title": (va.project.get("title") if va else "") or f"{d.name} {v.name}",
                         "has_assets": va is not None, **_overview(v), **(counts(va, v) if va else {"total": 0, "found": 0, "missing": 0})})
         if variations(d):
             continue
         va = visual.load(d) if visual.path(d).exists() else None
-        out.append({"id": d.name.split("_")[0], "name": d.name, "title": (va.project.get("title") if va else "") or d.name,
+        out.append({"id": project_key(d), "name": d.name, "title": (va.project.get("title") if va else "") or d.name,
                     "has_assets": va is not None, **_overview(d), **(counts(va, d) if va else {"total": 0, "found": 0, "missing": 0})})
     return out
 
@@ -201,7 +198,7 @@ def _log(a, action: str, **kw) -> None:
 def project_assets(pid: str) -> dict:
     p, va = _load(pid)
     sc = _scenes(p)
-    return {"project": {**va.project, "id": (f"{p.parent.name.split('_')[0]}~{p.name}" if is_variation(p) else p.name.split("_")[0]), "name": ref(p)}, "counts": counts(va, p),
+    return {"project": {**va.project, "id": (f"{project_key(p.parent)}~{p.name}" if is_variation(p) else project_key(p)), "name": ref(p)}, "counts": counts(va, p),
             "summary": va.summary, "characters": [c.model_dump() for c in va.characters],
             "assets": [view(a, p, sc, {c.id: c for c in va.characters} | {"_assets": va.assets}) for a in va.assets]}
 

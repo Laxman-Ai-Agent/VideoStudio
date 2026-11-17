@@ -358,7 +358,7 @@ def assets_command(project: Path) -> int:
     va = visual.load(project)
     scenes_json, resolved_json = project / "work" / "scenes.json", project / "work" / "resolved.json"
     if va is None or not scenes_json.exists():
-        print(f"  no {visual.FILE} yet: run `studio.cmd run {project.name[:2]}` first")
+        print(f"  no {visual.FILE} yet: run `studio.cmd run {project_key(project) or project.name}` first")
         return NEEDS_USER
     plan = ScenePlan.model_validate_json(scenes_json.read_text("utf-8"))
     resolved = Resolved.model_validate_json(resolved_json.read_text("utf-8")) if resolved_json.exists() else None

@@ -38,19 +38,36 @@ def slug(name: str) -> str:
     return s
 
 
-NUMBERED = re.compile(r"(\d+)[_-]")  # 03_Topic, 11-AI_doctor
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+# 01__15-Nov__Sugar_Walk: serial (per channel, by creation date), day-Mon-year, name.
+# The key used in commands and the dashboard is the folder name without the serial: "15-Nov__Sugar_Walk".
+PROJECT = re.compile(r"^(\d{2})__(\d{2})-([A-Za-z]{3})__(.+)$")
+
+
+def project_key(p: Path) -> str | None:
+    m = PROJECT.match(p.name)
+    return f"{m.group(2)}-{m.group(3)}__{m.group(4)}" if m else None
+
+
+def project_order(p: Path) -> tuple[int, int, int] | None:
+    """(month, day, serial) for sorting projects by creation date; None for a folder without this name.
+    Year is not in the name, so order is only right within one year."""
+    m = PROJECT.match(p.name)
+    if not m or m.group(3) not in MONTHS:
+        return None
+    return MONTHS.index(m.group(3)) + 1, int(m.group(2)), int(m.group(1))
 
 
 def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
-    """Numbered project folders: projects/NN_x, projects/<channel>/NN_x and projects/<channel>/<group>/NN_x.
-    Skips _deleted and dot folders. Any other non-numbered folder is a channel or group folder (max 2 deep)."""
+    """Project folders: projects/NN__..., projects/<channel>/NN__... and projects/<channel>/<group>/NN__...
+    Skips _deleted and dot folders. Any other folder is a channel or group folder (max 2 deep)."""
     out = []
 
     def walk(folder: Path, depth: int) -> None:
         for d in sorted(folder.iterdir()):
             if not d.is_dir() or d.name.startswith(("_", ".")):
                 continue
-            if NUMBERED.match(d.name):
+            if PROJECT.match(d.name):
                 out.append(d)
             elif depth < 2:
                 walk(d, depth + 1)
@@ -60,9 +77,11 @@ def project_dirs(projects_dir: Path = PROJECTS) -> list[Path]:
     return out
 
 
-def next_number(projects_dir: Path = PROJECTS) -> int:
-    nums = [int(m.group(1)) for p in project_dirs(projects_dir) if (m := NUMBERED.match(p.name))]
-    return max(nums, default=0) + 1
+def next_project_name(projects_dir: Path, name: str, when: datetime | None = None) -> str:
+    """Next serial in this folder (01, 02, ...) plus today's date: 03__16-Nov__Name."""
+    when = when or datetime.now()
+    serial = 1 + sum(1 for p in project_dirs(projects_dir) if p.parent == projects_dir)
+    return f"{serial:02d}__{when.day:02d}-{MONTHS[when.month - 1]}__{slug(name)}"
 
 
 VARIATION = re.compile(r"^\d+x\d+$")  # projects/03_Topic/16x9: one video of a topic, the drop folder is shared
@@ -149,7 +168,7 @@ def prune_scene_cache(variation: Path, hours: float = 24, now: float | None = No
 
 
 def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
-    project = projects_dir / f"{next_number(projects_dir):02d}_{slug(name)}"
+    project = projects_dir / next_project_name(projects_dir, name)
     ensure_layout(project)
     atomic_write(project / "project.md",
                  f"# {project.name}\n\nCreated: {datetime.now():%Y-%m-%d %H:%M}\n\n## Log\n")
@@ -157,7 +176,8 @@ def new_project(name: str, projects_dir: Path = PROJECTS) -> Path:
 
 
 def find_project(ref: str, projects_dir: Path = PROJECTS) -> Path:
-    """Accepts '01', '1', '01_AI_Agents', '03/16x9' (a variation) or a full path."""
+    """Accepts '15_Nov_2026_01' (the date key), '15_Nov_2026_01-Sugar_Walk' (the folder name), '15_Nov_2026_01/16x9'
+    (a variation) or a full path."""
     p = Path(ref)
     if p.is_dir():
         return p
@@ -168,8 +188,7 @@ def find_project(ref: str, projects_dir: Path = PROJECTS) -> Path:
             return v
         raise FileNotFoundError(f"variation not found: {ref}")
     for d in project_dirs(projects_dir):
-        m = NUMBERED.match(d.name)
-        if d.name == ref or (m and ref.isdigit() and int(m.group(1)) == int(ref)):
+        if d.name == ref or project_key(d) == ref:
             return d
     raise FileNotFoundError(f"project not found: {ref}")
 

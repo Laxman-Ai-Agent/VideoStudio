@@ -6,13 +6,13 @@ plus the steps that bring them into the timeline. The user keeps it with the pro
 """
 from pathlib import Path
 
-from .project import ref, upload_target
+from .project import project_key, ref, upload_target
 
 
 def write(va, project: Path) -> Path | None:
     out = project / "output" / "images_pending.txt"
     todo = [a for a in va.assets if a.status in ("prompt_ready", "needed", "failed")]
-    num = ref(project) if "x" in project.name else project.name.split("_")[0]
+    num = ref(project) if "x" in project.name else (project_key(project) or project.name)
     if not todo:  # keep the file (user wants the prompts to stay): list every prompt as a reference
         done = [a for a in va.assets if a.prompt.text]
         lines = [f"ALL IMAGES ARE IN: {project.name}  (nothing pending; {len(done)} prompts kept for reference/re-generation)", ""]
