@@ -45,8 +45,8 @@ Sheet only, never posted to the channel by Claude.
      invent one. When links are there, the description gets the affiliate line (ASCI / YouTube rules):
      "Some links in this description may be affiliate links; we may earn a small commission at no extra cost to you."
   8. Anything the video itself names (a device, a book) comes first.
-- Facebook (user rules 2026-11-18): two captions. `facebook` = Reel caption (9x16 clip, sheet column P);
-  `facebook_post` = long-video post caption (16x9, sheet column U). Both in the 16x9 metadata.json.
+- Facebook (user rules 2026-11-18): Facebook and Instagram get the Short (9x16 Reel) only; the long video is
+  YouTube only. `facebook` = the Reel caption (sheet column P), in the 16x9 metadata.json.
   1. The strongest line first, under ~80 characters (mobile shows 2-3 lines before "See more").
   2. Mostly Telugu (the Facebook audience reads Telugu), English only for key words.
   3. No link in the caption (Facebook cuts the reach of link posts): the video is uploaded to Facebook itself and
@@ -56,9 +56,8 @@ Sheet only, never posted to the channel by Claude.
   6. 2-3 short bullet lines with ✅ / ❌ / 👉 so the content is clear at a glance.
   7. 2-3 hashtags only: topic + channel (#TheDarkWorld).
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
-  9. The Reel caption is short (hook, 3 bullets, question, link line, hashtags); the post caption tells a bit more
-     (what the full video covers, its length) with the same rules. Written fresh for each video.
-- Instagram (sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
+  9. Short: hook, 3 bullets, question, link line, hashtags. Written fresh for each video.
+- Instagram (the Reel caption, sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
   1. Hook in the first line, about 50 characters (Instagram cuts at ~125 with "more").
   2. English search keywords inside a natural sentence (Instagram search reads captions more than hashtags),
      e.g. "aging reverse science in Telugu".
@@ -70,8 +69,8 @@ Sheet only, never posted to the channel by Claude.
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Health-related topics end with "ℹ️ సమాచారం కోసం మాత్రమే."
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column W;
-  in the 9x16 file = 2 options (Shorts cover) -> column X. Each option:
+- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column V;
+  in the 9x16 file = 2 options (Shorts cover) -> column W. Each option:
   `{"main": "...", "sub": "...", "highlight": "<one word of main>", "visual": "<one-line image idea>"}`.
   1. main = line 1: 2-4 words, big Telugu letters, a number or a shock word; `highlight` = the one word to color.
   2. sub = line 2: 3-6 words, smaller, curiosity or an English keyword.
@@ -81,7 +80,7 @@ Sheet only, never posted to the channel by Claude.
   6. Only what the video delivers (no fake claims, no real person shown doing something they did not do).
   7. `visual` = one line the user can turn into the image (subject, one prop, mood), photoreal, cinematic, dark background.
 - Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
-  `pinned_comment` in the 9x16 metadata.json -> column V (Shorts).
+  `pinned_comment` in the 9x16 metadata.json -> column U (Shorts).
   1. The question first, in Telugu (only the first 1-2 lines show).
   2. The same question the video asks at its end, so the comment continues the video.
   3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").

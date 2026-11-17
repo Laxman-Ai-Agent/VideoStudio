@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Facebook / Instagram = Shorts only (user): column U "Facebook Post Caption" deleted, `facebook_post` dropped; now S title options, T product links, U Shorts pin, V / W thumbnail text, X Refresh.
 - Refresh dropdown moved to the last column (Y) on the user's request; title options S, product links T, Facebook post U, Shorts pin V, thumbnail text W / X (code: `REFRESH`, indices shifted).
 - Thumbnail text: 7 rules per channel; `thumbnail_text` options (main, sub, highlight, visual idea) -> new columns X (16x9, 5 options) and Y (Shorts, 2); sync reads / writes A..Y. Aging_150 filled. Test: `test_thumbnail_text_goes_to_x_and_y`.
 - Pinned comments: 9 rules per channel; R renamed "Pinned Comment (16x9)", new W "Pinned Comment (Shorts)" from the 9x16 file; sync reads / writes A..W. Aging_150 both.

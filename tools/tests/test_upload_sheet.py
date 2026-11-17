@@ -32,7 +32,7 @@ def test_merge_keeps_user_columns_and_paths_sorts_by_date():
     assert b[2] == "new.mp4" and b[4] == "kept_thumb.png" and b[5:7] == ["My title", "Desc"]
     assert b[3] == NOT_FOUND and b[8] == "b9.mp4"
     assert rows[0][2] == "a.mp4" and rows[0][3] == ""  # projects not scanned this run stay as they were
-    assert all(len(r) == 25 for r in rows)
+    assert all(len(r) == 24 for r in rows)
 
 
 def test_channel_projects_needs_a_final_and_a_channel(tmp_path):
@@ -48,12 +48,12 @@ def test_metadata_fills_only_empty_text_cells(tmp_path):
     p = tmp_path / "The Dark World" / "02__10-NOV-2026__X"
     touch(p / "16x9" / "output" / "x_16x9.mp4")
     (p / "16x9" / "output" / "metadata.json").write_text(json.dumps(
-        {"title": "T16", "description": "D16", "tags": ["a", "b"], "products": ["book", "kit"], "product_links": ["https://x/1"], "facebook": "FB", "facebook_post": "FBP", "pinned_comment": "PIN", "title_options": ["A", "B", "C"]}), "utf-8")
+        {"title": "T16", "description": "D16", "tags": ["a", "b"], "products": ["book", "kit"], "product_links": ["https://x/1"], "facebook": "FB", "pinned_comment": "PIN", "title_options": ["A", "B", "C"]}), "utf-8")
     touch(p / "9x16" / "output" / "x_9x16.mp4")
     (p / "9x16" / "output" / "metadata.json").write_text(json.dumps({"title": "T9", "tags": [], "pinned_comment": "PIN9"}), "utf-8")
     found = scan(p)
     assert found[5] == "T16" and found[6] == "D16" and found[7] == "a, b" and found[14] == "book\nkit" and found[19] == "https://x/1"
-    assert found[15] == "FB" and found[20] == "FBP" and found[17] == "PIN" and found[18] == "1. A\n2. B\n3. C" and found[11] == "T9" and found[21] == "PIN9" and found[17] == "PIN" and 13 not in found and 16 not in found
+    assert found[15] == "FB" and found[17] == "PIN" and found[18] == "1. A\n2. B\n3. C" and found[11] == "T9" and found[20] == "PIN9" and found[17] == "PIN" and 13 not in found and 16 not in found
     rows = merge([["1", p.name, "", "", "", "My own title"]], {p.name: found})
     assert rows[0][5] == "My own title" and rows[0][6] == "D16" and rows[0][11] == "T9"
 
@@ -90,5 +90,5 @@ def test_thumbnail_text_goes_to_x_and_y(tmp_path):
         opts = [{"main": f"M{i}", "sub": f"S{i}", "highlight": f"M{i}", "visual": f"V{i}"} for i in range(n)]
         (p / fmt / "output" / "metadata.json").write_text(json.dumps({"thumbnail_text": opts}), "utf-8")
     found = scan(p)
-    assert found[22].count("Visual:") == 5 and found[23].count("Visual:") == 2
+    assert found[21].count("Visual:") == 5 and found[22].count("Visual:") == 2
     assert thumbnail_cell([{"main": "A", "sub": "B", "highlight": "A", "visual": "C"}]) == "1. A\n   B\n   Highlight: A · Visual: C"

@@ -12,15 +12,15 @@ from .config import PROJECTS, SHEET_ID, SHEET_KEY, SHEET_SKIP, SHEET_TABS
 from .project import PROJECT, project_dirs, project_order, variations
 
 NOT_FOUND = "Not found"
-WIDTH = 25  # A..Y (Y = the Refresh dropdown, last column, carried with its row)
-REFRESH, REFRESH_COL = 24, "Y"  # moved to the end on the user's request (2026-11-18)
+WIDTH = 24  # A..X (X = the Refresh dropdown, last column, carried with its row)
+REFRESH, REFRESH_COL = 23, "X"  # moved to the end on the user's request (2026-11-18)
 COLS = {"16x9": (2, 3, 4), "9x16": (8, 9, 10)}  # video, script, thumbnail columns (0-based: C D E, I J K)
 PATH_COLS = (2, 3, 4, 8, 9, 10)
 TEXT_COLS = {"16x9": (5, 6, 7), "9x16": (11, 12, 13)}  # title, description, tags (F G H, L M N)
-SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17,  # O P Q R, one per project
-          "facebook_post": 20}  # U: Facebook long-video post caption (P is the Reel caption)
-SHORTS_PIN = 21  # V: the 9x16 file's pinned_comment (R is the long video's)
-THUMB_TEXT = {"16x9": 22, "9x16": 23}  # W / X: thumbnail text options (main, sub, highlight, visual idea)
+# O P Q R, one per project. Facebook and Instagram get the Short (Reel) only (user, 2026-11-18).
+SHARED = {"products": 14, "facebook": 15, "instagram": 16, "pinned_comment": 17}
+SHORTS_PIN = 20  # U: the 9x16 file's pinned_comment (R is the long video's)
+THUMB_TEXT = {"16x9": 21, "9x16": 22}  # V / W: thumbnail text options (main, sub, highlight, visual idea)
 
 
 def thumbnail_cell(options: list[dict]) -> str:
@@ -98,7 +98,7 @@ def _order(name: str) -> tuple:
 
 
 def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list[list[str]]:
-    """Sheet rows (A2:Y, as read) + scanned projects -> the rows to write back."""
+    """Sheet rows (A2:X, as read) + scanned projects -> the rows to write back."""
     rows = {}
     for r in existing:
         r = (list(r) + [""] * WIDTH)[:WIDTH]
@@ -155,12 +155,12 @@ def sync(projects_dir: Path = PROJECTS) -> bool:
     api = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
     for tab, scanned in channel_projects(projects_dir).items():
         rng = lambda a: quote(f"'{tab}'!{a}", safe="")
-        got = _ok(s.get(api + rng("A2:Y")))
+        got = _ok(s.get(api + rng("A2:X")))
         rows = merge(got.json().get("values", []), scanned)
         if rows:
-            _ok(s.put(api + rng(f"A2:Y{len(rows) + 1}"), params={"valueInputOption": "RAW"},
+            _ok(s.put(api + rng(f"A2:X{len(rows) + 1}"), params={"valueInputOption": "RAW"},
                   json={"values": rows}))
-        _ok(s.post(api + rng(f"A{len(rows) + 2}:Y") + ":clear"))
+        _ok(s.post(api + rng(f"A{len(rows) + 2}:X") + ":clear"))
         print(f"  sheet: {tab} {len(rows)} rows")
     return True
 
@@ -175,19 +175,19 @@ def sync_safe() -> bool:
 
 
 WATCHED = IMAGES | {".mp4", ".txt", ".json"}
-# Refresh column (Y) dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
+# Refresh column (X) dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
 # RUNNING while it syncs, then DONE, or ASK when the sync failed (ask Claude).
 RUN, START, RUNNING, DONE, ASK = "▶ RUN", "▶ START", "⏳ RUNNING", "✅ DONE", "❌ ASK"
 
 
 def run_rows(column: list[list[str]]) -> list[int]:
-    """Sheet row numbers (2-based) whose Refresh cell (column Y) asks for a refresh (Y2:Y as read)."""
+    """Sheet row numbers (2-based) whose Refresh cell (column X) asks for a refresh (Y2:Y as read)."""
     return [i for i, c in enumerate(column, 2)
             if c and any(w in c[0].upper().split() for w in ("RUN", "START"))]
 
 
 def install_buttons(s=None) -> None:
-    """The Refresh column (Y, last) on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
+    """The Refresh column (X, last) on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
     s = s or _session()
     meta = _ok(s.get(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}",
                      params={"fields": "sheets.properties"})).json()
@@ -238,7 +238,7 @@ def signature(projects_dir: Path = PROJECTS) -> tuple:
 
 
 def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
-    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's Refresh cell (column Y) says
+    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's Refresh cell (column X) says
     RUN (both checked every 30 s); asked rows are set to DONE after the sync.
     ponytail: polling, no OS file events; 15 projects scan in milliseconds, add watchdog only if that changes."""
     import msvcrt

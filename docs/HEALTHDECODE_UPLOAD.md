@@ -52,8 +52,8 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
 - "Last reviewed: [Mon YYYY]" = the month of the final render.
 - Sensitive topics (mental health, suicide, cancer, epilepsy / seizures, addiction): add the Tele-MANAS line (India
   government's free 24x7 mental health helpline, 14416 or 1-800-891-4416) next to 108.
-- Facebook (user rules 2026-11-18): two captions. `facebook` = Reel caption (9x16 clip, sheet column P);
-  `facebook_post` = long-video post caption (16x9, sheet column U). Both in the 16x9 metadata.json.
+- Facebook (user rules 2026-11-18): Facebook and Instagram get the Short (9x16 Reel) only; the long video is
+  YouTube only. `facebook` = the Reel caption (sheet column P), in the 16x9 metadata.json.
   1. The strongest line first, under ~80 characters (mobile shows 2-3 lines before "See more").
   2. Mostly Telugu (the Facebook audience reads Telugu), English only for key words.
   3. No link in the caption (Facebook cuts the reach of link posts): the video is uploaded to Facebook itself and
@@ -63,9 +63,8 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   6. 2-3 short bullet lines with ✅ / ❌ / 👉 so the content is clear at a glance.
   7. 2-3 hashtags only: topic + channel (#HealthDecode).
   8. Always end with "ℹ️ సమాచారం కోసం మాత్రమే, doctor సలహా తీసుకోండి." (Facebook health policy).
-  9. The Reel caption is short (hook, 3 bullets, question, link line, hashtags); the post caption tells a bit more
-     (what the full video covers, its length) with the same rules. Written fresh for each video.
-- Instagram (sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
+  9. Short: hook, 3 bullets, question, link line, hashtags. Written fresh for each video.
+- Instagram (the Reel caption, sheet column Q, `instagram` in the 16x9 file; user rules 2026-11-18):
   1. Hook in the first line, about 50 characters (Instagram cuts at ~125 with "more").
   2. English search keywords inside a natural sentence (Instagram search reads captions more than hashtags),
      e.g. "aging reverse science in Telugu".
@@ -77,8 +76,8 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
   7. The first line repeats the Reel's cover / first-frame hook in other words: one message in both places.
   8. Always end with "ℹ️ సమాచారం కోసం మాత్రమే, doctor సలహా తీసుకోండి." (Instagram health policy).
   9. Telugu for the feeling, a few more English keywords than Facebook (search).
-- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column W;
-  in the 9x16 file = 2 options (Shorts cover) -> column X. Each option:
+- Thumbnail text (user rules 2026-11-18): `thumbnail_text` in the 16x9 metadata.json = 5 options -> column V;
+  in the 9x16 file = 2 options (Shorts cover) -> column W. Each option:
   `{"main": "...", "sub": "...", "highlight": "<one word of main>", "visual": "<one-line image idea>"}`.
   1. main = line 1: 2-4 words, big Telugu letters, a number or a shock word; `highlight` = the one word to color.
   2. sub = line 2: 3-6 words, smaller, curiosity or an English keyword.
@@ -89,7 +88,7 @@ Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to t
      promises.
   7. `visual` = one line the user can turn into the image (subject, one prop, mood), clean light clinical look, glossy 3D organ / body detail.
 - Pinned comment (user rules 2026-11-18): `pinned_comment` in the 16x9 metadata.json -> column R (long video);
-  `pinned_comment` in the 9x16 metadata.json -> column V (Shorts).
+  `pinned_comment` in the 9x16 metadata.json -> column U (Shorts).
   1. The question first, in Telugu (only the first 1-2 lines show).
   2. The same question the video asks at its end, so the comment continues the video.
   3. Easy to answer: Avunu / Kaadu, 1 / 2, or an emoji vote ("❤️ = అవును, 😮 = కాదు").
