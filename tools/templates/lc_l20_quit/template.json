@@ -1,0 +1,13 @@
+{
+ "name": "lc_l20_quit",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "L20 myth: too late to quit? extra risk about halves 10-15 years after quitting; quitting after 50 still helps"
+}

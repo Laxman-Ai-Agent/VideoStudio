@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sm.js"></script><script src="sm2.js"></script>
+<style>/* 16_Lung_Cancer lc_l06_dna: L06 DNA instruction book (grow / stop), smoke + pollution damage DNA, brake failed + accelerator stuck, out of control */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, film, smoke, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, lab, lungs, body, cells, dna, people, donut, cal, dial } = SM;
+  const T = (x) => Math.max(0, x - 84.15);
+  smoke({ dens: [[0, 0], [8, 0], [9, .9], [14, .6], [15, .1]], alpha: .26, c: "#b9a593" });
+  shot("A20", { t: 0, d: 8, mv: "push", in: "smoke", until: T(92.4) });
+  dna(W * .06, H * .64, W * .4, H * .2, T(85.3), { until: T(92.3) });
+  head("<b>DNA</b>", T(85.3), { x: W * .06, y: H * .16, size: 9, c: K.ice, until: T(92.3) });
+  tag("THE CELL'S INSTRUCTION BOOK", T(86.4), { x: W * .06, y: H * .34, c: K.ice, until: T(92.3) });
+  doc(`<h3>Cell instructions</h3><div style="color:#6b625a">Written in DNA · every cell has a copy</div><div class="rule"></div>
+    <b>1. GROW</b> — when the lining needs new cells<br><br><span id="stp"><b>2. STOP</b> — when there are enough cells</span><br><br><b>3. RETIRE</b> — when a cell is old or damaged`,
+    W * .54, H * .12, W * .4, H * .56, T(87.8), { until: T(92.3) });
+  te("ఎప్పుడు <b>పెరగాలి</b> · ఎప్పుడు <b>ఆపాలి</b>", T(88.7), { x: W * .54, y: H * .76, size: 3.2, until: T(92.3) });
+  shot("A22", { t: T(92.4), d: 7, mv: "push", in: "smoke", until: T(99.4) });
+  tag("SMOKE", T(93.0), { y: H * .1, until: T(99.3) });
+  tag("POLLUTION", T(93.5), { x: W * .2, y: H * .1, until: T(99.3) });
+  te("<b>ఏళ్ల తరబడి</b> ప్రభావం", T(94.6), { until: T(97.0) });
+  dna(W * .3, H * .62, W * .4, H * .18, T(95.6), { snap: T(98.2), until: T(99.3) });
+  head("DNA <b>DAMAGE</b>", T(98.0), { y: H * .3, align: "center", size: 7, until: T(99.3) });
+  shot("A23", { t: T(99.4), d: 4, mv: "panR", in: "wipe", until: T(103.1) });
+  dial(W * .24, H * .62, u * 12, T(100.0), { a0: .55, a1: 0, t2: T(100.5), label: "BRAKE · FAILED", c: K.ice, until: T(103.0) });
+  dial(W * .76, H * .62, u * 12, T(100.8), { a0: .3, a1: 1, t2: T(101.6), jam: true, label: "ACCELERATOR · STUCK", c: K.em, until: T(103.0) });
+  cells([0, 0, W, H], T(103.1), { chaos: T(103.6), grow: 2.8, n: 220, size: 6.5 });
+  head("OUT OF <b>CONTROL</b>", T(104.4), { y: H * .12, align: "center", size: 7 });
+  SM.done();
+</script>
+</body></html>

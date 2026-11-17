@@ -12,6 +12,14 @@ per-video themes, quote template, timeline page (dashboard `/timeline.html`: liv
 - `01_AI_Agents/edits.json` was changed by the user during the session (not by tests).
 
 
+## 16_Lung_Cancer (2026-11-17) - finals done (new "lightbox & ember" look)
+- Paired topic (lung cancer, TB confusion, never-smokers): `projects/16_Lung_Cancer/{16x9,9x16}`; 16x9 = 4 mp3s merged, 9x16 = user's replacement ElevenLabs audio (old files in `9x16/input/replaced/`), 1.15x -> `<fmt>/audio.mp3`.
+- User's gemini.json: 16x9 had a stale duplicate scene 48 + words lists cut short -> `scripts/fix_gemini.py <fmt>` -> `input/gemini_fixed.json` -> align_mms -> `input/gemini_corrected.json`.
+- Theme "lightbox & ember" (Bricolage Grotesque + Noto Serif Telugu + Outfit; graphite / X-ray ice / ember / bone; max 26% alike 15); kit `tools/templates/smoke_kit/{sm.js,sm2.js}`.
+- Images: 83 Kaggle stills `assets/ai` (prompts `work/kaggle_lung.json`); A28 (brain in the chest) unused.
+- Sequences `scripts/seq_*.py`, `scripts/rebuild.py <fmt>`; checks `<fmt>/work/check.html`, `sheet.html` (browser caches kit js: fetch with cache reload).
+- FINALS DONE 2026-11-17: `<fmt>/output/16_Lung_Cancer_<fmt>.mp4` (7:16 / 1:38), QA PASS + frame QC; `DarkWorld/README.txt` (thumbnails pending).
+
 ## 15_Asthma (2026-11-17) - finals done (new "breath lab" look)
 - Paired topic (asthma, inhaler myths): `projects/15_Asthma/{16x9,9x16}`; 16x9 = 5 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; gemini.json aligned (align_mms) -> `input/gemini_corrected.json`.
 - Theme "breath lab" (`theme.json`: Syne + Anek Telugu + Rajdhani; slate-teal / mint / coral / honey; 27% max alike 14); kit `tools/templates/breath_kit/bk.js`.

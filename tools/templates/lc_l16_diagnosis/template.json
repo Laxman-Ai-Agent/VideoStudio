@@ -1,0 +1,13 @@
+{
+ "name": "lc_l16_diagnosis",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "L16 diagnosis: chest X-ray or CT, biopsy confirms, small piece of tumour, gene tests on the same tissue"
+}

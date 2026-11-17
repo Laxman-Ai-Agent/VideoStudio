@@ -1,0 +1,13 @@
+{
+ "name": "lc_v02_causes",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "V02 causes: cigarette, beedi, second-hand smoke, pollution, chulha, diesel, asbestos, silica, radon, family history"
+}

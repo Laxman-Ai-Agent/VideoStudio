@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sm.js"></script><script src="sm2.js"></script>
+<style>/* 16_Lung_Cancer lc_l02_tb: L02 village cough for months, TB drugs, no relief, CT scan: not TB, lung cancer */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, film, smoke, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, lab, lungs, body, cells, dna, people, donut, cal, dial } = SM;
+  const T = (x) => Math.max(0, x - 22.45);
+  const v = shot("A05", { t: 0, d: 4.4, mv: "push", in: "cut", fx: .4 });
+  te("నెలల తరబడి <b>దగ్గు</b>", T(23.9), { until: T(26.6) });
+  cal(["MONTH 1", "MONTH 2", "MONTH 3", "MONTH 4"], W * .06, H * .07, W * .5, H * .1, T(24.0), { from: T(24.3), step: 1.4, until: T(30.7) });
+  morph(v, T(26.6), [0, 0, W * .5, H]);
+  const m = shot("A06", { t: T(26.6), d: 4, mv: "push", in: "rise", box: [W * .53, H * .2, W * .42, H * .55], panel: true, cap: "TB MEDICINES", until: T(30.8) });
+  te("<b>TB</b> ఏమో అనుకుని మందులు", T(27.2), { x: W * .53, y: H * .8, size: 3.2, until: T(30.7) });
+  head("STILL <b>COUGHING</b>", T(29.6), { x: W * .04, y: H * .74, size: 4.8, until: T(30.7) });
+  shot("A09", { t: T(30.8), d: 2, mv: "push", in: "scan", until: T(32.4) });
+  tag("CT SCAN", T(31.1), { c: K.ice, until: T(32.3) });
+  film("A55", W * .3, H * .08, W * .4, H * .72, T(32.3), { scan: [T(32.6)], d: 3 });
+  head("NOT <b>TB</b>", T(32.7), { x: W * .06, y: H * .4, size: 7, until: T(33.6) });
+  head("LUNG <b>CANCER</b>", T(33.6), { x: W * .72, y: H * .4, size: 6.4, align: "right" });
+  focus(W * .58, H * .4, u * 5, T(33.8), { label: "TUMOUR" });
+  SM.done();
+</script>
+</body></html>

@@ -1,0 +1,13 @@
+{
+ "name": "lc_v05_doctor",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "V05 3-week cough -> doctor, no self-medicating for TB; X-ray / CT, biopsy; treatments"
+}

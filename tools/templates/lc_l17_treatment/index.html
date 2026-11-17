@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sm.js"></script><script src="sm2.js"></script>
+<style>/* 16_Lung_Cancer lc_l17_treatment: L17 treatment depends on type, stage, gene results: surgery, chemo, radiation, targeted therapy, immunotherapy */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, film, smoke, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, lab, lungs, body, cells, dna, people, donut, cal, dial } = SM;
+  const T = (x) => Math.max(0, x - 289.65);
+  shot("A74", { t: 0, d: 5.3, mv: "drift", in: "smoke", until: T(294.9) });
+  head("TREATMENT <b>DEPENDS ON</b>", T(289.9), { y: H * .12, size: 6, c: K.ice, until: T(294.8) });
+  list([["Cancer <b>రకం</b>", T(291.2), true], ["<b>Stage</b>", T(291.7), true], ["<b>Gene test</b> results", T(292.4), true]], W * .06, H * .34, { until: T(294.8) });
+  const R5 = [["A59", T(294.9), "SURGERY"], ["A60", T(297.7), "CHEMOTHERAPY"], ["A61", T(298.7), "RADIATION"], ["A63", T(299.9), "TARGETED THERAPY"], ["A62", T(304.3), "IMMUNOTHERAPY"]];
+  R5.forEach(([k, t, c], i) => { const nx = R5[i + 1] ? R5[i + 1][1] : T(309.9);
+    shot(k, { t, d: nx - t, mv: ["push", "panL", "pull", "push", "drift"][i], in: ["wipe", "zoom", "wipeL", "scan", "iris"][i], until: nx + .3 });
+    head(c, t + .15, { y: H * .12, size: 6.4, c: i > 2 ? K.ice : K.em, until: nx }); });
+  te("Tumor ఉన్న భాగం <b>తొలగింపు</b>", T(295.8), { until: T(297.6) });
+  te("ప్రత్యేక <b>gene మార్పుల</b>పై నేరుగా", T(300.8), { until: T(304.2) });
+  te("<b>Immune system</b> కే పోరాడే శక్తి", T(305.3), { until: T(309.8) });
+  R5.forEach(([k, , c], i) => shot(k, { t: T(309.9) + i * .15, d: 3, mv: "push", in: "rise", box: [W * .03 + i * W * .19, H * .3, W * .18, H * .38], panel: true, cap: c.split(" ")[0] }));
+  head("MANY <b>OPTIONS</b>", T(310.6), { y: H * .76, align: "center", size: 5.4, c: K.ice });
+  SM.done();
+</script>
+</body></html>

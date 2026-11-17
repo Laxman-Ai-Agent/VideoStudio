@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sm.js"></script><script src="sm2.js"></script>
+<style>/* 16_Lung_Cancer lc_l24_share: L24 share with family / friends, comment, like */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, film, smoke, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, lab, lungs, body, cells, dna, people, donut, cal, dial } = SM;
+  const T = (x) => Math.max(0, x - 419.5);
+  shot("A78", { t: 0, d: 6.9, mv: "push", in: "wipe", until: T(426.3) });
+  te("తగ్గని <b>దగ్గు</b> ఉన్నవాళ్ళకి", T(420.0), { until: T(422.0) });
+  head("<b>SHARE</b> THIS VIDEO", T(422.0), { y: H * .14, size: 7, until: T(426.2) });
+  tag("FRIENDS · FAMILY", T(423.8), { y: H * .32, c: K.ice, until: T(426.2) });
+  shot("A04", { t: T(426.3), d: 9.6, mv: "drift", in: "smoke" });
+  const C = (n, c, t) => `<div class="cm" style="display:flex;gap:${u}px;padding:${u * .9}px 0;border-top:1px solid #ffffff14"><div style="width:${u * 3}px;height:${u * 3}px;border-radius:50%;background:${c};flex:none"></div>
+    <div><div style="color:${K.mute};font-size:${u * 1.1}px">@${n}</div><div style="font:500 ${u * 1.4}px var(--font);line-height:1.35">${t}</div></div></div>`;
+  const ph = phone(`<div style="padding:${u * 1.6}px ${u * 1.4}px"><div style="font:700 ${u * 1.8}px var(--font-head);margin-bottom:${u * .6}px">Comments · 1.2K</div>
+    <div style="font:500 ${u * 1.3}px var(--font);color:${K.bone};background:#ffffff12;border-radius:${u}px;padding:${u * .8}px;margin-bottom:${u * .6}px">Lung cancer smokers కి మాత్రమేనా? మీ అభిప్రాయం…</div>
+    ${C("ravi_kumar", "#6a8caf", "నేను కూడా smokers కే వస్తుంది అనుకున్నా 😮")}${C("lakshmi.d", "#b06a4a", "మా అమ్మకి చాలా నెలలు TB మందులు ఇచ్చారు…")}${C("suresh_vzg", "#7a9a6a", "3 weeks rule గుర్తుంచుకుంటా 🙏")}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:${u}px"><div id="lk2" style="padding:${u * .6}px ${u * 1.3}px;border-radius:${u * 3}px;background:#ffffff1a;font-weight:700">👍 Like</div>
+    <div style="color:${K.mute};font-size:${u * 1.2}px">Add a comment…</div></div></div>`, W * .6, H * .07, H * .86, T(426.5));
+  tl.fromTo(ph.querySelectorAll(".cm"), { opacity: 0, x: u * 3 }, { opacity: 1, x: 0, duration: .4, stagger: .7, immediateRender: true }, T(428.8));
+  head("COMMENT <b>BELOW</b>", T(430.9), { x: W * .06, y: H * .28, size: 6.6 });
+  te("మీరూ అలాగే <b>అనుకున్నారా</b>?", T(429.2), { x: W * .06, y: H * .5 });
+  tl.to(ph.querySelector("#lk2"), { background: K.em, scale: 1.15, duration: .3, ease: E.pop }, T(435.0));
+  head("<b>LIKE</b> 👍", T(434.8), { x: W * .06, y: H * .66, size: 6 });
+  SM.done();
+</script>
+</body></html>

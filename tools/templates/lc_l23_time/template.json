@@ -1,0 +1,13 @@
+{
+ "name": "lc_l23_time",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "L23 time is the strongest weapon; 3-week cough -> doctor, no self-medication; smokers at home"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "lc_v06_quit",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "V06 emergency signs -> hospital; quitting helps at any age; light / filter cigarettes not safe"
+}

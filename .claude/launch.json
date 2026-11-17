@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lung-check",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8799",
+        "--directory",
+        "projects/16_Lung_Cancer/16x9/work"
+      ],
+      "port": 8799
+    },
+    {
+      "name": "lung-root",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8798",
+        "--directory",
+        "projects/16_Lung_Cancer"
+      ],
+      "port": 8798
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+ "name": "lc_l08_types",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 16_Lung_Cancer; reuse only when the user asks",
+  "kit": "smoke_kit"
+ },
+ "description": "L08 two main types: 85% non-small cell, small cell rarer but fast"
+}

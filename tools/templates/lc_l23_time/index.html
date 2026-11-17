@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="sm.js"></script><script src="sm2.js"></script>
+<style>/* 16_Lung_Cancer lc_l23_time: L23 time is the strongest weapon; 3-week cough -> doctor, no self-medication; smokers at home */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, shot, enter, morph, film, smoke, head, te, tag, num, focus, myth, list, phone, doc, ring, flash, cam, lab, lungs, body, cells, dna, people, donut, cal, dial } = SM;
+  const T = (x) => Math.max(0, x - 406.15);
+  shot("A12", { t: 0, d: 7.4, mv: "push", in: "smoke", until: T(413.6) });
+  head("OUR BIGGEST WEAPON", T(406.6), { y: H * .14, size: 5, until: T(413.5) });
+  head("<b>TIME</b>", T(409.3), { y: H * .3, align: "center", size: 14, c: K.ice, nobar: true, until: T(413.5) });
+  cal(["WEEK 1", "WEEK 2", "WEEK 3"], W * .2, H * .74, W * .6, H * .1, T(410.9), { from: T(411.1), step: .4, until: T(413.5) });
+  shot("A74", { t: T(413.6), d: 3.5, mv: "push", in: "wipe", until: T(417.0) });
+  list([["మీరే <b>మందులు</b> వేసుకోకండి", T(413.8), false], ["నేరుగా <b>Doctor</b> ని కలవండి", T(415.4), true]], W * .06, H * .3, { until: T(416.9) });
+  shot("A77", { t: T(417.0), d: 2.6, mv: "push", in: "smoke", fx: .6 });
+  tag("A SMOKER AT HOME?", T(417.4), { c: K.ice });
+  SM.done();
+</script>
+</body></html>
