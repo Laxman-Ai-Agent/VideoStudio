@@ -1,15 +1,30 @@
-# Health Decode: description templates (user's, improved 2026-11-17)
+# Health Decode: upload rules (titles, descriptions, tags, products, captions)
 
-Long video (16x9) and Shorts (9x16) `metadata.json` "description". Fill the [brackets]; keep the fixed lines.
-Same rules as `docs/DARKWORLD_DESCRIPTION.md`: first ~150 characters = Telugu question + English question with the
-main keyword; keywords inside natural sentences (no comma keyword lists); no markdown `#` / `###`; topic hashtags
-first; (if known) lines are left out when the link is not known; never invent a link or a source.
-Health-only rules: no cure claims, no "stop your medicine", no fear words; facts in line with WHO / ICMR / NIH;
-the "When to see a doctor" points come from the script (or standard warning signs from WHO / NHS for that topic);
-the Telugu disclaimer line and 108 (India emergency number) are always there. Realistic AI images: add
-"Some visuals in this video are AI-generated." to the disclaimer. Sheet only, never posted to the channel by Claude.
+Only for Health Decode projects (The Dark World has its own: `docs/DARKWORLD_UPLOAD.md`).
+Process and file shape: `docs/UPLOAD_METADATA.md`. Sheet only, never posted to the channel by Claude.
 
-## Long video (16x9)
+## Rules
+- Title (16x9): main health keyword first (symptoms / causes / care), Telugu + English mix, 60-70 chars, curiosity
+  without fear or cure claims. Shorts title: short hook + `#shorts`.
+- Description: the templates below (long and Shorts).
+- Tags: 10-16, English + Telugu + Tenglish (e.g. "thyroid symptoms telugu"), under 500 chars, ending with "Health Decode".
+- Products: safe health devices and aids only (glucometer, BP monitor, pulse oximeter, ORS packets, books).
+  Never medicines, prescription drugs or supplements.
+- Facebook: 2-3 line hook + one question for comments + 3 hashtags.
+- Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #healthdecode.
+- YouTube medical misinformation + advertiser-friendly rules: no cure claims ("100% cure"), no "stop your medicine",
+  no home remedy promoted as a treatment, no fear words ("maranam", "danger") in titles; facts in line with
+  WHO / ICMR / NIH; first ~150 characters = Telugu question + English question with the main keyword; keywords in
+  natural sentences (no comma keyword lists); no markdown `#` / `###`; topic hashtags first; never invent a link or
+  a source; (if known) lines are left out when the link is not known.
+- "When to see a doctor" points come from the script, or standard warning signs from WHO / NHS for that topic.
+- The Telugu disclaimer line and 108 (India emergency number) are always in the long description.
+- Realistic AI images: the AI-visuals line, and remind the user to tick YouTube's "Altered or synthetic content".
+
+## Description templates
+Fill the [brackets]; keep the fixed lines.
+
+### Long video (16x9)
 ```
 [Telugu curiosity question]? [Same curiosity question in English, with the main health keyword]?
 [One natural sentence with the main search keywords: what the condition is, its symptoms / causes / care] – explained simply.
@@ -57,7 +72,7 @@ Subscribe to Health Decode for more educational videos about health, medical sci
 #[TopicKeyword] #HealthAwareness #HealthDecode #HealthScience #MedicalScience
 ```
 
-## Shorts (9x16)
+### Shorts (9x16)
 ```
 [Telugu hook question]? [English hook sentence with the main health keyword].
 👉 Full video: [link]   (if known; otherwise: Comment "[keyword]" for the full video link.)

@@ -1,5 +1,22 @@
-# The Dark World: description templates (user's, improved 2026-11-17)
+# The Dark World: upload rules (titles, descriptions, tags, products, captions)
 
+Only for The Dark World projects (Health Decode has its own: `docs/HEALTHDECODE_UPLOAD.md`).
+Process and file shape: `docs/UPLOAD_METADATA.md`. Approved example: Aging_150 (2026-11-17).
+Sheet only, never posted to the channel by Claude.
+
+## Rules
+- Title (16x9): main keyword first, Telugu + English mix (how people search), 60-70 chars, curiosity without false
+  claims. Shorts title: short hook + `#shorts`.
+- Description: the templates below (long and Shorts).
+- Tags: 10-16, English + Telugu + Tenglish, under 500 chars, ending with "The Dark World".
+- Products: safe, topic-related things (books on the topic, gadgets, devices). Never medicines or supplements.
+- Facebook: 2-3 line hook + one question for comments + 3 hashtags.
+- Instagram: hook, 3 short lines, Save / Share CTA, 8-10 hashtags incl. #thedarkworld.
+- Advertiser-friendly: facts, not rumours; company results stated as their own announcements; no defamation, no
+  graphic or fear words in titles. Health-related topics: the "not medical advice" line in the disclaimer.
+- Realistic AI images: the AI-visuals line, and remind the user to tick YouTube's "Altered or synthetic content".
+
+## Description templates
 Long video (16x9) and Shorts (9x16) `metadata.json` "description". Fill the [brackets]; keep the fixed lines.
 Rules the user approved: the first ~150 characters (shown in search) = curiosity question + main keyword, one Telugu
 line first; keywords inside natural sentences (no comma keyword lists: YouTube can treat them as spam); no markdown
@@ -8,7 +25,7 @@ Lines marked (if known) are left out when the link is not known yet: never inven
 Health-related topics add to the disclaimer: "This video is not medical advice. Please consult a doctor before
 starting any supplement or treatment." Realistic AI images add: "Some visuals in this video are AI-generated."
 
-## Long video (16x9)
+### Long video (16x9)
 ```
 [Telugu curiosity question]? [Same curiosity question in English, with the main keyword]?
 [One natural sentence that carries the main search keywords] – the real story behind [TOPIC].
@@ -49,7 +66,7 @@ Subscribe to The Dark World for more fascinating stories, discoveries, facts, an
 #[MainTopic] #[RelatedKeyword] #TheDarkWorld #Knowledge #Facts
 ```
 
-## Shorts (9x16)
+### Shorts (9x16)
 ```
 [Telugu hook question]? [English hook sentence with the main keyword].
 👉 Full video: [link]   (if known; otherwise: Comment "[keyword]" for the full video link.)
