@@ -154,11 +154,11 @@ def test_sync_writes_json_first_then_sheet_and_refills_an_empty_tab(tmp_path, mo
 def test_merge_fills_upload_times_but_keeps_the_users_own():
     from pipeline.upload_sheet import REFRESH, SCHEDULE
     own = [""] * WIDTH
-    own[1], own[23] = "01__09-NOV-2026__A", "7:30 PM"
+    own[1], own[23], own[24] = "01__09-NOV-2026__A", "20-Nov-2026 7:30 PM", "6:00 PM"  # user's own, old time-only default
     rows = merge([own], {"01__09-NOV-2026__A": {}, "02__10-NOV-2026__B": {}})
     by = {r[1]: r for r in rows}
-    assert by["01__09-NOV-2026__A"][23] == "7:30 PM" and by["01__09-NOV-2026__A"][24] == "6:00 PM"
-    assert [by["02__10-NOV-2026__B"][c] for c in SCHEDULE] == ["5:00 PM", "6:00 PM", "6:00 PM", "6:00 PM"]
+    assert by["01__09-NOV-2026__A"][23] == "20-Nov-2026 7:30 PM" and by["01__09-NOV-2026__A"][24] == "09-Nov-2026 6:00 PM"
+    assert [by["02__10-NOV-2026__B"][c] for c in SCHEDULE] == ["10-Nov-2026 5:00 PM"] + ["10-Nov-2026 6:00 PM"] * 3
     assert REFRESH == WIDTH - 1 and REFRESH not in SCHEDULE
 
 

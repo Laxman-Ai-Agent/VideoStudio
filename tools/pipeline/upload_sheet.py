@@ -98,6 +98,12 @@ def _metadata(path: Path, fmt: str) -> dict[int, str]:
     return {c: v for c, v in got.items() if v}
 
 
+def post_time(name: str, time: str) -> str:
+    """Upload date + time for the sheet (user, 2026-11-18): the project's own date, e.g. "18-Nov-2026 5:00 PM"."""
+    m = PROJECT.match(name)
+    return f"{m.group(2)}-{m.group(3).title()}-{m.group(4)} {time}" if m else time
+
+
 def _order(name: str) -> tuple:
     """Newest project first (user, 2026-11-18): date and serial descending; names without a date go last."""
     o = project_order(Path(name)) if PROJECT.match(name) else None
@@ -123,7 +129,8 @@ def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list
             if c not in PATH_COLS and not r[c]:  # text the user already has in the sheet is never replaced
                 r[c] = v
         for c, (_, time) in SCHEDULE.items():
-            r[c] = r[c] or time
+            if not r[c] or r[c] == time:  # empty, or the earlier time-only default: add the date
+                r[c] = post_time(name, time)
     out = sorted(rows.values(), key=lambda r: _order(r[1]))
     for i, r in enumerate(out, 1):
         r[0] = i
