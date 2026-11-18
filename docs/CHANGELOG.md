@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Sheet upload times for new videos: the day after the latest date in that column (not before today), oldest project first; the user's own dates stay. Picker script now bound to the sheet (menu shows). Test: `test_merge_fills_upload_times_but_keeps_the_users_own`.
 - Sheet date + time picker: `tools/appsscript/UploadTimePicker.gs` (menu "📅 Upload time", datetime-local dialog, writes real date-times to X-AA); the user pastes it once (docs/SHEET_SETUP.md).
 - Sheet upload times are real date-times with a calendar picker (date validation + `dd-mmm-yyyy h:mm am/pm`, written USER_ENTERED); `col_letter` for columns past Z. Test: `test_col_letter_past_z_and_style_puts_a_calendar_on_upload_times`.
 - Sheet upload times now carry the project's date ("18-Nov-2026 5:00 PM"); X-AA dropdowns copied from Refresh by the column insert removed.

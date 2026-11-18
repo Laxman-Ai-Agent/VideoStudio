@@ -98,10 +98,26 @@ def _metadata(path: Path, fmt: str) -> dict[int, str]:
     return {c: v for c, v in got.items() if v}
 
 
-def post_time(name: str, time: str) -> str:
-    """Upload date + time for the sheet (user, 2026-11-18): the project's own date, e.g. "18-Nov-2026 5:00 PM"."""
-    m = PROJECT.match(name)
-    return f"{m.group(2)}-{m.group(3).title()}-{m.group(4)} {time}" if m else time
+def _day(cell: str):
+    """The date in an upload-time cell ("18-Nov-2026 5:00 PM", as the sheet shows it), or None."""
+    from datetime import datetime
+    try:
+        return datetime.strptime(str(cell).split(" ")[0], "%d-%b-%Y").date()
+    except ValueError:
+        return None
+
+
+def fill_times(rows: list[list[str]], today=None) -> None:
+    """Empty upload-time cells get the day after the latest date already in that column (never before today),
+    oldest project first, one day each (user, 2026-11-18). Cells the user filled are never touched."""
+    from datetime import date, timedelta
+    today = today or date.today()
+    for c, (_, time) in SCHEDULE.items():
+        last = max((d for r in rows if (d := _day(r[c]))), default=today - timedelta(days=1))
+        for r in sorted(rows, key=lambda r: _order(r[1]), reverse=True):  # oldest project first
+            if not r[c] or r[c] == time:  # empty, or the earlier time-only default
+                last = max(last + timedelta(days=1), today)
+                r[c] = f"{last.day:02d}-{last:%b}-{last.year} {time}"
 
 
 def _order(name: str) -> tuple:
@@ -110,7 +126,7 @@ def _order(name: str) -> tuple:
     return (0, *(-x for x in o), name) if o else (1, 0, 0, 0, 0, name)
 
 
-def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list[list[str]]:
+def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]], today=None) -> list[list[str]]:
     """Sheet rows (A2:X, as read) + scanned projects -> the rows to write back."""
     rows = {}
     for r in existing:
@@ -128,9 +144,7 @@ def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list
         for c, v in found.items():
             if c not in PATH_COLS and not r[c]:  # text the user already has in the sheet is never replaced
                 r[c] = v
-        for c, (_, time) in SCHEDULE.items():
-            if not r[c] or r[c] == time:  # empty, or the earlier time-only default: add the date
-                r[c] = post_time(name, time)
+    fill_times(list(rows.values()), today)
     out = sorted(rows.values(), key=lambda r: _order(r[1]))
     for i, r in enumerate(out, 1):
         r[0] = i

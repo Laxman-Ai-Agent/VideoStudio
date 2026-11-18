@@ -23,7 +23,7 @@ Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `shee
 (Win+R, `shell:startup`). Stop: Task Manager > python.exe. `sheet.cmd` stays the manual Run button.
 
 Upload times: columns X-AA (YouTube Long Video, YT Short Video, Insta Short Video, Facebook Video) get the
-user's fixed times with the project's date ("18-Nov-2026 5:00 PM": YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; they are real date-times (double-click a cell for the calendar, then type the time); a
+user's fixed times with the day after the latest date already in that column (never before today; a new video = next free day) ("18-Nov-2026 5:00 PM": YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; they are real date-times (double-click a cell for the calendar, then type the time); a
 time the user types stays.
 
 Date + time picker (one time setup): open the sheet > Extensions > Apps Script, replace Code.gs with

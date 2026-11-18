@@ -152,13 +152,19 @@ def test_sync_writes_json_first_then_sheet_and_refills_an_empty_tab(tmp_path, mo
 
 
 def test_merge_fills_upload_times_but_keeps_the_users_own():
+    from datetime import date
     from pipeline.upload_sheet import REFRESH, SCHEDULE
     own = [""] * WIDTH
     own[1], own[23], own[24] = "01__09-NOV-2026__A", "20-Nov-2026 7:30 PM", "6:00 PM"  # user's own, old time-only default
-    rows = merge([own], {"01__09-NOV-2026__A": {}, "02__10-NOV-2026__B": {}})
+    rows = merge([own], {"01__09-NOV-2026__A": {}, "03__11-NOV-2026__C": {}, "02__10-NOV-2026__B": {}},
+                 today=date(2026, 11, 18))
     by = {r[1]: r for r in rows}
-    assert by["01__09-NOV-2026__A"][23] == "20-Nov-2026 7:30 PM" and by["01__09-NOV-2026__A"][24] == "09-Nov-2026 6:00 PM"
-    assert [by["02__10-NOV-2026__B"][c] for c in SCHEDULE] == ["10-Nov-2026 5:00 PM"] + ["10-Nov-2026 6:00 PM"] * 3
+    assert by["01__09-NOV-2026__A"][23] == "20-Nov-2026 7:30 PM"  # the user's own date stays
+    # the day after the latest date in the column, oldest project first
+    assert by["02__10-NOV-2026__B"][23] == "21-Nov-2026 5:00 PM" and by["03__11-NOV-2026__C"][23] == "22-Nov-2026 5:00 PM"
+    # a column with no date yet starts today, never in the past
+    assert [by[n][24] for n in ("01__09-NOV-2026__A", "02__10-NOV-2026__B", "03__11-NOV-2026__C")] == [
+        "18-Nov-2026 6:00 PM", "19-Nov-2026 6:00 PM", "20-Nov-2026 6:00 PM"]
     assert REFRESH == WIDTH - 1 and REFRESH not in SCHEDULE
 
 
