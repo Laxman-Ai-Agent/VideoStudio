@@ -4,7 +4,7 @@ After every passed final, Claude reads `<fmt>/output/script.txt` (+ `work/scenes
 writes `<fmt>/output/metadata.json`, then runs `studio.cmd sheet`. The sheet sync puts it in its column (layout, user 2026-11-18, each group side by side):
 A-B project | C-K YouTube long 16x9 (video, script, thumbnail, title, title options, description, tags, pinned
 comment, thumbnail text) | L-S YouTube Shorts 9x16 (same without title options) | T Facebook Reel | U Instagram Reel
-| V-W products (names, links) | X Refresh. Facebook and Instagram get the Short only; the long video is YouTube only.
+| V-W products (names, links) | X-AA upload times | AB Refresh. Facebook and Instagram get the Short only; the long video is YouTube only.
 Only EMPTY cells are filled, so the user's own
 edits in the sheet stay. Sheet only: Claude never posts to the channels.
 

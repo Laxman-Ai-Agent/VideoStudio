@@ -12,11 +12,12 @@ CATEGORIES = {
     "facebook": ("#1565C0", "#E3F2FD", (19,)),                                   # T
     "instagram": ("#AD1457", "#FCE4EC", (20,)),                                  # U
     "products": ("#2E7D32", "#E8F5E9", (21, 22)),                                # V-W
-    "refresh": ("#00695C", "#B7E1CD", (23,)),                                    # X
+    "schedule": ("#6A1B9A", "#F3E5F5", (23, 24, 25, 26)),                         # X-AA upload times
+    "refresh": ("#00695C", "#B7E1CD", (27,)),                                    # AB
 }
-WIDTHS = {0: 50, 1: 230, 5: 280, 6: 300, 7: 320, 14: 260, 15: 300, 23: 120}  # titles, title options, descriptions
+WIDTHS = {0: 50, 1: 230, 5: 280, 6: 300, 7: 320, 14: 260, 15: 300, 23: 130, 24: 130, 25: 130, 26: 130, 27: 120}  # titles, title options, descriptions
 DEFAULT_WIDTH = 220
-LAST = 24  # A..X
+LAST = 28  # A..AB
 
 
 def rgb(hex_color: str) -> dict:

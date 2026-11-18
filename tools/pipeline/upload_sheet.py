@@ -12,10 +12,11 @@ from .config import PROJECTS, SHEET_ID, SHEET_KEY, SHEET_SKIP, SHEET_TABS
 from .project import PROJECT, project_dirs, project_order, variations
 
 NOT_FOUND = "Not found"
-WIDTH = 24  # A..X (X = the Refresh dropdown, last column, carried with its row)
-REFRESH, REFRESH_COL = 23, "X"  # moved to the end on the user's request (2026-11-18)
+WIDTH = 28  # A..AB (AB = the Refresh dropdown, last column, carried with its row)
+REFRESH, REFRESH_COL = 27, "AB"  # always the last column (user, 2026-11-18)
 # Column layout (user, 2026-11-18): every group side by side. 0-based indexes.
-#   A-B project | C-K YouTube long (16x9) | L-S YouTube Shorts (9x16) | T Facebook | U Instagram | V-W products | X Refresh
+#   A-B project | C-K YouTube long (16x9) | L-S YouTube Shorts (9x16) | T Facebook | U Instagram | V-W products
+#   | X-AA upload times | AB Refresh
 COLS = {"16x9": (2, 3, 4), "9x16": (11, 12, 13)}  # video, script, thumbnail path (C D E, L M N)
 PATH_COLS = (2, 3, 4, 11, 12, 13)
 TEXT_COLS = {"16x9": (5, 7, 8), "9x16": (14, 15, 16)}  # title, description, tags (F H I, O P Q)
@@ -29,6 +30,9 @@ def thumbnail_cell(options: list[dict]) -> str:
     """Thumbnail text options as one readable cell: number + main line, sub line, highlight + visual idea."""
     return "\n\n".join(f"{i}. {o.get('main', '')}\n   {o.get('sub', '')}\n   Highlight: {o.get('highlight', '')}"
                        f" · Visual: {o.get('visual', '')}" for i, o in enumerate(options, 1))
+# Upload time per platform (user, 2026-11-18): header -> default time, filled only in empty cells (X Y Z AA).
+SCHEDULE = {23: ("YouTube Long Video", "5:00 PM"), 24: ("YT Short Video", "6:00 PM"),
+            25: ("Insta Short Video", "6:00 PM"), 26: ("Facebook Video", "6:00 PM")}
 PRODUCT_LINKS = 22  # W: affiliate links the user gives, one per line, same order as the products
 TITLE_OPTIONS = 6  # G: the 16x9 file's 3 title options, one per line, for YouTube "Test & Compare"
 METADATA = "metadata.json"  # output/metadata.json, written by Claude after a final (docs/UPLOAD_METADATA.md)
@@ -118,6 +122,8 @@ def merge(existing: list[list[str]], scanned: dict[str, dict[int, str]]) -> list
         for c, v in found.items():
             if c not in PATH_COLS and not r[c]:  # text the user already has in the sheet is never replaced
                 r[c] = v
+        for c, (_, time) in SCHEDULE.items():
+            r[c] = r[c] or time
     out = sorted(rows.values(), key=lambda r: _order(r[1]))
     for i, r in enumerate(out, 1):
         r[0] = i
@@ -182,19 +188,19 @@ def sync_safe() -> bool:
 
 
 WATCHED = IMAGES | {".mp4", ".txt", ".json"}
-# Refresh column (X) dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
+# Refresh column (AB) dropdown (same look as the user's script sheet): the user picks RUN or START, the watcher shows
 # RUNNING while it syncs, then DONE, or ASK when the sync failed (ask Claude).
 RUN, START, RUNNING, DONE, ASK = "▶ RUN", "▶ START", "⏳ RUNNING", "✅ DONE", "❌ ASK"
 
 
 def run_rows(column: list[list[str]]) -> list[int]:
-    """Sheet row numbers (2-based) whose Refresh cell (column X) asks for a refresh (Y2:Y as read)."""
+    """Sheet row numbers (2-based) whose Refresh cell (last column) asks for a refresh."""
     return [i for i, c in enumerate(column, 2)
             if c and any(w in c[0].upper().split() for w in ("RUN", "START"))]
 
 
 def install_buttons(s=None) -> None:
-    """The Refresh column (X, last) on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
+    """The Refresh column (AB, last) on every tab: header "Refresh" + a RUN / DONE dropdown, green and bold like the user's other sheet."""
     s = s or _session()
     meta = _ok(s.get(f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}",
                      params={"fields": "sheets.properties"})).json()
@@ -245,7 +251,7 @@ def signature(projects_dir: Path = PROJECTS) -> tuple:
 
 
 def watch(every: float = 30, projects_dir: Path = PROJECTS) -> None:
-    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's Refresh cell (column X) says
+    """`studio.cmd sheet --watch`: sync once, then again whenever signature() changes or a row's Refresh cell (last column) says
     RUN (both checked every 30 s); asked rows are set to DONE after the sync.
     ponytail: polling, no OS file events; 15 projects scan in milliseconds, add watchdog only if that changes."""
     import msvcrt

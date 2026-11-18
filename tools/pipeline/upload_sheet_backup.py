@@ -9,10 +9,10 @@ from urllib.parse import quote
 
 from .config import PROJECTS, SHEET_ID
 from .project import atomic_write
-from .upload_sheet import WIDTH, _ok, _session
+from .upload_sheet import REFRESH_COL, WIDTH, _ok, _session
 
 SNAPSHOT = PROJECTS / "upload_sheet.json"
-LAST = chr(ord("A") + WIDTH - 1)  # "X"
+LAST = REFRESH_COL  # last column letter ("AB"); chr() arithmetic breaks past Z
 API = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
 
 

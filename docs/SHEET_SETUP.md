@@ -22,7 +22,11 @@ captions come from `<fmt>/output/metadata.json` (`docs/UPLOAD_METADATA.md`) and 
 Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `sheet_watch.vbs` in the Startup folder
 (Win+R, `shell:startup`). Stop: Task Manager > python.exe. `sheet.cmd` stays the manual Run button.
 
-Button in the sheet: the last column X "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";
+Upload times: columns X-AA (YouTube Long Video, YT Short Video, Insta Short Video, Facebook Video) get the
+user's fixed times (YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; a
+time the user types stays.
+
+Button in the sheet: the last column AB "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";
 the running watcher shows "RUNNING", syncs within ~30 s and sets "DONE" ("ASK" = the sync failed, ask Claude). If it stays RUN, the watcher is not running
 (double-click `sheet_watch.vbs`).
 

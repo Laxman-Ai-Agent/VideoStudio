@@ -149,3 +149,22 @@ def test_sync_writes_json_first_then_sheet_and_refills_an_empty_tab(tmp_path, mo
     names = [r[1] for r in written["Health_Decode"]["rows"]]
     assert names == ["02__10-NOV-2026__New", "01__09-NOV-2026__Old"]  # the emptied tab came back from the JSON
     assert json.loads(snap_path.read_text("utf-8"))["tabs"]["Health_Decode"]["rows"] == written["Health_Decode"]["rows"]
+
+
+def test_merge_fills_upload_times_but_keeps_the_users_own():
+    from pipeline.upload_sheet import REFRESH, SCHEDULE
+    own = [""] * WIDTH
+    own[1], own[23] = "01__09-NOV-2026__A", "7:30 PM"
+    rows = merge([own], {"01__09-NOV-2026__A": {}, "02__10-NOV-2026__B": {}})
+    by = {r[1]: r for r in rows}
+    assert by["01__09-NOV-2026__A"][23] == "7:30 PM" and by["01__09-NOV-2026__A"][24] == "6:00 PM"
+    assert [by["02__10-NOV-2026__B"][c] for c in SCHEDULE] == ["5:00 PM", "6:00 PM", "6:00 PM", "6:00 PM"]
+    assert REFRESH == WIDTH - 1 and REFRESH not in SCHEDULE
+
+
+def test_backup_last_column_letter_matches_width():
+    from pipeline.upload_sheet_backup import LAST
+    n = 0
+    for ch in LAST:
+        n = n * 26 + ord(ch) - 64
+    assert n == WIDTH
