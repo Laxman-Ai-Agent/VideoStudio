@@ -23,7 +23,7 @@ Log: `tools/.cache/sheet_watch.log`. Start with Windows: put a shortcut to `shee
 (Win+R, `shell:startup`). Stop: Task Manager > python.exe. `sheet.cmd` stays the manual Run button.
 
 Upload times: columns X-AA (YouTube Long Video, YT Short Video, Insta Short Video, Facebook Video) get the
-user's fixed times with the project's date ("18-Nov-2026 5:00 PM": YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; a
+user's fixed times with the project's date ("18-Nov-2026 5:00 PM": YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; they are real date-times (double-click a cell for the calendar, then type the time); a
 time the user types stays.
 
 Button in the sheet: the last column AB "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";

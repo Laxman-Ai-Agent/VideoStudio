@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- Sheet upload times are real date-times with a calendar picker (date validation + `dd-mmm-yyyy h:mm am/pm`, written USER_ENTERED); `col_letter` for columns past Z. Test: `test_col_letter_past_z_and_style_puts_a_calendar_on_upload_times`.
 - Sheet upload times now carry the project's date ("18-Nov-2026 5:00 PM"); X-AA dropdowns copied from Refresh by the column insert removed.
 - Sheet upload times (user, 2026-11-18): columns X-AA YouTube Long 5:00 PM, YT Short / Insta / Facebook 6:00 PM (empty cells only), Refresh moved to AB; backup column letter fixed past Z. Tests: `test_merge_fills_upload_times_but_keeps_the_users_own`, `test_backup_last_column_letter_matches_width`.
 - 19 Cyclone_Akwan (The Dark World): new kit `cyclone_kit` (weather-desk look, Natural Earth Bay of Bengal map, satellite swirl, ocean cross-section, wind dial ...), sequences ck_l01-l23 / ck_v01-v07, 54 Kaggle images, finals 5:25 / 1:24 QA PASS, metadata + sheet.

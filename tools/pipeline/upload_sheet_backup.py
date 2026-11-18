@@ -9,11 +9,21 @@ from urllib.parse import quote
 
 from .config import PROJECTS, SHEET_ID
 from .project import atomic_write
-from .upload_sheet import REFRESH_COL, WIDTH, _ok, _session
+from .upload_sheet import REFRESH_COL, SCHEDULE, WIDTH, _ok, _session
 
 SNAPSHOT = PROJECTS / "upload_sheet.json"
 LAST = REFRESH_COL  # last column letter ("AB"); chr() arithmetic breaks past Z
 API = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
+
+
+def col_letter(i: int) -> str:
+    """0-based column index -> letter: 0 A, 25 Z, 26 AA."""
+    out = ""
+    i += 1
+    while i:
+        i, r = divmod(i - 1, 26)
+        out = chr(65 + r) + out
+    return out
 
 
 def build(values_by_tab: dict[str, list[list]], when: str | None = None) -> dict:
@@ -45,6 +55,10 @@ def write_sheet(s, snap: dict) -> None:
         _ok(s.put(API + quote(f"'{tab}'!A1:{LAST}{len(values)}", safe=""), params={"valueInputOption": "RAW"},
                   json={"values": values}))
         _ok(s.post(API + quote(f"'{tab}'!A{len(values) + 1}:{LAST}", safe="") + ":clear"))
+        if rows:  # upload times again as real dates (USER_ENTERED parses them), so the cell's calendar picker works
+            c0, c1 = min(SCHEDULE), max(SCHEDULE)
+            _ok(s.put(API + quote(f"'{tab}'!{col_letter(c0)}2:{col_letter(c1)}{len(values)}", safe=""),
+                      params={"valueInputOption": "USER_ENTERED"}, json={"values": [r[c0:c1 + 1] for r in rows]}))
 
 
 def restore(path: Path = SNAPSHOT, ask: bool = True) -> bool:

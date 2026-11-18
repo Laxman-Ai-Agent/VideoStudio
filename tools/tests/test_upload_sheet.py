@@ -168,3 +168,13 @@ def test_backup_last_column_letter_matches_width():
     for ch in LAST:
         n = n * 26 + ord(ch) - 64
     assert n == WIDTH
+
+
+def test_col_letter_past_z_and_style_puts_a_calendar_on_upload_times():
+    from pipeline.upload_sheet import SCHEDULE
+    from pipeline.upload_sheet_backup import col_letter
+    from pipeline.upload_sheet_style import requests_for
+    assert [col_letter(i) for i in (0, 25, 26, 27)] == ["A", "Z", "AA", "AB"]
+    dv = [r["setDataValidation"] for r in requests_for(7) if "setDataValidation" in r]
+    assert dv[0]["rule"]["condition"]["type"] == "DATE_IS_VALID"
+    assert (dv[0]["range"]["startColumnIndex"], dv[0]["range"]["endColumnIndex"]) == (min(SCHEDULE), max(SCHEDULE) + 1)

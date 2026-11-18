@@ -2,7 +2,7 @@
 tint on its column, frozen header + project name, column widths, "Not found" in red. Values are never touched.
 Run again after adding a column: `python -c "from pipeline.upload_sheet_style import style; style()"`."""
 from .config import SHEET_ID, SHEET_TABS
-from .upload_sheet import _ok, _session
+from .upload_sheet import SCHEDULE, _ok, _session
 
 # category: (header color, column tint, column indexes)
 CATEGORIES = {
@@ -46,6 +46,11 @@ def requests_for(sheet_id: int) -> list[dict]:
                  "properties": {"pixelSize": 48}, "fields": "pixelSize"}})
     reqs.append({"updateDimensionProperties": {"range": {"sheetId": sheet_id, "dimension": "ROWS", "startIndex": 1},
                  "properties": {"pixelSize": 36}, "fields": "pixelSize"}})  # one line per row; full text in the cell
+    sched = {"sheetId": sheet_id, "startRowIndex": 1, "startColumnIndex": min(SCHEDULE), "endColumnIndex": max(SCHEDULE) + 1}
+    reqs.append({"repeatCell": {"range": sched, "cell": {"userEnteredFormat": {"numberFormat": {
+        "type": "DATE_TIME", "pattern": "dd-mmm-yyyy h:mm am/pm"}}}, "fields": "userEnteredFormat.numberFormat"}})
+    reqs.append({"setDataValidation": {"range": sched, "rule": {  # double-click a cell -> calendar (user, 2026-11-18)
+        "condition": {"type": "DATE_IS_VALID"}, "strict": False, "showCustomUi": True}}})
     reqs.append({"addConditionalFormatRule": {"index": 0, "rule": {
         "ranges": [{"sheetId": sheet_id, "startRowIndex": 1, "startColumnIndex": 0, "endColumnIndex": LAST}],
         "booleanRule": {"condition": {"type": "TEXT_EQ", "values": [{"userEnteredValue": "Not found"}]},
