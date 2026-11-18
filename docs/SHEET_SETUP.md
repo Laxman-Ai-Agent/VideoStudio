@@ -26,6 +26,11 @@ Upload times: columns X-AA (YouTube Long Video, YT Short Video, Insta Short Vide
 user's fixed times with the project's date ("18-Nov-2026 5:00 PM": YouTube long 5:00 PM, Shorts / Instagram / Facebook 6:00 PM, `SCHEDULE`) in empty cells only; they are real date-times (double-click a cell for the calendar, then type the time); a
 time the user types stays.
 
+Date + time picker (one time setup): open the sheet > Extensions > Apps Script, replace Code.gs with
+`tools/appsscript/UploadTimePicker.gs`, Save, reload the sheet, allow access once. Then select a cell in X-AA >
+menu "📅 Upload time" > "Pick date & time" (date + time, quick 5 PM / 6 PM buttons; several cells = same time).
+Google does not let a script open a window on a plain click, so it runs from the menu.
+
 Button in the sheet: the last column AB "Refresh" has a dropdown on every row (`install_buttons()` set it up). Pick "RUN" or "START";
 the running watcher shows "RUNNING", syncs within ~30 s and sets "DONE" ("ASK" = the sync failed, ask Claude). If it stays RUN, the watcher is not running
 (double-click `sheet_watch.vbs`).
