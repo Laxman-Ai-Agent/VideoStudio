@@ -1,0 +1,13 @@
+{
+ "name": "gd_l25_myths",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L25 myths: cold milk cures acidity (no strong proof, relief is temporary); soda / cold drinks (no proof, fizzy drinks can worsen it)"
+}

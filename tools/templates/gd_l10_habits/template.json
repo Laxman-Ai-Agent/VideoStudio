@@ -1,0 +1,13 @@
+{
+ "name": "gd_l10_habits",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L10 lying down within 3 hours of a meal, one huge meal, painkillers"
+}

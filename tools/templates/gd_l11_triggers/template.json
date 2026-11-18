@@ -1,0 +1,13 @@
+{
+ "name": "gd_l11_triggers",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L11 triggers in some people: coffee, tea, fatty food, spicy food, tomato, chocolate; not the same for everyone"
+}

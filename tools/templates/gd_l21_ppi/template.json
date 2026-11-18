@@ -1,0 +1,13 @@
+{
+ "name": "gd_l21_ppi",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L21 H2 blockers and PPIs reduce acid production; PPIs stronger and help the esophagus heal; doctor decides which and how long"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "gd_l24_heart",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L24 a heart attack can feel like acidity: chest tightness, pain spreading to arm, neck or jaw; do not dismiss as gas, get emergency help"
+}

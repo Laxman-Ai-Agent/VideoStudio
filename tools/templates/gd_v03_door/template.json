@@ -1,0 +1,13 @@
+{
+ "name": "gd_v03_door",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "V03 where stomach meets esophagus: LES muscle ring = one-way door; when the door is weak, acid comes back up"
+}

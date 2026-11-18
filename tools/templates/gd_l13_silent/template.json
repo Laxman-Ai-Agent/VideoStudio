@@ -1,0 +1,13 @@
+{
+ "name": "gd_l13_silent",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L13 interesting: some people have no chest burn at all, only a cough that does not go, hoarse voice, bad breath"
+}

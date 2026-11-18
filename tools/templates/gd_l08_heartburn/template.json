@@ -1,0 +1,13 @@
+{
+ "name": "gd_l08_heartburn",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L08 acid touches the unprotected lining, burning behind the breastbone = heartburn, nothing to do with the heart; frequent = GERD"
+}

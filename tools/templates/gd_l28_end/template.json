@@ -1,0 +1,13 @@
+{
+ "name": "gd_l28_end",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L28 ending: no self-medication, see a doctor; share with family members on daily gas tablets; comment your trigger food; like"
+}

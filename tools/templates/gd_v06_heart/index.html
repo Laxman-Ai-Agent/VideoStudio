@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ac.js"></script><script src="ac2.js"></script>
+<style>/* 18 Acidity_GERD gd_v06_heart: V06 remember: burning plus pain spreading to arm, neck or jaw can be a heart attack; get emergency help now */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, wave, shot, enter, morph, drench, fizz, heat, head, te, tag, num, callout, list, myth, phone, doc, ring, flash, cam, key, tract, phScale, shield, people, clock3, bed, chain, tubes, flags, radiate, PH } = AC;
+  const T = (x) => Math.max(0, x - 65.4);
+  shot("B08", { t: 0, d: 6.6, mv: "push", in: "burn", until: T(72.0) });
+  head("REMEMBER <b>THIS</b>", T(65.6), { y: H * .07, size: 6.6, until: T(67.1) });
+  radiate(W * .14, H * .26, H * .5, T(67.2), { arm: T(69.3), neck: T(69.9), jaw: T(70.6), until: T(73.7) });
+  tl.to($("stage").firstChild, { opacity: .25, duration: .5 }, T(67.2));
+  list([["<b>చెయ్యి</b>", T(69.3), false], ["<b>మెడ</b>", T(69.9), false], ["<b>దవడ</b>", T(70.6), false]], W * .64, H * .3, { size: 4.2, until: T(71.9) });
+  head("<b>HEART ATTACK</b>?", T(72.0), { y: H * .1, size: 8, c: K.red });
+  shot("A69", { t: T(73.8), d: 2.6, mv: "push", in: "melt", box: [W * .05, H * .5, W * .9, W * .9 * .5625], fr: true, fig: "EMERGENCY", no: "6", c: K.red });
+  te("వెంటనే <b>emergency help</b>", T(74.3), { y: H * .82, c: K.fl });
+  AC.done();
+</script>
+</body></html>

@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ac.js"></script><script src="ac2.js"></script>
+<style>/* 18 Acidity_GERD gd_l07_door: L07 food goes in, the door shuts tight, acid blocked; weak door or opens at the wrong time -> acid rises */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, wave, shot, enter, morph, drench, fizz, heat, head, te, tag, num, callout, list, myth, phone, doc, ring, flash, cam, key, tract, phScale, shield, people, clock3, bed, chain, tubes, flags, radiate, PH } = AC;
+  const T = (x) => Math.max(0, x - 114.0);
+  shot("A20", { t: 0, d: 15.2, mv: "push", a: .5, in: "fade" }); tl.to($("stage").firstChild, { opacity: .32, duration: .5 }, .7);
+  tract(W * .06, H * .1, W * .42, H * .84, 0, { acid: [[0, .4], [T(118.3), .48]], food: [T(114.0)],
+    les: [[0, 0], [T(114.4), .9], [T(115.6), .9], [T(116.2), 0], [T(122.1), 0], [T(122.6), .45], [T(124.8), .45], [T(125.2), 1]],
+    reflux: [[0, 0], [T(118.9), 0], [T(119.4), .12], [T(120.2), 0], [T(125.6), 0], [T(128.1), .95]] });
+  head("FOOD IN · <b>DOOR SHUTS</b>", T(116.2), { x: W * .52, y: H * .18, size: 5, c: K.por, until: T(121.2) });
+  tag("ACID BLOCKED", T(120.0), { x: W * .52, y: H * .36, c: K.por, until: T(121.2) });
+  head("A <b>WEAK</b> DOOR", T(122.2), { x: W * .52, y: H * .18, size: 5.6, c: K.fl });
+  te("అవసరం లేనప్పుడు <b>తెరుచుకున్నా</b>", T(124.4), { x: W * .52, y: H * .34, c: K.fl });
+  shot("A19", { t: T(125.8), d: 3.4, mv: "dive", a: .5, in: "burn", box: [W * .53, H * .46, W * .42, H * .44], fr: true, fig: "REFLUX", no: "5", c: K.fl });
+  AC.done();
+</script>
+</body></html>

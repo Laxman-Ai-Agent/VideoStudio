@@ -36,6 +36,18 @@
         "projects/17_Sleep_Apnea"
       ],
       "port": 8797
+    },
+    {
+      "name": "acid-check",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8796",
+        "--directory",
+        "projects/Healthdecode/08__18-NOV-2026__Acidity_GERD"
+      ],
+      "port": 8796
     }
   ]
 }

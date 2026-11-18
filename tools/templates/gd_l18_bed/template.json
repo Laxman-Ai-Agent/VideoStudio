@@ -1,0 +1,13 @@
+{
+ "name": "gd_l18_bed",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L18 rather than extra pillows, raise the head end of the bed on blocks 10-20 cm"
+}

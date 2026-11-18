@@ -1,0 +1,13 @@
+{
+ "name": "gd_v05_control",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "V05 control: no lying down for 3 hours after dinner, small meals, notice and cut the food that burns"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "gd_l16_barrett",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L16 narrowing (hard to swallow), lining turns intestine-like = Barrett's esophagus, a very small cancer risk"
+}

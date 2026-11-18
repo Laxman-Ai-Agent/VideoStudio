@@ -1,0 +1,13 @@
+{
+ "name": "gd_l23_flags",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L23 see a doctor at once: hard / painful swallowing, repeated vomiting, blood or coffee-ground vomit, black tarry stool, weight loss without reason"
+}

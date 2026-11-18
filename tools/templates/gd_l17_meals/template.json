@@ -1,0 +1,13 @@
+{
+ "name": "gd_l17_meals",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L17 how to control: small meals more often instead of one full stomach; 3 hour gap between dinner and sleep"
+}

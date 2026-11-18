@@ -1,0 +1,13 @@
+{
+ "name": "gd_v02_acid",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "V02 stomach makes hydrochloric acid to digest food, very strong, the walls are safe thanks to a protective layer; why does it rise?"
+}

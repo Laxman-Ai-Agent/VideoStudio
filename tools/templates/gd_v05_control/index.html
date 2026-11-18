@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ac.js"></script><script src="ac2.js"></script>
+<style>/* 18 Acidity_GERD gd_v05_control: V05 control: no lying down for 3 hours after dinner, small meals, notice and cut the food that burns */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, wave, shot, enter, morph, drench, fizz, heat, head, te, tag, num, callout, list, myth, phone, doc, ring, flash, cam, key, tract, phScale, shield, people, clock3, bed, chain, tubes, flags, radiate, PH } = AC;
+  const T = (x) => Math.max(0, x - 51.8);
+  drench(0, { part: "out" });
+  shot("B07", { t: 0, d: 5.6, mv: "push", in: "cut", until: T(58.0) });
+  head("HOW TO <b>CONTROL</b>", .1, { y: H * .08, size: 7, c: K.por, until: T(54.0) });
+  clock3(W * .5, H * .3, u * 22, T(54.0), { t2: T(55.7), h0: 8, h1: 11, label: "3 HOURS", c: K.por, until: T(57.9) });
+  te("<b>3 గంటలు</b> పడుకోకండి", T(56.2), { y: H * .7, c: K.por, until: T(57.9) });
+  shot("A49", { t: T(58.0), d: 3.2, mv: "push", in: "split", box: [W * .05, H * .12, W * .9, W * .9 * .5625], fr: true, fig: "SMALL MEALS", no: "5", c: K.por, until: T(61.2) });
+  te("<b>కొంచెం కొంచెంగా</b> తినండి", T(59.6), { y: H * .5, c: K.por, until: T(61.1) });
+  doc(`<h3>Food diary</h3><div class="rule"></div><div>coffee <span class="bad">burn</span></div><div>dal, rice <span class="hl">ok</span></div><div>samosa <span class="bad">burn</span></div><div>idli <span class="hl">ok</span></div>`,
+    W * .12, H * .14, W * .76, H * .4, T(61.2));
+  head("FIND YOUR <b>TRIGGER</b>", T(62.2), { y: H * .62, size: 6 });
+  te("దాన్ని <b>తగ్గించండి</b>", T(64.1), { y: H * .74 });
+  AC.done();
+</script>
+</body></html>

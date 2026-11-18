@@ -1,0 +1,13 @@
+{
+ "name": "gd_l22_surgery",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L22 rarely surgery when medicines fail; ulcer or H. pylori infection: test first, then specific treatment"
+}

@@ -1,7 +1,16 @@
 # Status
 
-Updated 2026-11-17. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
+Updated 2026-11-18. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
+
+## 18 Acidity_GERD (2026-11-18) - finals done (new "acid & valve" look)
+- Paired topic (acidity / GERD, Health Decode): `projects/Healthdecode/08__18-NOV-2026__Acidity_GERD/{16x9,9x16}`; 16x9 = 4 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`.
+- User brief: new cinematic direction, complete creative freedom; standing go: no questions, 480p -> QC -> finals.
+- Theme "acid & valve" (Fraunces + Mallanna + Barlow Condensed; bottle-green black / acid yellow / flame orange / porcelain; max 23% alike 15); kit `tools/templates/acid_kit/{ac.js,ac2.js}` (tract diagram with LES door + reflux, pH scale, mucus shield, drench liquid wipe, specimen frames).
+- Images: 77 Kaggle stills `assets/ai` (prompts `work/kaggle_acid.json`); A56 / A68 have AI gibberish text -> not used.
+- Sequences gd_l01..l28 + gd_v01..v07 (`scripts/seq_*.py`), `scripts/rebuild.py <fmt>`, checks `<fmt>/work/{check,sheet,multi}.html` (launch config acid-check).
+- FINALS DONE 2026-11-18: `<fmt>/output/18_Acidity_GERD_<fmt>.mp4` (7:20 / 1:30), QA PASS + frame QC; metadata.json both formats, sheet synced; `Health_Decode_Channel/README.txt` (thumbnails pending).
+- Lesson: sequence code prefixes must be new (first used `ag_` = 13 Aging's prefix and overwrote ag_l01_hook / ag_v01_hook; restored from git). Check `ls tools/templates | grep ^<prefix>` first.
 
 ## Upload-path sheet (2026-11-17)
 - Sheet filled once by hand (browser): Health_Decode 7 rows, Dark_World 8 rows (AI_Doctor_5min first, 01_AI_Doctor removed).

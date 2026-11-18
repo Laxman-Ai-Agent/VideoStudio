@@ -1,0 +1,13 @@
+{
+ "name": "gd_l07_door",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L07 food goes in, the door shuts tight, acid blocked; weak door or opens at the wrong time -> acid rises"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "gd_l06_tube",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 18 Acidity_GERD; reuse only when the user asks",
+  "kit": "acid_kit"
+ },
+ "description": "L06 esophagus = food pipe from mouth to stomach; at the joint the LES muscle ring, a one-way door"
+}
