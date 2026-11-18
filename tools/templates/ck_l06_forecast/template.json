@@ -1,0 +1,13 @@
+{
+ "name": "ck_l06_forecast",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L06 IMD forecast: Cyclonic Storm Nov 16, Severe Nov 17, then Very Severe Cyclone"
+}

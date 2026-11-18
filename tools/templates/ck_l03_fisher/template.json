@@ -1,0 +1,13 @@
+{
+ "name": "ck_l03_fisher",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L03 imagine a fisherman: Arnab Oct 28, Murasu Nov 3 crossed near Ongole, Rs 2,484 crore loss in Andhra"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "ck_l23_end",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L23 end: tell us your weather in the comments; share with family and friends; like"
+}

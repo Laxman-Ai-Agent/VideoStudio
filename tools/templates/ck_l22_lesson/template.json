@@ -1,0 +1,13 @@
+{
+ "name": "ck_l22_lesson",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L22 lesson: Akwan's danger is not its name, it is the warm Bay of Bengal"
+}

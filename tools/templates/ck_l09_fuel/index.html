@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ck.js"></script><script src="ck_geo.js"></script><script src="ck2.js"></script>
+<style>/* 10 Cyclone_Akwan ck_l09_fuel: L09 bike needs petrol, a cyclone needs a warm sea; as long as heat and moisture flow, it grows */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, key, run, canvas, atmo, shot, enter, morph, cloudwipe, head, te, tag, num, callout, list, chips, stamp, phone, doc, ring, flash, cam, swirl, bay, cards, ladder, dial, xsec, gauge, wheel, mast, clock24 } = CK;
+  const T = (x) => Math.max(0, x - 126.2);
+  atmo();
+  shot("A38", { t: 0, d: 4.8, mv: "push", in: "wipe", box: [0, 0, W * .5, H], until: T(131.9) });
+  tag("BIKE → PETROL", .4, { until: T(131.9) });
+  shot("A09", { t: T(129.0), d: 3, mv: "push", in: "wipeL", box: [W * .5, 0, W * .5, H], until: T(131.9) });
+  tag("CYCLONE → WARM SEA", T(129.3), { x: W * .54, c: K.or, until: T(131.9) });
+  gauge(W * .5, H * .55, u * 16, T(127.7), { k: [[T(128.0), .9]], lo: "E", hi: "F", label: "FUEL", until: T(131.9) });
+  shot("A10", { t: T(131.9), d: 4.8, mv: "dive", a: .5, in: "cloud" });
+  gauge(W * .2, H * .48, u * 15, T(132.1), { k: [[T(132.3), .2], [T(133.4), .95]], label: "HEAT + MOISTURE" });
+  swirl(W * .7, H * .45, u * 18, T(132.4), { k: [[0, .3], [T(135.0), .55], [T(136.4), 1]], spin: .8 });
+  te("వేడి, తేమ అందుతున్నంతసేపు <b>బలపడుతుంది</b>", T(134.6), { y: H * .84 });
+  CK.done();
+</script>
+</body></html>

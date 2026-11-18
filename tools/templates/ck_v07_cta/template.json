@@ -1,0 +1,13 @@
+{
+ "name": "ck_v07_cta",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "V07 tell us your weather in the comments; like, share, subscribe to The Dark World"
+}

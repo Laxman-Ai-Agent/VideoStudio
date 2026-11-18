@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ck.js"></script><script src="ck_geo.js"></script><script src="ck2.js"></script>
+<style>/* 10 Cyclone_Akwan ck_v03_form: V03 how it forms: water above 26.5 C, warm moist air rises, low pressure, air rushes in, Earth's rotation spins it into a storm */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, key, run, canvas, atmo, shot, enter, morph, cloudwipe, head, te, tag, num, callout, list, chips, stamp, phone, doc, ring, flash, cam, swirl, bay, cards, ladder, dial, xsec, gauge, wheel, mast, clock24 } = CK;
+  const T = (x) => Math.max(0, x - 23.0);
+  atmo();
+  num(20, 26.5, T(23.3), { y: H * .06, align: "center", unit: "°C +", fmt: (v) => v.toFixed(1), c: K.or, d: 2 });
+  xsec([0, H * .2, W, H * .5], T(23.1), { k: { heat: T(23.3), rise: T(27.8), low: T(31.2), inflow: T(32.8), spin: T(35.5) } });
+  list([["వేడి గాలి <b>పైకి</b>", T(27.8), "n"], ["<b>Low Pressure</b>", T(31.2), "n"], ["గాలి <b>లోపలికి</b>", T(32.8), "n"],
+        ["భూమి భ్రమణం → <b>తుఫాను</b>", T(35.5), "n"]], W * .07, H * .72, { size: 4.6 });
+  CK.done();
+</script>
+</body></html>

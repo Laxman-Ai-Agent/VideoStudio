@@ -1,0 +1,13 @@
+{
+ "name": "ck_v01_landfall",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "V01 Akwan: landfall Nov 20 anywhere between Nellore and Visakhapatnam; winds 110-130 km/h"
+}

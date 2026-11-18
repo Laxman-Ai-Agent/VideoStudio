@@ -1,0 +1,13 @@
+{
+ "name": "ck_l05_birth",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L05 how it started: circulation over the South Andaman Sea -> Low Pressure Area -> Depression Nov 15 (31-61 km/h)"
+}

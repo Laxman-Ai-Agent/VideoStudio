@@ -48,6 +48,18 @@
         "projects/Healthdecode/08__18-NOV-2026__Acidity_GERD"
       ],
       "port": 8796
+    },
+    {
+      "name": "ck-check",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8797",
+        "--directory",
+        "projects/The Dark World/10__18-NOV-2026__Cyclone_Akwan"
+      ],
+      "port": 8797
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+ "name": "ck_v03_form",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "V03 how it forms: water above 26.5 C, warm moist air rises, low pressure, air rushes in, Earth's rotation spins it into a storm"
+}

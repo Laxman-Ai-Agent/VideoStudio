@@ -1,0 +1,13 @@
+{
+ "name": "ck_v04_alerts",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "V04 red alert for Kakinada, Konaseema, East / West Godavari, Eluru, Krishna, Bapatla; heavy rain likely in Visakhapatnam, Vizianagaram"
+}

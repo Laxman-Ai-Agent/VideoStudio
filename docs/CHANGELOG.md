@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-18
+- 19 Cyclone_Akwan (The Dark World): new kit `cyclone_kit` (weather-desk look, Natural Earth Bay of Bengal map, satellite swirl, ocean cross-section, wind dial ...), sequences ck_l01-l23 / ck_v01-v07, 54 Kaggle images, finals 5:25 / 1:24 QA PASS, metadata + sheet.
 - Sheet data flow is now project files -> projects/upload_sheet.json -> sheet (user): JSON written first, sheet = JSON; sheet edits read in first; an emptied tab refills from the JSON. Test: `test_sync_writes_json_first_then_sheet_and_refills_an_empty_tab`.
 - Sheet copy on disk (option B): every sync saves the sheet to `projects/upload_sheet.json`; `studio.cmd sheet --restore` writes it back (asks first). Test: `test_backup_build_pads_rows_and_keeps_headers`.
 - Sheet columns grouped (user): C-K YouTube long, L-S YouTube Shorts, T Facebook, U Instagram, V-W products, X Refresh. Data moved cell by cell (0 changes), restyled; code constants and tests now use column names.

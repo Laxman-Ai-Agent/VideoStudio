@@ -1,0 +1,13 @@
+{
+ "name": "ck_l13_landfall",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L13 when and where: Nov 20 between Nellore and Visakhapatnam (Andhra / Yanam coast); the point moved: Machilipatnam, then Bapatla, now a range"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "ck_l18_rescue",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L18 CM Chandrababu Naidu orders coastal precautions; Odisha 74 rescue teams, evacuation; 24-hour control rooms; shelters checked for food, water, electricity"
+}

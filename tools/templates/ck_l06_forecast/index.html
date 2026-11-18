@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ck.js"></script><script src="ck_geo.js"></script><script src="ck2.js"></script>
+<style>/* 10 Cyclone_Akwan ck_l06_forecast: L06 IMD forecast: Cyclonic Storm Nov 16, Severe Nov 17, then Very Severe Cyclone */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, key, run, canvas, atmo, shot, enter, morph, cloudwipe, head, te, tag, num, callout, list, chips, stamp, phone, doc, ring, flash, cam, swirl, bay, cards, ladder, dial, xsec, gauge, wheel, mast, clock24 } = CK;
+  const T = (x) => Math.max(0, x - 78.4);
+  atmo();
+  shot("A12", { t: 0, d: 11.5, mv: "drift", in: "cut", box: [W * .5, 0, W * .5, H], until: D });
+  tag("IMD FORECAST", .2, { y: H * .08 });
+  ladder([["DEPRESSION", "NOV 15", .1], ["CYCLONIC STORM", "NOV 16", T(82.4)], ["SEVERE", "NOV 17", T(85.0)], ["VERY SEVERE", "NEXT", T(87.2)]],
+         W * .04, H * .2, W * .44, H * .62, { cols: [K.cy, K.yl, K.or, K.red] });
+  swirl(W * .75, H * .5, u * 18, .2, { k: [[0, .6], [T(82.4), .75], [T(85.0), .88], [T(87.2), 1]], spin: .7, z: 6 });
+  te("<b>బలపడే</b> అవకాశం", T(88.0), { x: W * .04, y: H * .86 });
+  CK.done();
+</script>
+</body></html>

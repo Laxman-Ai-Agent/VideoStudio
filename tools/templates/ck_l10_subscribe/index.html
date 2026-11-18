@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ck.js"></script><script src="ck_geo.js"></script><script src="ck2.js"></script>
+<style>/* 10 Cyclone_Akwan ck_l10_subscribe: L10 the interesting part is coming; like the video, subscribe to The Dark World */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, key, run, canvas, atmo, shot, enter, morph, cloudwipe, head, te, tag, num, callout, list, chips, stamp, phone, doc, ring, flash, cam, swirl, bay, cards, ladder, dial, xsec, gauge, wheel, mast, clock24 } = CK;
+  const T = (x) => Math.max(0, x - 136.6);
+  atmo();
+  shot("A11", { t: 0, d: 10.5, mv: "drift", in: "cut" });
+  head("BUT HERE IS THE <b>TWIST</b>...", T(137.9), { y: H * .14, size: 7.4, until: T(141.4) });
+  const like = mk("div", "", undefined, "LIKE"); place(like, W * .5, H * .44);
+  Object.assign(like.style, { position: "absolute", transform: "translate(-50%,-50%)", font: `600 ${u * 9}px var(--font-head)`, color: K.deep, background: K.cy, padding: `0 ${u * 3}px`, borderRadius: u + "px", zIndex: 20 });
+  show(like, T(141.4), { opacity: 0, scale: 2 }, .5, E.pop); out(like, T(142.6));
+  ring(W * .5, H * .44, T(141.8), { r: u * 14 });
+  const sub = mk("div", "", undefined, "SUBSCRIBE"); place(sub, W * .5, H * .44);
+  Object.assign(sub.style, { position: "absolute", transform: "translate(-50%,-50%)", font: `600 ${u * 10}px var(--font-head)`, color: "#fff", background: K.red, padding: `0 ${u * 3.4}px`, borderRadius: u + "px", zIndex: 20 });
+  show(sub, T(145.3), { opacity: 0, scale: .4 }, .5, E.pop);
+  tag("THE DARK WORLD", T(144.6), { align: "center", y: H * .64, size: 3.4 });
+  te("ఇలాంటి మరిన్ని <b>updates</b> కోసం", T(142.8), { y: H * .78, align: "center" });
+  cloudwipe(D, { part: "in" });
+  CK.done();
+</script>
+</body></html>

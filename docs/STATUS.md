@@ -3,6 +3,15 @@
 Updated 2026-11-18. Phases 0-5 done, plus paper style, transitions, kinetic text, UI cards, free asset sources,
 per-video themes, quote template, timeline page (dashboard `/timeline.html`: live preview of the real templates, scene list, warnings, transport, Render button), visual-assets.json and the Visual Assets dashboard. History: `docs/CHANGELOG.md` and git log.
 
+## 19 Cyclone_Akwan (2026-11-18) - finals done (new "eye of the storm" look, The Dark World)
+- Paired topic (Cyclone Akwan, third Bay of Bengal storm in 3 weeks): `projects/The Dark World/10__18-NOV-2026__Cyclone_Akwan/{16x9,9x16}`; 16x9 = 3 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`. 9x16 audio has no first script paragraph (JSON matches the audio).
+- plan.md approved (cinematic mode); user: 480p -> QC -> 1080p finals without asking.
+- Theme "eye of the storm" (Teko + NTR + Rajdhani; sea-slate / storm cyan / alert red-orange-yellow; max 21% alike 07 Lung_Cancer); kit `tools/templates/cyclone_kit/{ck.js,ck_geo.js,ck2.js}` (atmo isobars, radar / cloud reveals, cloudwipe, canvas satellite swirl, Bay of Bengal map from Natural Earth with go / pin / track / cone / ruler / arrow / state fill, cards, ladder, wind dial, ocean cross-section, fuel gauge, name wheel, signal mast, 24h clock).
+- Images: 54 Kaggle stills `assets/ai` (prompts `work/kaggle_cyc.json`); A35 (politician look-alike), A32 / B06 (AI text), A05, B01 unused.
+- Sequences ck_l01..l23 + ck_v01..v07 (`scripts/seq_*.py`), `scripts/rebuild.py <fmt>`, checks `<fmt>/work/{check,sheet}.html` (launch config ck-check).
+- FINALS DONE 2026-11-18: `<fmt>/output/19_Cyclone_Akwan_<fmt>.mp4` (5:25 / 1:24), QA PASS + frame QC; metadata.json both formats, sheet synced; `Dark_World_Channel/README.txt` (thumbnails pending). Music: clinical_calm (only track in the library; a tense news track would fit better).
+- Lessons: kit `canvas()` must set `inset: auto` BEFORE `place()` (else left/top are wiped); `<fmt>/work/theme.json` must exist or the preview falls back to the paper theme; map `bay()` has z 4, so shots drawn over it need `z: 10`; stamps need `until`; render ERR_NETWORK_CHANGED again (re-run renders only the failed scene).
+
 ## 18 Acidity_GERD (2026-11-18) - finals done (new "acid & valve" look)
 - Paired topic (acidity / GERD, Health Decode): `projects/Healthdecode/08__18-NOV-2026__Acidity_GERD/{16x9,9x16}`; 16x9 = 4 mp3s merged, 1.15x -> `<fmt>/audio.mp3`; user's gemini.json aligned (align_mms) -> `input/gemini_corrected.json`.
 - User brief: new cinematic direction, complete creative freedom; standing go: no questions, 480p -> QC -> finals.

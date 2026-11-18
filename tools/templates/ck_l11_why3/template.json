@@ -1,0 +1,13 @@
+{
+ "name": "ck_l11_why3",
+ "version": 1,
+ "engine": "hyperframes",
+ "visual_types": [
+  "motion_graphic"
+ ],
+ "params": {
+  "code": "written for 10 Cyclone_Akwan; reuse only when the user asks",
+  "kit": "cyclone_kit"
+ },
+ "description": "L11 why three storms back to back: the Bay stayed warm after the monsoon, the atmosphere helps, a very active season"
+}

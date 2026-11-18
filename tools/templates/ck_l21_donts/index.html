@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="gsap.min.js"></script><script src="scene.js"></script>
+<link rel="stylesheet" href="studio.css"><script src="studio.js"></script>
+<script src="ck.js"></script><script src="ck_geo.js"></script><script src="ck2.js"></script>
+<style>/* 10 Cyclone_Akwan ck_l21_donts: L21 stay away from trees, hoardings, current poles; do not cross flooded roads; go to the shelter when told; farmers harvest early */</style></head><body>
+<div id="root" data-composition-id="root" data-width="{{W}}" data-height="{{H}}" data-start="0" data-duration="{{DUR}}">
+  <div id="stage"></div>
+</div>
+<script>
+  const { W, H, D, V, u, K, tl, E, R, at, $, mk, place, out, show, svg, key, run, canvas, atmo, shot, enter, morph, cloudwipe, head, te, tag, num, callout, list, chips, stamp, phone, doc, ring, flash, cam, swirl, bay, cards, ladder, dial, xsec, gauge, wheel, mast, clock24 } = CK;
+  const T = (x) => Math.max(0, x - 304.5);
+  atmo();
+  shot("A28", { t: 0, d: 3.8, mv: "push", in: "cut", until: T(308.3) });
+  tag("STAY AWAY FROM", .2, { c: K.red, until: T(308.2) });
+  list([["చెట్లు · Trees", T(304.7), false], ["Hoardings", T(305.5), false], ["Current Poles", T(306.3), false]], W * .06, H * .28, { until: T(308.2) });
+  shot("A30", { t: T(306.3), d: 2, mv: "push", in: "iris", box: [W * .56, H * .2, W * .38, H * .56], fr: true, c: K.red, until: T(308.3) });
+  shot("A14", { t: T(308.3), d: 1.5, mv: "push", in: "wipe", until: T(309.8) });
+  stamp("DON'T CROSS", W * .3, H * .4, T(308.5), { c: K.red, until: T(309.8) });
+  shot("A21", { t: T(309.8), d: 2.6, mv: "push", in: "wipeL", until: T(312.4) });
+  head("TOLD TO GO? <b>GO NOW</b>", T(310.0), { y: H * .62, size: 7.4, c: K.ok, until: T(312.3) });
+  shot("A31", { t: T(312.4), d: 2.5, mv: "panR", in: "cloud" });
+  tag("FARMERS · HARVEST EARLY", T(312.6), { c: K.yl });
+  te("వర్షాలకు <b>ముందే</b> పంట కోత", T(313.9), { y: H * .8 });
+  CK.done();
+</script>
+</body></html>
